@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>测试专用</title>
+	</head>
+	<body>
+		<div class="test">
+			<button class="nextPage">下一页</button>
+			<button class="nextPage1">下一页1</button>
+			<h3>测试localstorage和sessionStorage</h3>
+			<label >key</label>
+			<input type="text" name="" id="key" value="" /><br />
+			<label>val</label>
+			<input type="text" name="" id="val" value="" /><br />
+			<input type="radio" name="type" id="" value="localstorage" checked="checked" />localstorage
+			<input type="radio" name="type" id="" value="sessionStorage" />sessionStorage<br />
+			<input type="button" id="save" value="存储" /><br />
+			<input type="button" id="read" value="一次读取存储的数据" />
+			<h1>测试拍照功能</h1>
+			<input type="file" name="" id="file" value="选择文件" />
+			<div id="">
+				<img src="" class="loginPhoto"/>
+			</div>
+		</div>
+	</body>
+	
+	<script src="../js/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../lib/commontest.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#save").on("click",function(){
+				var key = $("#key").val(),
+					val = $("#val").val(),
+					type = $("input[name = 'type']:checked").val();
+					!key && alert("key 不能为空");
+					!val && alert("val 不能为空");
+					if(!!key && !!val){
+						if (type == "localstorage") {
+							localStorage.setItem(key,val)
+						}else if(type == "sessionStorage"){
+							sessionStorage.setItem(key,val);
+						}
+					}
+			})
+			$("#read").on("click",function(){
+				var type = $("input[name = 'type']:checked").val();
+				if (type == "localstorage") {
+					var num = window.localStorage.length;
+					alert(type+"的存储个数为"+num);
+					for (var i= 0;i<num;i++) {
+						alert(window.localStorage.key(i))
+						alert(window.localStorage.getItem(window.localStorage.key(i)))
+					}
+				}else if(type == "sessionStorage"){
+					var num = window.sessionStorage.length;
+					alert(type+"的存储个数为"+num)
+					for (var i= 0;i<num;i++) {
+						alert(window.sessionStorage.key(i))
+						alert(window.sessionStorage.getItem(window.sessionStorage.key(i)))
+					}
+				}
+			});
+			$(".nextPage").on("click",function(){
+				common.jumpLinkPlainApp("测试01","html/test01.html");
+				
+			})
+			$(".nextPage1").on("click",function(){
+				common.jumpLinkPlainApp("测试02","html/test111.html")
+			})
+			$("#file").on("focus",function(){
+				console.log("focus")
+			});
+			$("#file").on("blur",function(){
+				console.log("blur")
+			});
+			$("#file").on("change",function(){
+				alert($(this).val())
+				var tar = this,
+				files = tar.files,
+				fNum = files.length,
+				URL = window.URL || window.webkitURL;
+				console.log(files);
+				if( !files[0] ) return;
+				for( var i = 0; i < fNum; i++ ){
+					if( files[i].type.search(/image/) >= 0){
+						var blob = URL.createObjectURL(files[i]);
+						document.getElementsByClassName('loginPhoto')[0].src = blob;
+					}
+				};
+			})
+		})
+	</script>
+</html>

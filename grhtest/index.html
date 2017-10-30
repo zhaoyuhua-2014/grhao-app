@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>首页</title>
+		
+			<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://api.grhao.com/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'  " >
+		
+		<!--<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://61.164.118.194:8090/grh_api/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'"/>
+		--><meta name="viewport" content="width=720,user-scalable=no" />
+		<meta content="telephone=no, address=no" name="format-detection" />
+		<link rel="stylesheet" type="text/css" href="css/base.css" />
+		<link rel="stylesheet" type="text/css" href="css/swiper-3.3.1.min.css"/>
+		<style type="text/css">
+			#wrapper{top: 100px;}
+		</style>
+	</head>
+	<body class="animation-fadeIn">
+		<div class="header_wrap">
+			<div class="index_header">
+				<div class="index_loge"></div>
+				<div class="index_tit">
+					<p><span></span>&nbsp;&nbsp;<span></span>&nbsp;&nbsp;<span class="all_bg1"></span></p>
+					<p></p>
+				</div>
+				<div class="index_rigth"></div>
+			</div>
+		</div>
+		<div class="main_wrap" id="wrapper">
+			<div id="iscroll">
+				<div id="pullDown" class="empty">
+					<!--<span class="pullDownIcon"></span><span class="pullDownLabel">Pull down to refresh...</span>-->
+					<div class="loader">
+						<span></span><span></span><span></span><span></span>
+					</div>
+					<div class="pullDownLabel">下拉刷新...</div>
+				</div>
+				<div class="main">
+					<div class="banner_wrap">
+						<div class="index_banner">
+							<div class="swiper-wrapper"></div>
+							<div class="swiper-pagination"></div>
+						</div>
+					</div>
+					<div class="index_center_wrap">
+							<dl class="top_left" data="1">
+								<dt class="all_bg2"></dt>
+								<dd>礼盒套餐</dd>
+								<dd>满足味蕾</dd>
+							</dl>
+							<dl class="top_right" data="2">
+								<dt class="all_bg3"></dt>
+								<dd>钜惠活动</dd>
+								<dd>吃点新鲜</dd>
+							</dl>
+						
+							<dl class="bottom_left" data="3">
+								<dt class="all_bg4"></dt>
+								<dd>疯狂秒杀</dd>
+								<dd>整点秒杀</dd>
+							</dl>
+							<dl class="bottom_right" data="4">
+								<dt class="all_bg5"></dt>
+								<dd>一元预购</dd>
+								<dd>意想不到</dd>
+							</dl>
+						<div class="index_center_center">
+						</div>
+						<div class="mask hidden"></div>
+					</div>
+					<div class="index_inner_wrap">
+						<div class="index_inner lazyload"></div>
+					</div>
+				</div>
+				<!--<div id="pullUp">
+					<span class="pullUpIcon"></span><span class="pullUpLabel">Pull up to load more...</span>
+				</div>-->
+			</div>
+		</div>
+		<div class="order_refund">		
+			<div class="refund_bg"></div>
+			<div class="order_refund_content">
+			    <div class="order_refund_confirm">是否切换为用户绑定门店?</div>
+			    <dl class="order_refund_choose clearfloat">
+			    	<dt class="float_left">		    	    	
+			    	    <button class="refund_cancle" style="background:#f25f4f;">取消</button>
+			    	</dt>
+			    	<dd class="float_right">
+			    		<button class="makeSure" style="background:#93c01d;">确定</button>
+			    	</dd>		    	
+			    </dl>
+			</div>	
+		</div>
+	</body>
+	<script data-main = "dist/index.js?v=123" src="require/require.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		// 定位交互
+		function setLocation(d){
+			if (d) {
+				localStorage.setItem("location",d);
+			};
+		};
+		// 取消交互逻辑
+		function cancleFn(){
+			pub.apiHandle.cancleFn();
+		};
+		// 确定交互逻辑
+		function trueFn(){
+			pub.apiHandle.trueFn();
+		};
+		function trueFn1(){
+			pub.apiHandle.trueFn1();
+		}
+	</script>
+</html>

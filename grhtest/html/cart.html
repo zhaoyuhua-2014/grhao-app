@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>购物车</title>
+	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://api.grhao.com/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'  " >
+	<meta name="viewport" content="width=720,user-scalable=no"/>
+	<meta content="telephone=no, address=no" name="format-detection" />	
+	<link rel="stylesheet" href="../css/base.css?v=123" />
+	<style type="text/css">
+		/*常购商品页面*/
+		.often_shop_main_wrap .main ul{width:100%;margin-top:10px;background:#FFF}
+		.line-wrapper{width:100%;height:220px;overflow:hidden;background: #F7F7F7;margin-bottom: 20px;}
+		.line-scroll-wrapper{height:200;width:950px}
+		.line-normal-wrapper{float:left;width:750px;height:200px}
+		.line-normal-avatar-wrapper{float:left;width:200px;height:200px;padding:20px}
+		.line-normal-avatar-wrapper img{width:100%;height:100%}
+		.line-normal-info-wrapper{float:left;width:448px;height:200px;padding-top:18px;}
+		.often_shop_goods_top p{float:left;font-size:28px;color:#999999}
+		.often_shop_goods_top .often_shop_goods_tit{width: 320px;line-height: 60px;color: #393737;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;}
+		.often_shop_goods_top .often_shop_goods_icon{line-height: 50px;color: #ff7b29;font-size: 32px;}
+		.often_shop_goods_top .often_shop_goods_icon del{color: #c1c1c1;font-size: 28px;}
+		.often_shop_goods_top.often_shop_show p{line-height: 50px;}
+		.often_shop_color{color:#F76A10;font-size:30px}
+		.line-btn-delete{float:left;width:200px;height:200px}
+		.line-btn-delete button{width:100%;height:100%;background:#ff3b30;border:none;font-size:28px;font-family:'Microsoft Yahei';color:#fff}
+		#wrapper{bottom: 100px;background: #FFF;}
+	</style>
+</head>
+<body id="zs-cart" class="animation-fadeIn">
+	
+	<div class="main">
+		<div id="wrapper">
+			<div id="iscroll">
+				<div id="pullDown" class="empty">
+					<!--<span class="pullDownIcon "></span><span class="pullDownLabel">Pull down to refresh...</span>-->
+					<div class="loader">
+						<span></span><span></span><span></span><span></span>
+					</div>
+					<div class="pullDownLabel">下拉刷新...</div>
+				</div>
+				<ul class="ul-box" id="ul-box"></ul>
+			</div>
+		</div>
+		<div class="clearfloat" id="total">
+			<ul class="detail">
+				<li class="detail-list">
+					<p id="all-select"><span class="select-dot" ></span><span>全选</span></p>
+				</li>
+				<li id="select-delete">删除</li>
+				<li class="detail-list">
+					<p><span>合计:&nbsp;</span><span class="totalmoney">¥0.00</span></p>
+				</li>
+			</ul>
+			<div class="settle">结算</div>
+		</div>
+	</div>
+	<!--<div class="footer_wrap">
+		<div class="footer clearfloat" id="foot">
+			<div class="footer_item">首页</div>
+			<div class="footer_item">更多商品</div>
+			<div class="footer_item actived" data-content="0" >购物车</div>
+			<div class="footer_item">我</div>
+		</div>
+	</div>-->
+	<div id="empty-cart"><img src="../img/epmty_cart.png" alt="" data-title = "全部商品" data-url = "html/moregoods.html"></div>
+
+	<div class="order_refund">		
+		<div class="refund_bg"></div>
+		<div class="order_refund_content">
+		    <div class="order_refund_confirm">确定删除？</div>
+		    <dl class="order_refund_choose clearfloat">
+		    	<dt class="float_left">		    	    	
+		    	    <button class="refund_cancle" style="background:#f25f4f;">取消</button>
+		    	</dt>
+		    	<dd class="float_right">
+		    		<button class="makeSure" style="background:#93c01d;">确定</button>
+		    	</dd>		    	
+		    </dl>
+		</div>	
+	</div>
+</body>
+	<!--<script src="../seajs/2.1.1/sea.js"></script>
+	<script src="../seajs-config.js"></script>
+	<script>
+		seajs.use(['../lib/zsCart.js?v=20000'],function( zs ){
+			zs.init();
+		});
+	</script>-->
+	<script data-main = "../dist/zsCart.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		// 取消交互逻辑
+		function cancleFn(){
+			pub.apiHandle.cancleFn();
+		};
+		// 确定交互逻辑
+		function trueFn(){
+			pub.apiHandle.trueFn();
+		};
+	</script>
+</html>

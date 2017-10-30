@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>搜索页面</title>
+		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://api.grhao.com/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'  " >
+		<meta name="viewport" content="width=720,user-scalable=no"/>
+    	<meta content="telephone=no, address=no" name="format-detection" />
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+	</head>
+	<body module-id="search">
+		<!--<div class="header_wrap">
+			<div class="header_contain">
+				<div class="search_left">
+					<span class="triangle-btn gray"></span>
+				</div>
+				<div class="search_box">
+					<input type="text" class="search" name="" id="" value="" placeholder="请输入商品" />
+					<img class="search_delete" src="../img/icon_delete.png"/>
+				</div>
+				<div class="search_btn">
+					搜索
+				</div>
+			</div>
+		</div>
+		<div class="empty"></div>-->
+		<div class="main_wrap">
+			<div class="main">
+				<div class="search_star">
+					<p class="search_tit">热门搜索</p>
+					<ul class="search_item_list">
+						
+					</ul>
+				</div>
+				<div class="search_none" style="display: none;">
+					<dl>
+						<dt>
+							<img src="../img/search_error.png"/>
+						</dt>
+						<dd>
+							<p>非常抱歉，暂时没有您需要的水果！</p>
+							<p>400-0650-159</p>
+						</dd>
+					</dl>
+				</div>
+				<div class="search_resurt" style="display: none;">
+					<div class="search_goods">
+						<!--<dl>
+							<dt>
+								<img src="img/pingguo01.png"/>
+							</dt>
+							<dd>
+								
+							</dd>
+						</dl>-->
+					</div>
+					<p class="click_load" style="display:none">点击加载更多</p>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script data-main = "../dist/search.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		function searchWithText(val){
+			pub.search.apiHandle.searchWithText(val);
+		}
+	</script>
+</html>

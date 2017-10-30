@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>编辑地址</title>
+	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://api.grhao.com/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'  " >
+	<meta name="viewport" content="width=720,user-scalable=no"/>
+    <meta content="telephone=no, address=no" name="format-detection" />	
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" type="text/css" href="../css/LArea.css"/>
+</head>
+<body ontouchstart>
+	<!--<div class="header_wrap">
+		<div class="header_contain">
+			<div class="header_left">
+			    <span class="triangle-btn green" ></span>
+			</div>
+			<h1 class="header_title header_title_color"></h1>
+			
+	    </div>
+	</div>
+	<div class="empty1"></div>-->
+	<div class="main_wrap main_wrap_margin">
+		<div class="main">
+			<ul class='person_message'>
+				<li>
+					<label for="" class="person_name">收货人：</label><input type="text" id="person_name" value="" placeholder="请输入联系人" autocomplete="off" />
+				</li>
+				<li>
+					<label for="" class="person_address">联系方式：</label><input type="text" id="person_phone" value="" placeholder="请输入联系方式" autocomplete="off" />
+				</li>
+				<li>
+					<label for="" class="person_address">所在地区：</label><input type="text" id="person_area" value="" placeholder="请输入所在地区"  readonly="readonly"/>
+					<input id="value1" type="hidden" value="20,234,504">
+				</li>
+				<li>
+					<label for="" class="person_address">详细地址：</label><input type="text" id="person_moreAddress" value="" placeholder="请输入详细地址" autocomplete="off" />
+				</li>
+			</ul>
+		    <button class="address_reverse" id="btn_save">保存</button>
+		</div>
+	</div>
+	
+	
+</body>
+
+<!--<script src="../seajs/2.1.1/sea.js"></script>
+<script src="../seajs-config.js"></script>
+<script>
+	seajs.use(['../lib/addressfix'],function( zs ){
+		zs.init();
+	});
+</script>-->
+<script data-main = "../dist/addressfix.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+
+</html>

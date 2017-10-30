@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>我1</title>
+		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://api.grhao.com/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'  " ><meta name="viewport" content="width=720,user-scalable=no"/>
+    	<meta content="telephone=no, address=no" name="format-detection" />    	
+    	<link rel="stylesheet" href="../css/base.css" />
+	</head>
+	<body module-id="0" class="animation-fadeIn">
+		<div class="main_wrap main_wo_wrap" id="wrapper">
+			<div id="iscroll">
+				<div id="pullDown" class="empty">
+					<!--<span class="pullDownIcon"></span><span class="pullDownLabel">Pull down to refresh...</span>-->
+					<div class="loader">
+						<span></span><span></span><span></span><span></span>
+					</div>
+					<div class="pullDownLabel">下拉刷新...</div>
+				</div>
+				<div class="main">
+					<div class="main_top">
+						<div class="main_top_roof clearfloat">
+							<div class="main_top_right"></div>
+						</div>
+						<div class="my_nologin">
+							<div class="main_top_middle">
+						    </div>
+						    <div class="main_top_login"><a href="javascript:void(0)">登录</a></div>
+						</div>
+						<dl class="my_islogin clearfloat">
+							<dt class="my_login">
+							    <img class="loginPhoto"/>
+							    <form id="form2" action="http://api.grhao.com/server/api.do?method=face_img_upload" enctype="multipart/form-data" method="post" target="formImg">
+							    	<input type="file" accept="image/*" id='loginPhoto' name="faceimg"/>
+							    	<input type="hidden" name="userId" id="cuserId" value="" />
+							    	<input type="hidden" name="tokenId" id="tokenId" value="" />
+							    	<input type="hidden" name="sign" id="sign" value="" />
+							    	<input type="hidden" name="source" id="source" value="" />
+							    	<input type="hidden" name="angle" id="angle" value="" />
+							    	<!--<input type="hidden" name="method" id="" value="face_img_upload" />-->
+							    </form>
+							    <iframe style="display: none;" name="formImg"></iframe>
+						    </dt>
+						    <dd class="my_islogin_right">
+						    	<div class="my_islogin_right_top clearfloat">
+						    		<div class="my_name"></div>
+						            <div class="my_level"></div>
+						    	</div>
+						    	<div class="my_islogin_right_bottom clearfloat">
+						    		<ul class="my_month_card">
+						    			<li>账户余额</li>
+						    			<li id="month_card"></li>
+						    		</ul>
+						            <ul class="my_fruit_money">
+						            	<li>果币</li>
+						            	<li id="fruit_money"></li>
+						            </ul>
+						    	</div>					        
+						    </dd>					    
+						</dl>					
+					</div>
+					<div class="main_center clearfloat">					
+						<dl>						
+							<dd class="zs_personal" data-url="html/order_management.html" data-title = "订单管理">订单管理</dd>
+						</dl>
+						<dl>						
+							<dd class="zs_personal" data-url="html/PreOrder_management.html" data-title = "我的预购">我的预购</dd>
+						</dl>
+						<dl>						
+							<dd class="zs_personal" data-url="html/cuopon_management.html" data-title = "优惠卷管理">优惠券(<span class="wo_main_coupon" style="color: #fa6b7d;">0</span>)</dd>
+						</dl>
+					</div>
+				    <div class="main_bottom">
+				    	<dl>			    		
+				    		<dd class="zs_personal" data-url="html/address_management.html?addr=addr" data-title = "收货地址">收货地址</dd>
+				    	</dl>
+				    	<dl>			    		
+				    		<dd class="zs_personal" data-url="html/fruitMall.html" data-title = "果币商城">果币商城</dd>
+				    	</dl>
+				    	<dl>			    		
+				    		<dd class="zs_personal" data-url="html/month_recharge.html?search=recharge" data-title = "在线充值">在线充值</dd>
+				    	</dl>
+				    	<dl>			    		
+				    		<dd class="zs_personal" data-url="html/pwd_change.html" data-title = "修改密码">修改密码</dd>
+				    	</dl>
+				    	<dl>			    		
+				    		<dd class="zs_personal" data-url="html/help.html" data-title = "帮助中心">帮助中心</dd>
+				    	</dl>
+				    	<dl>			    		
+				    		<dd class="zs_personal" style="border: none;" data-url="html/my_settlement.html" data-title = "设置">设置</dd>
+				    	</dl>
+				    	<!--<dl>
+				    		<dd class="test">测试页面</dd>
+				    	</dl>-->
+				    </div>
+				    <div class="exit">退出</div>
+				    
+				</div>
+			</div>
+		</div>
+	</body>
+	<!--<script src="../seajs/2.1.1/sea.js"></script>
+	<script src="../seajs-config.js"></script>
+	<script src="../lib/exif.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+		seajs.use(['../lib/personal.js?v=30000'], function(zs){
+			zs.init();	
+		});
+	</script>-->
+	<script data-main = "../dist/personal.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		function setAppVersion(n){
+			if (typeof n == 'string') {
+				if (!!n) {
+					localStorage.setItem("version",n);
+					console.log(localStorage.getItem('version'));
+				}else{
+					console.log("n is empty string")	
+				}			
+			}else{
+				console.log(n+"not is string")
+			}
+		}
+	</script>
+</html>

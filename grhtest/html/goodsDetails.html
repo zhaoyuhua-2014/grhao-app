@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>商品详情</title>	
+		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://api.grhao.com/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'  " >
+		<meta name="viewport" content="width=720,user-scalable=no"/>
+	    <meta content="telephone=no, address=no" name="format-detection" />
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/swiper-3.3.1.min.css"/>
+	</head>
+	<body style="background: #FFFFFF;" module-id="goodsDetail" class="animation-fadeIn">
+		<!--<div class="header_wrap">
+			<div class="header_contain">
+				<div class="header_left">
+					<span class="triangle-btn green"></span>
+				</div>
+				<h1 class="header_title header_title_color">商品详情</h1>
+				<div class="header_right">					
+				</div>
+		   </div>
+		</div>
+		<div class="empty"></div>-->
+		<div class="main_wrap" style="background: #FFFFFF;">
+			<div class="main">
+				<div class="goodsDetails_img_box">
+					<div class="swiper-wrapper">
+						<!--<img src="img/goods_apply.png"/>-->
+					</div>
+					<!-- 如果需要分页器 -->
+					<div class="swiper-pagination"></div>
+				</div>
+				<div class="goodsDetails_box1">
+					<div class="gd_goodName">
+						
+					</div>
+					<div class="gd_specification clearfloat">
+						<p class="float_left"></p>
+						<p class="float_right" style="display: none;"></p>
+					</div>
+					<div class="gd_goodsDescribe"></div>
+					<div class="good_box1_box1 clearfloat zs-static-box zs-goods-box">
+						<div class="gd_price">
+							
+						</div>
+						<div class="gd_number clearfloat" style="width:auto;">
+							 <div class="minus_num">
+								<img src="../img/btn_m.png"/>
+							</div>
+							<div class="show_num" style="width:auto;padding: 0 10px"> 
+								
+							</div>
+							<div class="add_num">
+								<img src="../img/btn_a.png"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="goodsDetails_box2">
+					<h4 class="clearfloat"><span class="float_left"></span><b class="float_left">商品详情</b></h4>
+					<ul class="goodsDetails_box2_ lazyload">
+						
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!--<div class="empty1"></div>-->
+		<div class="my_bg"></div>
+		<!--<div class="footer_wrap">
+			<div class="footer clearfloat" id="foot">
+				<div class="footer_item">首页</div>
+				<div class="footer_item">更多商品</div>
+				<div class="footer_item" data-content="0">购物车</div>
+				<div class="footer_item">我</div>
+			</div>
+		</div>-->
+		<!-- <div class="footer_wrap">
+			<div class="footer_car clearfloat">
+				<span id="gw_car">
+					<span class="gw_car_num"></span>
+				</span>
+				<dl class="goshoping_car">
+					<dt class="car_top clearfloat">
+						<div class="car_left">
+							购物车
+						</div>
+						<div class="car_right car_clear">清空所有</div>
+					</dt>
+					<dd class="car_main"><ul></ul></dd>
+				</dl>
+				<div class="footer_car_left">
+					购物车是空的
+				</div>
+				<div class="footer_car_rigth"></div>
+			</div>
+		</div> -->
+		<div class="toTop"></div>
+	</body>
+	<!--<script src="../seajs/2.1.1/sea.js"></script>
+	<script src="../seajs-config.js"></script>
+	<script>
+		seajs.use(['../lib/moregoods.js?v=30000'],function( zs ){
+			zs.init();
+		});
+	</script>-->
+	<script data-main = "../dist/moregoods.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+</html>
