@@ -185,15 +185,21 @@ require(['../require/config'],function(){
 	                        userId : pub.userId,
 	                    }
 	                }[ pub.seachParam ];
-	
+					
+					// app 传参
+	                pub.wxAppPayWay = pub.isRecharge ? '3' : pub.isBase ? '1' : pub.isPre ? '2' : undefined; // 3充值，1普通商品支付，2预购商品
 	                pub.isApp && ( pub.aliPayApi.isApp = '1' );
 	                common.ajaxPost($.extend( {},pub.userBasicParam, pub.aliPayApi ),function( d ){
 	                    if ( d.statusCode == '100000' ) {
-	                        var html = "";
-	                        $.each( d.data, function( i, v ){
-	                            html += '<input type="hidden" name="' + i + '" id="" value="' + v + '" />';
-	                        });
-	                        $("#form2").append( html ).submit();
+	                        if (common.isPhone()) {
+	                        	pub.apiHandle.order_topay_alipay.apiData(d.data)
+	                        } else{
+	                        	var html = "";
+		                        $.each( d.data, function( i, v ){
+		                            html += '<input type="hidden" name="' + i + '" id="" value="' + v + '" />';
+		                        });
+		                        $("#form2").append( html ).submit();
+	                        }
 	                    }else{
 	                        common.prompt( d.statusStr );
 	                    }
@@ -202,6 +208,13 @@ require(['../require/config'],function(){
 	                    common.prompt( d.statusStr );
 	                    pub.loading.hide();
 	                })
+	            },
+	            apiData : function( d ){
+	                try{
+	                    //common.isAndroid() ? android.WXPay( common.JSONStr( d ), pub.wxAppPayWay ) : window.webkit.messageHandlers.WXPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
+	                    window.webkit.messageHandlers.AliPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
+	                }catch(e){}
+	                pub.loading.hide();
 	            }
 	        },
 	        // 银行卡
