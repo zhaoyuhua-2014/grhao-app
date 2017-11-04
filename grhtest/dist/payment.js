@@ -205,7 +205,7 @@ require(['../require/config'],function(){
 	                        	var data = {
 	                        		orderCode:pub.orderCode || d.data.note,
 	                        		productName:'果然好商品',
-	                        		money:pub.money || pub.payMoney,
+	                        		money:pub.money || d.data.payMoney,
 	                        	};
 	                        	pub.apiHandle.order_topay_alipay.apiData(data)
 	                        } else{
