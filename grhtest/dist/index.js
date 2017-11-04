@@ -219,7 +219,7 @@ require(['../require/config'],function () {
 						html += '<div class="swiper-slide"><a href="javascript:void(0)" url="'+link+'"><img src="' + d[i].adLogo + '" /></a></div>'
 					}
 					return html;
-				},pub.isrefresh);
+				},'.swiper-pagination',pub.isrefresh);
 				data.mainPageGoodsDetails.length == 0 && $(".index_inner").html("");
 				data.mainPageGoodsDetails.length != 0 && me.apiDataDeal( data.mainPageGoodsDetails );
 			 	pub.myScroll.refresh();
