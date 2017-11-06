@@ -149,10 +149,9 @@ define(['jquery'],function($){
         }
 
         var _absMoveY = Math.abs(me._moveY);
-
         // 加载上方
         if(me.opts.loadUpFn != '' && me.touchScrollTop <= 0 && me.direction == 'down' && !me.isLockUp){
-            e.preventDefault();
+            //e.preventDefault();
 
             me.$domUp = $('.'+me.opts.domUp.domClass);
             // 如果加载区没有DOM
@@ -263,6 +262,7 @@ define(['jquery'],function($){
             me.loading = false;
             // 如果有数据
             if(me.isData){
+                console.log(me.$domDown)
                 // 加载区修改样式
                 me.$domDown.html(me.opts.domDown.domRefresh);
                 fnRecoverContentHeight(me);

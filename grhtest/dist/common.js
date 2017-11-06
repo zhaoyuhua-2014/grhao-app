@@ -381,7 +381,7 @@ define(['jquery','mdData','shar1'],function($){
 
 			var height = $(window).height();
 
-			$('#wrapper').on('scroll',function(){
+			$(window).on('scroll',function(){
 
 				var 
 				len = $('.lazyload img[data-src]').length,

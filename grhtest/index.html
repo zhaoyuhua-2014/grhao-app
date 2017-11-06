@@ -10,6 +10,57 @@
 		<link rel="stylesheet" type="text/css" href="css/swiper-3.3.1.min.css"/>
 		<style type="text/css">
 			#wrapper{top: 100px;}
+			.dropload-up,.dropload-down{
+			    position: relative;
+			    height: 0;
+			    overflow: hidden;
+			    font-size: 26px;
+			    /* 开启硬件加速 */
+			    -webkit-transform:translateZ(0);
+			    transform:translateZ(0);
+			}
+			.dropload-down{
+			    height: 100px;
+			}
+			.dropload-refresh,.dropload-update,.dropload-load,.dropload-noData{
+			    height: 100px;
+			    line-height:100px;
+			    text-align: center;
+			}
+			.dropload-load .loading{
+			    display: inline-block;
+			    height: 30px;
+			    width: 30px;
+			    border-radius: 100%;
+			    margin: 6px;
+			    border: 2px solid #666;
+			    border-bottom-color: transparent;
+			    vertical-align: middle;
+			    -webkit-animation: rotate 0.75s linear infinite;
+			    animation: rotate 0.75s linear infinite;
+			}
+			@-webkit-keyframes rotate {
+			    0% {
+			        -webkit-transform: rotate(0deg);
+			    }
+			    50% {
+			        -webkit-transform: rotate(180deg);
+			    }
+			    100% {
+			        -webkit-transform: rotate(360deg);
+			    }
+			}
+			@keyframes rotate {
+			    0% {
+			        transform: rotate(0deg);
+			    }
+			    50% {
+			        transform: rotate(180deg);
+			    }
+			    100% {
+			        transform: rotate(360deg);
+			    }
+}
 		</style>
 	</head>
 	<body class="animation-fadeIn">
@@ -23,8 +74,9 @@
 				<div class="index_rigth"></div>
 			</div>
 		</div>
+		<div class="empty"></div>
 		<div class="main_wrap" id="wrapper">
-			<div id="iscroll">
+			<!-- <div id="iscroll"> -->
 				<!--<div id="pullDown" class="empty">
 					<span class="pullDownIcon"></span><span class="pullDownLabel">Pull down to refresh...</span>
 					<div class="loader">
@@ -68,7 +120,7 @@
 					<div class="index_inner_wrap">
 						<div class="index_inner lazyload"></div>
 					</div>
-				</div>
+				<!-- </div> -->
 			</div>
 		</div>
 		<div class="order_refund">		

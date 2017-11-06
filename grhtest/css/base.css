@@ -939,7 +939,7 @@ background-origin: content-box;-webkit-background-clip: content-box;}
 				top:0px;bottom: 0px; left:-9999px;
 				width:100%;
 				background:#eee;
-				overflow:hidden;
+
 			}
 			#wrapper1{
 				position: absolute;z-index: 1;

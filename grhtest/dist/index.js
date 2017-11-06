@@ -225,6 +225,10 @@ require(['../require/config'],function () {
 				data.mainPageGoodsDetails.length == 0 && $(".index_inner").html("");
 				data.mainPageGoodsDetails.length != 0 && me.apiDataDeal( data.mainPageGoodsDetails );
 			 	//pub.myScroll.refresh();
+			 	if (pub.isrefresh) {
+			 		pub.iscroll.resetload();
+                    common.lazyload(); // 懒加载
+			 	}
 	 		}
 	 	};
 	
@@ -316,16 +320,16 @@ require(['../require/config'],function () {
 				$(".index_tit").on('click',function(){
 					common.jumpLinkPlainApp('门店选择','html/store1.html');
 				});
-				$(".swiper-wrapper").on("touchstart",'a',function(e){
+				/*$(".swiper-wrapper").on("touchstart",'a',function(e){
 					var _touch = e.originalEvent.targetTouches[0];
 　　					pub.touch_start= _touch.pageX;
 				});
 				$(".swiper-wrapper").on("touchmove",'a',function(e){
 					var _touch = e.originalEvent.targetTouches[0];
 　　					pub.touch_move= _touch.pageX;
-				});
-				$(".swiper-wrapper").on("touchend",'a',function(e){
-					if (Math.abs(pub.touch_start - pub.touch_move) < 100) {
+				});*/
+				$(".swiper-wrapper").on("click",'a',function(e){
+					//if (Math.abs(pub.touch_start - pub.touch_move) < 100) {
 						var urlArr = [{
 							url:'goodsDetails.html',
 							tit:"商品详情"
@@ -364,7 +368,7 @@ require(['../require/config'],function () {
 								}
 							}
 						}
-					}
+					//}
 				});
 				//取消按钮
 				$(".order_refund").on("click",".refund_cancle",function(){
@@ -421,12 +425,6 @@ require(['../require/config'],function () {
 				"pullingUpLable":"松开加载更多...",
 				"loadingLable":"加载中..."
 			}
-			
-	 		var myScroll,
-			pullDownEl, pullDownOffset,
-			pullUpEl, pullUpOffset,
-			generatedCount = 0;
-		
 			function pullDownAction () {
 				setTimeout(function () {
 					pub.isrefresh = true;
@@ -434,92 +432,7 @@ require(['../require/config'],function () {
 					
 				}, 1000);	
 			}
-			
-			function loaded() {
-				pullDownEl = document.getElementById('pullDown');
-				pullDownOffset = pullDownEl.offsetHeight;
-				/*pullUpEl = document.getElementById('pullUp');	
-				pullUpOffset = pullUpEl.offsetHeight;*/
-				
-				pub.myScroll = myScroll = new iScroll('wrapper', {
-					useTransition: true,
-					topOffset: pullDownOffset,
-					preventDefaultException: { className: 'swiper-slide' },///(^|\s)formfield(\s|$)/
-					deceleration:0.004,
-					bounce:true,//当滚动器到达容器边界时他将执行一个小反弹动画。在老的或者性能低的设备上禁用反弹对实现平滑的滚动有帮助。
-					disableMouse: true,//禁用鼠标和指针事件：
-   					disablePointer: true,
-   					momentum:true,//在用户快速触摸屏幕时，你可以开/关势能动画。关闭此功能将大幅度提升性能。
-					//刷新的时候，加载初始化刷新更多的提示div
-					onRefresh: function () {
-						if(this.maxScrollY >-100){
-							//pullUpEl.style.display = 'none';
-						}else{
-							//pullUpEl.style.display = 'block';
-							if (pullDownEl.className.match('loading')) {
-								pullDownEl.className = '';
-								pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-								pullDownEl.querySelector('.loader').style.display="none"
-								pullDownEl.style.lineHeight=pullDownEl.offsetHeight+"px";	
-							}
-						}
-					},
-					//拖动，滚动位置判断
-					onScrollMove: function () {
-						if (this.y > 5 && !pullDownEl.className.match('flip')) {//判断是否向下拉超过5,问题：这个单位好像不是px
-							pullDownEl.className = 'flip';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullingDownLable;
-							this.minScrollY = 0;
-						} else if (this.y < 5 && pullDownEl.className.match('flip')) {
-							pullDownEl.className = '';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-							this.minScrollY = -pullDownOffset;
-						}
-						var lazy = $('.lazyload img[data-src]');
-						
-						var len = lazy.length;
-						if(lazy.length){
-							lazy.each(function(){
-								var
-								$this = $(this), 
-								offsetTop = $this.parents('dl').offset().top;
-								if( wh > offsetTop  ){
-									var dataSrc = $this.attr('data-src');
-									$this.attr('src',dataSrc).addClass('fadeIn');;
-									$this.removeAttr('data-src');
-								}				
-							});
-						}
-						
-					},
-					onScrollEnd: function () {
-						if (pullDownEl.className.match('flip')) {
-							pullDownEl.className = 'loading';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.loadingLable;
-							pullDownEl.querySelector('.loader').style.display="block"
-							pullDownEl.style.lineHeight="40px";	
-							pullDownAction();
-						}
-						var lazy = $('.lazyload img[data-src]');
-						var len = lazy.length;
-						if(lazy.length){
-							lazy.each(function(){
-								var
-								$this = $(this), 
-								offsetTop = $this.parents('dl').offset().top;
-								console.log(wh > offsetTop)
-								if( wh > offsetTop  ){
-									var dataSrc = $this.attr('data-src');
-									$this.attr('src',dataSrc).addClass('fadeIn');;
-									$this.removeAttr('data-src');
-								}				
-							});
-						}
-					}
-				});
-				setTimeout(function () { document.getElementById('wrapper').style.left = '0'; myScroll.refresh(); }, 800);
-			}
-			$('#iscroll').dropload({
+			$('.main_wrap').dropload({
 		        scrollArea : window,
 		        domUp : {
 		            domClass   : 'dropload-up',
@@ -533,74 +446,12 @@ require(['../require/config'],function () {
 		            domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中-自定义内容...</div>',
 		            domNoData  : '<div class="dropload-noData">暂无数据-自定义内容</div>'
 		        },
-		        loadUpFn : function(me){
-		            $.ajax({
-		                type: 'GET',
-		                url: './json/update.json',
-		                dataType: 'json',
-		                success: function(data){
-		                    var result = '';
-		                    for(var i = 0; i < data.lists.length; i++){
-		                        result +=   '<a class="item opacity" href="'+data.lists[i].link+'">'
-		                                        +'<img src="'+data.lists[i].pic+'" alt="">'
-		                                        +'<h3>'+data.lists[i].title+'</h3>'
-		                                        +'<span class="date">'+data.lists[i].date+'</span>'
-		                                    +'</a>';
-		                    }
-		                    // 为了测试，延迟1秒加载
-		                    setTimeout(function(){
-		                        $('.lists').html(result);
-		                        // 每次数据加载完，必须重置
-		                        me.resetload();
-		                    },1000);
-		                },
-		                error: function(xhr, type){
-		                    alert('Ajax error!');
-		                    // 即使加载出错，也得重置
-		                    me.resetload();
-		                }
-		            });
+		        loadUpFn : function(drop){
+		        	pub.iscroll = drop;
+		        	pullDownAction(drop)
 		        },
-		        loadDownFn : function(me){
-		            $.ajax({
-		                type: 'GET',
-		                url: './json/more.json',
-		                dataType: 'json',
-		                success: function(data){
-		                    var result = '';
-		                    counter++;
-		                    pageEnd = num * counter;
-		                    pageStart = pageEnd - num;
-		
-		                    for(var i = pageStart; i < pageEnd; i++){
-		                        result +=   '<a class="item opacity" href="'+data.lists[i].link+'">'
-		                                        +'<img src="'+data.lists[i].pic+'" alt="">'
-		                                        +'<h3>'+data.lists[i].title+'</h3>'
-		                                        +'<span class="date">'+data.lists[i].date+'</span>'
-		                                    +'</a>';
-		                        if((i + 1) >= data.lists.length){
-		                            // 锁定
-		                            me.lock();
-		                            // 无数据
-		                            me.noData();
-		                            break;
-		                        }
-		                    }
-		                    // 为了测试，延迟1秒加载
-		                    setTimeout(function(){
-		                        $('.lists').append(result);
-		                        // 每次数据加载完，必须重置
-		                        me.resetload();
-		                    },1000);
-		                },
-		                error: function(xhr, type){
-		                    alert('Ajax error!');
-		                    // 即使加载出错，也得重置
-		                    me.resetload();
-		                }
-		            });
-		        },
-		        threshold : 50
+		        threshold : 100,
+		        distance:100
 		    });
 			
 			

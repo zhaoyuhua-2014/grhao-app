@@ -1,7 +1,7 @@
 
 
 require(['../require/config'],function(){
-	require(['common','mobileUi','iscroll'],function(common){
+	require(['common','mobileUi','iscroll','dropload'],function(common){
 		// 命名空间
 
 		pub = {};
@@ -139,7 +139,10 @@ require(['../require/config'],function(){
 			       	$('.order_manage_contain').append( html ); 
 			        pub.orderManagement.isLast && $('.lodemore').removeClass('loadMore').html('没有更多数据了').show();
 			        !pub.orderManagement.isLast && $('.lodemore').addClass('loadMore').html('点击加载更多数据').show();
-			        pub.myScroll.refresh();
+			        //pub.myScroll.refresh();
+			        if (pub.isrefresh) {
+				 		pub.iscroll.resetload();
+				 	}
 				}
 			},
 	
@@ -547,7 +550,10 @@ require(['../require/config'],function(){
 			    		$(".my_order_list2").css("display","none");
 			    		orderInfo.orderStatus == '3' && $('.order_situation').css("display","none");
 			    	}
-			    	pub.myScroll.refresh();
+			    	//pub.myScroll.refresh();
+			    	if (pub.isrefresh) {
+				 		pub.iscroll.resetload();
+				 	}
 				}
 			},
 			// 合并接口 统一处理函数
@@ -660,26 +666,15 @@ require(['../require/config'],function(){
 		$(document).ready(function(){
 		 	pub.init();
 		 	window.pub = pub;
-		 	setTimeout(loaded(), 5000);
+		 	setTimeout(document.getElementById('wrapper').style.left = '0', 500);
 	 		var 
 			wh = document.documentElement.clientHeight;
 			$("#iscroll").css("min-height",wh)
 			
-			pub.info = {
-				"pullDownLable":"下拉刷新...",
-				"pullingDownLable":"松开刷新...",
-				"pullUpLable":"下拉加载更多...",
-				"pullingUpLable":"松开加载更多...",
-				"loadingLable":"加载中..."
-			}
-			
-	 		var myScroll,
-			pullDownEl, pullDownOffset,
-			pullUpEl, pullUpOffset,
-			generatedCount = 0;
 		
 			function pullDownAction () {
 				setTimeout(function () {
+					pub.isrefresh = true;
 					if (pub.moduleId == 'orderManagement') {
 						pub.PAGE_INDEX = common.PAGE_INDEX; // 索引
 						pub.orderManagement.apiHandle.init();
@@ -689,61 +684,28 @@ require(['../require/config'],function(){
 				}, 1000);	
 			}
 			
-			function loaded() {
-				pullDownEl = document.getElementById('pullDown');
-				pullDownOffset = pullDownEl.offsetHeight;
-				
-				pub.myScroll = myScroll = new iScroll('wrapper', {
-					useTransition: true,
-					topOffset: pullDownOffset,
-					preventDefaultException: { className: 'swiper-slide' },///(^|\s)formfield(\s|$)/
-					deceleration:0.004,
-					bounce:true,//当滚动器到达容器边界时他将执行一个小反弹动画。在老的或者性能低的设备上禁用反弹对实现平滑的滚动有帮助。
-					disableMouse: true,//禁用鼠标和指针事件：
-   					disablePointer: true,
-   					momentum:true,//在用户快速触摸屏幕时，你可以开/关势能动画。关闭此功能将大幅度提升性能。
-					//刷新的时候，加载初始化刷新更多的提示div
-					onRefresh: function () {
-						if(this.maxScrollY >-40){
-							//pullUpEl.style.display = 'none';
-						}else{
-							//pullUpEl.style.display = 'block';
-							if (pullDownEl.className.match('loading')) {
-								pullDownEl.className = '';
-								pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-								pullDownEl.querySelector('.loader').style.display="none"
-								pullDownEl.style.lineHeight=pullDownEl.offsetHeight+"px";
-							}
-						}
-					},
-					//拖动，滚动位置判断
-					onScrollMove: function () {
-						if (this.y > 5 && !pullDownEl.className.match('flip')) {//判断是否向下拉超过5,问题：这个单位好像不是px
-							pullDownEl.className = 'flip';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullingDownLable;
-							this.minScrollY = 0;
-						} else if (this.y < 5 && pullDownEl.className.match('flip')) {
-							
-							pullDownEl.className = '';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-							this.minScrollY = -pullDownOffset;
-						} 
-					},
-					onScrollEnd: function () {
-						if (pullDownEl.className.match('flip')) {
-							pullDownEl.className = 'loading';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.loadingLable;
-							pullDownEl.querySelector('.loader').style.display="block"
-							pullDownEl.style.lineHeight="40px";				
-							pullDownAction();	// Execute custom function (ajax call?)
-						}
-					}
-				});
-				
-				setTimeout(function () { document.getElementById('wrapper').style.left = '0'; myScroll.refresh(); }, 800);
-				
-			}
-			document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+			$('#iscroll').dropload({
+		        scrollArea : window,
+		        domUp : {
+		            domClass   : 'dropload-up',
+		            domRefresh : '<div class="dropload-refresh">↓下拉刷新-自定义内容</div>',
+		            domUpdate  : '<div class="dropload-update">↑释放更新-自定义内容</div>',
+		            domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中-自定义内容...</div>'
+		        },
+		        domDown : {
+		            domClass   : 'dropload-down',
+		            domRefresh : '<div class="dropload-refresh">↑上拉加载更多-自定义内容</div>',
+		            domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中-自定义内容...</div>',
+		            domNoData  : '<div class="dropload-noData">暂无数据-自定义内容</div>'
+		        },
+		        loadUpFn : function(drop){
+		        	pub.iscroll = drop;
+		        	pullDownAction(drop)
+		        },
+		        threshold : 100,
+		        distance:100
+		    });
+			
 		})
 	})
 })
