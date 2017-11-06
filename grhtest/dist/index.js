@@ -3,7 +3,9 @@
 */ 
 
 require(['../require/config'],function () {
-	require(['common','mobileUi','swiperJS','iscroll'],function(common){
+	require(['common','mobileUi','swiperJS','dropload'],function(common){
+		
+		
 		
 		var pub = {};
 	
@@ -222,7 +224,7 @@ require(['../require/config'],function () {
 				},'.swiper-pagination',pub.isrefresh);
 				data.mainPageGoodsDetails.length == 0 && $(".index_inner").html("");
 				data.mainPageGoodsDetails.length != 0 && me.apiDataDeal( data.mainPageGoodsDetails );
-			 	pub.myScroll.refresh();
+			 	//pub.myScroll.refresh();
 	 		}
 	 	};
 	
@@ -409,9 +411,8 @@ require(['../require/config'],function () {
 	 	$(document).ready(function(){
 		 	pub.init();
 		 	window.pub = pub;
-		 	setTimeout(loaded(), 5000);
-	 		var 
-			wh = document.documentElement.clientHeight;
+		 	setTimeout(document.getElementById('wrapper').style.left = '0', 500);
+	 		var wh = document.documentElement.clientHeight;
 			
 			pub.info = {
 				"pullDownLable":"下拉刷新...",
@@ -500,7 +501,6 @@ require(['../require/config'],function () {
 							pullDownAction();
 						}
 						var lazy = $('.lazyload img[data-src]');
-						
 						var len = lazy.length;
 						if(lazy.length){
 							lazy.each(function(){
@@ -517,15 +517,93 @@ require(['../require/config'],function () {
 						}
 					}
 				});
-				
 				setTimeout(function () { document.getElementById('wrapper').style.left = '0'; myScroll.refresh(); }, 800);
-				
 			}
+			$('#iscroll').dropload({
+		        scrollArea : window,
+		        domUp : {
+		            domClass   : 'dropload-up',
+		            domRefresh : '<div class="dropload-refresh">↓下拉刷新-自定义内容</div>',
+		            domUpdate  : '<div class="dropload-update">↑释放更新-自定义内容</div>',
+		            domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中-自定义内容...</div>'
+		        },
+		        domDown : {
+		            domClass   : 'dropload-down',
+		            domRefresh : '<div class="dropload-refresh">↑上拉加载更多-自定义内容</div>',
+		            domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中-自定义内容...</div>',
+		            domNoData  : '<div class="dropload-noData">暂无数据-自定义内容</div>'
+		        },
+		        loadUpFn : function(me){
+		            $.ajax({
+		                type: 'GET',
+		                url: './json/update.json',
+		                dataType: 'json',
+		                success: function(data){
+		                    var result = '';
+		                    for(var i = 0; i < data.lists.length; i++){
+		                        result +=   '<a class="item opacity" href="'+data.lists[i].link+'">'
+		                                        +'<img src="'+data.lists[i].pic+'" alt="">'
+		                                        +'<h3>'+data.lists[i].title+'</h3>'
+		                                        +'<span class="date">'+data.lists[i].date+'</span>'
+		                                    +'</a>';
+		                    }
+		                    // 为了测试，延迟1秒加载
+		                    setTimeout(function(){
+		                        $('.lists').html(result);
+		                        // 每次数据加载完，必须重置
+		                        me.resetload();
+		                    },1000);
+		                },
+		                error: function(xhr, type){
+		                    alert('Ajax error!');
+		                    // 即使加载出错，也得重置
+		                    me.resetload();
+		                }
+		            });
+		        },
+		        loadDownFn : function(me){
+		            $.ajax({
+		                type: 'GET',
+		                url: './json/more.json',
+		                dataType: 'json',
+		                success: function(data){
+		                    var result = '';
+		                    counter++;
+		                    pageEnd = num * counter;
+		                    pageStart = pageEnd - num;
+		
+		                    for(var i = pageStart; i < pageEnd; i++){
+		                        result +=   '<a class="item opacity" href="'+data.lists[i].link+'">'
+		                                        +'<img src="'+data.lists[i].pic+'" alt="">'
+		                                        +'<h3>'+data.lists[i].title+'</h3>'
+		                                        +'<span class="date">'+data.lists[i].date+'</span>'
+		                                    +'</a>';
+		                        if((i + 1) >= data.lists.length){
+		                            // 锁定
+		                            me.lock();
+		                            // 无数据
+		                            me.noData();
+		                            break;
+		                        }
+		                    }
+		                    // 为了测试，延迟1秒加载
+		                    setTimeout(function(){
+		                        $('.lists').append(result);
+		                        // 每次数据加载完，必须重置
+		                        me.resetload();
+		                    },1000);
+		                },
+		                error: function(xhr, type){
+		                    alert('Ajax error!');
+		                    // 即使加载出错，也得重置
+		                    me.resetload();
+		                }
+		            });
+		        },
+		        threshold : 50
+		    });
 			
-		
-			document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-		
-		//document.addEventListener('DOMContentLoaded', function () { console.log("DOMContentLoaded");setTimeout(loaded(), 200); }, false);
+			
 	 	})
 	})
 });
