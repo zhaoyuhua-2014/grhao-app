@@ -221,7 +221,9 @@ require(['../require/config'],function(){
 					};
 					common.cancelDialogApp();
 					/*pub.myscroll1.refresh();*/
-					pub.pullInstance1.pullDownSuccess();
+					if (pub.isrefresh) {
+						pub.pullInstance1.pullDownSuccess();
+					}
 				}
 			}
 		};
@@ -558,6 +560,7 @@ require(['../require/config'],function(){
 			}
 			function pullDownAction1 () {
 				setTimeout(function () {
+					pub.isrefresh = true;
 					if(pub.moduleId == "goods"){
 						pub.PAGE_INDEX = common.PAGE_INDEX;
 						pub.goods.apiHandle.goods_list.init();
