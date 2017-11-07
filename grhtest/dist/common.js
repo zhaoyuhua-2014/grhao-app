@@ -382,18 +382,15 @@ define(['jquery','mdData','shar1'],function($){
 			var height = $(window).height();
 
 			$(window).on('scroll',function(){
-
 				var 
 				len = $('.lazyload img[data-src]').length,
 				top = $(this).scrollTop();
-
 				len == 0 && $(window).off('scroll');
 
 				$('.lazyload img[data-src]').each(function(){
 					var
 					$this = $(this), 
 					offsetTop = $this.parents('dl').offset().top;
-					console.log(offsetTop)
 					$this.addClass('fadeIn');
 					if( height + top > offsetTop  ){
 						var dataSrc = $this.attr('data-src');

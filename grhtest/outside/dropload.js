@@ -87,6 +87,7 @@ define(['jquery'],function($){
             }
         });
         me.$element.on('touchmove',function(e){
+        	//console.log(e.originalEvent.touches[0])
             if(!me.loading){
                 fnTouches(e, me);
                 fnTouchmove(e, me);
@@ -141,13 +142,16 @@ define(['jquery'],function($){
     function fnTouchmove(e, me){
         me._curY = e.touches[0].pageY;
         me._moveY = me._curY - me._startY;
-
+		console.log(e);
         if(me._moveY > 0){
             me.direction = 'down';
         }else if(me._moveY < 0){
             me.direction = 'up';
         }
-
+        /*console.log(me._curY)
+        console.log(me._moveY)*/
+		console.log(me.direction)
+		console.log(window.TOP)
         var _absMoveY = Math.abs(me._moveY);
         // 加载上方
         if(me.opts.loadUpFn != '' && me.touchScrollTop <= 0 && me.direction == 'down' && !me.isLockUp){
@@ -184,8 +188,8 @@ define(['jquery'],function($){
     function fnTouchend(me){
         var _absMoveY = Math.abs(me._moveY);
         if(me.opts.loadUpFn != '' && me.touchScrollTop <= 0 && me.direction == 'down' && !me.isLockUp){
-            fnTransition(me.$domUp,300);
-
+           	fnTransition(me.$domUp,300);
+            
             if(_absMoveY > me.opts.distance){
                 me.$domUp.css({'height':me.$domUp.children().height()});
                 me.$domUp.html(me.opts.domUp.domLoad);
@@ -262,7 +266,6 @@ define(['jquery'],function($){
             me.loading = false;
             // 如果有数据
             if(me.isData){
-                console.log(me.$domDown)
                 // 加载区修改样式
                 me.$domDown.html(me.opts.domDown.domRefresh);
                 fnRecoverContentHeight(me);
