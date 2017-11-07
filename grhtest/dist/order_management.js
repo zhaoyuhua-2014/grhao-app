@@ -1,7 +1,7 @@
 
 
 require(['../require/config'],function(){
-	require(['common','mobileUi','iscroll','dropload'],function(common){
+	require(['common','mobileUi','pull'],function(common){
 		// 命名空间
 
 		pub = {};
@@ -141,7 +141,8 @@ require(['../require/config'],function(){
 			        !pub.orderManagement.isLast && $('.lodemore').addClass('loadMore').html('点击加载更多数据').show();
 			        //pub.myScroll.refresh();
 			        if (pub.isrefresh) {
-				 		pub.iscroll.resetload();
+				 		//pub.iscroll.resetload();
+				 		pub.pullInstance.pullDownSuccess();
 				 	}
 				}
 			},
@@ -552,7 +553,8 @@ require(['../require/config'],function(){
 			    	}
 			    	//pub.myScroll.refresh();
 			    	if (pub.isrefresh) {
-				 		pub.iscroll.resetload();
+				 		//pub.iscroll.resetload();
+				 		pub.pullInstance.pullDownSuccess();
 				 	}
 				}
 			},
@@ -669,7 +671,7 @@ require(['../require/config'],function(){
 		 	setTimeout(document.getElementById('wrapper').style.left = '0', 500);
 	 		var 
 			wh = document.documentElement.clientHeight;
-			$("#iscroll").css("min-height",wh)
+			
 			
 		
 			function pullDownAction () {
@@ -684,27 +686,17 @@ require(['../require/config'],function(){
 				}, 1000);	
 			}
 			
-			$('#iscroll').dropload({
-		        scrollArea : window,
-		        domUp : {
-		            domClass   : 'dropload-up',
-		            domRefresh : '<div class="dropload-refresh">↓下拉刷新-自定义内容</div>',
-		            domUpdate  : '<div class="dropload-update">↑释放更新-自定义内容</div>',
-		            domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中-自定义内容...</div>'
-		        },
-		        domDown : {
-		            domClass   : 'dropload-down',
-		            domRefresh : '<div class="dropload-refresh">↑上拉加载更多-自定义内容</div>',
-		            domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中-自定义内容...</div>',
-		            domNoData  : '<div class="dropload-noData">暂无数据-自定义内容</div>'
-		        },
-		        loadUpFn : function(drop){
-		        	pub.iscroll = drop;
-		        	pullDownAction(drop)
-		        },
-		        threshold : 100,
-		        distance:100
-		    });
+		    var $listWrapper = $('.main');
+
+	        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
+	            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
+	             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
+	
+	            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
+	            onPullDown: function () {
+	                pullDownAction();
+	            },
+	        });
 			
 		})
 	})

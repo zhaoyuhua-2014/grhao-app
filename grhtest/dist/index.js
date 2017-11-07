@@ -3,7 +3,7 @@
 */ 
 
 require(['../require/config'],function () {
-	require(['common','mobileUi','swiperJS','dropload'],function(common){
+	require(['common','mobileUi','swiperJS','pull'],function(common){
 		
 		
 		
@@ -225,9 +225,13 @@ require(['../require/config'],function () {
 				data.mainPageGoodsDetails.length == 0 && $(".index_inner").html("");
 				data.mainPageGoodsDetails.length != 0 && me.apiDataDeal( data.mainPageGoodsDetails );
 			 	//pub.myScroll.refresh();
-			 	if (pub.isrefresh) {
+			 	/*if (pub.isrefresh) {
 			 		pub.iscroll.resetload();
                     common.lazyload(); // 懒加载
+			 	}*/
+			 	if(pub.isrefresh){
+			 		pub.pullInstance.pullDownSuccess();
+			 		common.lazyload(); // 懒加载
 			 	}
 	 		}
 	 	};
@@ -429,31 +433,19 @@ require(['../require/config'],function () {
 				setTimeout(function () {
 					pub.isrefresh = true;
 					pub.apiHandle.init(); // 模块初始化接口数据处理
-					
 				}, 1000);	
 			}
-			$('.main_wrap').dropload({
-		        scrollArea : window,
-		        domUp : {
-		            domClass   : 'dropload-up',
-		            domRefresh : '<div class="dropload-refresh">↓下拉刷新</div>',
-		            domUpdate  : '<div class="dropload-update">↑释放更新</div>',
-		            domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>'
-		        },
-		        domDown : {
-		            domClass   : 'dropload-down',
-		            domRefresh : '<div class="dropload-refresh">↑上拉加载更多</div>',
-		            domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>',
-		            domNoData  : '<div class="dropload-noData">暂无数据</div>'
-		        },
-		        loadUpFn : function(drop){
-		        	pub.iscroll = drop;
-		        	pullDownAction(drop)
-		        },
-		        threshold : 100,
-		        distance:100
-		    });
-			
+			var $listWrapper = $('.main');
+
+	        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
+	            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
+	             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
+	
+	            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
+	            onPullDown: function () {
+	                pullDownAction();
+	            },
+	        });
 			
 	 	})
 	})

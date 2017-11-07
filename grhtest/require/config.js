@@ -14,6 +14,7 @@ define(function(){
 	            'LAreaData':'../outside/LAreaData',
 	            'iscroll':'../outside/iscroll',
 	            'dropload':'../outside/dropload',
+	            'pull':'../outside/pull',
 	            'map':'http://webapi.amap.com/maps?v=1.3&key=68f1f7850d75a2c422f417cc77331395&plugin=AMap.DragRoute',
 	        }
 	    }
