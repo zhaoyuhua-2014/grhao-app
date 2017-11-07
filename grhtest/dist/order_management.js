@@ -628,10 +628,10 @@ require(['../require/config'],function(){
 				});
 	
 			    //点击确定
-			    $('.order_refund_choose .makeSure').on('click',function(e){
+			   /* $('.order_refund_choose .makeSure').on('click',function(e){
 				    common.stopEventBubble(e);
 				    pub.orderDetail.apiHandle.unify_deal.init();		    	            
-				});
+				});*/
 	
 			    //点击取消//点击遮罩
 				/*$('.order_refund_choose .refund_cancle,.refund_bg').on('click',function(){

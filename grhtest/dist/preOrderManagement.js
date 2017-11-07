@@ -1,7 +1,7 @@
 
 
 require(['../require/config'],function(){
-	require(['common','mobileUi','iscroll'],function(common){
+	require(['common','mobileUi','pull'],function(common){
 
 		// 命名空间
 	
@@ -144,10 +144,14 @@ require(['../require/config'],function(){
 					$('.order_manage_contain').append( html ); 
 			        pub.preOrderManagement.isLast && pub.preOrderManagement.lodemore.removeClass('loadMore').html('没有更多数据了').show();
 			        !pub.preOrderManagement.isLast && pub.preOrderManagement.lodemore.addClass('loadMore').html('点击加载更多数据').show();
-					console.log("refersh")
+					/*console.log("refersh")
 					setTimeout(function(){
 						pub.myScroll.refresh()
-					},1000)
+					},1000)*/
+					if (pub.isrefresh) {
+				 		//pub.iscroll.resetload();
+				 		pub.pullInstance.pullDownSuccess();
+				 	}
 				}
 			},
 			order_del : {
@@ -168,6 +172,13 @@ require(['../require/config'],function(){
 						}
 					})
 				}
+			},
+			trueFn : function(){
+				pub.preOrderManagement.source = 'orderCode' +  pub.preOrderManagement.orderCode;
+	
+				pub.preOrderManagement.sign = md5( pub.preOrderManagement.source + "key" + common.secretKeyfn() ).toUpperCase();
+				
+				pub.preOrderManagement.apiHandle.order_del.init();
 			}
 		};
 	
@@ -250,8 +261,15 @@ require(['../require/config'],function(){
 			        pub.preOrderManagement.orderCode = $this.parent().attr('datacode'); // 支付定金订单 订单号
 			        pub.preOrderManagement.orderType = pub.preOrderManagement.orderCode.substring( 8, 10 ); // 订单类型
 			        pub.preOrderManagement.listNode = $this.parents('.order_manage_content');
-			        $('.order_refund,.refund_bg').css({'display':'block'});
-			        $("body").css("overflow-y","hidden");
+			        /*$('.order_refund,.refund_bg').css({'display':'block'});
+			        $("body").css("overflow-y","hidden");*/
+			       var data = {
+						type:1,
+						title:'确定删除？',
+						canclefn:'cancleFn',
+						truefn:'trueFn'
+					}
+					common.alertMaskApp(JSON.stringify(data));
 				});	
 	
 				//点击已完成
@@ -260,7 +278,7 @@ require(['../require/config'],function(){
 	    			return;
 	    		});
 				//点击确定
-				$('.order_refund').on('click','.makeSure',function(){
+				/*$('.order_refund').on('click','.makeSure',function(){
 	
 					pub.preOrderManagement.source = 'orderCode' +  pub.preOrderManagement.orderCode;
 	
@@ -270,13 +288,13 @@ require(['../require/config'],function(){
 	
 					pub.preOrderManagement.apiHandle.order_del.init();
 	
-				});	
+				});	*/
 	
 				//点击弹出框取消
-			    $('.order_refund').on('click','.refund_cancle,.refund_bg',function(){
+			   /* $('.order_refund').on('click','.refund_cancle,.refund_bg',function(){
 			    	$('.order_refund,.refund_bg').css({'display':'none'});
 			    	$("body").css("overflow-y","auto");
-			    });
+			    });*/
 	
 			}
 		};
@@ -539,7 +557,8 @@ require(['../require/config'],function(){
 						
 					})
 				}
-			}
+			},
+			
 		};
 		pub.preOrderDetail.eventHandle = {
 			init : function(){
@@ -579,8 +598,15 @@ require(['../require/config'],function(){
 						}else {
 							$('.order_refund_confirm').html( pub.preOrderDetail.TIP_MESSAGE[ key ].text );
 							pub.preOrderDetail.API_METHOD = pub.preOrderDetail.TIP_MESSAGE[ key ].apiMethod; // 接收方法
-							$('.order_refund,.refund_bg').show();
-	        				$("body").css("overflow-y","hidden");
+							/*$('.order_refund,.refund_bg').show();
+	        				$("body").css("overflow-y","hidden");*/
+	        				var data = {
+								type:1,
+								title:pub.preOrderDetail.TIP_MESSAGE[ key ].text,
+								canclefn:'cancleFn',
+								truefn:'trueFn'
+							}
+							common.alertMaskApp(JSON.stringify(data));
 						}
 					}
 					/paying/.test( e.target.className ) && common.jumpLinkPlainApp( "订单支付",'html/order_pay.html?search=pre' ); // 去支付
@@ -621,10 +647,9 @@ require(['../require/config'],function(){
 		$(document).ready(function(){
 		 	pub.init();
 		 	window.pub = pub;
-		 	setTimeout(loaded(), 5000);
+		 	setTimeout(loaded(), 500);
 	 		var 
 			wh = document.documentElement.clientHeight;
-			$("#iscroll").css("min-height",wh)
 			
 			pub.info = {
 				"pullDownLable":"下拉刷新...",
@@ -641,69 +666,27 @@ require(['../require/config'],function(){
 		
 			function pullDownAction () {
 				setTimeout(function () {
+					pub.isrefresh = true;
 					if (pub.moduleId == 'preOrderManagement') {
 						pub.PAGE_INDEX = common.PAGE_INDEX; // 索引
 						pub.preOrderManagement.apiHandle.init();
 					}
-				}, 1000);	
+				}, 1000);
 			}
 			function loaded() {
-				pullDownEl = document.getElementById('pullDown');
-				pullDownOffset = pullDownEl.offsetHeight;
-				/*pullUpEl = document.getElementById('pullUp');	
-				pullUpOffset = pullUpEl.offsetHeight;*/
-				
-				pub.myScroll = myScroll = new iScroll('wrapper', {
-					useTransition: true,
-					topOffset: pullDownOffset,
-					preventDefaultException: { className: 'swiper-slide' },///(^|\s)formfield(\s|$)/
-					deceleration:0.004,
-					bounce:true,//当滚动器到达容器边界时他将执行一个小反弹动画。在老的或者性能低的设备上禁用反弹对实现平滑的滚动有帮助。
-					disableMouse: true,//禁用鼠标和指针事件：
-   					disablePointer: true,
-   					momentum:true,//在用户快速触摸屏幕时，你可以开/关势能动画。关闭此功能将大幅度提升性能。
-					//刷新的时候，加载初始化刷新更多的提示div
-					onRefresh: function () {
-						if(this.maxScrollY >-40){
-							//pullUpEl.style.display = 'none';
-						}else{
-							//pullUpEl.style.display = 'block';
-							if (pullDownEl.className.match('loading')) {
-								pullDownEl.className = '';
-								pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-								pullDownEl.querySelector('.loader').style.display="none"
-								pullDownEl.style.lineHeight=pullDownEl.offsetHeight+"px";
-							}
-						}
-					},
-					//拖动，滚动位置判断
-					onScrollMove: function () {
-						if (this.y > 5 && !pullDownEl.className.match('flip')) {//判断是否向下拉超过5,问题：这个单位好像不是px
-							pullDownEl.className = 'flip';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullingDownLable;
-							this.minScrollY = 0;
-						} else if (this.y < 5 && pullDownEl.className.match('flip')) {
-							
-							pullDownEl.className = '';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-							this.minScrollY = -pullDownOffset;
-						} 
-					},
-					onScrollEnd: function () {
-						if (pullDownEl.className.match('flip')) {
-							pullDownEl.className = 'loading';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.loadingLable;
-							pullDownEl.querySelector('.loader').style.display="block"
-							pullDownEl.style.lineHeight="40px";				
-							pullDownAction();	// Execute custom function (ajax call?)
-						}
-					}
-				});
-				
-				setTimeout(function () { document.getElementById('wrapper').style.left = '0'; myScroll.refresh(); }, 800);
-				
+				var $listWrapper = $('.main');
+	
+		        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
+		            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
+		             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
+		
+		            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
+		            onPullDown: function () {
+		                pullDownAction();
+		            },
+		        });
+		        $('#wrapper').css("left","0")
 			}
-			document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 		})
 	})
 })

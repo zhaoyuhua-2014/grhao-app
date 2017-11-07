@@ -1,6 +1,6 @@
 
 require(['../require/config'],function(){
-	require(['goshopCar','common','mobileUi','swiperJS','iscroll'],function(cart,common){
+	require(['goshopCar','common','mobileUi','swiperJS','pull'],function(cart,common){
 		
 		/************************************商品管理模块***********************/
 
@@ -155,7 +155,6 @@ require(['../require/config'],function(){
 					},function( d ){
 						if (d.statusCode == "100000") {
 							pub.goods.isEnd = d.data.isLast
-							console.log(d.data.objects.length)
 							if (d.data.objects != "" && d.data.objects.length !="0" ) {
 								pub.goods.apiHandle.goods_list.apiData( d );
 							} else if(d.data.objects.length == '0' ){
@@ -221,7 +220,8 @@ require(['../require/config'],function(){
 						pub.loading.show().html("点击加载更多！");
 					};
 					common.cancelDialogApp();
-					pub.myscroll1.refresh();
+					/*pub.myscroll1.refresh();*/
+					pub.pullInstance1.pullDownSuccess();
 				}
 			}
 		};
@@ -531,8 +531,8 @@ require(['../require/config'],function(){
 		 	window.pub = pub;
 		 	setTimeout(function(){
 		 		if (pub.moduleId == "goods") {
-					loaded();
-					document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+		 			load();
+		 			document.getElementById("wrapper").style.left = 0;
 		 		}
 		 	}, 500);
 		 	pub.info = {
@@ -546,18 +546,13 @@ require(['../require/config'],function(){
 			wh = document.documentElement.clientHeight;
 			$("#iscroll").css("min-height",wh)
 			
-	 		var myScroll,
-			pullDownEl, pullDownOffset,
-			/*pullUpEl, pullUpOffset,*/
-			pullDownEl1, pullDownOffset1,
-			generatedCount = 0;
-		
 			function pullDownAction () {
 				setTimeout(function () {
 					if(pub.moduleId == "goods"){
 						pub.PAGE_INDEX = common.PAGE_INDEX;
 						pub.goods.apiHandle.init();
-						pub.myscroll.refresh();
+						/*pub.myscroll.refresh();*/
+						pub.pullInstance.pullDownSuccess();
 					}
 				}, 1000);	
 			}
@@ -569,102 +564,33 @@ require(['../require/config'],function(){
 					}
 				}, 1000);	
 			}
-			function loaded() {
-				pullDownEl = document.getElementById('pullDown');
-				pullDownOffset = pullDownEl.offsetHeight;
-				pullDownEl1 = document.getElementById('pullDown1');
-				pullDownOffset1 = pullDownEl1.offsetHeight;
-				/*pullUpEl = document.getElementById('pullUp');	
-				pullUpOffset = pullUpEl.offsetHeight;*/
-				/*整体页面的刷新*/
-				pub.myscroll = myScroll = new iScroll('wrapper', {
-					useTransition: true,
-					topOffset: pullDownOffset,
-					preventDefaultException: { className: 'goods_item' },///(^|\s)formfield(\s|$)/
-					deceleration:0.004,
-					bounce:true,//当滚动器到达容器边界时他将执行一个小反弹动画。在老的或者性能低的设备上禁用反弹对实现平滑的滚动有帮助。
-					disableMouse: true,//禁用鼠标和指针事件：
-   					disablePointer: true,
-   					momentum:true,//在用户快速触摸屏幕时，你可以开/关势能动画。关闭此功能将大幅度提升性能。
-					//刷新的时候，加载初始化刷新更多的提示div
-					onRefresh: function () {
-						if(this.maxScrollY <-40){
-							if (pullDownEl.className.match('loading')) {
-								pullDownEl.className = '';
-								pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-								pullDownEl.querySelector('.loader').style.display="none"
-								pullDownEl.style.lineHeight=pullDownEl.offsetHeight+"px";
-							}
-						}
-					},
-					//拖动，滚动位置判断
-					onScrollMove: function () {
-						if (this.y > 5 && !pullDownEl.className.match('flip')) {//判断是否向下拉超过5,问题：这个单位好像不是px
-							pullDownEl.className = 'flip';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullingDownLable;
-							this.minScrollY = 0;
-						} else if (this.y < 5 && pullDownEl.className.match('flip')) {
-							pullDownEl.className = '';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-							this.minScrollY = -pullDownOffset;
-						}
-						
-					},
-					onScrollEnd: function () {
-						if (pullDownEl.className.match('flip')) {
-							pullDownEl.className = 'loading';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.loadingLable;
-							pullDownEl.querySelector('.loader').style.display="block"
-							pullDownEl.style.lineHeight="40px";				
-							pullDownAction();	// Execute custom function (ajax call?)
-						}
-					}
-				});
-				setTimeout(function () { document.getElementById('wrapper').style.left = '0'; myScroll.refresh(); }, 800);
-				/*右下角商品列表的刷新*/
-				pub.myscroll1 = myScroll1 = new iScroll('wrapper1', {
-					useTransition: true,
-					topOffset: pullDownOffset1,
-					deceleration:0.004,
-					bounce:true,//当滚动器到达容器边界时他将执行一个小反弹动画。在老的或者性能低的设备上禁用反弹对实现平滑的滚动有帮助。
-					disableMouse: true,//禁用鼠标和指针事件：
-   					disablePointer: true,
-   					momentum:true,//在用户快速触摸屏幕时，你可以开/关势能动画。关闭此功能将大幅度提升性能。
-					//刷新的时候，加载初始化刷新更多的提示div
-					onRefresh: function () {
-						if(this.maxScrollY <-40){
-							if (pullDownEl1.className.match('loading')) {
-								pullDownEl1.className = '';
-								pullDownEl1.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-								pullDownEl1.querySelector('.loader').style.display="none"
-								pullDownEl1.style.lineHeight=pullDownEl.offsetHeight+"px";
-							}
-						}
-					},
-					//拖动，滚动位置判断
-					onScrollMove: function () {
-						if (this.y > 5 && !pullDownEl1.className.match('flip')) {//判断是否向下拉超过5,问题：这个单位好像不是px
-							pullDownEl1.className = 'flip';
-							pullDownEl1.querySelector('.pullDownLabel').innerHTML = pub.info.pullingDownLable;
-							this.minScrollY = 0;
-						} else if (this.y < 5 && pullDownEl1.className.match('flip')) {
-							pullDownEl1.className = '';
-							pullDownEl1.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-							this.minScrollY = -pullDownOffset;
-						}
-						
-					},
-					onScrollEnd: function () {
-						if (pullDownEl1.className.match('flip')) {
-							pullDownEl1.className = 'loading';
-							pullDownEl1.querySelector('.pullDownLabel').innerHTML = pub.info.loadingLable;
-							pullDownEl1.querySelector('.loader').style.display="block"
-							pullDownEl1.style.lineHeight="40px";				
-							pullDownAction1();	// Execute custom function (ajax call?)
-						}
-					}
-				});
+			function load(){
+				var $listWrapper = $('.main');
+
+		        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
+		            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
+		             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
+		
+		            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
+		            onPullDown: function () {
+		                pullDownAction();
+		            },
+		        });
+		        
+		        var $listWrapper1 = $('._more_');
+
+		        pub.pullInstance1 =  pullInstance1 = new Pull($listWrapper1, {
+		             scrollArea: $('.more_bottom_right_wrap'), // 滚动区域的dom对象或选择器。默认 window
+		             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
+		
+		            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
+		            onPullDown: function () {
+		                pullDownAction1();
+		            },
+		        });
+		        
 			}
+	        
 		})
 	})
 })

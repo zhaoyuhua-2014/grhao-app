@@ -199,12 +199,15 @@ define(['jquery'],function($){
 
             // 绑定事件
             self.$element.on('touchstart', function (e) {
+            	if(e.srcElement.parentNode.id == "_more_"){e.stopPropagation()};
                 fnTouches(e);
                 fnTouchstart(e, self);
             }).on('touchmove', function (e) {
+            	if(e.srcElement.parentNode.id == "_more_"){;e.stopPropagation()};
                 fnTouches(e);
                 fnTouchmove(e, self);
             }).on('touchend', function (e) {
+            	if(e.srcElement.parentNode.id == "_more_"){e.stopPropagation()};
                 fnTouchend(self);
             }).on('touchcancel', function (e) {
                 fnTouchcancel(self);

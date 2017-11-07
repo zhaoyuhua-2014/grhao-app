@@ -1,5 +1,5 @@
 require(['../require/config'],function(){
-	require(['common','goshopCar','iscroll'],function(common,cart){
+	require(['common','goshopCar','pull'],function(common,cart){
 		var pub = {};
 	
 		pub.cartData = common.JSONparse( common.good.getItem() ); // 读取本地数据
@@ -103,7 +103,8 @@ require(['../require/config'],function(){
 				selectDotLen = $('.select-node .select-dot','#ul-box').length;
 				listLen == 0  && $('#empty-cart').show().appendTo('#ul-box');
 				listLen == selectDotLen && $('#all-select','#total').find('span:eq(0)').addClass('unselect-dot').removeClass('select-dot');
-				pub.myScroll.refresh();
+				//pub.myScroll.refresh();
+				pub.pullInstance.pullDownSuccess();
 	    	});
 		};
 	
@@ -180,7 +181,8 @@ require(['../require/config'],function(){
 				$('.totalmoney','#total').text('¥0.00');
 				if( $('.line-wrapper','#ul-box').length == 0 ){
 					$('#empty-cart').show().appendTo('#ul-box');
-					pub.myScroll.refresh();
+					//pub.myScroll.refresh();
+					pub.pullInstance.pullDownSuccess();
 				}
 				$('#all-select','#total').find('span:eq(0)').removeClass('select-dot').addClass('unselect-dot');
 				cart.style_change();
@@ -263,85 +265,29 @@ require(['../require/config'],function(){
 		$(document).ready(function(){
 		 	pub.init();
 		 	window.pub = pub;
-		 	setTimeout(loaded(), 500);
+		 	setTimeout(document.getElementById('wrapper').style.left = '0', 500);
 	 		var 
 			wh = document.documentElement.clientHeight;
-			$("#empty-cart").height(wh-400)
-			pub.info = {
-				"pullDownLable":"下拉刷新...",
-				"pullingDownLable":"松开刷新...",
-				"pullUpLable":"下拉加载更多...",
-				"pullingUpLable":"松开加载更多...",
-				"loadingLable":"加载中..."
-			}
 			
-	 		var myScroll,
-			pullDownEl, pullDownOffset,
-			pullUpEl, pullUpOffset,
-			generatedCount = 0;
 		
 			function pullDownAction () {
 				setTimeout(function () {
 					pub.apiHandle.reFresh();
-					myScroll.refresh();	
+					//myScroll.refresh();
+					pub.pullInstance.pullDownSuccess();
 				}, 1000);	
 			}
-			
-			function loaded() {
-				pullDownEl = document.getElementById('pullDown');
-				pullDownOffset = pullDownEl.offsetHeight;
-				
-				pub.myScroll = myScroll = new iScroll('wrapper', {
-					useTransition: true,
-					topOffset: pullDownOffset,
-					preventDefaultException: { className: 'goods_item' },///(^|\s)formfield(\s|$)/
-					deceleration:0.004,
-					bounce:true,//当滚动器到达容器边界时他将执行一个小反弹动画。在老的或者性能低的设备上禁用反弹对实现平滑的滚动有帮助。
-					disableMouse: true,//禁用鼠标和指针事件：
-   					disablePointer: true,
-   					momentum:true,//在用户快速触摸屏幕时，你可以开/关势能动画。关闭此功能将大幅度提升性能。
-					//刷新的时候，加载初始化刷新更多的提示div
-					onRefresh: function () {
-						if(this.maxScrollY <-40){
-							if (pullDownEl.className.match('loading')) {
-								pullDownEl.className = '';
-								pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-								pullDownEl.querySelector('.loader').style.display="none"
-								pullDownEl.style.lineHeight=pullDownEl.offsetHeight+"px";	
-							}
-						}
-					},
-					//拖动，滚动位置判断
-					onScrollMove: function () {
-						if (this.y > 5 && !pullDownEl.className.match('flip')) {//判断是否向下拉超过5,问题：这个单位好像不是px
-							pullDownEl.className = 'flip';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullingDownLable;
-							this.minScrollY = 0;
-						} else if (this.y < 5 && pullDownEl.className.match('flip')) {
-							
-							pullDownEl.className = '';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-							this.minScrollY = -pullDownOffset;
-						}
-						
-					},
-					onScrollEnd: function () {
-						if (pullDownEl.className.match('flip')) {
-							pullDownEl.className = 'loading';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.loadingLable;
-							pullDownEl.querySelector('.loader').style.display="block"
-							pullDownEl.style.lineHeight="40px";	
-							pullDownAction();
-						}
-					}
-				});
-				
-				setTimeout(function () { document.getElementById('wrapper').style.left = '0'; myScroll.refresh(); }, 800);
-				
-			}
-			
-		
-			document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+			var $listWrapper = $('.ul-box');
+
+	        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
+	            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
+	             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
+	
+	            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
+	            onPullDown: function () {
+	                pullDownAction();
+	            },
+	        });
 		
 		})
 	})
