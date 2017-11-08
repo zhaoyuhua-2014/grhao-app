@@ -220,7 +220,6 @@ require(['../require/config'],function(){
 						pub.loading.show().html("点击加载更多！");
 					};
 					common.cancelDialogApp();
-					/*pub.myscroll1.refresh();*/
 					if (pub.isrefresh) {
 						pub.pullInstance1.pullDownSuccess();
 					}
@@ -534,7 +533,6 @@ require(['../require/config'],function(){
 		 	setTimeout(function(){
 		 		if (pub.moduleId == "goods") {
 		 			load();
-		 			document.getElementById("wrapper").style.left = 0;
 		 		}
 		 	}, 500);
 		 	pub.info = {
@@ -550,25 +548,26 @@ require(['../require/config'],function(){
 			
 			function pullDownAction () {
 				setTimeout(function () {
+					
 					if(pub.moduleId == "goods"){
 						pub.PAGE_INDEX = common.PAGE_INDEX;
 						pub.goods.apiHandle.init();
 						/*pub.myscroll.refresh();*/
-						pub.pullInstance.pullDownSuccess();
+						//pub.pullInstance.pullDownSuccess();
 					}
 				}, 1000);	
 			}
 			function pullDownAction1 () {
 				setTimeout(function () {
-					pub.isrefresh = true;
 					if(pub.moduleId == "goods"){
+						pub.isrefresh = true;
 						pub.PAGE_INDEX = common.PAGE_INDEX;
 						pub.goods.apiHandle.goods_list.init();
 					}
 				}, 1000);	
 			}
 			function load(){
-				var $listWrapper = $('.main');
+				/*var $listWrapper = $('.main');
 
 		        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
 		            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
@@ -578,7 +577,7 @@ require(['../require/config'],function(){
 		            onPullDown: function () {
 		                pullDownAction();
 		            },
-		        });
+		        });*/
 		        
 		        var $listWrapper1 = $('._more_');
 
