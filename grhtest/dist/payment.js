@@ -252,6 +252,11 @@ require(['../require/config'],function(){
 	                        method : 'month_card_ll_pay',
 	                        payMoney : pub.payMoney,
 	                        userId : pub.userId
+	                    },
+	                    'rechargeIos' : {
+	                        method : 'month_card_ll_pay',
+	                        payMoney : pub.payMoney,
+	                        userId : pub.userId
 	                    }
 	                }[ pub.seachParam ];
 	
@@ -322,6 +327,11 @@ require(['../require/config'],function(){
 	                        orderCode : pub.orderCode,
 	                    },
 	                    'recharge' : {
+	                        method : "month_card_wx_pay_app",
+	                        payMoney : pub.payMoney,
+	                        userId : pub.userId,
+	                    },
+	                    'rechargeIos' : {
 	                        method : "month_card_wx_pay_app",
 	                        payMoney : pub.payMoney,
 	                        userId : pub.userId,
