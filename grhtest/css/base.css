@@ -917,7 +917,7 @@ background-origin: content-box;-webkit-background-clip: content-box;}
 #zs-cart .curPrice{font-size:32px;color:#ff7b29;margin-top: 10px;}
 #zs-cart .oldPrice{font-size: 28px;color:#c1c1c1;margin-top: 5px;}
 
-#total{width:720px;max-width: 720px;background: #ffffff;position: fixed;bottom:0px;left:0;right:0;margin:0 auto;}
+#total{width:720px;max-width: 720px;background: #ffffff;position: fixed;bottom:0px;left:0;right:0;margin:0 auto;z-index: 2;}
 
 #total .settle{float:right;width:197px;background: #ff7b29;height:100px;color:#ffffff;font-size: 30px;text-align: center;line-height: 100px;}
 #total .detail{width:523px;border-top:2px solid #dfdfdf;height:98px;float:left;display:inline-block;padding:30px 0;}
