@@ -181,6 +181,7 @@ define(['jquery','mdData','shar1'],function($){
 				common.secretKey.setItem( d.data.secretKey );
 				common.logined.setItem('logined');
 			}
+			common.DTD.resolve();
 
 		},function(d){
 			common.prompt(d.statusStr);

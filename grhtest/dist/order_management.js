@@ -414,7 +414,9 @@ require(['../require/config'],function(){
 			        	}else{
 			        		$('.watm_info_wrap').removeClass("hidden");
 			        		$(".watm_info").html("<p>手机号："+orderInfo.customMobile+"</p><p>提货码："+ orderInfo.pickUpCode +"</p>");
-			        		orderInfo.orderStatus == 3 && $(".watm_info_wrap").append("<p style='color:#df3a1f;font-size:26px;line-height:40px;text-align:center'>请于今日22:00前去自助售货机取货</p>")
+			        		if (orderInfo.orderStatus == 3 && $(".watm_info_wrap").find('p.msg').length == 0) {
+			        			$(".watm_info_wrap").append("<p class='msg' style='color:#df3a1f;font-size:26px;line-height:40px;text-align:center'>请于今日22:00前去自助售货机取货</p>")
+			        		}
 			        		if (orderInfo.orderStatus == 7) {
 			        			var i = ''
 			        			if(orderInfo.watmStatus == '1'){

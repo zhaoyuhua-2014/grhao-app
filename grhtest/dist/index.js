@@ -43,20 +43,22 @@ require(['../require/config'],function () {
 	 		var me = this;
 	 		
 	 		if (pub.logined) {
-	 			me.firm_default.init(); // 默认门店
-	 			if (common.user_datafn().firmId == '0') {//注册的情况下将APP本地门店ID赋值给当前用户
-	 				pub.apiHandle.choice_firm.init();
-	 			}else {//登录的情况下
-	 				if (common.firmId.getItem() != common.user_datafn().firmId) {
-	 					var data = {
-							type:1,
-							title:'是否切换为已绑定门店?',
-							canclefn:'cancleFn',
-							truefn:'trueFn'
-						}
-						common.alertMaskApp(JSON.stringify(data));
-	 				}
-		 		}
+	 			common.DTD.done(function(){
+	 				me.firm_default.init(); // 默认门店
+		 			if (common.user_datafn().firmId == '0') {//注册的情况下将APP本地门店ID赋值给当前用户
+		 				pub.apiHandle.choice_firm.init();
+		 			}else {//登录的情况下
+		 				if (common.firmId.getItem() != common.user_datafn().firmId) {
+		 					var data = {
+								type:1,
+								title:'是否切换为已绑定门店?',
+								canclefn:'cancleFn',
+								truefn:'trueFn'
+							}
+							common.alertMaskApp(JSON.stringify(data));
+		 				}
+			 		}
+	 			})
 	 		}else{
 	 			me.firm_default.init(); // 默认门店
 	 			if(!common.firmId.getItem()){
@@ -403,7 +405,7 @@ require(['../require/config'],function () {
 	
 	 		pub.isApp = common.isApp();
 	
-	 		if( common.appData.getKey() ){
+	 		if( common.appData.getKey() && JSON.parse(common.appData.getItem()).data.order_cancel_time){
 				pub.apiHandle.system_config_constant.apiData( true );
  			}else{
 	 			pub.apiHandle.system_config_constant.init(); // 是 app 调 APP 方法
