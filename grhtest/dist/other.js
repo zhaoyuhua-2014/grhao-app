@@ -31,6 +31,10 @@ require(['../require/config'],function () {
 	pub.PAGE_INDEX = common.PAGE_INDEX; // 索引
 	pub.PAGE_SIZE = common.PAGE_SIZE; // 页面显示数据个数
 
+
+	pub.orderType = pub.orderCode.substring( 8, 10 ); // 订单类型
+	pub.method = pub.orderType == '07' ? 'pre_order_details' : 'order_details'; // 获取接口类型
+	
 /******************************************* 订单评价 *************************************/
 
 	// 命名空间
@@ -40,6 +44,19 @@ require(['../require/config'],function () {
 	// 接口处理
 	pub.evaluate.apiHandle = {
 		init : function(){
+			var a = $.extend({
+				method:pub.method
+			},pub.userBasicParam);
+			common.ajaxPost($.extend({},pub.userBasicParam,{
+				method:pub.method
+			}),function( d ){
+				if( d.statusCode == "100000" ){
+					pub.evaluate.data = d.data.orderInfo.orderDetailsList;
+					pub.evaluate.apiHandle.apiData(pub.evaluate.data);
+				}else{
+					common.prompt( d.statusCode );
+				}
+			})
 		},
 		order_comment : {
 			init : function(){
@@ -54,6 +71,10 @@ require(['../require/config'],function () {
 					d.statusCode == "100000" && common.goBackApp(1,true,"html/order_management.html");
 				});
 			}
+		},
+		apiData:function(d){
+			console.log(d.length);
+			var html='';
 		}
 	};
 	// 事件处理
@@ -88,6 +109,7 @@ require(['../require/config'],function () {
 	};
 
 	pub.evaluate.init = function(){
+		pub.evaluate.apiHandle.init()
 		pub.evaluate.eventHandle.init();
 	};
 
