@@ -17,7 +17,8 @@
 			<p class="txt"></p>
 		</div>
 	</body>
-	<script src="js/jquery-2.0.3.js" type="text/javascript" charset="utf-8"></script>
+	<!--<script src="js/jquery-2.0.3.js" type="text/javascript" charset="utf-8"></script>-->
+	<script src="grhtest/js/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
 		$('form').submit(function(){ 
 			console.log($("#form").serialize())
@@ -177,6 +178,8 @@
 	
 	        var xhr = new XMLHttpRequest();
 	        var formdata = new FormData();
+	        console.log(formdata)
+	console.log(blob)
 	        formdata.append('imagefile', blob);
 	console.log(formdata)
 	console.log(blob)

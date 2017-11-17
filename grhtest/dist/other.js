@@ -73,8 +73,41 @@ require(['../require/config'],function () {
 			}
 		},
 		apiData:function(d){
-			console.log(d.length);
 			var html='';
+			for (var i=0;i<d.length;i++) {
+				html += '<div class="comment_good_item">'
+				html += '	<div class="comment_good_item_top clearfloat">'
+				html += '		<dl class="float_left clearfloat">'
+				html += '			<dt>'
+				html += '				<img src="../img/img_0.png"/>'
+				html += '			</dt>'
+				html += '			<dd>商品名称</dd>'
+				html += '		</dl>'
+				html += '		<dl class="float_right clearfloat">'
+				html += '			<dt>商品质量</dt>'
+				html += '			<dd class="goods_star">'
+				html += '				<span class="star" data="2"></span>'
+				html += '				<span class="star" data="4"></span>'
+				html += '				<span class="star" data="6"></span>'
+				html += '				<span class="star" data="8"></span>'
+				html += '				<span class="star" data="10"></span>'
+				html += '			</dd>'
+				html += '			<input type="hidden" name="stars" id="stars" value="1" />'
+				html += '		</dl>'
+				html += '	</div>'
+				html += '	<div class="comment_good_item_bottom">'
+				html += '		<textarea maxlength="50" placeholder="商品满足了你的期待吗？分享给想买的他们吧"></textarea>'
+				html += '		<div class="comment_good_image_box clearfloat">'
+				html += '			<div class="comment_good_image_boxs float_left">'
+				html += '			</div>'
+				html += '			<div class="comment_good_picter_add float_left">'
+				html += '				<input type="file" accept="image/*" class="comment_good_picter" name="faceimg"/>'
+				html += '			</div>'
+				html += '		</div>'
+				html += '	</div>'
+				html += '</div>'
+			}
+			$(".comment_goods").append(html)
 		}
 	};
 	// 事件处理
@@ -87,8 +120,11 @@ require(['../require/config'],function () {
 				len = parentNode.find('.actived').size();
 				len != 0 && parentNode.find('.actived').removeClass('actived');
 				$this.addClass('actived').prevAll('.zs-star').addClass('actived');
+				
 			});
+			
 			$('.eval_submit').click(function(){
+				console.log(this)
 				var evalNode = $('.zs-eval');
 				pub.evaluate.EVALUATE_CONTENT = $('.eval_intro_content').val(); // 评价内容
 				pub.evaluate.QUALITY_STARS_NUM = evalNode.eq(0).find('.actived').length; // 商品
@@ -105,7 +141,186 @@ require(['../require/config'],function () {
 				}
 				pub.evaluate.apiHandle.order_comment.init();
 			});
-		},
+			var timeout = undefined;
+			
+			$(".comment_goods").on('touchstart',".comment_good_image", function(e) {
+				var nood = $(this).find(".del_img");
+	        	timeout = setTimeout(function(e){
+	            	nood.show();  
+	            }, 800);  //长按时间超过800ms，则执行传入的方法  
+	        });
+	        $(".comment_goods").on('touchend',".comment_good_image", function(e) {  
+	            clearTimeout(timeout);  //长按时间少于800ms，不会执行传入的方法  
+	        });
+	        $(".comment_goods").on("click",".del_img",function(e){
+	        	var nood = $(this).parent();
+	        	nood.remove()
+	        });
+	        $(".comment_goods").on("change",".comment_good_picter",function(){
+	        	console.log("chenge");
+	        	var nodes = $(this).parent().parent().find(".comment_good_image_boxs")
+	        	var tar = this,
+				files = tar.files,
+				fNum = files.length,
+				URL = window.URL || window.webkitURL,
+				file = files[0];
+				if( !file ) return;
+				var fr = new FileReader();
+				var span = document.createElement("span");
+				span.className = "comment_good_image"
+            	span.innerHTML = '<img src="../img/img_logo.png"/><b class="del_img"></b>';
+            	nodes.append(span)
+				fr.onload = function () {
+	                var result = this.result;
+	                var img = new Image();
+	                img.src = result;
+					var ll = imgsize(result);
+	                //如果图片大小小于200kb，则直接上传
+	                if (ll <= 200 *1024) {
+	                    img = null;
+	                    $(span).find("img").attr("src",result);
+	                    //upload(result, file.type, $(li));
+	                    
+	                    return;
+	                }
+					// 图片加载完毕之后进行压缩，然后上传
+	                if (img.complete) {
+	                    callback();
+	                } else {
+	                    img.onload = callback;
+	                }
+	
+	                function callback() {
+	                    var data = compress(img);
+	
+	                    $(span).find("img").attr("src",result);
+						console.log(imgsize(data))
+	                    //upload(data, file.type, $(li));
+	                    img = null;
+	                }
+	
+	            };
+                fr.readAsDataURL(file);
+	        })
+	        $(".comment_goods").on("touchstart",".comment_good_picter",function(e){
+	        	console.log("tauchstar");
+	        	if ($(this).parent().parent().find(".comment_good_image").length == 3) {
+	        		$(this).attr("disabled","disabled");
+	        		common.prompt("每个商品最多添加三张图片！")
+	        	}else{
+	        		$(this).removeAttr("disabled")
+	        	}
+	        })
+	        //评价打星
+			$(".comment_goods").on("click",".goods_star .star",function(){
+				var nood = $(this);
+				nood.parent().parent().find("input").val(nood.attr("data"))
+				nood.addClass("active");
+				nood.prevAll(".star").addClass("active");
+				nood.nextAll(".star").removeClass("active");
+				console.log(nood.parent().parent().find("input").val());
+			});
+			$(".comment_order").on("click",".goods_star .star",function(){
+				var nood = $(this);
+				nood.parent().parent().find("input").val(nood.attr("data"))
+				nood.addClass("active");
+				nood.prevAll(".star").addClass("active");
+				nood.nextAll(".star").removeClass("active");
+				console.log(nood.parent().parent().find("input").val());
+			});
+	        function compress(img) {
+		        var initSize = img.src.length;
+		        var width = img.width;
+		        var height = img.height;
+				var canvas = document.createElement("canvas");
+		        //如果图片大于四百万像素，计算压缩比并将大小压至400万以下
+		        var ratio;
+		        if ((ratio = width * height / 4000000)>1) {
+		            ratio = Math.sqrt(ratio);
+		            width /= ratio;
+		            height /= ratio;
+		        }else {
+		            ratio = 1;
+		        }
+		
+		        canvas.width = width;
+		        canvas.height = height;
+				var ctx = canvas.getContext("2d");
+				//        铺底色
+		        ctx.fillStyle = "#fff";
+		        ctx.fillRect(0, 0, canvas.width, canvas.height);
+		
+		        //如果图片像素大于100万则使用瓦片绘制
+		        var count;
+		        if ((count = width * height / 1000000) > 1) {
+		            count = ~~(Math.sqrt(count)+1); //计算要分成多少块瓦片
+		
+					//            计算每块瓦片的宽和高
+		            var nw = ~~(width / count);
+		            var nh = ~~(height / count);
+					var tCanvas = document.createElement("canvas");
+					var tctx = tCanvas.getContext('2d')
+		            tCanvas.width = nw;
+		            tCanvas.height = nh;
+		            for (var i = 0; i < count; i++) {
+		                for (var j = 0; j < count; j++) {
+		                    tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh);
+		
+		                    ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh);
+		                }
+		            }
+		        } else {
+		            ctx.drawImage(img, 0, 0, width, height);
+		        }
+		
+		        //进行最小压缩
+		        var ndata = canvas.toDataURL('image/jpeg', 0.1);
+		
+		        console.log('压缩前：' + initSize);
+		        console.log('压缩后：' + ndata.length);
+		        console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + "%");
+		
+		        tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0;
+		
+		        return ndata;
+		    };
+	        function upload(basestr, type, $li) {
+		        var text = window.atob(basestr.split(",")[1]);
+		        var buffer = new ArrayBuffer(text.length);
+		        var ubuffer = new Uint8Array(buffer);
+		        var pecent = 0 , loop = null;
+		
+		        for (var i = 0; i < text.length; i++) {
+		            ubuffer[i] = text.charCodeAt(i);
+		        }
+		
+		        var Builder = window.WebKitBlobBuilder || window.MozBlobBuilder;
+		        var blob;
+		
+		        if (Builder) {
+		            var builder = new Builder();
+		            builder.append(buffer);
+		            blob = builder.getBlob(type);
+		        } else {
+		            blob = new window.Blob([buffer], {type: type});
+		        }
+				var formdata = new FormData();
+		        formdata.append('imagefile', blob);
+		        
+		    };
+	        //计算图片文件的大小
+			function imgsize(str){
+				var str=str.substring(22);
+				var equalIndex= str.indexOf('=');
+				if(str.indexOf('=')>0){
+				    str=str.substring(0, equalIndex);
+				}
+				var strLength=str.length;
+				var fileLength=parseInt(strLength-(strLength/8)*2);
+				return fileLength
+			}
+			
+		}
 	};
 
 	pub.evaluate.init = function(){
