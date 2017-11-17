@@ -103,22 +103,20 @@ require(['../require/config'],function(){
 						/*清除本地购物车数据*/
 						common.good.removeItem();
 						common.setShopCarNumApp();
+						common.setShopCarNum_ShoppingCartApp('0')
 						/*移除用户相关信息*/
 						common.tokenId.removeItem();
 						common.secretKey.removeItem();
 						common.user_data.removeItem();
 						/*移除门店相关信息*/
-						/*common.firmId.removeItem();
-						common.firmIdType.removeItem()*/
 					},function( d ){
 						common.tellRefreshAPP();
 						common.good.removeItem();
 						common.setShopCarNumApp();
+						common.setShopCarNum_ShoppingCartApp('0')
 						common.tokenId.removeItem();
 						common.secretKey.removeItem();
 						common.user_data.removeItem();
-						/*common.firmId.removeItem();
-						common.firmIdType.removeItem()*/
 					});
 				}
 			}

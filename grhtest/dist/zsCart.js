@@ -125,6 +125,10 @@ require(['../require/config'],function(){
 			}
 		};
 		$('#select-delete').bind('click',function(e){
+			console.log(pub.isrefresh)
+			if (pub.isrefresh) {
+				return;
+			}
 			common.stopEventBubble(e);
 			pub.dataSourse = common.JSONparse( common.good.getItem() );
 			pub.listNode = $('.line-wrapper','#ul-box');
@@ -201,6 +205,10 @@ require(['../require/config'],function(){
 	 		}else{
 	 			cart.car_goods();
 	 		}
+	 		if (pub.isrefresh) {
+	 			pub.isrefresh = false;
+	 			pub.pullInstance.pullDownSuccess();
+	 		}
 		};
 		pub.init = function(){
 	
@@ -265,16 +273,16 @@ require(['../require/config'],function(){
 		$(document).ready(function(){
 		 	pub.init();
 		 	window.pub = pub;
+		 	pub.isrefresh = false;
 		 	setTimeout(document.getElementById('wrapper').style.left = '0', 500);
 	 		var 
 			wh = document.documentElement.clientHeight;
 			
 		
 			function pullDownAction () {
+				pub.isrefresh = true;
 				setTimeout(function () {
 					pub.apiHandle.reFresh();
-					//myScroll.refresh();
-					pub.pullInstance.pullDownSuccess();
 				}, 1000);	
 			}
 			var $listWrapper = $('.ul-box');

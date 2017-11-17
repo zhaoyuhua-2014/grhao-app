@@ -242,6 +242,7 @@ require(['../require/config'],function () {
 		// 门店 接口命名空间
 		pub.store.apiHandle = {
 			init : function(){
+				pub.store.Node.html("");
 				pub.store.apiHandle.firm_list.init();
 				pub.store.apiHandle.firm_area.init();
 			},
@@ -260,7 +261,6 @@ require(['../require/config'],function () {
 					},function( d ){
 						d.statusCode == "100000" && pub.store.apiHandle.firm_list.apiData( d );
 						d.statusCode != "100000" && common.prompt(d.statusStr);
-			 			
 					})
 				},
 				apiData : function( d ){
@@ -316,25 +316,6 @@ require(['../require/config'],function () {
 						    } );      //onError返回定位出错信息
 						});
 					});
-					/*var map = new AMap.Map('mapContainer', {
-					    resizeEnable: true,
-					    zoom:12,
-					    center: [120.1823616,30.24423873]//以杭州火车站为地图中心
-					});
-					var markers = [];
-					
-					for (var i in d.data) {
-						var marker;
-						marker = new AMap.Marker({
-						    position: [ d.data[i].longitude, d.data[i].latitude ],
-							map: map
-						});
-						marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
-					        offset: new AMap.Pixel(10,-10),//修改label相对于maker的位置
-					        content: d.data[i].firmName
-					   	});
-					   	markers.push(marker);
-					}*/
 				}
 			},
 			firm_area :	{
@@ -356,7 +337,7 @@ require(['../require/config'],function () {
 					for (var i in d) {
 						html += '<span class = "area1" data-id = '+JSON.parse(i).id+' data-data = '+JSON.stringify(d[i])+'>'+JSON.parse(i).name+'</span>'
 					}
-					area1Node.html(html);console.log(area1Node.find("span").eq(0).attr("data-data"))
+					area1Node.html(html);
 					pub.store.filter_area =  JSON.parse(area1Node.find("span").eq(0).addClass('active').attr("data-data"));
 					
 					pub.store.apiHandle.firm_area.apiData2();
