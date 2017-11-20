@@ -419,13 +419,25 @@ require(['../require/config'],function(){
 		pub.goodsDetail.init = function(){
 	
 			pub.goodsDetail.goodsId = common.getUrlParam('goodsId');
+			var 
+			wh = document.documentElement.clientHeight;
 			//返回顶部
 			window.onscroll=function(){
 				var scroll = document.body.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
+				var scroll1 = $('.goodsDetails_box2_top').offset().top
+				var h = $(".goodsDetails_img_box").height() + $(".goodsDetails_box1").height() +40;
 				if( scroll >= 600){				
 					$('.toTop').css({'display':'block'});			
 				}else{
 					$('.toTop').css({'display':'none'});
+				}
+				console.log(h+"#"+scroll);
+				if (scroll >= h) {
+					$(".goodsDetails_box2_top").addClass("goodsDetails_box2_top_fixed");
+					$(".goodsDetails_box2_top_empty").show()
+				}else{
+					$(".goodsDetails_box2_top").removeClass("goodsDetails_box2_top_fixed")
+					$(".goodsDetails_box2_top_empty").hide()
 				}
 			};
 			$('.toTop').on('click',function(){
@@ -433,7 +445,11 @@ require(['../require/config'],function(){
 					scrollTop : 0
 				},500); 
 			});
-	
+			$(".goodsDetails_box2_top li").on("click",function(){
+				var index = $(this).index();
+				$(this).addClass("active").siblings().removeClass("active");
+				$(".goodsDetails_box2_bottom .goodsDetails_box2_bottom_item").eq(index).show().siblings().hide();
+			})
 			$('.show_num').attr( 'zs-goodsId',pub.goodsDetail.goodsId );
 			pub.goodsDetail.apiHandle.init();
 			pub.goodsDetail.eventHandle.init();

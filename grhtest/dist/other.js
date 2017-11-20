@@ -76,12 +76,12 @@ require(['../require/config'],function () {
 			var html='';
 			for (var i=0;i<d.length;i++) {
 				html += '<div class="comment_good_item">'
-				html += '	<div class="comment_good_item_top clearfloat">'
+				html += '	<div class="comment_good_item_top clearfloat" data-id = "'+d[i].goodsId+'">'
 				html += '		<dl class="float_left clearfloat">'
 				html += '			<dt>'
-				html += '				<img src="../img/img_0.png"/>'
+				html += '				<img src="'+d[i].goodsLogo+'"/>'
 				html += '			</dt>'
-				html += '			<dd>商品名称</dd>'
+				html += '			<dd>'+d[i].goodsName+'</dd>'
 				html += '		</dl>'
 				html += '		<dl class="float_right clearfloat">'
 				html += '			<dt>商品质量</dt>'
@@ -101,13 +101,16 @@ require(['../require/config'],function () {
 				html += '			<div class="comment_good_image_boxs float_left">'
 				html += '			</div>'
 				html += '			<div class="comment_good_picter_add float_left">'
-				html += '				<input type="file" accept="image/*" class="comment_good_picter" name="faceimg"/>'
+				html += '				<input type="file" accept="image/*" class="comment_good_picter" name="faceimg"  data-id = "'+d[i].goodsId+'" />'
 				html += '			</div>'
 				html += '		</div>'
 				html += '	</div>'
 				html += '</div>'
 			}
 			$(".comment_goods").append(html)
+		},
+		comment_upload_img:function(){
+			common.ajaxPost()
 		}
 	};
 	// 事件处理
@@ -179,7 +182,7 @@ require(['../require/config'],function () {
 	                if (ll <= 200 *1024) {
 	                    img = null;
 	                    $(span).find("img").attr("src",result);
-	                    //upload(result, file.type, $(li));
+	                    upload(result, file.type);
 	                    
 	                    return;
 	                }
@@ -195,7 +198,7 @@ require(['../require/config'],function () {
 	
 	                    $(span).find("img").attr("src",result);
 						console.log(imgsize(data))
-	                    //upload(data, file.type, $(li));
+	                    upload(data, file.type);
 	                    img = null;
 	                }
 	
@@ -306,6 +309,10 @@ require(['../require/config'],function () {
 		        }
 				var formdata = new FormData();
 		        formdata.append('imagefile', blob);
+		        console.log(basestr);
+		        console.log(type);
+		        console.log($li);
+		        
 		        
 		    };
 	        //计算图片文件的大小
