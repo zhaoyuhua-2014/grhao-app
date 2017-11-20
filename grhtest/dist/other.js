@@ -62,10 +62,10 @@ require(['../require/config'],function () {
 			init : function(){
 				common.ajaxPost($.extend({
 					method : 'order_comment',
-					goods : pub.evaluate.QUALITY_STARS_NUM,
-					shop : pub.evaluate.SELLER_STARS_NUM,
-					dispatcher : pub.evaluate.DISPATCHING_STARS_NUM,
-					desc : pub.evaluate.EVALUATE_CONTENT
+					goods : pub.evaluate.GOODS,
+					service : pub.evaluate.SERVICE,
+					speed : pub.evaluate.SPEED,
+					goodsComments : pub.evaluate.goodsComments
 
 				},pub.userBasicParam),function( d ){
 					d.statusCode == "100000" && common.goBackApp(1,true,"html/order_management.html");
@@ -75,8 +75,8 @@ require(['../require/config'],function () {
 		apiData:function(d){
 			var html='';
 			for (var i=0;i<d.length;i++) {
-				html += '<div class="comment_good_item">'
-				html += '	<div class="comment_good_item_top clearfloat" data-id = "'+d[i].goodsId+'">'
+				html += '<div class="comment_good_item"  data-id = "'+d[i].goods+'">'
+				html += '	<div class="comment_good_item_top clearfloat">'
 				html += '		<dl class="float_left clearfloat">'
 				html += '			<dt>'
 				html += '				<img src="'+d[i].goodsLogo+'"/>'
@@ -92,7 +92,7 @@ require(['../require/config'],function () {
 				html += '				<span class="star" data="8"></span>'
 				html += '				<span class="star" data="10"></span>'
 				html += '			</dd>'
-				html += '			<input type="hidden" name="stars" id="stars" value="1" />'
+				html += '			<input type="hidden" name="stars" id="stars" value="0" />'
 				html += '		</dl>'
 				html += '	</div>'
 				html += '	<div class="comment_good_item_bottom">'
@@ -101,7 +101,7 @@ require(['../require/config'],function () {
 				html += '			<div class="comment_good_image_boxs float_left">'
 				html += '			</div>'
 				html += '			<div class="comment_good_picter_add float_left">'
-				html += '				<input type="file" accept="image/*" class="comment_good_picter" name="faceimg"  data-id = "'+d[i].goodsId+'" />'
+				html += '				<input type="file" accept="image/*" class="comment_good_picter" name="faceimg"  data-id = "'+d[i].goods+'" />'
 				html += '			</div>'
 				html += '		</div>'
 				html += '	</div>'
@@ -109,8 +109,22 @@ require(['../require/config'],function () {
 			}
 			$(".comment_goods").append(html)
 		},
-		comment_upload_img:function(){
-			common.ajaxPost()
+		comment_upload_img:function(data,el){
+			$.ajax({
+				type:"POST",
+				url:common.API,
+				dataType:"JSON",
+				data:data,
+		        processData : false, // 不处理发送的数据，因为data值是Formdata对象，不需要对数据做处理
+		        contentType : false, // 不设置Content-type请求头
+				success:function(d){
+					if( d.statusCode == "100000" ){
+						$(el).attr("data-src",d.data);
+					}else{
+						common.prompt( d.statusCode );
+					}
+				}
+			});
 		}
 	};
 	// 事件处理
@@ -127,25 +141,29 @@ require(['../require/config'],function () {
 			});
 			
 			$('.eval_submit').click(function(){
-				console.log(this)
-				var evalNode = $('.zs-eval');
-				pub.evaluate.EVALUATE_CONTENT = $('.eval_intro_content').val(); // 评价内容
-				pub.evaluate.QUALITY_STARS_NUM = evalNode.eq(0).find('.actived').length; // 商品
-				pub.evaluate.SELLER_STARS_NUM = evalNode.eq(1).find('.actived').length; // 商家
-				pub.evaluate.DISPATCHING_STARS_NUM = evalNode.eq(2).find('.actived').length; // 配送
-				if( !pub.evaluate.QUALITY_STARS_NUM ){
-					common.prompt('商品质量评价不能为空'); return;
-				}
-				if( !pub.evaluate.SELLER_STARS_NUM ){
-					common.prompt('商家服务评价不能为空'); return;
-				}
-				if( !pub.evaluate.DISPATCHING_STARS_NUM ){
-					common.prompt('配送服务评价不能为空'); return;
-				}
+				var nood = $(".comment_goods .comment_good_item");
+				pub.evaluate.goodsComments = [];
+				
+				nood.each(function(i){
+					var el = $(nood[i]);
+					var obj = {
+						goodsid : el.attr("data-id"),
+						service : el.find('.comment_good_item_top input').val(),
+						comment : el.find('.comment_good_item_bottom textarea').val(),
+						pics : getImgStr(el.find('.comment_good_item_bottom .comment_good_image_boxs'))
+					}
+					pub.evaluate.goodsComments.push(obj)
+				})
+				pub.evaluate.goodsComments = JSON.stringify(pub.evaluate.goodsComments)
+				var evalNode = $('.comment_order_star .comment_order_star_item');
+				pub.evaluate.SERVICE = evalNode.eq(0).find('input').val(); // 商品
+				pub.evaluate.GOODS = evalNode.eq(1).find('input').val(); // 商家
+				pub.evaluate.SPEED = evalNode.eq(2).find('input').val(); // 配送
+				
 				pub.evaluate.apiHandle.order_comment.init();
 			});
-			var timeout = undefined;
 			
+			var timeout = undefined;
 			$(".comment_goods").on('touchstart',".comment_good_image", function(e) {
 				var nood = $(this).find(".del_img");
 	        	timeout = setTimeout(function(e){
@@ -161,7 +179,8 @@ require(['../require/config'],function () {
 	        });
 	        $(".comment_goods").on("change",".comment_good_picter",function(){
 	        	console.log("chenge");
-	        	var nodes = $(this).parent().parent().find(".comment_good_image_boxs")
+	        	var nodes = $(this).parent().parent().find(".comment_good_image_boxs");
+	        	var goodid = $(this).attr("data-id")
 	        	var tar = this,
 				files = tar.files,
 				fNum = files.length,
@@ -182,7 +201,7 @@ require(['../require/config'],function () {
 	                if (ll <= 200 *1024) {
 	                    img = null;
 	                    $(span).find("img").attr("src",result);
-	                    upload(result, file.type);
+	                    upload(result, file.type,goodid,span);
 	                    
 	                    return;
 	                }
@@ -198,7 +217,7 @@ require(['../require/config'],function () {
 	
 	                    $(span).find("img").attr("src",result);
 						console.log(imgsize(data))
-	                    upload(data, file.type);
+	                    upload(data, file.type,goodid,span);
 	                    img = null;
 	                }
 	
@@ -287,33 +306,16 @@ require(['../require/config'],function () {
 		
 		        return ndata;
 		    };
-	        function upload(basestr, type, $li) {
-		        var text = window.atob(basestr.split(",")[1]);
-		        var buffer = new ArrayBuffer(text.length);
-		        var ubuffer = new Uint8Array(buffer);
-		        var pecent = 0 , loop = null;
-		
-		        for (var i = 0; i < text.length; i++) {
-		            ubuffer[i] = text.charCodeAt(i);
-		        }
-		
-		        var Builder = window.WebKitBlobBuilder || window.MozBlobBuilder;
-		        var blob;
-		
-		        if (Builder) {
-		            var builder = new Builder();
-		            builder.append(buffer);
-		            blob = builder.getBlob(type);
-		        } else {
-		            blob = new window.Blob([buffer], {type: type});
-		        }
+	        function upload(basestr, type, goodid,el) {
+		        var basestr = basestr.split(",")[1];
+		        var type = type.split("/")[1];
 				var formdata = new FormData();
-		        formdata.append('imagefile', blob);
-		        console.log(basestr);
-		        console.log(type);
-		        console.log($li);
-		        
-		        
+		        formdata.append("method","comment_img_upload");
+		        formdata.append("orderCode",pub.orderCode);
+		        formdata.append("goodsId",goodid);
+		       	formdata.append("imgStr",basestr);
+		        formdata.append("suffix",type);
+		        pub.evaluate.apiHandle.comment_upload_img(formdata,el);
 		    };
 	        //计算图片文件的大小
 			function imgsize(str){
@@ -326,7 +328,18 @@ require(['../require/config'],function () {
 				var fileLength=parseInt(strLength-(strLength/8)*2);
 				return fileLength
 			}
-			
+			function getImgStr (o){
+				if (typeof o == "object") {
+					var el = o.find('span');
+					var str = '';
+					if(el.length !=0){
+						el.each(function(i){
+							str += $(el[i]).attr("data-src")+"@";
+						})
+					}
+					return str;
+				}
+			}
 		}
 	};
 
