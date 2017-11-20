@@ -23,6 +23,10 @@ require(['../require/config'],function(){
 	    pub.isPre = pub.seachParam == 'pre' ; // 预购支付
 	    pub.isRecharge = pub.seachParam == 'recharge' ; // 充值
 	
+		if (pub.isRecharge && common.isApple()) {
+			pub.seachParam = 'rechargeIos'
+		}
+	
 	    pub.isApp = common.isApp(); // 接收 app 环境
 	    if( pub.logined ){
 	        pub.tokenId = common.tokenIdfn(); 
@@ -99,7 +103,6 @@ require(['../require/config'],function(){
 		                            .next().html("订单金额:<span>￥" + orderInfo.realPayMoney + "</span>")
 		                            .next().html("支付成功后可以获得<b>" + orderInfo.barterCount + "</b>次换购机会");
 	                        	}
-	                            
 	                        }else if( pub.orderType == "4" ){
 	                            node.eq(0).html("预购商品:<span>" + orderInfo.orderDetailsList[0].goodsName + "</span>")
 	                            .next().html("订单号:<span>" + orderInfo.orderCode + "</span>")
@@ -110,8 +113,10 @@ require(['../require/config'],function(){
 	                            .next().html("订单金额:<span>￥" + orderInfo.realPayMoney + "</span>");
 	                        }
 	                        pub.firmIdType != '5' && node.eq(3).html( '22:30前付款，预计明日送达' );
+	                        pub.money = orderInfo.realPayMoney;
 	                    }else{
 	                        node.eq(0).html("预购商品:<span>" + orderInfo.goodsInfo.goodsName + "</span>").next().html("订单号:<span>" + orderInfo.orderCode + "</span>").next().html("预购金额:<span class='font_color'>￥" + orderInfo.frontMoney + "</span>");
+	                    	pub.money = orderInfo.frontMoney;
 	                    }
 	                    $(".orderList_intro").html("订单已提交！");
 	                    pub.firmIdType == '5' && $('.pay_gg').html("请于"+pub.appData.data.order_cancel_time+"分钟内完成支付，超时订单将取消！")
@@ -183,17 +188,33 @@ require(['../require/config'],function(){
 	                        method : 'month_card_ali_pay',
 	                        payMoney : pub.payMoney,
 	                        userId : pub.userId,
+	                    },
+	                    'rechargeIos' : {
+	                    	method : 'month_card_ali_pay2',
+	                        payMoney : pub.payMoney,
+	                        userId : pub.userId,
 	                    }
 	                }[ pub.seachParam ];
-	
+					
+					// app 传参
+	                pub.wxAppPayWay = pub.isRecharge ? '3' : pub.isBase ? '1' : pub.isPre ? '2' : undefined; // 3充值，1普通商品支付，2预购商品
 	                pub.isApp && ( pub.aliPayApi.isApp = '1' );
 	                common.ajaxPost($.extend( {},pub.userBasicParam, pub.aliPayApi ),function( d ){
 	                    if ( d.statusCode == '100000' ) {
-	                        var html = "";
-	                        $.each( d.data, function( i, v ){
-	                            html += '<input type="hidden" name="' + i + '" id="" value="' + v + '" />';
-	                        });
-	                        $("#form2").append( html ).submit();
+	                        if (common.isApple()) {
+	                        	var data = {
+	                        		orderCode:pub.orderCode || d.data.note,
+	                        		productName:'果然好商品',
+	                        		money:pub.money || d.data.payMoney,
+	                        	};
+	                        	pub.apiHandle.order_topay_alipay.apiData(data)
+	                        } else{
+	                        	var html = "";
+		                        $.each( d.data, function( i, v ){
+		                            html += '<input type="hidden" name="' + i + '" id="" value="' + v + '" />';
+		                        });
+		                        $("#form2").append( html ).submit();
+	                        }
 	                    }else{
 	                        common.prompt( d.statusStr );
 	                    }
@@ -202,6 +223,17 @@ require(['../require/config'],function(){
 	                    common.prompt( d.statusStr );
 	                    pub.loading.hide();
 	                })
+	            },
+	            init1: function(){
+	            	
+	            },
+	            apiData : function( d ){
+	                try{
+	                	console.log(JSON.stringify(d))
+	                    //common.isAndroid() ? android.WXPay( common.JSONStr( d ), pub.wxAppPayWay ) : window.webkit.messageHandlers.WXPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
+	                    window.webkit.messageHandlers.AliPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
+	                }catch(e){}
+	                pub.loading.hide();
 	            }
 	        },
 	        // 银行卡
@@ -217,6 +249,11 @@ require(['../require/config'],function(){
 	                        orderCode : pub.orderCode
 	                    },
 	                    'recharge' : {
+	                        method : 'month_card_ll_pay',
+	                        payMoney : pub.payMoney,
+	                        userId : pub.userId
+	                    },
+	                    'rechargeIos' : {
 	                        method : 'month_card_ll_pay',
 	                        payMoney : pub.payMoney,
 	                        userId : pub.userId
@@ -293,6 +330,11 @@ require(['../require/config'],function(){
 	                        method : "month_card_wx_pay_app",
 	                        payMoney : pub.payMoney,
 	                        userId : pub.userId,
+	                    },
+	                    'rechargeIos' : {
+	                        method : "month_card_wx_pay_app",
+	                        payMoney : pub.payMoney,
+	                        userId : pub.userId,
 	                    }
 	                }[ pub.seachParam ];
 	                // app 传参
@@ -347,7 +389,7 @@ require(['../require/config'],function(){
 	    pub.payWay.weixinAppPay = function(){
 	         // 充值
 	        if( pub.isRecharge ){
-	            pub.payMoney = $('#wx_rechange').val();
+	            pub.money = pub.payMoney = $('#wx_rechange').val();
 	            if( isNaN( pub.payMoney ) || pub.payMoney < 0.01 ){
 	                common.prompt( "充值金额只能为数字且不小于0.01元" ); return;
 	            } 
@@ -369,7 +411,7 @@ require(['../require/config'],function(){
 	            pub.payMoney = $('#zfb_rechange').val();
 	            if( isNaN( pub.payMoney ) || pub.payMoney < 0.01 ){
 	                common.prompt( "充值金额只能为数字且不小于0.01元" ); return;
-	            } 
+	            }
 	        }
 	        pub.loading.show();
 	        pub.timer = setTimeout(function(){
@@ -379,8 +421,10 @@ require(['../require/config'],function(){
 	        	}
 	        	clearTimeout(pub.timer)
 	        },10000)
+	        console.log(pub.seachParam)
 	        pub.apiHandle.order_topay_alipay.init();
 	    };
+	    
 	    // 银行卡支付
 	    pub.payWay.bankPay = function(){
 	        pub.bankCardNum = $("#pay_style_card").val();

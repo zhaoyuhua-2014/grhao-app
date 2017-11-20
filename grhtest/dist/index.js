@@ -3,7 +3,9 @@
 */ 
 
 require(['../require/config'],function () {
-	require(['common','mobileUi','swiperJS','iscroll'],function(common){
+	require(['common','mobileUi','swiperJS','pull'],function(common){
+		
+		
 		
 		var pub = {};
 	
@@ -41,20 +43,22 @@ require(['../require/config'],function () {
 	 		var me = this;
 	 		
 	 		if (pub.logined) {
-	 			me.firm_default.init(); // 默认门店
-	 			if (common.user_datafn().firmId == '0') {//注册的情况下将APP本地门店ID赋值给当前用户
-	 				pub.apiHandle.choice_firm.init();
-	 			}else {//登录的情况下
-	 				if (common.firmId.getItem() != common.user_datafn().firmId) {
-	 					var data = {
-							type:1,
-							title:'是否切换为已绑定门店?',
-							canclefn:'cancleFn',
-							truefn:'trueFn'
-						}
-						common.alertMaskApp(JSON.stringify(data));
-	 				}
-		 		}
+	 			common.DTD.done(function(){
+	 				me.firm_default.init(); // 默认门店
+		 			if (common.user_datafn().firmId == '0') {//注册的情况下将APP本地门店ID赋值给当前用户
+		 				pub.apiHandle.choice_firm.init();
+		 			}else {//登录的情况下
+		 				if (common.firmId.getItem() != common.user_datafn().firmId) {
+		 					var data = {
+								type:1,
+								title:'是否切换为已绑定门店?',
+								canclefn:'cancleFn',
+								truefn:'trueFn'
+							}
+							common.alertMaskApp(JSON.stringify(data));
+		 				}
+			 		}
+	 			})
 	 		}else{
 	 			me.firm_default.init(); // 默认门店
 	 			if(!common.firmId.getItem()){
@@ -219,10 +223,18 @@ require(['../require/config'],function () {
 						html += '<div class="swiper-slide"><a href="javascript:void(0)" url="'+link+'"><img src="' + d[i].adLogo + '" /></a></div>'
 					}
 					return html;
-				},pub.isrefresh);
+				},'.swiper-pagination',pub.isrefresh);
 				data.mainPageGoodsDetails.length == 0 && $(".index_inner").html("");
 				data.mainPageGoodsDetails.length != 0 && me.apiDataDeal( data.mainPageGoodsDetails );
-			 	pub.myScroll.refresh();
+			 	//pub.myScroll.refresh();
+			 	/*if (pub.isrefresh) {
+			 		pub.iscroll.resetload();
+                    common.lazyload(); // 懒加载
+			 	}*/
+			 	if(pub.isrefresh){
+			 		pub.pullInstance.pullDownSuccess();
+			 		common.lazyload(); // 懒加载
+			 	}
 	 		}
 	 	};
 	
@@ -314,16 +326,16 @@ require(['../require/config'],function () {
 				$(".index_tit").on('click',function(){
 					common.jumpLinkPlainApp('门店选择','html/store1.html');
 				});
-				$(".swiper-wrapper").on("touchstart",'a',function(e){
+				/*$(".swiper-wrapper").on("touchstart",'a',function(e){
 					var _touch = e.originalEvent.targetTouches[0];
 　　					pub.touch_start= _touch.pageX;
 				});
 				$(".swiper-wrapper").on("touchmove",'a',function(e){
 					var _touch = e.originalEvent.targetTouches[0];
 　　					pub.touch_move= _touch.pageX;
-				});
-				$(".swiper-wrapper").on("touchend",'a',function(e){
-					if (Math.abs(pub.touch_start - pub.touch_move) < 100) {
+				});*/
+				$(".swiper-wrapper").on("click",'a',function(e){
+					//if (Math.abs(pub.touch_start - pub.touch_move) < 100) {
 						var urlArr = [{
 							url:'goodsDetails.html',
 							tit:"商品详情"
@@ -362,7 +374,7 @@ require(['../require/config'],function () {
 								}
 							}
 						}
-					}
+					//}
 				});
 				//取消按钮
 				$(".order_refund").on("click",".refund_cancle",function(){
@@ -393,7 +405,7 @@ require(['../require/config'],function () {
 	
 	 		pub.isApp = common.isApp();
 	
-	 		if( common.appData.getKey() ){
+	 		if( common.appData.getKey() && JSON.parse(common.appData.getItem()).data.order_cancel_time){
 				pub.apiHandle.system_config_constant.apiData( true );
  			}else{
 	 			pub.apiHandle.system_config_constant.init(); // 是 app 调 APP 方法
@@ -409,9 +421,8 @@ require(['../require/config'],function () {
 	 	$(document).ready(function(){
 		 	pub.init();
 		 	window.pub = pub;
-		 	setTimeout(loaded(), 5000);
-	 		var 
-			wh = document.documentElement.clientHeight;
+		 	setTimeout(document.getElementById('wrapper').style.left = '0', 500);
+	 		var wh = document.documentElement.clientHeight;
 			
 			pub.info = {
 				"pullDownLable":"下拉刷新...",
@@ -420,112 +431,24 @@ require(['../require/config'],function () {
 				"pullingUpLable":"松开加载更多...",
 				"loadingLable":"加载中..."
 			}
-			
-	 		var myScroll,
-			pullDownEl, pullDownOffset,
-			pullUpEl, pullUpOffset,
-			generatedCount = 0;
-		
 			function pullDownAction () {
 				setTimeout(function () {
 					pub.isrefresh = true;
 					pub.apiHandle.init(); // 模块初始化接口数据处理
-					
 				}, 1000);	
 			}
+			var $listWrapper = $('.main');
+
+	        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
+	            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
+	             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
+	
+	            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
+	            onPullDown: function () {
+	                pullDownAction();
+	            },
+	        });
 			
-			function loaded() {
-				pullDownEl = document.getElementById('pullDown');
-				pullDownOffset = pullDownEl.offsetHeight;
-				/*pullUpEl = document.getElementById('pullUp');	
-				pullUpOffset = pullUpEl.offsetHeight;*/
-				
-				pub.myScroll = myScroll = new iScroll('wrapper', {
-					useTransition: true,
-					topOffset: pullDownOffset,
-					preventDefaultException: { className: 'swiper-slide' },///(^|\s)formfield(\s|$)/
-					deceleration:0.004,
-					bounce:true,//当滚动器到达容器边界时他将执行一个小反弹动画。在老的或者性能低的设备上禁用反弹对实现平滑的滚动有帮助。
-					disableMouse: true,//禁用鼠标和指针事件：
-   					disablePointer: true,
-   					momentum:true,//在用户快速触摸屏幕时，你可以开/关势能动画。关闭此功能将大幅度提升性能。
-					//刷新的时候，加载初始化刷新更多的提示div
-					onRefresh: function () {
-						if(this.maxScrollY >-100){
-							//pullUpEl.style.display = 'none';
-						}else{
-							//pullUpEl.style.display = 'block';
-							if (pullDownEl.className.match('loading')) {
-								pullDownEl.className = '';
-								pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-								pullDownEl.querySelector('.loader').style.display="none"
-								pullDownEl.style.lineHeight=pullDownEl.offsetHeight+"px";	
-							}
-						}
-					},
-					//拖动，滚动位置判断
-					onScrollMove: function () {
-						if (this.y > 5 && !pullDownEl.className.match('flip')) {//判断是否向下拉超过5,问题：这个单位好像不是px
-							pullDownEl.className = 'flip';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullingDownLable;
-							this.minScrollY = 0;
-						} else if (this.y < 5 && pullDownEl.className.match('flip')) {
-							pullDownEl.className = '';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-							this.minScrollY = -pullDownOffset;
-						}
-						var lazy = $('.lazyload img[data-src]');
-						
-						var len = lazy.length;
-						if(lazy.length){
-							lazy.each(function(){
-								var
-								$this = $(this), 
-								offsetTop = $this.parents('dl').offset().top;
-								if( wh > offsetTop  ){
-									var dataSrc = $this.attr('data-src');
-									$this.attr('src',dataSrc).addClass('fadeIn');;
-									$this.removeAttr('data-src');
-								}				
-							});
-						}
-						
-					},
-					onScrollEnd: function () {
-						if (pullDownEl.className.match('flip')) {
-							pullDownEl.className = 'loading';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.loadingLable;
-							pullDownEl.querySelector('.loader').style.display="block"
-							pullDownEl.style.lineHeight="40px";	
-							pullDownAction();
-						}
-						var lazy = $('.lazyload img[data-src]');
-						
-						var len = lazy.length;
-						if(lazy.length){
-							lazy.each(function(){
-								var
-								$this = $(this), 
-								offsetTop = $this.parents('dl').offset().top;
-								console.log(wh > offsetTop)
-								if( wh > offsetTop  ){
-									var dataSrc = $this.attr('data-src');
-									$this.attr('src',dataSrc).addClass('fadeIn');;
-									$this.removeAttr('data-src');
-								}				
-							});
-						}
-					}
-				});
-				
-				setTimeout(function () { document.getElementById('wrapper').style.left = '0'; myScroll.refresh(); }, 800);
-				
-			}
-			
-		
-			document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-		
-		//document.addEventListener('DOMContentLoaded', function () { console.log("DOMContentLoaded");setTimeout(loaded(), 200); }, false);
 	 	})
 	})
 });

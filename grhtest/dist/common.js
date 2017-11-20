@@ -181,6 +181,7 @@ define(['jquery','mdData','shar1'],function($){
 				common.secretKey.setItem( d.data.secretKey );
 				common.logined.setItem('logined');
 			}
+			common.DTD.resolve();
 
 		},function(d){
 			common.prompt(d.statusStr);
@@ -267,22 +268,22 @@ define(['jquery','mdData','shar1'],function($){
 
 		// banner轮播图
 		bannerShow : function( data, box, callback, pagination ,isrefresh){
-			
-			//isrefresh = isrefresh || false;
+			isrefresh = isrefresh || false;
 			pagination = pagination || '.swiper-pagination';
 			var html = callback( data );
 			$( box + " .swiper-wrapper" ).html( html );
-			//if(!pub.isrefresh){
-				var mySwiper = new Swiper (box, {
+			if(!isrefresh){
+				window.mySwiper = mySwiper = new Swiper (box, {
 				    direction: 'horizontal',
 				    loop: true,
 				    autoplay:5000,
-				    paginationClickable:true,
 				    autoplayDisableOnInteraction : false,
 				    
-				    pagination: pagination // 如果需要分页器
+				    pagination: pagination, // 如果需要分页器
 				});
-			//}
+			}else{
+				window.mySwiper.init();
+			}
 		},
 
 		alertShow : function( ele, callback){
@@ -381,19 +382,16 @@ define(['jquery','mdData','shar1'],function($){
 
 			var height = $(window).height();
 
-			$('#wrapper').on('scroll',function(){
-
+			$(window).on('scroll',function(){
 				var 
 				len = $('.lazyload img[data-src]').length,
 				top = $(this).scrollTop();
-
 				len == 0 && $(window).off('scroll');
 
 				$('.lazyload img[data-src]').each(function(){
 					var
 					$this = $(this), 
 					offsetTop = $this.parents('dl').offset().top;
-					console.log(offsetTop)
 					$this.addClass('fadeIn');
 					if( height + top > offsetTop  ){
 						var dataSrc = $this.attr('data-src');

@@ -1,7 +1,7 @@
 
 
 require(['../require/config'],function(){
-	require(['common','mobileUi','iscroll'],function(common){
+	require(['common','mobileUi','pull'],function(common){
 		// 命名空间
 
 		pub = {};
@@ -139,7 +139,11 @@ require(['../require/config'],function(){
 			       	$('.order_manage_contain').append( html ); 
 			        pub.orderManagement.isLast && $('.lodemore').removeClass('loadMore').html('没有更多数据了').show();
 			        !pub.orderManagement.isLast && $('.lodemore').addClass('loadMore').html('点击加载更多数据').show();
-			        pub.myScroll.refresh();
+			        //pub.myScroll.refresh();
+			        if (pub.isrefresh) {
+				 		//pub.iscroll.resetload();
+				 		pub.pullInstance.pullDownSuccess();
+				 	}
 				}
 			},
 	
@@ -410,7 +414,9 @@ require(['../require/config'],function(){
 			        	}else{
 			        		$('.watm_info_wrap').removeClass("hidden");
 			        		$(".watm_info").html("<p>手机号："+orderInfo.customMobile+"</p><p>提货码："+ orderInfo.pickUpCode +"</p>");
-			        		orderInfo.orderStatus == 3 && $(".watm_info_wrap").append("<p style='color:#df3a1f;font-size:26px;line-height:40px;text-align:center'>请于今日22:00前去自助售货机取货</p>")
+			        		if (orderInfo.orderStatus == 3 && $(".watm_info_wrap").find('p.msg').length == 0) {
+			        			$(".watm_info_wrap").append("<p class='msg' style='color:#df3a1f;font-size:26px;line-height:40px;text-align:center'>请于今日22:00前去自助售货机取货</p>")
+			        		}
 			        		if (orderInfo.orderStatus == 7) {
 			        			var i = ''
 			        			if(orderInfo.watmStatus == '1'){
@@ -547,7 +553,11 @@ require(['../require/config'],function(){
 			    		$(".my_order_list2").css("display","none");
 			    		orderInfo.orderStatus == '3' && $('.order_situation').css("display","none");
 			    	}
-			    	pub.myScroll.refresh();
+			    	//pub.myScroll.refresh();
+			    	if (pub.isrefresh) {
+				 		//pub.iscroll.resetload();
+				 		pub.pullInstance.pullDownSuccess();
+				 	}
 				}
 			},
 			// 合并接口 统一处理函数
@@ -620,10 +630,10 @@ require(['../require/config'],function(){
 				});
 	
 			    //点击确定
-			    $('.order_refund_choose .makeSure').on('click',function(e){
+			   /* $('.order_refund_choose .makeSure').on('click',function(e){
 				    common.stopEventBubble(e);
 				    pub.orderDetail.apiHandle.unify_deal.init();		    	            
-				});
+				});*/
 	
 			    //点击取消//点击遮罩
 				/*$('.order_refund_choose .refund_cancle,.refund_bg').on('click',function(){
@@ -660,26 +670,15 @@ require(['../require/config'],function(){
 		$(document).ready(function(){
 		 	pub.init();
 		 	window.pub = pub;
-		 	setTimeout(loaded(), 5000);
+		 	setTimeout(document.getElementById('wrapper').style.left = '0', 500);
 	 		var 
 			wh = document.documentElement.clientHeight;
-			$("#iscroll").css("min-height",wh)
 			
-			pub.info = {
-				"pullDownLable":"下拉刷新...",
-				"pullingDownLable":"松开刷新...",
-				"pullUpLable":"下拉加载更多...",
-				"pullingUpLable":"松开加载更多...",
-				"loadingLable":"加载中..."
-			}
 			
-	 		var myScroll,
-			pullDownEl, pullDownOffset,
-			pullUpEl, pullUpOffset,
-			generatedCount = 0;
 		
 			function pullDownAction () {
 				setTimeout(function () {
+					pub.isrefresh = true;
 					if (pub.moduleId == 'orderManagement') {
 						pub.PAGE_INDEX = common.PAGE_INDEX; // 索引
 						pub.orderManagement.apiHandle.init();
@@ -689,61 +688,18 @@ require(['../require/config'],function(){
 				}, 1000);	
 			}
 			
-			function loaded() {
-				pullDownEl = document.getElementById('pullDown');
-				pullDownOffset = pullDownEl.offsetHeight;
-				
-				pub.myScroll = myScroll = new iScroll('wrapper', {
-					useTransition: true,
-					topOffset: pullDownOffset,
-					preventDefaultException: { className: 'swiper-slide' },///(^|\s)formfield(\s|$)/
-					deceleration:0.004,
-					bounce:true,//当滚动器到达容器边界时他将执行一个小反弹动画。在老的或者性能低的设备上禁用反弹对实现平滑的滚动有帮助。
-					disableMouse: true,//禁用鼠标和指针事件：
-   					disablePointer: true,
-   					momentum:true,//在用户快速触摸屏幕时，你可以开/关势能动画。关闭此功能将大幅度提升性能。
-					//刷新的时候，加载初始化刷新更多的提示div
-					onRefresh: function () {
-						if(this.maxScrollY >-40){
-							//pullUpEl.style.display = 'none';
-						}else{
-							//pullUpEl.style.display = 'block';
-							if (pullDownEl.className.match('loading')) {
-								pullDownEl.className = '';
-								pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-								pullDownEl.querySelector('.loader').style.display="none"
-								pullDownEl.style.lineHeight=pullDownEl.offsetHeight+"px";
-							}
-						}
-					},
-					//拖动，滚动位置判断
-					onScrollMove: function () {
-						if (this.y > 5 && !pullDownEl.className.match('flip')) {//判断是否向下拉超过5,问题：这个单位好像不是px
-							pullDownEl.className = 'flip';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullingDownLable;
-							this.minScrollY = 0;
-						} else if (this.y < 5 && pullDownEl.className.match('flip')) {
-							
-							pullDownEl.className = '';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.pullDownLable;
-							this.minScrollY = -pullDownOffset;
-						} 
-					},
-					onScrollEnd: function () {
-						if (pullDownEl.className.match('flip')) {
-							pullDownEl.className = 'loading';
-							pullDownEl.querySelector('.pullDownLabel').innerHTML = pub.info.loadingLable;
-							pullDownEl.querySelector('.loader').style.display="block"
-							pullDownEl.style.lineHeight="40px";				
-							pullDownAction();	// Execute custom function (ajax call?)
-						}
-					}
-				});
-				
-				setTimeout(function () { document.getElementById('wrapper').style.left = '0'; myScroll.refresh(); }, 800);
-				
-			}
-			document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+		    var $listWrapper = $('.main');
+
+	        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
+	            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
+	             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
+	
+	            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
+	            onPullDown: function () {
+	                pullDownAction();
+	            },
+	        });
+			
 		})
 	})
 })

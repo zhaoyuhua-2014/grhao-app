@@ -7,6 +7,9 @@
 		<meta name="viewport" content="width=720,user-scalable=no" />
 		<meta content="telephone=no, address=no" name="format-detection" />
 		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<style type="text/css">
+			
+		</style>
 	</head>
 	<body module-id="goods" class="animation-fadeIn">
 		<!--<div class="header_wrap">
@@ -17,15 +20,15 @@
 			</div>
 		</div>
 		<div class="empty"></div>-->
-		<div class="main_wrap" id="wrapper">
-			<div id="iscroll">
+		<div class="main_wrap">
+			<!--<div id="iscroll">
 				<div id="pullDown" class="empty">
-					<!--<span class="pullDownIcon "></span><span class="pullDownLabel">下拉刷新...</span>-->
+					<span class="pullDownIcon "></span><span class="pullDownLabel">下拉刷新...</span>
 					<div class="loader">
 						<span></span><span></span><span></span><span></span>
 					</div>
 					<div class="pullDownLabel">下拉刷新...</div>
-				</div>
+				</div>-->
 				<div class="main">
 					<div class="more_top_wrap">
 						<ul class="more_top">
@@ -36,50 +39,25 @@
 							<ul class="more_bottom_left" id="_more_">
 							</ul>
 						</div>
-						<div class="more_bottom_right_wrap" id="wrapper1">
-							<div id="scroll1">
+						<div class="more_bottom_right_wrap">
+							<!--<div id="scroll1">
 								<div id="pullDown1" class="empty">
-									<!--<span class="pullDownIcon "></span><span class="pullDownLabel">下拉刷新...</span>-->
+									<span class="pullDownIcon "></span><span class="pullDownLabel">下拉刷新...</span>
 									<div class="loader">
 										<span></span><span></span><span></span><span></span>
 									</div>
 									<div class="pullDownLabel">下拉刷新...</div>
-								</div>
-								<div id="_more_">
+								</div>-->
+								<div id="_more_" class="_more_">
 									<div class="more_bottom_right lazyload zs-static-box" id="_more_"></div>
 									<p class="click_load" id="_more_">正在加载中...</p>
 								</div>
-							</div>
+							<!--</div>-->
 						</div>
 					</div>
-				</div>
+			<!--	</div>-->
 			</div>
 		</div>
 	</body>
 	<script data-main = "../dist/moregoods.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
-	<script type="text/javascript">
-		/*setTimeout(function(){
-			//alert(document.getElementsByTagName("html")[0].innerHTML);
-			//创建一个div  
-		    var div = document.createElement("div");  
-		      
-		    //为div添加样式  
-		    var style = document.createAttribute("style");  
-		    div.setAttributeNode(style);  
-		    div.style.backgroundColor = "#F00";  
-		    div.style.borderWidth = "20px";  
-		    div.style.borderColor = "#000";  
-		    div.style.width = "500px";  
-		    div.style.height = "500px";  
-		    div.style.marginLeft = "-250px";  
-		    div.style.marginTop = "-250px"; 
-		    div.style.position = "absolute";
-		    div.style.top = '50%';
-		    div.style.left = '50%';
-		    div.style.overflow = "auto"
-		    div.textContent = document.getElementsByTagName("html")[0].innerHTML
-		    //把div追加到body  
-		    document.getElementsByTagName("body").item(0).appendChild(div); 
-		},4000)*/
-	</script>
 </html>
