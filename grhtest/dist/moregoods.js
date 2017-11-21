@@ -332,11 +332,13 @@ require(['../require/config'],function(){
 		// 命名空间
 	
 		pub.goodsDetail = {};
+		pub.goodsDetail.isEnd = null;
 	
 		// 商品详情 接口处理
 		pub.goodsDetail.apiHandle = {
 			init : function(){
 				pub.goodsDetail.apiHandle.goods_show.init();
+				pub.goodsDetail.apiHandle.good_comment.init();
 			},
 			goods_show : {
 				init : function(){
@@ -404,6 +406,77 @@ require(['../require/config'],function(){
 					d.goodsContext && $('.goodsDetails_box2_').show().html( d.goodsContext);
 					
 				}
+			},
+			good_comment:{
+				init:function(){
+					common.ajaxPost({
+						method : 'goods_comment_list',
+						goodsId : pub.goodsDetail.goodsId,
+						pageNo : pub.PAGE_INDEX,
+						pageSize : pub.PAGE_SIZE
+					},function( d ){
+						if (d.statusCode == '100000') {
+							pub.goods.isEnd = d.data.isLast
+							if (d.data.objects != "" && d.data.objects.length !="0" ) {
+								pub.goodsDetail.apiHandle.good_comment.apiData( d );
+							} else if(d.data.objects.length == '0' ){
+								if (pub.PAGE_INDEX == 1) {
+									pub.loading.show().html("暂无评论信息！").css("text-align","left");
+								}else{
+									pub.loading.show().html("没有更多数据了！");
+								}
+								
+							}
+						}else{
+							common.prompt(d.statusStr)
+						}
+					})
+				},
+				apiData:function(d){
+					d = d.data;
+					pub.goods.isEnd = d.isLast;
+					if (pub.PAGE_INDEX == 1) {
+						$(".goodsDetails_box2_comment_box").html('');
+					}
+					var html = '',i;
+					for ( i in d.objects ) {
+						html +='<div class="comment_item">'
+						html +='	<dl class="comment_item_top clearfloat">'
+						html +='		<dt class="float_left"><img src="'+d.objects[i].userFaceImg+'"/></dt>'
+						html +='		<dd	class="float_left">'
+						html +='			<p class="comment_time">'+d.objects[i].createTime.split(" ")[0]+'</p>'
+						html +='			<p class="comment_name">'+d.objects[i].userName+'</p>'
+						html +='		</dd>'
+						html +='		<dd class="goods_star float_right">'
+						for (var n=2;n<=10;n+=2) {
+							if (n<=d.objects[i].service) {
+								html +='			<span class="star active" data="'+n+'"></span>'		
+							} else{
+								html +='			<span class="star" data="'+n+'"></span>'		
+							}
+						}
+						html +='		</dd>'
+						html +='		<input type="hidden" name="stars" id="stars" value="'+d.objects[i].service+'" />'
+						html +='	</dl>'
+						html +='	<div class="comment_item_bottom">'
+						html +='		<p class="comment_content">'+d.objects[i].comment+'</p>'
+						html +='		<div class="comment_goods_picter_box clearfloat">'
+						for (var m in d.objects[i].pics.split("@")) {
+							if (d.objects[i].pics.split("@")[m]) {
+								html +='			<div class="comment_goods_picter_item"><img src="'+d.objects[i].pics.split("@")[m]+'"/></div>'
+							}
+						}
+						html +='		</div>'
+						html +='	</div>'
+						html +='</div>'
+					}
+					$(".goodsDetails_box2_comment_box").append(html);
+					if( pub.goods.isEnd ){
+						pub.loading.show().html("没有更多数据了！");
+					}else{
+						pub.loading.show().html("点击加载更多！");
+					};
+				}
 			}
 		};
 	
@@ -449,7 +522,17 @@ require(['../require/config'],function(){
 				var index = $(this).index();
 				$(this).addClass("active").siblings().removeClass("active");
 				$(".goodsDetails_box2_bottom .goodsDetails_box2_bottom_item").eq(index).show().siblings().hide();
-			})
+			});
+			//点击加载更多
+			pub.loading.on('click',function(e){
+				/*e.stopPropagation()*/
+				if (!pub.goods.isEnd) {
+					pub.PAGE_INDEX ++;
+					pub.goodsDetail.apiHandle.good_comment.init();
+				}else{
+					pub.loading.show().html("没有更多数据了！");
+				}
+			});
 			$('.show_num').attr( 'zs-goodsId',pub.goodsDetail.goodsId );
 			pub.goodsDetail.apiHandle.init();
 			pub.goodsDetail.eventHandle.init();
@@ -583,18 +666,6 @@ require(['../require/config'],function(){
 				}, 1000);	
 			}
 			function load(){
-				/*var $listWrapper = $('.main');
-
-		        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
-		            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
-		             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
-		
-		            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
-		            onPullDown: function () {
-		                pullDownAction();
-		            },
-		        });*/
-		        
 		        var $listWrapper1 = $('._more_');
 
 		        pub.pullInstance1 =  pullInstance1 = new Pull($listWrapper1, {

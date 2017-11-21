@@ -86,13 +86,13 @@ require(['../require/config'],function () {
 				html += '		<dl class="float_right clearfloat">'
 				html += '			<dt>商品质量</dt>'
 				html += '			<dd class="goods_star">'
-				html += '				<span class="star" data="2"></span>'
-				html += '				<span class="star" data="4"></span>'
-				html += '				<span class="star" data="6"></span>'
-				html += '				<span class="star" data="8"></span>'
-				html += '				<span class="star" data="10"></span>'
+				html += '				<span class="star active" data="2"></span>'
+				html += '				<span class="star active" data="4"></span>'
+				html += '				<span class="star active" data="6"></span>'
+				html += '				<span class="star active" data="8"></span>'
+				html += '				<span class="star active" data="10"></span>'
 				html += '			</dd>'
-				html += '			<input type="hidden" name="stars" id="stars" value="0" />'
+				html += '			<input type="hidden" name="stars" id="stars" value="10" />'
 				html += '		</dl>'
 				html += '	</div>'
 				html += '	<div class="comment_good_item_bottom">'
@@ -147,7 +147,7 @@ require(['../require/config'],function () {
 				nood.each(function(i){
 					var el = $(nood[i]);
 					var obj = {
-						goodsid : el.attr("data-id"),
+						goodsId : el.attr("data-id"),
 						service : el.find('.comment_good_item_top input').val(),
 						comment : el.find('.comment_good_item_bottom textarea').val(),
 						pics : getImgStr(el.find('.comment_good_item_bottom .comment_good_image_boxs'))
@@ -187,42 +187,49 @@ require(['../require/config'],function () {
 				URL = window.URL || window.webkitURL,
 				file = files[0];
 				if( !file ) return;
-				var fr = new FileReader();
-				var span = document.createElement("span");
-				span.className = "comment_good_image"
-            	span.innerHTML = '<img src="../img/img_logo.png"/><b class="del_img"></b>';
-            	nodes.append(span)
-				fr.onload = function () {
-	                var result = this.result;
-	                var img = new Image();
-	                img.src = result;
-					var ll = imgsize(result);
-	                //如果图片大小小于200kb，则直接上传
-	                if (ll <= 200 *1024) {
-	                    img = null;
-	                    $(span).find("img").attr("src",result);
-	                    upload(result, file.type,goodid,span);
-	                    
-	                    return;
-	                }
-					// 图片加载完毕之后进行压缩，然后上传
-	                if (img.complete) {
-	                    callback();
-	                } else {
-	                    img.onload = callback;
-	                }
-	
-	                function callback() {
-	                    var data = compress(img);
-	
-	                    $(span).find("img").attr("src",result);
-						console.log(imgsize(data))
-	                    upload(data, file.type,goodid,span);
-	                    img = null;
-	                }
-	
-	            };
-                fr.readAsDataURL(file);
+				EXIF.getData(files[0], function() {  
+		            //alert(EXIF.pretty(this));  
+		            EXIF.getAllTags(this);   
+		            //alert(EXIF.getTag(this, 'Orientation'));   
+		            Orientation = EXIF.getTag(this, 'Orientation');
+		            var fr = new FileReader();
+					var span = document.createElement("span");
+					span.className = "comment_good_image"
+	            	span.innerHTML = '<img src="../img/img_logo.png"/><b class="del_img"></b>';
+	            	nodes.append(span)
+					fr.onload = function () {
+		                var result = this.result;
+		                var img = new Image();
+		                img.src = result;
+						var ll = imgsize(result);
+		                //如果图片大小小于200kb，则直接上传
+		                if (ll <= 200 *1024) {
+		                    img = null;
+		                    $(span).find("img").attr("src",result);
+		                    upload(result, file.type,goodid,span,Orientation);
+		                    
+		                    return;
+		                }
+						// 图片加载完毕之后进行压缩，然后上传
+		                if (img.complete) {
+		                    callback();
+		                } else {
+		                    img.onload = callback;
+		                }
+		
+		                function callback() {
+		                    var data = compress(img);
+		
+		                    $(span).find("img").attr("src",result);
+							console.log(imgsize(data))
+		                    upload(data, file.type,goodid,span,Orientation);
+		                    img = null;
+		                }
+		
+		            };
+	                fr.readAsDataURL(file);
+			  	})
+				
 	        })
 	        $(".comment_goods").on("touchstart",".comment_good_picter",function(e){
 	        	console.log("tauchstar");
@@ -306,7 +313,7 @@ require(['../require/config'],function () {
 		
 		        return ndata;
 		    };
-	        function upload(basestr, type, goodid,el) {
+	        function upload(basestr, type, goodid,el,Orientation) {
 		        var basestr = basestr.split(",")[1];
 		        var type = type.split("/")[1];
 				var formdata = new FormData();
@@ -315,6 +322,7 @@ require(['../require/config'],function () {
 		        formdata.append("goodsId",goodid);
 		       	formdata.append("imgStr",basestr);
 		        formdata.append("suffix",type);
+		        formdata.append("angle",Orientation);
 		        pub.evaluate.apiHandle.comment_upload_img(formdata,el);
 		    };
 	        //计算图片文件的大小
@@ -328,6 +336,7 @@ require(['../require/config'],function () {
 				var fileLength=parseInt(strLength-(strLength/8)*2);
 				return fileLength
 			}
+			//从元素上提取img地址拼接str
 			function getImgStr (o){
 				if (typeof o == "object") {
 					var el = o.find('span');
@@ -344,6 +353,7 @@ require(['../require/config'],function () {
 	};
 
 	pub.evaluate.init = function(){
+		var EXIF = require(['exif'],function(){})
 		pub.evaluate.apiHandle.init()
 		pub.evaluate.eventHandle.init();
 	};
