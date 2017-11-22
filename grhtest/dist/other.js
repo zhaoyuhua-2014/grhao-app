@@ -174,11 +174,25 @@ require(['../require/config'],function () {
 	            clearTimeout(timeout);  //长按时间少于800ms，不会执行传入的方法  
 	        });
 	        $(".comment_goods").on("click",".del_img",function(e){
-	        	var nood = $(this).parent();
-	        	nood.remove()
+	        	console.log("deg_img")
+	        	pub.evaluate.nood = $(this).parent();
+	        	var data = {
+					type:1,
+					title:'确定删除图片吗?',
+					canclefn:'cancleFn',
+					truefn:'trueFn'
+				}
+				common.alertMaskApp(JSON.stringify(data));
 	        });
+	        $(".comment_goods").on("click",'.comment_good_image_boxs img',function(){
+	        	$(this).is('.img_preview') ? $(this).removeClass("img_preview") : $(this).addClass("img_preview");
+	        })
 	        $(".comment_goods").on("change",".comment_good_picter",function(){
-	        	console.log("chenge");
+	        	pub.evaluate.addNode = null;
+	        	if ($(this).parent().parent().find('.comment_good_image').length == 3 ) {
+	        		pub.evaluate.addNode = $(this).parent();
+	        		pub.evaluate.addNode.css("display","none");
+	        	}
 	        	var nodes = $(this).parent().parent().find(".comment_good_image_boxs");
 	        	var goodid = $(this).attr("data-id")
 	        	var tar = this,
@@ -231,7 +245,7 @@ require(['../require/config'],function () {
 			  	})
 				
 	        })
-	        $(".comment_goods").on("touchstart",".comment_good_picter",function(e){
+	        /*$(".comment_goods").on("touchstart",".comment_good_picter",function(e){
 	        	console.log("tauchstar");
 	        	if ($(this).parent().parent().find(".comment_good_image").length == 3) {
 	        		$(this).attr("disabled","disabled");
@@ -239,7 +253,7 @@ require(['../require/config'],function () {
 	        	}else{
 	        		$(this).removeAttr("disabled")
 	        	}
-	        })
+	        })*/
 	        //评价打星
 			$(".comment_goods").on("click",".goods_star .star",function(){
 				var nood = $(this);
@@ -353,9 +367,16 @@ require(['../require/config'],function () {
 	};
 
 	pub.evaluate.init = function(){
+		window.pub = pub;
 		var EXIF = require(['exif'],function(){})
 		pub.evaluate.apiHandle.init()
 		pub.evaluate.eventHandle.init();
+		pub.evaluate.trueFn = function(){
+			pub.evaluate.nood.remove();
+			if (pub.evaluate.addNode) {
+				pub.evaluate.addNode.css("display","block")
+			}
+		}
 	};
 
 /**************************** 订单支付结果 模块 **********************************/

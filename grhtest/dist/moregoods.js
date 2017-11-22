@@ -495,7 +495,8 @@ require(['../require/config'],function(){
 			var 
 			wh = document.documentElement.clientHeight;
 			//返回顶部
-			window.onscroll=function(){
+			window.onscroll=function(e){
+				console.log(e)
 				var scroll = document.body.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
 				var scroll1 = $('.goodsDetails_box2_top').offset().top
 				var h = $(".goodsDetails_img_box").height() + $(".goodsDetails_box1").height() +40;
@@ -523,6 +524,11 @@ require(['../require/config'],function(){
 				$(this).addClass("active").siblings().removeClass("active");
 				$(".goodsDetails_box2_bottom .goodsDetails_box2_bottom_item").eq(index).show().siblings().hide();
 			});
+			$(".goodsDetails_box2_comment").on("click",".comment_goods_picter_box img",function(){
+				$(this).is(".img_preview") ? $(this).removeClass("img_preview") : $(this).addClass("img_preview");
+				//pub.apiHandle.pre_img($(".goodsDetails_box2_comment .comment_goods_picter_box"))
+			})
+			
 			//点击加载更多
 			pub.loading.on('click',function(e){
 				/*e.stopPropagation()*/
@@ -614,6 +620,33 @@ require(['../require/config'],function(){
 		pub.apiHandle = {
 			init : function(){
 	
+			},
+			pre_img:function(el){
+				var nood = el.find("img")
+				console.log(nood.length);
+				
+				var div = $("<div class='img_preview'  style='display:none'><div id='swiper_content' class='swiper_content'><div class='swiper-wrapper'></div></div></div>");
+				div.css("background","#000000");
+				$("body").append(div);
+				var html = '';
+				Array.prototype.forEach.call(nood, function(ele, index) {
+				    html += '<div class="swiper-slide"><img src= "'+$(ele).attr("src")+'" /></div>'
+				    
+				})
+				console.log(html)
+				$(".img_preview .swiper-wrapper").append(html);
+//				for(var i in nood){
+//					console.log(i)
+//					//console.log(nood[i])
+//				}
+				var mySwiper1 = new Swiper('#swiper_content', {
+					direction:'horizontal',
+					autoplay: 5000,//可选选项，自动滑动
+					//effect : 'cube',
+				})
+				$(".img_preview").css("display","block");
+				$("body").css("overflow-y","hidden")
+				
 			}
 		};
 	

@@ -1050,11 +1050,11 @@ to {
 .comment_good_item .star{width:32px;height:32px;display:inline-block;background-image:url(../img/img_xingxing_b.png);background-repeat:no-repeat;background-size:cover;background-origin:content-box;-webkit-background-origin:content-box;background-clip:content-box;-webkit-background-clip:content-box}
 .comment_good_item .star.active{background-image:url(../img/star1.png)}
 .comment_good_item_bottom textarea{width:100%;height:150px;line-height:40px;padding:24px 40px}
-.comment_good_image_box{padding-bottom:30px;font-size:0}
+.comment_good_image_box{padding-bottom:30px;font-size:0;padding-top: 30px;}
 .comment_good_picter_add{background:url(../img/add_img.png) no-repeat center;width:140px;height:140px}
 .comment_good_picter{width:100%;height:100%;opacity:0}
 .comment_good_image{width:170px;height:140px;display:inline-block;padding-right:30px;position:relative}
-.del_img{width:36px;height:36px;position:absolute;background:url(../img/icon_delete.png);display:block;top:-18px;right:12px;display:none}
+.del_img{width:44px;height:44px;position:absolute;background:url(../img/icon_delete.png) no-repeat center;display:block;top:-18px;right:12px;}
 .comment_good_image img{width:100%;height:100%;display:block}
 .comment_order_tit{width:100%;padding:16px 0;background:url(../img/comment_order_icon.png) no-repeat 5px center;height:64px;line-height:32px;text-indent:52px}
 .comment_order_star{padding:20px 0}
@@ -1086,4 +1086,7 @@ to {
 .comment_goods_picter_box .comment_goods_picter_item{float:left;margin-left:30px;width:100px;height:100px}
 .comment_goods_picter_item img{width:100%;height:100%}
 .goodsDetails_box2_bottom .comment_time{font-size:24px}
-.goodsDetails_box2_bottom .comment_name{font-size:28px}
+.goodsDetails_box2_bottom .comment_name{font-size:28px;}
+/*图片预览放大*/
+.img_preview{top: 0;left: 0;bottom: 0;right: 0;z-index: 100;position:fixed}
+.swiper_content{overflow: hidden; position: relative;width: 100%;vertical-align: middle;}
