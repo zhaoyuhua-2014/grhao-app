@@ -1089,4 +1089,6 @@ to {
 .goodsDetails_box2_bottom .comment_name{font-size:28px;}
 /*图片预览放大*/
 .img_preview{top: 0;left: 0;bottom: 0;right: 0;z-index: 100;position:fixed}
-.swiper_content{overflow: hidden; position: relative;width: 100%;vertical-align: middle;}
+.swiper_content{overflow: hidden; position: relative;width: 100%;height: 100%;}
+.swiper_content .slide{position: relative;float: left;height: 100%;visibility: visible;background-color: #000;display: -webkit-box;-webkit-box-pack: center;-webkit-box-align: center;}
+.swiper_content img{width: 100%;}

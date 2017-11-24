@@ -184,9 +184,9 @@ require(['../require/config'],function () {
 				}
 				common.alertMaskApp(JSON.stringify(data));
 	        });
-	        $(".comment_goods").on("click",'.comment_good_image_boxs img',function(){
+	        /*$(".comment_goods").on("click",'.comment_good_image_boxs img',function(){
 	        	$(this).is('.img_preview') ? $(this).removeClass("img_preview") : $(this).addClass("img_preview");
-	        })
+	        })*/
 	        $(".comment_goods").on("change",".comment_good_picter",function(){
 	        	pub.evaluate.addNode = null;
 	        	if ($(this).parent().parent().find('.comment_good_image').length == 3 ) {
@@ -273,21 +273,21 @@ require(['../require/config'],function () {
 			});
 	        function compress(img) {
 		        var initSize = img.src.length;
-		        var width = img.width;
-		        var height = img.height;
+		        var w = img.width;
+		        var h = img.height;
 				var canvas = document.createElement("canvas");
 		        //如果图片大于四百万像素，计算压缩比并将大小压至400万以下
 		        var ratio;
-		        if ((ratio = width * height / 4000000)>1) {
+		        if ((ratio = w * h / 4000000)>1) {
 		            ratio = Math.sqrt(ratio);
-		            width /= ratio;
-		            height /= ratio;
+		            w /= ratio;
+		            h /= ratio;
 		        }else {
 		            ratio = 1;
 		        }
 		
-		        canvas.width = width;
-		        canvas.height = height;
+		        canvas.width = w;
+		        canvas.height = h;
 				var ctx = canvas.getContext("2d");
 				//        铺底色
 		        ctx.fillStyle = "#fff";
@@ -295,13 +295,14 @@ require(['../require/config'],function () {
 		
 		        //如果图片像素大于100万则使用瓦片绘制
 		        var count;
-		        if ((count = width * height / 1000000) > 1) {
+		        var tCanvas = document.createElement("canvas");
+		        if ((count = w * h / 1000000) > 1) {
 		            count = ~~(Math.sqrt(count)+1); //计算要分成多少块瓦片
 		
 					//            计算每块瓦片的宽和高
-		            var nw = ~~(width / count);
-		            var nh = ~~(height / count);
-					var tCanvas = document.createElement("canvas");
+		            var nw = ~~(w / count);
+		            var nh = ~~(h / count);
+					
 					var tctx = tCanvas.getContext('2d')
 		            tCanvas.width = nw;
 		            tCanvas.height = nh;
@@ -313,7 +314,7 @@ require(['../require/config'],function () {
 		                }
 		            }
 		        } else {
-		            ctx.drawImage(img, 0, 0, width, height);
+		            ctx.drawImage(img, 0, 0, w, h);
 		        }
 		
 		        //进行最小压缩
@@ -322,7 +323,10 @@ require(['../require/config'],function () {
 		        console.log('压缩前：' + initSize);
 		        console.log('压缩后：' + ndata.length);
 		        console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + "%");
-		
+				console.log(tCanvas.width)
+				console.log(tCanvas.height)
+				console.log(canvas.width)
+				console.log(canvas.height)
 		        tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0;
 		
 		        return ndata;

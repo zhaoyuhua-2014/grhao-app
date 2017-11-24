@@ -496,7 +496,6 @@ require(['../require/config'],function(){
 			wh = document.documentElement.clientHeight;
 			//返回顶部
 			window.onscroll=function(e){
-				console.log(e)
 				var scroll = document.body.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
 				var scroll1 = $('.goodsDetails_box2_top').offset().top
 				var h = $(".goodsDetails_img_box").height() + $(".goodsDetails_box1").height() +40;
@@ -505,7 +504,6 @@ require(['../require/config'],function(){
 				}else{
 					$('.toTop').css({'display':'none'});
 				}
-				console.log(h+"#"+scroll);
 				if (scroll >= h) {
 					$(".goodsDetails_box2_top").addClass("goodsDetails_box2_top_fixed");
 					$(".goodsDetails_box2_top_empty").show()
@@ -525,10 +523,9 @@ require(['../require/config'],function(){
 				$(".goodsDetails_box2_bottom .goodsDetails_box2_bottom_item").eq(index).show().siblings().hide();
 			});
 			$(".goodsDetails_box2_comment").on("click",".comment_goods_picter_box img",function(){
-				$(this).is(".img_preview") ? $(this).removeClass("img_preview") : $(this).addClass("img_preview");
-				//pub.apiHandle.pre_img($(".goodsDetails_box2_comment .comment_goods_picter_box"))
+				//$(this).is(".img_preview") ? $(this).removeClass("img_preview") : $(this).addClass("img_preview");
+				pub.apiHandle.pre_img($(".goodsDetails_box2_comment .comment_goods_picter_box"))
 			})
-			
 			//点击加载更多
 			pub.loading.on('click',function(e){
 				/*e.stopPropagation()*/
@@ -622,31 +619,59 @@ require(['../require/config'],function(){
 	
 			},
 			pre_img:function(el){
-				var nood = el.find("img")
-				console.log(nood.length);
-				
-				var div = $("<div class='img_preview'  style='display:none'><div id='swiper_content' class='swiper_content'><div class='swiper-wrapper'></div></div></div>");
-				div.css("background","#000000");
+				var nood = el.find("img"),l=nood.length;
+				var div = $("<div class='img_preview'  style='display:none'><div id='swiper_content' class='swiper_content' style='transition-duration: 0.5s; transform: translateX(0px);'></div></div>");
 				$("body").append(div);
 				var html = '';
 				Array.prototype.forEach.call(nood, function(ele, index) {
-				    html += '<div class="swiper-slide"><img src= "'+$(ele).attr("src")+'" /></div>'
-				    
+				    html += '<div class="slide"><img src= "'+$(ele).attr("src")+'" /></div>'
 				})
-				console.log(html)
-				$(".img_preview .swiper-wrapper").append(html);
-//				for(var i in nood){
-//					console.log(i)
-//					//console.log(nood[i])
-//				}
-				var mySwiper1 = new Swiper('#swiper_content', {
-					direction:'horizontal',
-					autoplay: 5000,//可选选项，自动滑动
-					//effect : 'cube',
-				})
-				$(".img_preview").css("display","block");
+				var noodpar = $(".img_preview"),w = noodpar.width();
+				noodpar.find(".swiper_content").append(html).width(nood.length * w);
+				noodpar.css({"display":"block","background":"#000000"}).find(".slide").width(w);
 				$("body").css("overflow-y","hidden")
-				
+				var moveX,endX,cout = 0,moveDir;
+				var movebox = document.querySelector(".img_preview .swiper_content");
+				movebox.addEventListener("touchstart", boxTouchStart, false);
+	            movebox.addEventListener("touchmove", boxTouchMove, false);
+	            movebox.addEventListener("touchend", boxTouchEnd, false);
+	            movebox.addEventListener("click", boxClick, false);
+	            function boxClick(e){
+	            	movebox.parentNode.remove();
+	            	$("body").css("overflow-y","auto");
+	            }
+				function boxTouchStart(e){
+	                var touch = e.touches[0];
+	                startX = touch.pageX;
+	                endX = parseInt(movebox.style.transform.replace("translateX(",""));
+	           }
+	            function boxTouchMove(e){
+	                var touch = e.touches[0];
+	                moveX = touch.pageX - startX; 
+					if(cout == 0 && moveX > 0){
+						return false;
+					}
+					if(cout == l-1 && moveX < 0){	
+						return false;
+					}
+					movebox.style.transform = "translateX(" + (endX + moveX) + "px)";
+	            }
+	            function boxTouchEnd(e){
+	                moveDir = moveX < 0 ? true : false;
+					if(moveDir){
+						if(cout<l-1){
+	                        movebox.style.transform = "translateX(" + (endX-w) + "px)";
+	                        cout++;
+	                   }
+	               	}else{
+	                    if(cout == 0){
+	                        return false;
+	                    }else{
+							movebox.style.transform = "translateX(" + (endX+w) + "px)";
+							cout--;
+						}
+	                }
+	            }
 			}
 		};
 	
