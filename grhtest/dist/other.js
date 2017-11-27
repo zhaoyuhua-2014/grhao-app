@@ -296,6 +296,7 @@ require(['../require/config'],function () {
 		        //如果图片像素大于100万则使用瓦片绘制
 		        var count;
 		        var tCanvas = document.createElement("canvas");
+		        
 		        if ((count = w * h / 1000000) > 1) {
 		            count = ~~(Math.sqrt(count)+1); //计算要分成多少块瓦片
 		
