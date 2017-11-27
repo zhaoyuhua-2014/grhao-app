@@ -35,8 +35,15 @@ require(['../require/config'],function(){
 		pub.orderManagement = {};
 	
 		pub.orderManagement.orderStatusHash = [ '', 1, 3, 4, 7 ]; // ''，全部，1，待支付，3，已付款，4，待收货，7，已完成 处理 tab
+		
 		//订单状态
 		//-3已退款、-2退款中、-1已作废、1，2待支付、3已付款、4待收货，5待评价、6已评价、6,7已完成
+		//2017-11-27和彭哥核对订单状态
+		/*
+		 7-为已完成对应为去评价的操作
+		 6-为评价完成对应订单完成的操作
+		 
+		 * */
 		//watm添加-4已过期
 		pub.orderManagement.orderStatus = null; // 存储当前状态  处理 tab
 	
@@ -46,7 +53,7 @@ require(['../require/config'],function(){
 	
 		!pub.orderManagement.tabIndex && ( pub.orderManagement.tabIndex = '0' ); // tab 不存在默认设置为 0
 	
-		pub.orderManagement.orderStatusLabel = ['订单超时','已退款','退款中','已作废','','待支付','待支付','已付款','待收货','待评价','已完成','已完成']; // 订单状态标签
+		pub.orderManagement.orderStatusLabel = ['订单超时','已退款','退款中','已作废','','待支付','待支付','已付款','待收货','已完成','已完成','待评价']; // 订单状态标签
 	
 		pub.orderManagement.orderCode = null;  // 订单编号
 	
@@ -125,7 +132,7 @@ require(['../require/config'],function(){
 		       		    if ( v.orderStatus == '1'  || v.orderStatus == '2' )  html += '      <div class="order_sunmit_status" style="background:#f68a42">去支付</div>'  
 		       		    v.orderStatus == '4'  && v.pickUpMethod == '1' && ( html += '  <div class="order_take_style1" style="background: #93c01d;">门店自提</div>' )
 		       		    v.orderStatus == '4'  && v.pickUpMethod == '2' && ( html += '  <div class="order_take_style2" style="background: #0398ff;">送货上门</div>' )
-		       		    v.orderStatus == '5'  && ( html += '      <div class="order_sunmit_status" style="background:#93c01d">去评价</div>' )
+		       		    v.orderStatus == '7'  && ( html += '      <div class="order_sunmit_status" style="background:#93c01d">去评价</div>' )
 		       		   	v.orderStatus == '-1' && ( html += '      <div class="order_sunmit_status" style="background:#f25f4f">删除</div>' ) 
 		       		      
 		       	   	    html += '                    </div>'
@@ -355,9 +362,9 @@ require(['../require/config'],function(){
 	    	{ text : '待支付', className : 'unpay-operate', btnText : '' },
 	    	{ text : '',       className : 'refund-btn', btnText : '退款', pickUpMethod : ['待自提','已付款']},
 	    	{ text : '待收货', className : 'hide', btnText : ''},
-	    	{ text : '已签收', className : 'comment-btn', btnText : '评价'},
 	    	{ text : '已完成', className : 'hide', btnText : ''},
-	    	{ text : '已完成', className : 'hide', btnText : ''}];
+	    	{ text : '已完成', className : 'hide', btnText : ''},
+	    	{ text : '已签收', className : 'comment-btn', btnText : '评价'}];
 	
 	    pub.orderDetail.METHOD = null; // 接收方法
 	

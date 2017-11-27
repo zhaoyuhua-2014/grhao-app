@@ -524,7 +524,8 @@ require(['../require/config'],function(){
 			});
 			$(".goodsDetails_box2_comment").on("click",".comment_goods_picter_box img",function(){
 				//$(this).is(".img_preview") ? $(this).removeClass("img_preview") : $(this).addClass("img_preview");
-				pub.apiHandle.pre_img($(".goodsDetails_box2_comment .comment_goods_picter_box"))
+				var nood = $(this).parent().parent();
+				pub.apiHandle.pre_img(nood,$(this));
 			})
 			//点击加载更多
 			pub.loading.on('click',function(e){
@@ -618,20 +619,28 @@ require(['../require/config'],function(){
 			init : function(){
 	
 			},
-			pre_img:function(el){
-				var nood = el.find("img"),l=nood.length;
+			pre_img:function(el,me){
+				var imgUrl = me.attr("src"),imgIndex=0;
+				var nood = el.find("img"),l=nood.length,arrImg=[];
 				var div = $("<div class='img_preview'  style='display:none'><div id='swiper_content' class='swiper_content' style='transition-duration: 0.5s; transform: translateX(0px);'></div></div>");
 				$("body").append(div);
 				var html = '';
 				Array.prototype.forEach.call(nood, function(ele, index) {
+					if (imgUrl == $(ele).attr("src")) {
+						imgIndex = index;
+					}
 				    html += '<div class="slide"><img src= "'+$(ele).attr("src")+'" /></div>'
 				})
 				var noodpar = $(".img_preview"),w = noodpar.width();
+				
 				noodpar.find(".swiper_content").append(html).width(nood.length * w);
-				noodpar.css({"display":"block","background":"#000000"}).find(".slide").width(w);
+				//noodpar.css({"display":"block","background":"#000000"}).find(".slide").width(w);
 				$("body").css("overflow-y","hidden")
 				var moveX,endX,cout = 0,moveDir;
 				var movebox = document.querySelector(".img_preview .swiper_content");
+				movebox.style.transform = "translateX(" + (-imgIndex * w) + "px)";
+				cout = imgIndex;
+				noodpar.css({"display":"block","background":"#000000"}).find(".slide").width(w);
 				movebox.addEventListener("touchstart", boxTouchStart, false);
 	            movebox.addEventListener("touchmove", boxTouchMove, false);
 	            movebox.addEventListener("touchend", boxTouchEnd, false);
