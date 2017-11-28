@@ -640,7 +640,10 @@ require(['../require/config'],function(){
 				var movebox = document.querySelector(".img_preview .swiper_content");
 				movebox.style.transform = "translateX(" + (-imgIndex * w) + "px)";
 				cout = imgIndex;
-				noodpar.css({"display":"block","background":"#000000"}).find(".slide").width(w);
+				noodpar.css({"background":"#000000"}).find(".slide").width(w);
+				setTimeout(function(){
+					noodpar.show();
+				},100)
 				movebox.addEventListener("touchstart", boxTouchStart, false);
 	            movebox.addEventListener("touchmove", boxTouchMove, false);
 	            movebox.addEventListener("touchend", boxTouchEnd, false);

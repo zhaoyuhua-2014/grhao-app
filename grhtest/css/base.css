@@ -1076,7 +1076,8 @@ to {
 .goodsDetails_box2_bottom li.active{display:block}
 .goodsDetails_box2_comment .comment_item{padding:20px}
 .goodsDetails_box2_comment .comment_item_top{padding:20px;width:100%}
-.goodsDetails_box2_comment .comment_item_top dt{overflow:hidden;padding-right:23px;width:103px;height:80px;border-radius:50%}
+.goodsDetails_box2_comment .comment_item_top dd.float_left{padding-left: 20px;}
+.goodsDetails_box2_comment .comment_item_top dt{overflow:hidden;width: 80px;height:80px;border-radius:50%}
 .goodsDetails_box2_comment .comment_item_top dt img{width:100%;height:100%}
 .goodsDetails_box2_comment .star{display:inline-block;width:32px;height:32px;background-image:url(../img/img_xingxing_b.png);background-size:cover;background-repeat:no-repeat;background-clip:content-box;background-origin:content-box;-webkit-background-origin:content-box;-webkit-background-clip:content-box}
 .goodsDetails_box2_comment .star.active{background-image:url(../img/star1.png)}

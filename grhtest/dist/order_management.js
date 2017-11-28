@@ -244,7 +244,7 @@ require(['../require/config'],function(){
 	
 			    	    common.jumpLinkPlainApp( "订单支付",'html/order_pay.html' );
 	
-				    }else if( status == '5' ){ // 评价
+				    }else if( status == '7' ){ // 评价
 	
 				    	common.orderColumn.removeItem();
 				    	common.jumpLinkPlainApp( '订单评价','html/order_evaluation.html' );
