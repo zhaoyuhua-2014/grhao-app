@@ -7,8 +7,8 @@ define(['jquery','mdData','shar1'],function($){
 
 	$.extend(common,{
 
-		//API : "http://api.grhao.com/server/api.do", // 接口地址
-		API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
+		API : "http://api.grhao.com/server/api.do", // 接口地址
+		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数
 		PAGE_SIZE : 10,
 		// 页码索引
