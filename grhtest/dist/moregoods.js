@@ -332,11 +332,13 @@ require(['../require/config'],function(){
 		// 命名空间
 	
 		pub.goodsDetail = {};
+		pub.goodsDetail.isEnd = null;
 	
 		// 商品详情 接口处理
 		pub.goodsDetail.apiHandle = {
 			init : function(){
 				pub.goodsDetail.apiHandle.goods_show.init();
+				pub.goodsDetail.apiHandle.good_comment.init();
 			},
 			goods_show : {
 				init : function(){
@@ -404,6 +406,77 @@ require(['../require/config'],function(){
 					d.goodsContext && $('.goodsDetails_box2_').show().html( d.goodsContext);
 					
 				}
+			},
+			good_comment:{
+				init:function(){
+					common.ajaxPost({
+						method : 'goods_comment_list',
+						goodsId : pub.goodsDetail.goodsId,
+						pageNo : pub.PAGE_INDEX,
+						pageSize : pub.PAGE_SIZE
+					},function( d ){
+						if (d.statusCode == '100000') {
+							pub.goods.isEnd = d.data.isLast
+							if (d.data.objects != "" && d.data.objects.length !="0" ) {
+								pub.goodsDetail.apiHandle.good_comment.apiData( d );
+							} else if(d.data.objects.length == '0' ){
+								if (pub.PAGE_INDEX == 1) {
+									pub.loading.show().html("暂无评论信息！").css("text-align","left");
+								}else{
+									pub.loading.show().html("没有更多数据了！");
+								}
+								
+							}
+						}else{
+							common.prompt(d.statusStr)
+						}
+					})
+				},
+				apiData:function(d){
+					d = d.data;
+					pub.goods.isEnd = d.isLast;
+					if (pub.PAGE_INDEX == 1) {
+						$(".goodsDetails_box2_comment_box").html('');
+					}
+					var html = '',i;
+					for ( i in d.objects ) {
+						html +='<div class="comment_item">'
+						html +='	<dl class="comment_item_top clearfloat">'
+						html +='		<dt class="float_left"><img src="'+d.objects[i].userFaceImg+'"/></dt>'
+						html +='		<dd	class="float_left">'
+						html +='			<p class="comment_time">'+d.objects[i].createTime.split(" ")[0]+'</p>'
+						html +='			<p class="comment_name">'+d.objects[i].userName+'</p>'
+						html +='		</dd>'
+						html +='		<dd class="goods_star float_right">'
+						for (var n=2;n<=10;n+=2) {
+							if (n<=d.objects[i].service) {
+								html +='			<span class="star active" data="'+n+'"></span>'		
+							} else{
+								html +='			<span class="star" data="'+n+'"></span>'		
+							}
+						}
+						html +='		</dd>'
+						html +='		<input type="hidden" name="stars" id="stars" value="'+d.objects[i].service+'" />'
+						html +='	</dl>'
+						html +='	<div class="comment_item_bottom">'
+						html +='		<p class="comment_content">'+d.objects[i].comment+'</p>'
+						html +='		<div class="comment_goods_picter_box clearfloat">'
+						for (var m in d.objects[i].pics.split("@")) {
+							if (d.objects[i].pics.split("@")[m]) {
+								html +='			<div class="comment_goods_picter_item"><img src="'+d.objects[i].pics.split("@")[m]+'"/></div>'
+							}
+						}
+						html +='		</div>'
+						html +='	</div>'
+						html +='</div>'
+					}
+					$(".goodsDetails_box2_comment_box").append(html);
+					if( pub.goods.isEnd ){
+						pub.loading.show().html("没有更多数据了！");
+					}else{
+						pub.loading.show().html("点击加载更多！");
+					};
+				}
 			}
 		};
 	
@@ -419,13 +492,24 @@ require(['../require/config'],function(){
 		pub.goodsDetail.init = function(){
 	
 			pub.goodsDetail.goodsId = common.getUrlParam('goodsId');
+			var 
+			wh = document.documentElement.clientHeight;
 			//返回顶部
-			window.onscroll=function(){
+			window.onscroll=function(e){
 				var scroll = document.body.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
+				var scroll1 = $('.goodsDetails_box2_top').offset().top
+				var h = $(".goodsDetails_img_box").height() + $(".goodsDetails_box1").height() +40;
 				if( scroll >= 600){				
 					$('.toTop').css({'display':'block'});			
 				}else{
 					$('.toTop').css({'display':'none'});
+				}
+				if (scroll >= h) {
+					$(".goodsDetails_box2_top").addClass("goodsDetails_box2_top_fixed");
+					$(".goodsDetails_box2_top_empty").show()
+				}else{
+					$(".goodsDetails_box2_top").removeClass("goodsDetails_box2_top_fixed")
+					$(".goodsDetails_box2_top_empty").hide()
 				}
 			};
 			$('.toTop').on('click',function(){
@@ -433,7 +517,26 @@ require(['../require/config'],function(){
 					scrollTop : 0
 				},500); 
 			});
-	
+			$(".goodsDetails_box2_top li").on("click",function(){
+				var index = $(this).index();
+				$(this).addClass("active").siblings().removeClass("active");
+				$(".goodsDetails_box2_bottom .goodsDetails_box2_bottom_item").eq(index).show().siblings().hide();
+			});
+			$(".goodsDetails_box2_comment").on("click",".comment_goods_picter_box img",function(){
+				//$(this).is(".img_preview") ? $(this).removeClass("img_preview") : $(this).addClass("img_preview");
+				var nood = $(this).parent().parent();
+				pub.apiHandle.pre_img(nood,$(this));
+			})
+			//点击加载更多
+			pub.loading.on('click',function(e){
+				/*e.stopPropagation()*/
+				if (!pub.goods.isEnd) {
+					pub.PAGE_INDEX ++;
+					pub.goodsDetail.apiHandle.good_comment.init();
+				}else{
+					pub.loading.show().html("没有更多数据了！");
+				}
+			});
 			$('.show_num').attr( 'zs-goodsId',pub.goodsDetail.goodsId );
 			pub.goodsDetail.apiHandle.init();
 			pub.goodsDetail.eventHandle.init();
@@ -515,6 +618,72 @@ require(['../require/config'],function(){
 		pub.apiHandle = {
 			init : function(){
 	
+			},
+			pre_img:function(el,me){
+				var imgUrl = me.attr("src"),imgIndex=0;
+				var nood = el.find("img"),l=nood.length,arrImg=[];
+				var div = $("<div class='img_preview'  style='display:none'><div id='swiper_content' class='swiper_content' style='transition-duration: 0.5s; transform: translateX(0px);'></div></div>");
+				$("body").append(div);
+				var html = '';
+				Array.prototype.forEach.call(nood, function(ele, index) {
+					if (imgUrl == $(ele).attr("src")) {
+						imgIndex = index;
+					}
+				    html += '<div class="slide"><img src= "'+$(ele).attr("src")+'" /></div>'
+				})
+				var noodpar = $(".img_preview"),w = noodpar.width();
+				
+				noodpar.find(".swiper_content").append(html).width(nood.length * w);
+				//noodpar.css({"display":"block","background":"#000000"}).find(".slide").width(w);
+				$("body").css("overflow-y","hidden")
+				var moveX,endX,cout = 0,moveDir;
+				var movebox = document.querySelector(".img_preview .swiper_content");
+				movebox.style.transform = "translateX(" + (-imgIndex * w) + "px)";
+				cout = imgIndex;
+				noodpar.css({"background":"#000000"}).find(".slide").width(w);
+				setTimeout(function(){
+					noodpar.show();
+				},100)
+				movebox.addEventListener("touchstart", boxTouchStart, false);
+	            movebox.addEventListener("touchmove", boxTouchMove, false);
+	            movebox.addEventListener("touchend", boxTouchEnd, false);
+	            movebox.addEventListener("click", boxClick, false);
+	            function boxClick(e){
+	            	movebox.parentNode.remove();
+	            	$("body").css("overflow-y","auto");
+	            }
+				function boxTouchStart(e){
+	                var touch = e.touches[0];
+	                startX = touch.pageX;
+	                endX = parseInt(movebox.style.transform.replace("translateX(",""));
+	           }
+	            function boxTouchMove(e){
+	                var touch = e.touches[0];
+	                moveX = touch.pageX - startX; 
+					if(cout == 0 && moveX > 0){
+						return false;
+					}
+					if(cout == l-1 && moveX < 0){	
+						return false;
+					}
+					movebox.style.transform = "translateX(" + (endX + moveX) + "px)";
+	            }
+	            function boxTouchEnd(e){
+	                moveDir = moveX < 0 ? true : false;
+					if(moveDir){
+						if(cout<l-1){
+	                        movebox.style.transform = "translateX(" + (endX-w) + "px)";
+	                        cout++;
+	                   }
+	               	}else{
+	                    if(cout == 0){
+	                        return false;
+	                    }else{
+							movebox.style.transform = "translateX(" + (endX+w) + "px)";
+							cout--;
+						}
+	                }
+	            }
 			}
 		};
 	
@@ -567,18 +736,6 @@ require(['../require/config'],function(){
 				}, 1000);	
 			}
 			function load(){
-				/*var $listWrapper = $('.main');
-
-		        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
-		            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
-		             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
-		
-		            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
-		            onPullDown: function () {
-		                pullDownAction();
-		            },
-		        });*/
-		        
 		        var $listWrapper1 = $('._more_');
 
 		        pub.pullInstance1 =  pullInstance1 = new Pull($listWrapper1, {
