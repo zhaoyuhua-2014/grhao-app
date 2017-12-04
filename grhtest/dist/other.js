@@ -110,13 +110,35 @@ require(['../require/config'],function () {
 			$(".comment_goods").append(html)
 		},
 		comment_upload_img:function(data,el){
-			$.ajax({
+			console.log(data)
+			/*$.ajax({
 				type:"POST",
 				url:common.API,
 				dataType:"JSON",
 				data:data,
 		        processData : false, // 不处理发送的数据，因为data值是Formdata对象，不需要对数据做处理
 		        contentType : false, // 不设置Content-type请求头
+				success:function(d){
+					console.log(JSON.stringify(d))
+					if( d.statusCode == "100000" ){
+						console.log(d.data)
+						$(el).attr("data-src",d.data);
+					}else{
+						common.prompt( d.statusCode );
+					}
+				}
+			});*/
+		/*common.ajaxPost($.extend(data,pub.userBasicParam),function( d ){
+				d.statusCode == "100000" && common.goBackApp(1,true,"html/order_management.html");
+				
+			});*/
+			data.imgStr=data.imgStr.substr(0,3000)
+			console.log(data.imgStr)
+			$.ajax({
+				type:"POST",
+				url:common.API,
+				dataType:"JSONP",
+				data:data,
 				success:function(d){
 					console.log(JSON.stringify(d))
 					if( d.statusCode == "100000" ){
@@ -337,13 +359,21 @@ require(['../require/config'],function () {
 	        function upload(basestr, type, goodid,el,Orientation) {
 		        var basestr = basestr.split(",")[1];
 		        var type = type.split("/")[1];
-				var formdata = new FormData();
+				/*var formdata = new FormData();
 		        formdata.append("method","comment_img_upload");
 		        formdata.append("orderCode",pub.orderCode);
 		        formdata.append("goodsId",goodid);
 		       	formdata.append("imgStr",basestr);
 		        formdata.append("suffix",type);
-		        formdata.append("angle",Orientation);
+		        formdata.append("angle",Orientation);*/
+		        var formdata = {
+		        	"method":"comment_img_upload",
+		        	"orderCode":pub.orderCode,
+		        	"goodsId":goodid,
+		        	"imgStr":basestr,
+		        	"suffix":type,
+		        	"angle":Orientation
+		        }
 		        pub.evaluate.apiHandle.comment_upload_img(formdata,el);
 		    };
 	        //计算图片文件的大小
