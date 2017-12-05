@@ -112,11 +112,11 @@ require(['../require/config'],function () {
 		comment_upload_img:function(data,el){
 			$.ajax({
 				type:"POST",
-				url:common.API+"?img",
+				url:common.API,
 				dataType:"JSON",
 				data:data,
-		        processData : false, // 不处理发送的数据，因为data值是Formdata对象，不需要对数据做处理
-		        contentType : false, // 不设置Content-type请求头
+		        //processData : false, // 不处理发送的数据，因为data值是Formdata对象，不需要对数据做处理
+		        //contentType : false, // 不设置Content-type请求头
 				success:function(d){
 					console.log(d)
 					if( d.statusCode == "100000" ){
@@ -336,13 +336,21 @@ require(['../require/config'],function () {
 	        function upload(basestr, type, goodid,el,Orientation) {
 		        var basestr = basestr.split(",")[1];
 		        var type = type.split("/")[1];
-				var formdata = new FormData();
+				/*var formdata = new FormData();
 		        formdata.append("method","comment_img_upload");
 		        formdata.append("orderCode",pub.orderCode);
 		        formdata.append("goodsId",goodid);
 		       	formdata.append("imgStr",basestr);
 		        formdata.append("suffix",type);
-		        formdata.append("angle",Orientation);
+		        formdata.append("angle",Orientation);*/
+		        var formdata = {
+		        	"method":"comment_img_upload",
+		        	"orderCode":pub.orderCode,
+		        	"goodsId":goodid,
+		        	"imgStr":basestr,
+		        	"suffix":type,
+		        	"angle":Orientation,
+		        }
 		        pub.evaluate.apiHandle.comment_upload_img(formdata,el);
 		    };
 	        //计算图片文件的大小

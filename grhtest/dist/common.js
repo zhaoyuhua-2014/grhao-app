@@ -6,8 +6,9 @@ define(['jquery','mdData','shar1'],function($){
 	var common = {};
 
 	$.extend(common,{
-
-		API : "http://api.grhao.com/server/api.do", // 接口地址
+		//EVE 作为正式环境和测试环境的开关，为true时为正式环境，为false时为测试环境
+		EVE:true,
+		//API : "http://api.grhao.com/server/api.do", // 接口地址
 		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数
 		PAGE_SIZE : 10,
@@ -34,9 +35,16 @@ define(['jquery','mdData','shar1'],function($){
 		ID_CARD_REG : /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/,
 		//全局的延时函数
 		DTD : $.Deferred(),
+		
 	});
 
-	
+	(function(){
+		if (common.EVE) {
+			common.API = "http://api.grhao.com/server/api.do";
+		}else{
+			common.API = "http://61.164.118.194:8090/grh_api/server/api.do"
+		}
+	})(common)
 
 	// 构造HTML5存储方式 
 	function Memory( key, way ){
@@ -669,5 +677,16 @@ define(['jquery','mdData','shar1'],function($){
 		var nodeTemp = $(this).remove();
 		nodeTemp = null;
 	});
+	(function(){
+		var m = document.createElement("meta"),
+			h = document.getElementsByTagName("head")[0];
+			m.setAttribute("http-equiv","Content-Security-Policy");
+		if (common.EVE) {
+			m.setAttribute("content","script-src 'self' 'unsafe-inline' 'unsafe-eval' http://api.grhao.com/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'");
+		}else{
+			m.setAttribute("content","script-src 'self' 'unsafe-inline' 'unsafe-eval' http://61.164.118.194:8090/grh_api/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'");
+		}
+		h.appendChild(m)
+	})(common)
 	return common;
 });
