@@ -138,7 +138,8 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .border_left{border-left: 1px solid #FFFFFF;}
 /*隐藏一个元素*/
 .hidden{display: none;}
-
+/*省略号样式*/
+.ellipsis{overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
 /*首页样式*/
 .index_header {position:relative;left:0;top:0;}
 .index_loge {position:absolute;left:0;top:0;width:190px;height:96px;padding:6px 25px;background-position: 0 -10px}
@@ -200,11 +201,11 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .store_store_wrap {padding:0 20px;}
 .store_store_item {height:160px;background:#FFFFFF;margin-bottom:20px;}
 .store_store_item dl {height:160px;float: left;}
-.store_store_item dl dt {width:200px;height:160px;float:left;padding:20px;}
+.store_store_item dl dt {width:200px;height:160px;float:left;padding:20px;background: url(../img/search_error.png) no-repeat center;background-size: 70%;}
 .store_store_item dl dd {float:left;width:340px;height:160px;padding:20px 0;}
 .store_store_item.active{background: #EEEEEE;}
-.business_name {line-height:50px;}
-.business_address {line-height:34px;font-size:26px;color:rgb(136,136,136);}
+.business_name {line-height:50px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.business_address {line-height:34px;font-size:26px;color:rgb(136,136,136);display: -webkit-box;-webkit-box-orient:vertical ;-webkit-line-clamp: 2;overflow: hidden;}
 .business_timer {position: relative; width:180px;float: left;height: 160px; background: url(../img/location.png) no-repeat center 40px;text-align:center;color:#666;font-size: 24px; padding-top: 104px;line-height: 34px;background-size: 20%}
 .business_timer p{position: absolute;white-space: nowrap;right: 20px;}
 .store_box2 {width:100%;display:none;}
@@ -280,7 +281,7 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .goods_item dd {width:360px;padding-top:20px;border-bottom:1px solid #b2b2b2;}
 .goods_item dd .good_box{width: 340px;position: relative;height: 60px;}
 
-.good_name {height:50px;line-height:50px;font-weight:900;white-space:nowrap;font-size: 28px;}
+.good_name {height:50px;line-height:50px;font-weight:900;white-space:nowrap;font-size: 28px;overflow: hidden;text-overflow: ellipsis;}
 .good_describe ,.good_describe1{height:45px;line-height:45px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
 .good_describe1{color: #898989;}
 .good_picre {width: 186px;height: 50px; position: absolute;left: 0;bottom: 0;line-height:50px;font-size:30px;color:#fc7732;}
@@ -301,7 +302,7 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .goodsDetails_box1 {width:100%;padding:22px 20px 30px;height:236px;background:#FFFFFF;}
 .gd_goodName {height:52px;font-size:36px;color:rgb(51,51,51);font-weight:900;}
 .gd_specification,.gd_goodsDescribe{height:40px;line-height: 40px; font-size:26px;color:rgb(136,136,136);}
-.gd_specification .float_left,.gd_specification .float_right,.gd_goodsDescribe{white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+.gd_specification .float_left,.gd_specification .float_right,.gd_goodsDescribe,.gd_goodName{white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
 .gd_specification .float_left{max-width:280px;}
 .gd_specification .float_right{color:red;max-width: 350px;}
 .good_box1_box1 {height:50px;font-size:28px;}

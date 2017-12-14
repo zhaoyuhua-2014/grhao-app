@@ -26,7 +26,7 @@ define(['common'],function(common){
 				html +='				</div>'
 	            html +='				<div class="often_shop_goods_top often_shop_show clearfloat">'
 				html +='					<p class="often_shop_goods_tit">'+arr[i].specifications+'</p>'
-				html +='					<p class="often_shop_goods_icon"><del>￥'+arr[i].oldPrice+'</del></p>'
+				html +='					<p class="often_shop_goods_icon ellipsis"><del>￥'+arr[i].oldPrice+'</del></p>'
 				html +='				</div>'
 				html +='				<div class="oprate">'
 				html +='					<span class="minus_num actived">－</span><input class="show_num" value="' + arr[i].count + '" disabled="disabled" readonly="true" dataID="'+arr[i].goodsId+'"><span class="add_num">+</span>'
