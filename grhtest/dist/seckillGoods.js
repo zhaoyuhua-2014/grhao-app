@@ -234,7 +234,7 @@ require(['../require/config'],function () {
 					}, function( d ){
 						if ( d.statusCode == "100000" ) {
 							common.shareData = d.data.customShare; // 微信分享
-							common.isWeiXin() && require.async('lib/weixin'); //判断微信环境调用分享
+							//common.isWeiXin() && require.async('lib/weixin'); //判断微信环境调用分享
 							pub.seckill.apiHandle.kill_goods_list.apiData( d );
 						}
 					})

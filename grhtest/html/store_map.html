@@ -3,8 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>门店位置</title>
-		<!--<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://api.grhao.com/server/api.do http://webapi.amap.com https://webapi.amap.com https://restapi.amap.com; style-src 'self' 'unsafe-inline' 'unsafe-eval' https://webapi.amap.com; " >
-		--><style type="text/css">
+		<style type="text/css">
 			#container{width: 100%;height: 600px;}
 			.amap-marker .amap-marker-label{background: rgba(0,0,0,0.6);border:0;color:#ffffff;padding:8px 12px;border-radius: 8px;font-size: 26px;line-height: 26px;}
 		</style>
@@ -14,48 +13,13 @@
 			<div id="container"></div>
 		</div>
 	</body>
-	<script src="../js/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../outside/mobile-util.js" type="text/javascript" charset="utf-8"></script>
-	<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=68f1f7850d75a2c422f417cc77331395"></script>
-    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
-	<script>
-		$(document).ready(function(){
-			$("#container").height($(window).height())
-			var pub = {};//{'latitude':'30.27415000','longitude':'120.15515000'}
-			pub.locationInfo = (localStorage.getItem("location") && JSON.parse(localStorage.getItem("location")).AOIName) ? JSON.parse(localStorage.getItem("location")) : {'latitude':'30.24423873','longitude':'120.1823616'}
-			
-			pub.mapData = localStorage.getItem("mapData") ? JSON.parse(localStorage.getItem("mapData")) : null;
-	        if (pub.mapData && !!pub.mapData.longitude) {
-	        	var  map = new AMap.Map("container", {
-			        resizeEnable: true,
-			        center: [pub.mapData.longitude, pub.mapData.latitude],
-			        zoom: 15
-			    });
-	        	var marker = new AMap.Marker({
-	        		map:map,
-		            icon: "../img/labelmap2.png",
-		            position: [pub.mapData.longitude, pub.mapData.latitude],
-		            label : { content : pub.mapData.firmName, offset : new AMap.Pixel(-40,-44) },
-		        });
-		        var marker1 = new AMap.Marker({
-		        	map:map,
-		            icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_r.png",
-		            position: [pub.locationInfo.longitude, pub.locationInfo.latitude],
-		            label : { content : '当前位置', offset : new AMap.Pixel(-40,-44) },
-		        });
-	        }else{
-	        	var  map = new AMap.Map("container", {
-			        resizeEnable: true,
-			        center: [pub.locationInfo.longitude, pub.locationInfo.latitude],
-			        zoom: 15
-			    });
-			    var marker1 = new AMap.Marker({
-		        	map:map,
-		            icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_r.png",
-		            position: [pub.locationInfo.longitude, pub.locationInfo.latitude],
-		            label : { content : '当前位置', offset : new AMap.Pixel(-40,-44) },
-		        });
-	        }
-		})
+	<script data-main = "../dist/map.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		function trueFn(){
+			pub.Map.apiHandle.trueFn();
+		}
+		function cancleFn(){
+			pub.Map.apiHandle.cancleFn();
+		}
 	</script>
 </html>

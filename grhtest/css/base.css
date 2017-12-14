@@ -199,7 +199,7 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 
 .store_area_click {border-color:#93C01D;color:#93C01D;}
 .store_store_wrap {padding:0 20px;}
-.store_store_item {height:160px;background:#FFFFFF;margin-bottom:20px;}
+.store_store_item {height:160px;background:#FFFFFF;margin-bottom:20px;position: relative;}
 .store_store_item dl {height:160px;float: left;}
 .store_store_item dl dt {width:200px;height:160px;float:left;padding:20px;background: url(../img/search_error.png) no-repeat center;background-size: 70%;}
 .store_store_item dl dd {float:left;width:340px;height:160px;padding:20px 0;}
@@ -210,7 +210,9 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .business_timer p{position: absolute;white-space: nowrap;right: 20px;}
 .store_box2 {width:100%;display:none;}
 .store_store_item dt img{width: 100%;height: 100%;}
-					
+.store_store_item .icon{position: absolute;width: 82px;height: 119px;top: 0;left: 20px;background-size: 60%;background-position: left top;background-repeat: no-repeat;}
+.store_store_item .icon.store{background-image: url(../img/store.png);}
+.store_store_item .icon.machine{background-image: url(../img/machine.png);}
 /*watm机修改门店筛选页面*/
 
 .fillter_tab{display: flex;line-height:80px;background: #FFF;border-bottom: 1rpx solid #ddd;z-index: 2;position: relative;}
@@ -233,9 +235,9 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .filter_panel.filter_panel2 .filter_area1 span.active{background: #EEE;}
 .fillter_content .hidden{display: none;}
 .filter_panel2 .filter_panel_list:nth-child(1) span{background: #FFF;}
-.location_content{height: 90px;line-height: 90px;background: #FFFFFF url(../img/location.png) no-repeat 38px center;padding-left: 100px;}
+.location_content{height: 90px;line-height: 90px;background: #FFFFFF url(../img/location.png) no-repeat 38px center;padding-left: 100px;padding-right: 24px;}
 .location_content em{font-size: 20px;color: #909090;font-style: normal;padding: 0 10px;}
-
+.location_content .float_right{width: 100px;height: 90px;background: url(../img/map.png) no-repeat center;background-size: 70%;}
 .store_box_title,.location_title{height: 20px;line-height: 20px;background: #F0F0F0;text-indent: 28px;font-size: 20px;}
 
 .filter_panel1 span.active,.filter_panel3 span.active{background:#FFF url(../img/right.png) no-repeat 90% center;}

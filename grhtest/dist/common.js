@@ -7,7 +7,7 @@ define(['jquery','mdData','shar1'],function($){
 
 	$.extend(common,{
 		//EVE 作为正式环境和测试环境的开关，为true时为正式环境，为false时为测试环境
-		EVE:true,
+		EVE:false,
 		//API : "http://api.grhao.com/server/api.do", // 接口地址
 		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数
@@ -104,6 +104,10 @@ define(['jquery','mdData','shar1'],function($){
 	/*2017-10-24*/
 	common.orderColumn = new Memory('orderColumn','local'); // 订单 tab 
 	common.preColumn = new Memory('preColumn','local'); // 预购订单 tab 
+	/*2017-12-14*/
+	common.allMap = new Memory("allMap","local");//所有门店地址
+	common.mapData = new Memory("mapData","local");//点击当前门店的地址
+
 	// session存储
 	common.first_data = new Memory('first_data','session'); //
 	common.two_data = new Memory('two_data','session'); //
@@ -682,11 +686,16 @@ define(['jquery','mdData','shar1'],function($){
 			h = document.getElementsByTagName("head")[0];
 			m.setAttribute("http-equiv","Content-Security-Policy");
 		if (common.EVE) {
-			m.setAttribute("content","script-src 'self' 'unsafe-inline' 'unsafe-eval' http://api.grhao.com/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'");
+			m.setAttribute("content","script-src 'self' 'unsafe-inline' 'unsafe-eval' http://webapi.amap.com/ http://restapi.amap.com/ http://api.grhao.com/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval' http://webapi.amap.com/theme/v1.3/style1503546983737.css");
 		}else{
-			m.setAttribute("content","script-src 'self' 'unsafe-inline' 'unsafe-eval' http://61.164.118.194:8090/grh_api/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'");
+			m.setAttribute("content","script-src 'self' 'unsafe-inline' 'unsafe-eval' http://restapi.amap.com/ http://webapi.amap.com/ http://61.164.118.194:8090/grh_api/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval' http://webapi.amap.com/theme/v1.3/style1503546983737.css");
 		}
-		h.appendChild(m)
+		
+		var t = window.location.href;
+		//console.log(t.indexOf("store_map"));
+		if(!t.indexOf("store_map")){
+			h.appendChild(m)
+		}
 	})(common)
 	return common;
 });

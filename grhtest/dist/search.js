@@ -264,8 +264,9 @@ require(['../require/config'],function () {
 					})
 				},
 				apiData : function( d ){
-					var o = d.data.objects;
-					pub.store.isLast = d.data.isLast;
+					var o = d.data.hasPage.objects;
+					pub.store.isLast = d.data.hasPage.isLast;
+					$(".location_content").data("allMap",pub.store.apiHandle.filter_data(d.data.noPage));
 					var html = '', i;
 					for ( i in o) {
 						html += '<div class="store_store_item" data1="' + o[i].id + '">'
@@ -277,6 +278,11 @@ require(['../require/config'],function () {
 						html += '		</dd>'
 						html += '	</dl>'
 						html += '	<div class="business_timer" data-longitude = "'+o[i].longitude+'" data-latitude = "'+o[i].latitude+'" data-firmName = "'+o[i].firmName+'"><p>' +(o[i].distance == -1 ? "" : o[i].streetName+" "+pub.store.apiHandle.distance_number( o[i].distance ) )+ '</p></div>'
+						if (o[i].type == 5) {
+							html += '<div class = "icon machine"></div>'
+						} else{
+							html += '<div class = "icon store"></div>'
+						}
 						html += '</div>'
 					};
 					pub.store.Node.append( html );
@@ -407,6 +413,18 @@ require(['../require/config'],function () {
 			//取消方法
 			cancleFn:function(){
 				pub.firmIdTemp = null;
+			},
+			//过滤门店数据 空的经纬度不展示
+			filter_data:function(d){
+				var arr = [],obj={};
+				for (var i in d) {
+					if (d[i].longitude && d[i].latitude) {
+						obj = {'longitude':d[i].longitude,'latitude':d[i].latitude,'firmName':d[i].firmName,"id":d[i].id};
+						arr.push(obj);
+						obj = null;
+					}
+				}
+				return arr;
 			}
 		};
 		pub.store.locationInfoFn = function(){
@@ -541,7 +559,8 @@ require(['../require/config'],function () {
 						'latitude':latitude,
 						'firmName':firmName
 					}
-					localStorage.setItem("mapData",JSON.stringify(mapData));
+					common.allMap.removeItem();
+					common.mapData.setItem(JSON.stringify(mapData))
 					common.jumpLinkPlainApp("门店位置","html/store_map.html")
 				});
 	
@@ -574,6 +593,12 @@ require(['../require/config'],function () {
 						pub.loading.show().html("没有更多数据了！");
 					}
 				});
+				//点击进入地图总页面
+				$(".location_content .float_right").on("click",function(){
+					common.mapData.removeItem();
+					common.allMap.setItem(JSON.stringify($(".location_content").data("allMap")));
+					common.jumpLinkPlainApp("门店位置","html/store_map.html?type=all")
+				})
 			}
 		};
 	
