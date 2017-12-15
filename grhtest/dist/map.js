@@ -34,13 +34,7 @@ require(['../require/config'],function () {
 				        center: [pub.locationInfo.longitude, pub.locationInfo.latitude],
 				        zoom: 15
 				    });
-				  
-        			var data = [
-        				{'latitude':'30.24423873','longitude':"120.1823616",'firmName':'名字1',"id":'1'},
-        				{'latitude':'30.23423873','longitude':"120.1823616",'firmName':'名字2',"id":'2'},
-        				{'latitude':'30.22423873','longitude':"120.1823616",'firmName':'名字3',"id":'3'},
-        				{'latitude':'30.21315000','longitude':"120.1823616",'firmName':'名字4',"id":'4'},
-        			];
+				  	var data = JSON.parse(common.allMap.getItem());
         			for (var i in data) {
         				pub.Map.creatMake(map,data[i],i)
         			}
@@ -123,7 +117,7 @@ require(['../require/config'],function () {
 			trueFn:function(){
 				common.tellRefreshAPP();
 				if (pub.logined) {
-					pub.Map.apiHandle.choice_firm.init();
+					pub.Map.choice_firm.init();
 				}else{
 					common.firmId.setItem(pub.firmIdTemp);
 					common.goBackApp(2,true,'index.html');
