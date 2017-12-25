@@ -701,8 +701,8 @@ define(['jquery','mdData','shar1'],function($){
 		}
 		
 		var t = window.location.href;
-		//console.log(t.indexOf("store_map"));
-		if(!t.indexOf("store_map")){
+		console.log(t.indexOf("store_map"));
+		if(t.indexOf("store_map") < 0){
 			h.appendChild(m)
 		}
 	})(common)
