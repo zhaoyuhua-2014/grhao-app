@@ -147,10 +147,12 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .index_tit p {height:38px;line-height:38px;color:rgb(51,51,51);padding-left: 14px;white-space: nowrap;}
 .all_bg1{display: inline-block;width: 60px;height: 37px;background-position: -200px -30px;}
 .index_rigth {position:absolute;right:0;top:0;text-align:center;height:96px;width:110px;padding-top:17px;z-index:10;background-position: 6px -116px}
-.index_center_wrap {width:100%;height:330px;padding:20px 0;background:#f0f0f0;position: relative;}
+/*.index_center_wrap {width:100%;height:330px;padding:20px 0;background:#f0f0f0;position: relative;}
 .index_center_wrap dl{position: absolute;width: 50%;height: 140px;font-size: 28px;background: #ffffff;}
+*/
+
 /*watm选择售货机活动灰掉不可选*/
-.index_center_wrap .notClick{opacity: 0.5;}
+/*.index_center_wrap .notClick{opacity: 0.5;}
 .index_center_wrap .top_left{top: 20px;left: 0;}
 .index_center_wrap .top_right{top: 20px;right: 0;}
 .index_center_wrap .bottom_left{bottom: 20px;left: 0;}
@@ -169,6 +171,7 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .index_center_wrap dl dd:nth-child(2) {color:rgb(90,94,95);}
 .index_center_wrap dl dd:nth-child(3) {font-size:24px;color: #888888;}
 .index_center_center {position:absolute;width:240px;height:240px;border-radius:50%;overflow: hidden;left:50%;top: 50%;margin-left:-120px;margin-top:-120px;background-position:-136px -83px;z-index: 2;}
+*/
 .index_inner {width:100%;font-size:24px;color: #FFFFFF;}
 .index_inner dl {float:left;width:240px;height:320px;border: 1px solid #cccccc;}
 .index_inner dl dt {height:240px;position:relative;width: 238px;background-image: url(../img/pic_logo_load.png);background-repeat: no-repeat;background-position: center;background-size: 220px 220px;}
@@ -184,6 +187,15 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .index_inner dl dd{height: 80px;background: #FFFFFF;line-height:40px;color:rgb(90,94,95);}
 .index_inner dl dd p {text-align:center;width: 238px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;}
 .index_inner dl dd p span{white-space: nowrap;text-overflow: ellipsis;overflow: hidden;}
+
+/*新增*/
+.index_banner .swiper-slide a{display: block;width: 90%;height: 310px; margin: 0 auto;border-radius:34px ;overflow: hidden;padding-top: 10px;}
+.index_center_wrap {width:100%;height:210px;background:#f0f0f0;position: relative;overflow: hidden;}
+.index_center_banner{width: 100%;height: 100%;background: #FFFFFF;}
+.index_center_banner dl{padding-top: 40px;}
+.index_center_banner dl dt{width: 100%; height: 84px;background: url(../img/banner_load.png) no-repeat center;background-size: 90%;}
+.index_center_banner dl dt img{display: block;width: 84px;height: 84px;margin: 0 auto;}
+.index_center_banner dl dd{line-height: 80px;font-size: 26px;text-align: center;padding: 0 10px;}
 /*门店页面*/
 .store_top {width:100%;height:80px;background:#FFFFFF;color:rgb(51,51,51);}
 .store_item {float:left;width:50%;text-align:center;border-bottom:4px solid white;font-size:30px;}

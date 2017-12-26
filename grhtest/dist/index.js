@@ -71,6 +71,7 @@ require(['../require/config'],function () {
 					common.alertMaskApp(JSON.stringify(data));
 	 			}
 	 		}
+	 		pub.apiHandle.custom_activity_firm_list.init()
 	 	};
 	 	// 默认门店
 	 	pub.apiHandle.firm_default = {
@@ -237,7 +238,39 @@ require(['../require/config'],function () {
 			 	}
 	 		}
 	 	};
-	
+		
+		//首页活动list
+		pub.apiHandle.custom_activity_firm_list = {
+			init:function(){
+				common.ajaxPost({
+	 				method : 'custom_activity_firm_list',
+	 				firmId:pub.firmId,
+	 				//websiteNode:pub.websiteNode
+		 		},function( d ){
+		 			d.statusCode == "100000" && pub.apiHandle.custom_activity_firm_list.apiData( d );
+		 			//d.statusCode != "100000" && common.cancelDialogApp();
+		 			d.statusCode != "100000" &&  common.prompt(d.statusStr);
+		 			//d.statusCode == common.SESSION_EXPIRE_CODE && common.clearData();
+		 			
+		 		});
+			},
+			apiData:function(d){
+				var o = d.data,html = '',link = null;
+				if ( o == null || o.length == 0) {
+					$(".index_center_wrap").addClass("hidden");
+				} else{
+					for (var i in o) {
+						link = o[i].appUrl ? o[i].appUrl : '';
+						html += '<dl class="swiper-slide" link = "'+link+'" tit= "'+o[i].name+'"><dt><img src="'+o[i].logo+'"/></dt><dd class="ellipsis">'+o[i].name+'</dd></dl>'
+					}
+				}
+				$(".index_center_banner .swiper-wrapper").html(html)
+				var swiper = new Swiper(".index_center_banner",{
+					direction: 'horizontal',
+					slidesPerView : 4,
+				});
+			}
+		}
 	 	// app 参数
 	 	pub.apiHandle.system_config_constant = {
 	 		init : function(){
@@ -287,7 +320,7 @@ require(['../require/config'],function () {
 					common.jumpLinkPlainApp( "商品详情", "html/goodsDetails.html?goodsId=" + $(this).attr("data") );
 				});
 	
-				$(".index_center_wrap").on('click', "dl", function() {
+				/*$(".index_center_wrap").on('click', "dl", function() {
 					if(!$(this).is(".notClick")){
 						common.first_data.removeItem();
 						common.two_data.removeItem();
@@ -300,7 +333,7 @@ require(['../require/config'],function () {
 				});
 				$(".index_center_wrap").on('click', ".index_center_center", function() {
 					common.jumpLinkPlainApp("充值优惠","html/month_service.html");
-				});
+				});*/
 				$(".index_rigth").on("click",function(){
 					var url = '/html/search.html'
 					if (common.isApp()) {
@@ -334,7 +367,7 @@ require(['../require/config'],function () {
 					var _touch = e.originalEvent.targetTouches[0];
 　　					pub.touch_move= _touch.pageX;
 				});*/
-				$(".swiper-wrapper").on("click",'a',function(e){
+				$(".index_banner .swiper-wrapper").on("click",'a',function(e){
 					//if (Math.abs(pub.touch_start - pub.touch_move) < 100) {
 						var urlArr = [{
 							url:'goodsDetails.html',
@@ -376,6 +409,15 @@ require(['../require/config'],function () {
 						}
 					//}
 				});
+				$(".index_center_banner").on("click","dl",function(){
+					var nood = $(this),
+						link = nood.attr("link"),
+						title = nood.attr("tit");
+					if (link != '') {
+						common.jumpLinkPlainApp(title,link);
+					}
+					
+				})
 				//取消按钮
 				$(".order_refund").on("click",".refund_cancle",function(){
 					$(".order_refund").hide();
