@@ -189,13 +189,15 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .index_inner dl dd p span{white-space: nowrap;text-overflow: ellipsis;overflow: hidden;}
 
 /*新增*/
-.index_banner .swiper-slide a{display: block;width: 90%;height: 310px; margin: 0 auto;border-radius:34px ;overflow: hidden;padding-top: 10px;}
-.index_center_wrap {width:100%;height:210px;background:#f0f0f0;position: relative;overflow: hidden;}
+.index_banner .swiper-slide a{display: block;width: 700px;height: 310px; margin: 0 auto;border-radius:34px ;overflow: hidden;padding-top: 10px;}
+.index_center_wrap {width:100%;height:210px;background:#f0f0f0;position: relative;overflow: hidden;margin-bottom: 20px;}
 .index_center_banner{width: 100%;height: 100%;background: #FFFFFF;}
 .index_center_banner dl{padding-top: 40px;}
 .index_center_banner dl dt{width: 100%; height: 84px;background: url(../img/banner_load.png) no-repeat center;background-size: 90%;}
 .index_center_banner dl dt img{display: block;width: 84px;height: 84px;margin: 0 auto;}
 .index_center_banner dl dd{line-height: 80px;font-size: 26px;text-align: center;padding: 0 10px;}
+.index_inner_wrap{padding: 0 10px;background: #FFF;}
+.index_inner dl,.index_inner dl dt,.index_inner dl dt img{width: 233px;}
 /*门店页面*/
 .store_top {width:100%;height:80px;background:#FFFFFF;color:rgb(51,51,51);}
 .store_item {float:left;width:50%;text-align:center;border-bottom:4px solid white;font-size:30px;}
