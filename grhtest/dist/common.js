@@ -7,7 +7,7 @@ define(['jquery','mdData','shar1'],function($){
 
 	$.extend(common,{
 		//EVE 作为正式环境和测试环境的开关，为true时为正式环境，为false时为测试环境
-		EVE:false,
+		EVE:true,
 		//API : "http://api.grhao.com/server/api.do", // 接口地址
 		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数
@@ -36,7 +36,7 @@ define(['jquery','mdData','shar1'],function($){
 		//全局的延时函数
 		DTD : $.Deferred(),
 		//更新日期
-		DATE:"1226",
+		DATE:"1229",
 	});
 
 	(function(){
@@ -474,7 +474,6 @@ define(['jquery','mdData','shar1'],function($){
 		jumpLinkPlainApp : function( title , url ){
 			url = url || window.location.href;
 			if (common.DATE) {
-				console.log(url)
 				if (url.indexOf("?")>0) {
 					url = url + "&v="+common.DATE;
 				}else{
