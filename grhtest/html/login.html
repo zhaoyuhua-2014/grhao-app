@@ -55,6 +55,17 @@
 			</div>
 			<div class="login_regsiter">没有账号，请先<a href="regsiter.html">注册</a></div>
             <button class="login_btn"  autocomplete="off">登录</button>
+            <div class="quick_login_wrap">
+            	<div class="quick_login">
+	            	<h4 class="txt-otherLogin">其他登录方式</h4>
+	            	<div class="quick_login_center">
+	            		<dl class="quick_login_item login_wx">
+	            			<dt></dt>
+	            			<dd>微信</dd>
+	            		</dl>	
+	            	</div>
+            	</div>
+            </div>
 		</div>		
 	</body>
 	<!--<script src="../seajs/2.1.1/sea.js"></script>
@@ -65,4 +76,15 @@
 		});
 	</script>-->
 	<script data-main = "../dist/login.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		function trueFn(d){
+			pub.login.apiHandle.trueFn(d);
+		}
+		function cancleFn(d){
+			pub.login.apiHandle.cancleFn(d);
+		}
+		function failFn(d){
+			pub.login.apiHandle.failFn(d);
+		}
+	</script>
 </html>

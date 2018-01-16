@@ -210,7 +210,7 @@ require(['../require/config'],function () {
 		            var fr = new FileReader();
 					var span = document.createElement("span");
 					span.className = "comment_good_image"
-	            	span.innerHTML = '<img src="../img/img_logo.png"/><b class="del_img"></b>';
+	            	span.innerHTML = '<img src="../img/pic_logo_load.png"/><b class="del_img"></b>';
 	            	nodes.append(span)
 					fr.onload = function () {
 		                var result = this.result;
@@ -371,7 +371,12 @@ require(['../require/config'],function () {
 					var str = '';
 					if(el.length !=0){
 						el.each(function(i){
-							str += $(el[i]).attr("data-src")+"@";
+							
+							if ((i+1) == el.length) {
+								str += $(el[i]).attr("data-src");
+							}else{
+								str += $(el[i]).attr("data-src")+"@";
+							}
 						})
 					}
 					return str;

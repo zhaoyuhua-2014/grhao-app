@@ -503,6 +503,14 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .login_regsiter a{text-decoration:none;color:rgb(3,152,255);}
 .login_btn{width:80%;height:80px;margin:0 auto;display:block;font-size:26px;color:#ffffff;background:#93c01d;text-align:center;line-height:80px;border-radius:10px;}
 
+.quick_login_wrap{padding: 0 24px;padding-top: 150px;}
+.quick_login{border-top: 1px solid #ccc;position: relative;}
+.txt-otherLogin{position: absolute;top: -18px;left: 50%;-webkit-transform: translateX(-50%);transform: translateX(-50%);padding: 4px 6px;font-size: 24px;font-weight: 400;color: rgb(178,178,178);background: #f0f0f0;}
+.quick_login_center{padding-top: 40px;}
+.quick_login .icon-wx{padding-top: 60px;}
+.quick_login_item{width: 150px;margin: 0 auto;}
+.login_wx dt{background: url(../img/login_icon_wx.svg) no-repeat center;height: 60px;background-size: 36%;}
+.login_wx dd{text-align: center;font-size: 24px;color: #909090;}
 /*注册页面样式*/
 .regsiter_pack{width: 100%;height: 632px;}
 .regsiter_pack div{width:100%;height:88px;background:white;}

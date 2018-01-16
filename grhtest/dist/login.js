@@ -116,6 +116,7 @@ require(['../require/config'],function(){
 				});
 			},
 			apiData : function( d ){
+				
 				var 
 				infor = d.data.cuserInfo,
 				user_data = {
@@ -172,9 +173,9 @@ require(['../require/config'],function(){
 						bool && common.goodid.removeItem();
 						common.goHomeApp();
 					}
-					
 				},500);
-			}
+			},
+			
 		};
 		// 图片验证码
 		pub.verification = {
@@ -192,6 +193,30 @@ require(['../require/config'],function(){
 				});
 			}
 		};
+		//微信自动登录成功回调函数
+		pub.login.apiHandle.trueFn = function(d){
+			
+			//sessionStorage.setItem("weixinAppId",d);
+			//common.jumpLinkPlainApp("绑定账号","../html/bindUser.html");
+			var d = JSON.parse(d);
+			pub.weixin_login.init(d.openid);
+		};
+		//微信自动登录失败回调函数
+		pub.login.apiHandle.cancleFn = function(d){
+			if(d == '2009'){
+				
+			}else{
+				alert(d)
+			}
+		};
+		//
+		pub.login.apiHandle.failFn = function(d){
+			if(d == '2009'){
+				
+			}else{
+				alert(d)
+			}
+		}
 		// 登录事件初始化函数
 		pub.login.eventHandle = { 
 	
@@ -248,14 +273,64 @@ require(['../require/config'],function(){
 					pub.login.apiHandle.init($this);
 					
 				});
+				//微信登录
+				$(".quick_login_center").on("click","dl",function(){
+					var nood = $(this),
+						iswx = nood.is(".login_wx");
+					if (iswx) {
+						common.wxLoginApp();
+					}
+				})
 	
 				pub.onceRun = common.onceRun( pub.verification.init, pub );
 			}
 		};
+		//使用 openId 自动登录
+		pub.weixin_login = {
+			init:function(openId){
+				common.ajaxPost({
+		            method: 'weixin_login',
+		            openId : openId,
+		            flag:'app',
+		       },function( d ){
+		            if( d.statusCode == '100000'){
+						pub.login.apiHandle.apiData(d);		                
+		            }else if(d.statusCode == '100200'){
+		        		common.openId.setItem( openId ); // 存opendId
+		        		common.jumpLinkPlainApp("绑定注册","../html/bindUser.html");
+		            }else{
+		            	common.prompt( d.statusStr );
+		            }
+		        });
+			},
+			apiData:function(){
+				
+			}
+		}
+		//* 微信认证 method : weixin_binding
+		pub.weixin_binding = {
+			init:function(){
+				common.ajaxPost({
+		            method: 'weixin_binding',
+		            openId:openId,
+		            userId:userId,
+		        },function( d ){
+		            if( d.statusCode == '100000' && d.data.fromWX == 1 ){
+		                pub.openId =  d.data.openId;
+		                common.openId.setItem( pub.openId ); // 存opendId
+		            }else{
+		                common.prompt( d.statusStr );
+		            }
+		        });
+			},
+			apiData:function(){
+				
+			}
+		}
+		
 		/**
 			以下注册模块
 		*/
-	
 		// 注册 命名空间
 	
 		pub.register = {};
@@ -303,7 +378,6 @@ require(['../require/config'],function(){
 			},
 			
 		};
-	
 		
 	
 		// 注册接口
@@ -409,5 +483,6 @@ require(['../require/config'],function(){
 			pub.send_sms_type == '1' && pub.register.eventHandle.init(); // 注册初始化
 		};
 		pub.init();
+		window.pub = pub;
 	})
 });

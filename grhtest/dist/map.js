@@ -38,6 +38,7 @@ require(['../require/config'],function () {
         			for (var i in data) {
         				pub.Map.creatMake(map,data[i],i)
         			}
+        			console.log(map)
         		}else{
         			if (pub.mapData && !!pub.mapData.longitude) {
 			        	var  map = new AMap.Map("container", {
@@ -97,9 +98,9 @@ require(['../require/config'],function () {
         	creatMake:function(map,data){
         		new AMap.Marker({
 		        	map:map,
-		            icon: "../img/labelmap2.png",
 		            position: [data.longitude, data.latitude],
-		            label : { content : data.firmName, offset : new AMap.Pixel(-40,-44) },
+		            content : data.firmName,
+		            offset : new AMap.Pixel(-40,-44),
 		            extData : data
 		        }).on("click",function(){
 		        	var data = {
@@ -111,6 +112,11 @@ require(['../require/config'],function () {
 					common.alertMaskApp(JSON.stringify(data));
 					console.log(this.getExtData())
 					pub.firmIdTemp = this.getExtData().id;
+		        })
+		        new AMap.Marker({
+		        	map:map,
+		            icon: "../img/labelmap2.png",
+		            position: [data.longitude, data.latitude],
 		        })
         	},
         	//确定方法

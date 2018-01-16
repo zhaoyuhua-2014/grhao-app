@@ -36,13 +36,13 @@ define(['jquery','mdData','shar1'],function($){
 		//全局的延时函数
 		DTD : $.Deferred(),
 		//更新日期
-		DATE:"1229",
+		DATE:"0112",
 	});
 
 	(function(){
 		if (common.EVE) {
 			common.API = "http://api.grhao.com/server/api.do";
-		}else{
+		}else{//http://61.164.118.194:8090/grh_api/server/api.do/192.168.1.3:80
 			common.API = "http://61.164.118.194:8090/grh_api/server/api.do"
 		}
 	})(common)
@@ -90,6 +90,7 @@ define(['jquery','mdData','shar1'],function($){
 	common.orderType = new Memory('orderType','local'); // 1.普通商品 2.秒杀商品 3.预购商品
 	common.good = new Memory('good','local'); // 购物车商品信息
 	common.orderBack = new Memory('orderBack','local'); // 订单入口 
+	
 	common.openId = new Memory('openId','local'); //  
 	/*ios 不支持session 改为localstorage*/
 	common.addressData = new Memory('addressData','local'); // 存储地址数据
@@ -582,6 +583,25 @@ define(['jquery','mdData','shar1'],function($){
 						android.setShopCarNum_ShoppingCart(num)
 					}catch(e){
 						console.log("调用Android方法setShopCarNum_ShoppingCart出错")
+					}
+				}					
+			}else{
+				console.log("this is not grhao App!")
+			}
+		},
+		wxLoginApp:function(){
+			if (common.isPhone()) {
+				if (common.isApple()) {
+					try{
+						window.webkit.messageHandlers.wechatLogin.postMessage('');
+					}catch(e){
+						console.log("调用ios方法wxLoginApp出错")
+					}
+				} else if(common.isAndroid()){
+					try{
+						android.wxLoginApp()
+					}catch(e){
+						console.log("调用Android方法wxLoginApp出错")
 					}
 				}					
 			}else{
