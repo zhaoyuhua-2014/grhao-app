@@ -193,6 +193,25 @@ require(['../require/config'],function(){
 				});
 			}
 		};
+		/*
+		typedef NS_ENUM(NSInteger, UMSocialPlatformErrorType) {
+		    UMSocialPlatformErrorType_Unknow            = 2000,            // 未知错误
+		    UMSocialPlatformErrorType_NotSupport        = 2001,            // 不支持（url scheme 没配置，或者没有配置-ObjC， 或则SDK版本不支持或则客户端版本不支持）
+		    UMSocialPlatformErrorType_AuthorizeFailed   = 2002,            // 授权失败
+		    UMSocialPlatformErrorType_ShareFailed       = 2003,            // 分享失败
+		    UMSocialPlatformErrorType_RequestForUserProfileFailed = 2004,  // 请求用户信息失败
+		    UMSocialPlatformErrorType_ShareDataNil      = 2005,             // 分享内容为空
+		    UMSocialPlatformErrorType_ShareDataTypeIllegal = 2006,          // 分享内容不支持
+		    UMSocialPlatformErrorType_CheckUrlSchemaFail = 2007,            // schemaurl fail
+		    UMSocialPlatformErrorType_NotInstall        = 2008,             // 应用未安装
+		    UMSocialPlatformErrorType_Cancel            = 2009,             // 取消操作
+		    UMSocialPlatformErrorType_NotNetWork        = 2010,             // 网络异常
+		    UMSocialPlatformErrorType_SourceError       = 2011,             // 第三方错误
+		
+		    UMSocialPlatformErrorType_ProtocolNotOverride = 2013,   // 对应的    UMSocialPlatformProvider的方法没有实现
+		    UMSocialPlatformErrorType_NotUsingHttps      = 2014,   // 没有用https的请求,@see UMSocialGlobal isUsingHttpsWhenShareContent
+		
+		}; * */
 		//微信自动登录成功回调函数
 		pub.login.apiHandle.trueFn = function(d){
 			
@@ -203,19 +222,45 @@ require(['../require/config'],function(){
 		};
 		//微信自动登录失败回调函数
 		pub.login.apiHandle.cancleFn = function(d){
-			if(d == '2009'){
-				
+			var d = d.toString();
+			if(d.indexOf('2000') != '-1'){
+				str = '未知错误';
+				common.prompt(str);
+				return;
+			}else if(d.indexOf('2002') != '-1'){
+				str = '授权失败';
+				common.prompt(str);
+				return;
+			}else if(d.indexOf('2008') != '-1'){
+				str = '应用未安装';
+				common.prompt(str);
+				return;
+			}else if(d.indexOf('2009') != '-1'){
+				str = '取消操作';
+				common.prompt(str);
+				return;
+			}else if(d.indexOf('2010') != '-1'){
+				str = '网络异常';
+				common.prompt(str);
+				return;
+			}else if(d.indexOf('2011') != '-1'){
+				str = '第三方错误';
+				common.prompt(str);
+				return;
+			}else if(d.indexOf('2004') != '-1'){
+				str = '请求用户信息失败';
+				common.prompt(str);
+				return;
 			}else{
-				alert(d)
+				str = '服务异常';
+				common.prompt(str);
+				return;
 			}
 		};
 		//
+		
 		pub.login.apiHandle.failFn = function(d){
-			if(d == '2009'){
-				
-			}else{
-				alert(d)
-			}
+			pub.login.apiHandle.cancleFn(d);
 		}
 		// 登录事件初始化函数
 		pub.login.eventHandle = { 
@@ -297,7 +342,7 @@ require(['../require/config'],function(){
 						pub.login.apiHandle.apiData(d);		                
 		            }else if(d.statusCode == '100200'){
 		        		common.openId.setItem( openId ); // 存opendId
-		        		common.jumpLinkPlainApp("绑定注册","../html/bindUser.html");
+		        		common.jumpLinkPlainApp("绑定注册","html/bindUser.html");
 		            }else{
 		            	common.prompt( d.statusStr );
 		            }
