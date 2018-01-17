@@ -709,7 +709,7 @@ define(['jquery','mdData','shar1'],function($){
 		var nodeTemp = $(this).remove();
 		nodeTemp = null;
 	});
-	(function(){
+	/*(function(){
 		var m = document.createElement("meta"),
 			h = document.getElementsByTagName("head")[0];
 			m.setAttribute("http-equiv","Content-Security-Policy");
@@ -724,6 +724,6 @@ define(['jquery','mdData','shar1'],function($){
 		if(t.indexOf("store_map") < 0){
 			h.appendChild(m)
 		}
-	})(common)
+	})(common)*/
 	return common;
 });
