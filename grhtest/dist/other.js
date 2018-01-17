@@ -31,8 +31,9 @@ require(['../require/config'],function () {
 	pub.PAGE_INDEX = common.PAGE_INDEX; // 索引
 	pub.PAGE_SIZE = common.PAGE_SIZE; // 页面显示数据个数
 
-
-	pub.orderType = pub.orderCode.substring( 8, 10 ); // 订单类型
+	if (pub.orderCode) {
+		pub.orderType = pub.orderCode.substring( 8, 10 ); // 订单类型
+	}
 	pub.method = pub.orderType == '07' ? 'pre_order_details' : 'order_details'; // 获取接口类型
 	
 /******************************************* 订单评价 *************************************/

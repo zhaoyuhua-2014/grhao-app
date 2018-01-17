@@ -71,7 +71,7 @@ require(['../require/config'],function () {
 					common.alertMaskApp(JSON.stringify(data));
 	 			}
 	 		}
-	 		pub.apiHandle.custom_activity_firm_list.init()
+	 		
 	 	};
 	 	// 默认门店
 	 	pub.apiHandle.firm_default = {
@@ -108,7 +108,7 @@ require(['../require/config'],function () {
 				
 				
 				pub.apiHandle.main_page_goods.init();
-				
+				pub.apiHandle.custom_activity_firm_list.init()
 				common.firmIdType.setItem(d.type);
 				var Node = $(".index_center_wrap dl");
 				if (d.type == 5) {
@@ -216,11 +216,12 @@ require(['../require/config'],function () {
 	 				common.timestamp.setItem( common.JSONStr( json ) );
 	 			}
 	
-	
+				
+				
 				data.adInfoList.length != 0 && common.bannerShow(data.adInfoList, '.index_banner', function( d ){
 					var html = '', i = 0, link = null;
 					for ( i in d ){
-						link = d[i].linkUrl ? d[i].linkUrl : '';
+						link = getLink(d[i].linkUrl)
 						html += '<div class="swiper-slide"><a href="javascript:void(0)" url="'+link+'"><img src="' + d[i].adLogo + '" /></a></div>'
 					}
 					return html;
@@ -235,6 +236,18 @@ require(['../require/config'],function () {
 			 	if(pub.isrefresh){
 			 		pub.pullInstance.pullDownSuccess();
 			 		common.lazyload(); // 懒加载
+			 	}
+			 	function getLink (link){
+			 		var wxUrl = 'weixin.grhao.com';
+			 		var url = '';
+			 		if (link) {
+			 			if (link.indexOf(wxUrl) != -1) {
+			 				url = link.substr((link.indexOf(wxUrl) + wxUrl.length))
+			 			}else{
+			 				url = '';
+			 			}
+			 		}
+			 		return url
 			 	}
 	 		}
 	 	};
