@@ -30,6 +30,7 @@ require(['../require/config'],function(){
 		};
 	
 		pub.firmId = ( common.firmId.getItem() ? common.firmId.getItem() : null)// 门店ID
+		pub.firmIdType = ( common.firmIdType.getItem() ? common.firmIdType.getItem() : null)// 门店类型
 		// 商品
 	
 		pub.goods = {};
@@ -59,7 +60,7 @@ require(['../require/config'],function(){
 				init : function(){
 					common.ajaxPost({
 						method : 'goods_first_type',
-						type : pub.goods.type ? pub.goods.type : '' ,
+						type : pub.goods.type ? pub.goods.type : (pub.firmIdType == "5"? "WATM":"PU_TONG") ,
 						firmId: pub.firmId
 					},function( d ){
 						if ( d.statusCode == "100000" ) {

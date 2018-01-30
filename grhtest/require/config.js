@@ -1,6 +1,14 @@
 define(function(){
 	require.config(
 	    {
+	    	urlArgs: function(id, url) {
+		        var args = 'v=1';
+		        if (url.indexOf('view.html') !== -1) {
+		            args = 'v=2'
+		        }
+		
+		        return (url.indexOf('?') === -1 ? '?' : '&') + args;
+		    },
 	        paths: {
 	            'jquery':'../outside/jquery-1.8.3.min',
 	            'common':'../dist/common',
