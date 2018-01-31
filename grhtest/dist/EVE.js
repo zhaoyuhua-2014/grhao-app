@@ -1,7 +1,7 @@
 var common = {
-	EVE:true
+	EVE:false
 };
-(function(){
+/*(function(){
 	var m = document.createElement("meta"),
 		h = document.getElementsByTagName("head")[0];
 		m.setAttribute("http-equiv","Content-Security-Policy");
@@ -15,4 +15,4 @@ var common = {
 	if(t.indexOf("store_map") < 0){
 		h.appendChild(m)
 	}
-})(common);
+})(common);*/
