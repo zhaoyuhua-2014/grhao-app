@@ -2,7 +2,7 @@
 * active scirpt for Zhangshuo Guoranhao
 */ 
 require(['../require/config'],function(){
-	require(['common'],function(common){
+	require(['common',"swiperJS"],function(common){
 		// 命名空间
 		var pub = {};
 		
@@ -36,16 +36,30 @@ require(['../require/config'],function(){
 		//红包雨
 		pub.redEnvelopesRain = {
 			init:function(){
+				//定义红包雨可点击红包开关
+				pub.redRain = true;
+				//节点缓存
+				//抢红包按钮
+				pub.redpick_center_btn_box = $(".redpick_center_btn_box");
+				//倒计时节点
+				pub.redpick_center_time = $(".redpick_center_time");
+				//中奖记录的节点
+				pub.redpick_center_winningRecord_box = $(".redpick_center_winningRecord_box");
+				//规则节点
+				pub.rule_box_wrap = $(".rule_box_wrap");
+				//红包雨动画节点
+				pub.redpick_rain_wrap  = $(".redpick_rain_wrap");
+				//中奖的弹框节点
+				pub.winning_box_wrap = $(".winning_box_wrap");
 				pub.redEnvelopesRain.redpickRain.init();
 				pub.redEnvelopesRain.coupon_rain.init();
 				
-				
-				pub.redEnvelopesRain.coupon_rain_rcd_user.init();
+				pub.redEnvelopesRain.eventHandle.init()
 			},
 			redpickRain:{
 				init:function(){
 					/*定义创建红包的个数*/
-					var creatRedpickNum = 1;
+					var creatRedpickNum = 20;
 					/*获取屏幕的可见宽度*/
 					var clientWidth = document.documentElement.clientWidth,
 						clientHeight = document.documentElement.clientHeight;
@@ -79,53 +93,40 @@ require(['../require/config'],function(){
 			        function durationValue(value) {
 			            return value + 's';
 			        }
+			        //获取红包下落速度
+			        function getSpeed(){
+			        	return Math.random() * (8000 - 3000) + 3000; // 下落速度
+			        }
 			        /*创建红包*/
-			       	function creatRedpick(){
-			    		var div = document.createElement("div"),
-			    			redImg = document.createElement("img");
-			    		redImg.src = "img/redPick.png";
-			    		div.appendChild(redImg);
-			    		$(div).css({
-			    			width:"106px",
-							height:"122px",
-							position:"absolute",
-						})
-			    		$(div).addClass("run1")
-			    		return div;
+			       	function creatRedpick(i){
+			    		var $div = $("<div data-id="+i+"><img src='img/redPick.png'/></div>");
+			    		redpickRun($div)
+			    		return $div;
 			    	}
 			       	var pickBox = $(".redpick_rain");
 			       	for (var i = 0; i < creatRedpickNum;i++) {
-			       		var el = creatRedpick();
+			       		var el = creatRedpick(i);
 			       		pickBox.append(el);
 			       	};
 			       	
 			       	/*红包运动*/
-			       	function redpickRun(){
-						var els = pickBox.find("div");
-			       		for (var i=0;i<els.length;i++) {
-			       			
-//			       			redpickRun1(els[i])
-			       		}
-			       	}
-			       	//单个运动
-			       	function redpickRun1(el){
-			       		var params = $(el).offset();
-			       		console.log(params);
-			       		console.log(clientHeight);
-			       		console.log(clientWidth);
-			       		console.log(params.top > clientHeight);
-			       		console.log(params.left <-120);
-			       		console.log(params.left > clientWidth+120)
-			       		if (params.top > clientHeight || params.left <-120 || params.left > clientWidth+120) {
-			       			
-			       		}else{
-			       			$(el).animate({
-			       				top:(params.top+randomInteger(0,50))+"px",
-			       				left:(params.left+randomInteger(-20,20))+"px"
-			       			},10000);
-			       		}
-			       		
-			       	}
+			       	function redpickRun(el){
+			       		var t = randomInteger(-120,-clientHeight)
+			       			l = randomInteger(-120,720)
+						el.css({
+			    			width:"106px",
+							height:"122px",
+							position:"absolute",
+							top:t+"px",
+							left:l+"px"
+						})
+			    		el.animate({
+			    			top:(clientHeight+122)+"px",
+			    			left:( randomInteger(-106,106+clientWidth) )+"px"
+			    		},randomInteger(5000,8000),function(){
+			    			redpickRun(el)
+			    		})
+			       }
 				},
 				
 			},
@@ -140,10 +141,85 @@ require(['../require/config'],function(){
 					});
 				},
 				apiData:function(d){
-					pub.couponRainId = d.data.couponRain.id;
+					var couponRainData = d.data.couponRain,
+						adInfoList = d.data.adInfoList;
+					pub.couponRainId = couponRainData.id;
+					//果然好规则初始化
+					pub.redEnvelopesRain.coupon_rain.activeRule(d.data.grhDesc);
+					//果然好广告轮播处理
+					if (adInfoList) {
+						pub.redEnvelopesRain.coupon_rain.activeBanner(adInfoList)
+					}
+					//系统时间开始时间结束时间
+					pub.systemTime = Date.parse(d.data.systemTime);
+					pub.startTime = Date.parse(couponRainData.startTime);
+					pub.stopTime = Date.parse(couponRainData.stopTime);
 					
-					pub.redEnvelopesRain.coupon_user_raffle.init();
-					pub.redEnvelopesRain.coupon_rain_rcd_list.init();
+					if (pub.startTime > pub.stopTime) {
+						console.log("时间设置有误")
+					}else{
+						if (pub.systemTime < pub.startTime) {
+							var h = (pub.startTime - pub.systemTime)/1000;
+							pub.redpick_center_time.attr("time",h).removeClass("hidden");
+							pub.redEnvelopesRain.coupon_rain.redpickTime.init();
+							pub.redpick_center_btn_box.addClass("active");
+							
+						} else if (pub.systemTime >= pub.startTime && pub.systemTime <= pub.stopTime){
+							
+							pub.redpick_center_btn_box.removeClass("hidden").addClass("active_start");
+							console.log("活动进行中")
+							pub.redEnvelopesRain.coupon_rain_rcd_list.init();
+						} else if (pub.systemTime > pub.stopTime){
+							pub.redpick_center_btn_box.removeClass("hidden").addClass("active_end");
+							console.log("活动已经结束")
+							pub.redEnvelopesRain.coupon_rain_rcd_list.init();
+						}
+					}
+					
+					
+				},
+				//广告显示
+				activeBanner:function(d){
+					var html = '';
+					for (var i in d) {
+						html += "<div class='swiper-slide'><img src = '"+d[i].adLogo+"' /></div>"
+					}
+					$(".redPick_top_banner .swiper-wrapper").append(html);
+					var swiper = new Swiper(".redPick_top_banner",{
+						direction: 'horizontal',
+						loop: true,
+				    	autoplay:5000,
+					});
+				},
+				//活动规则
+				activeRule:function(d){
+					pub.rule_box_wrap.data("data",d);
+					pub.rule_box_wrap.find(".rule_box_center").html("<p class='text'>"+d.desc+"</p>")
+				},
+				/*将毫秒转换为时分秒*/
+				changeTime:function(a){
+					var arr = [],m='';
+					arr[0] = parseInt(a/3600) < 10 ? "0"+parseInt(a/3600) :  parseInt(a/3600);
+					arr[1] = parseInt((a%3600)/60) < 10 ? "0"+parseInt((a%3600)/60) : parseInt((a%3600)/60);
+					arr[2] = (a%3600)%60 < 10 ? "0"+(a%3600)%60 : (a%3600)%60; 
+					console.log(arr);
+					return arr;
+				},
+				redpickTime:{
+					init:function(){
+						var time = setInterval(function(){
+							var d = pub.redpick_center_time.attr("time");
+							if (d>0) {
+								var arr = pub.redEnvelopesRain.coupon_rain.changeTime(d);
+								pub.redpick_center_time.find('.redpick_center_time_number_box').eq(0).html(arr[0]).end().eq(1).html(arr[1]).end().eq(2).html(arr[2]);
+								pub.redpick_center_time.attr("time",d-1);
+							}else{
+								pub.redpick_center_time.addClass("hidden");
+								
+								clearInterval(time);
+							}
+						},1000)
+					}
 				}
 			},
 			coupon_user_raffle:{
@@ -154,15 +230,32 @@ require(['../require/config'],function(){
 						couponRainId:pub.couponRainId,
 					},{}), function( d ){
 						d.statusCode == "100000" && pub.redEnvelopesRain.coupon_user_raffle.apiData( d );
-						d.statusCode != "100000" && common.prompt( d.statusStr );
+						
+						if (d.statusCode != "100000") {
+							if (d.statusCode == "100803") {
+								
+							}else{
+								common.prompt( d.statusStr );
+							}
+						}
+						pub.redRain = true;
+						pub.redEnvelopesRain.coupon_rain_rcd_list.init();
 					});
 				},
 				apiData:function(d){
-					console.log(d)
+					pub.redpick_rain_wrap.addClass("hidden");
+					if (d.data == 0) {
+						pub.winning_box_wrap.find(".winning_box_top").html("很抱歉<br />这是一个空包哦")
+					} else{
+						pub.winning_box_wrap.find(".winning_box_top").html("恭喜您<br />抽中了"+d.data+"元红包")
+					}
+					
+					pub.winning_box_wrap.removeClass("hidden")
 				}
 			},
 			coupon_rain_rcd_list:{
 				init:function(){
+					
 					common.ajaxPost($.extend({},{
 						method : 'coupon_rain_rcd_list',
 						couponRainId:pub.couponRainId,
@@ -175,23 +268,76 @@ require(['../require/config'],function(){
 				},
 				apiData:function(d){
 					var html = '',d = d.data.objects;
-					
+					if (d && d.length != 0) {
+						for (var i in d) {
+							html += '<p class="swiper-slide item" >恭喜用户<span>&nbsp;&nbsp;'+d[i].cuserName+'&nbsp;&nbsp;&nbsp;&nbsp;</span>获得'+d[i].money+'元红包</p>'
+						}
+						$('.redpick_center_winningRecord_banner .swiper-wrapper').html(html)
+						if (!pub.swiper) {
+							var swiper = pub.swiper = new Swiper(".redpick_center_winningRecord_banner",{
+								direction: 'vertical',
+								loop: true,
+						    	autoplay:5000,
+						    	slidesPerView:5,
+						    	height: 200,
+							});
+						}else{
+							pub.swiper.init();
+						}
+					}
 				}
 			},
-			coupon_rain_rcd_user:{
+			eventHandle:{
 				init:function(){
-					common.ajaxPost($.extend({},{
-						method : 'coupon_rain_rcd_user',
-						userId : pub.userId,
-					},{}), function( d ){
-						d.statusCode == "100000" && pub.redEnvelopesRain.coupon_rain_rcd_user.apiData( d );
-						d.statusCode != "100000" && common.prompt( d.statusStr );
+					//定义抢红包的状态;
+					var status = 0;
+					
+					$(".redpick_center_top").on("click",".redPick_btn1",function(){
+						var l = $(this).is(".float_left"),
+							r = $(this).is(".float_right");
+						if (l) {
+							console.log("跳转优惠卷")
+						}
+						if (r) {
+							pub.rule_box_wrap.removeClass("hidden");
+						}
 					});
-				},
-				apiData:function(d){
-					console.log(d)
+					//红包规则
+					$(".rule_box_wrap").on("click",function(){
+						$(this).addClass("hidden")
+					});
+					//点击抢红包按钮红包雨显示
+					pub.redpick_center_btn_box.on("click",function(){
+						if ($(this).is(".active_start")) {
+							pub.redpick_rain_wrap.removeClass("hidden");
+							$(document).css({"overflow":"hidden"});
+						}
+						if ($(this).is(".active")) {
+							console.log("活动未开始")
+						}
+						if ($(this).is(".active_end")) {
+							console.log("活动已经结束")
+						}
+					});
+					//红包雨中点击红包
+					pub.redpick_rain_wrap.on("click","div[data-id]",function(){
+						if(pub.redRain){
+							pub.redRain = false;
+							pub.redEnvelopesRain.coupon_user_raffle.init();
+							
+						}
+						
+					});
+					//红包雨点击关闭按钮
+					pub.redpick_rain_wrap.on("click",".redpick_rain_del",function(){
+						pub.redpick_rain_wrap.addClass("hidden");
+					});
+					//抽红包之后点击消失
+					pub.winning_box_wrap.on("click",function(){
+						pub.winning_box_wrap.addClass("hidden")
+					})
 				}
-			},
+			}
 		}
 		
 		pub.init = function(){

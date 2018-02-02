@@ -3,7 +3,10 @@
 	width: 720px;
 	height: 756px;
 	padding-top: 20px;
+	position: relative;
+	overflow: hidden;
 }
+.redPick_top_banner,.redPick_top_banner .swiper-wrapper,.redPick_top_banner .swiper-slide{width: 100%;height: 100%;}
 .redPick_top_box img{
 	display: block;
 	margin: 0 auto;
@@ -27,22 +30,25 @@
 .redpick_center_time_number_box{width: 152px;height: 170px;background: url(../img/active003.png) no-repeat center top;text-align: center;line-height: 152px;font-size: 100px;color: #7A4b1d;}
 .redpick_center_time_dian_box{width: 60px;height: 170px;background: url(../img/dian.png) no-repeat center;}
 
-.redpick_center_btn_box{width: 100%;padding: 16px 72px;height: 120px;background-position: center;background-repeat: no-repeat;}
-.redpick_center_btn_box.active_start{background-image:url(../img/active002.png) ;}
+.redpick_center_btn_box{width: 100%;padding: 16px 72px;height: 120px;background-position: center;background-repeat: no-repeat;margin-top: 34px;}
+.redpick_center_btn_box.active{background-image: url(../img/active.jpg);}
+.redpick_center_btn_box.active_start{background-image:url(../img/active_start.jpg) ;}
+.redpick_center_btn_box.active_end{background-image: url(../img/active_end.jpg);}
 
 .redpick_center_tips_box p{line-height: 64px;font-size: 24px;color: #FFF;text-align: center;}
-.redpick_center_winningRecord_box{margin: 50px auto;width: 624px;min-height: 180px;background: url(../img/btn0002.png) no-repeat center top;position: relative;background-color: #FACEA7;
+.redpick_center_winningRecord_box{margin: 50px auto;width: 624px;height: 226px; background: url(../img/btn0002.png) no-repeat center top;position: relative;background-color: #FACEA7;
 border-bottom-left-radius:16px ;border-top-right-radius: 16px;
 }
 
 .redpick_center_winningRecord_icon{width: 34px;height: 34px;position: absolute;left: -17px;top: -17px; background: url(../img/icon.png) no-repeat center;background-size: 34px 34px;
 
 }
-.redpick_center_winningRecord{padding: 16px 30px;line-height: 40px;}
+.redpick_center_winningRecord{padding: 5px 30px;line-height: 40px;width: 564px;height: 210px;position: relative;overflow: hidden;}
 .redpick_center_winningRecord .item{font-size: 20px;color: #7e4e24;}
 .redpick_center_winningRecord .item span{
 	color: #D14419;
 }
+.redpick_center_winningRecord .swiper-slide{height: 40px;}
 .redpick_mask{position: fixed;top: 0;left: 0;right: 0;bottom: 0;background: rgba(0,0,0,0.4);z-index: 100;}
 .winning_box_wrap{}
 .winning_box{width: 332px;height: 500px;position: absolute;top: 50%;left: 50%;margin-left: -166px;margin-top: -250px;background: url(../img/winning.png) no-repeat center;text-align: center;}
@@ -56,62 +62,10 @@ border-bottom-left-radius:16px ;border-top-right-radius: 16px;
 
 .rule_box{width: 496px;height: 684px;position: absolute;top: 50%;left: 50%;margin-left: -248px;margin-top: -300px;background: url(../img/rule.png) no-repeat center;text-align: center;}
 .rule_box_top{height: 228px;line-height: 160px;font-size: 54px;color: #f3e7d1;}
-.rule_box_center{height: 376px;padding: 50px;line-height: 36px;color: #f1e2c6;font-size: 22px;text-align: left;}
+.rule_box_center{height: 376px;padding: 16px 50px;line-height: 36px;color: #f1e2c6;font-size: 22px;text-align: left;}
 .rule_box_center .text{padding-bottom: 10px;}
 .rule_box_bottom{height: 80px;}
 .rule_box_bottom .text1{line-height: 34px;color: #efdfc2;font-size: 20px;}
 .rule_box_bottom .text2{line-height: 28px;color: #efdfc2;font-size: 18px;}
 
-
-.redpick_rain .run1  {
-	animation: myfirst 15s;
-	-moz-animation: myfirst 15s;
-	/* Firefox */
-	-webkit-animation: myfirst 15s;
-	/* Safari and Chrome */
-	-o-animation: myfirst 15s;
-	/* Opera */
-}
-@keyframes myfirst {
-	0% {
-		top: -120px;
-		left: 5px;
-	}
-	100% {
-		top: 1500px;
-		left: 500px;
-	}
-}
-/* Firefox */
-@-moz-keyframes myfirst{
-	0% {
-		top: -120px;
-		left: 5px;
-	}
-	100% {
-		top: 1500px;
-		left: 500px;
-	}
-}
-/* Safari 和 Chrome */
-@-webkit-keyframes myfirst{
-	0% {
-		top: -120px;
-		left: 5px;
-	}
-	100% {
-		top: 1500px;
-		left: 500px;
-	}
-}
-
-@-o-keyframes myfirst{
-	0% {
-		top: -120px;
-		left: 5px;
-	}
-	100% {
-		top: 1500px;
-		left: 500px;
-	}
-}
+.redpick_rain_del{position: absolute;top: 0;right: 0;width: 72px;height:72px;background: url(../../img/icon_delete.png) no-repeat center;background-size: 60px 60px;z-index: 200;}

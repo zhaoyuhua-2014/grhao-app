@@ -7,6 +7,7 @@
     	<meta content="telephone=no, address=no" name="format-detection" />
     	<link rel="stylesheet" href="../css/base.css" />
     	<link rel="stylesheet" type="text/css" href="css/active.css"/>
+    	<link rel="stylesheet" type="text/css" href="../css/swiper-3.3.1.min.css"/>
     	<script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body data-type = "redEnvelopesRain" module-id = "redEnvelopesRain">
@@ -23,7 +24,9 @@
 		<div class="main_wrap">
 			<div class="main" style="background: #e03f3e;">
 				<div class="redPick_top_box">
-					<img src="img/active005.png"/>
+					<div class="redPick_top_banner">
+						<div class="swiper-wrapper"></div>
+					</div>
 				</div>
 				<div class="redpick_center_box">
 					<div class="redpick_center_top clearfloat">
@@ -34,28 +37,25 @@
 							<img src="img/btn02.png"/>
 						</div>
 					</div>
-					<div class="redpick_center_time clearfloat">
+					<div class="redpick_center_time clearfloat hidden">
 						<div class="redpick_center_time_number_box float_left">11</div>
 						<div class="redpick_center_time_dian_box float_left"></div>
 						<div class="redpick_center_time_number_box float_left">11</div>
 						<div class="redpick_center_time_dian_box float_left"></div>
 						<div class="redpick_center_time_number_box float_left">11</div>
 					</div>
-					<div class="redpick_center_btn_box active_start">
+					<div class="redpick_center_btn_box">
 						
 					</div>
-					<div class="redpick_center_tips_box">
+					<div class="redpick_center_tips_box hidden">
 						<p>Tips:下期开奖时间：12:00</p>
 					</div>
 					<div class="redpick_center_winningRecord_box">
 						<div class="redpick_center_winningRecord_icon"></div>
 						<div class="redpick_center_winningRecord">
-							<div class="item">恭喜用户<span>&nbsp;&nbsp;会****鱼&nbsp;&nbsp;&nbsp;&nbsp;</span>获得5元无限制优惠卷</div>
-							<div class="item">恭喜用户<span>&nbsp;&nbsp;会****鱼&nbsp;&nbsp;&nbsp;&nbsp;</span>获得5元无限制优惠卷</div>
-							<div class="item">恭喜用户<span>&nbsp;&nbsp;会****鱼&nbsp;&nbsp;&nbsp;&nbsp;</span>获得5元无限制优惠卷</div>
-							<div class="item">恭喜用户<span>&nbsp;&nbsp;会****鱼&nbsp;&nbsp;&nbsp;&nbsp;</span>获得5元无限制优惠卷</div>
-							<div class="item">恭喜用户<span>&nbsp;&nbsp;会****鱼&nbsp;&nbsp;&nbsp;&nbsp;</span>获得5元无限制优惠卷</div>
-							<div class="item">恭喜用户<span>&nbsp;&nbsp;会****鱼&nbsp;&nbsp;&nbsp;&nbsp;</span>获得5元无限制优惠卷</div>
+							<div class="redpick_center_winningRecord_banner swiper-no-swiping">
+								<div class="swiper-wrapper"></div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -63,7 +63,7 @@
 				<div class="redpick_mask winning_box_wrap hidden">
 					<div class="winning_box">
 						<div class="winning_box_top">
-							恭喜您<br />抽中了优惠卷5元
+							<!--恭喜您<br />抽中了5元红包-->
 						</div>
 						<div class="winning_box_center">
 							<p class="text1">将活动告诉朋友</p>
@@ -93,6 +93,7 @@
 				</div>
 				<!--红包雨动画-->
 				<div class="redpick_mask redpick_rain_wrap hidden">
+					<span class="redpick_rain_del"></span>
 					<div class="redpick_rain">
 						
 					</div>
