@@ -2,7 +2,7 @@
 * active scirpt for Zhangshuo Guoranhao
 */ 
 require(['../require/config'],function(){
-	require(['common',"swiperJS"],function(common){
+	require(['common',"swiperJS","pull"],function(common){
 		// 命名空间
 		var pub = {};
 		
@@ -59,7 +59,8 @@ require(['../require/config'],function(){
 			redpickRain:{
 				init:function(){
 					/*定义创建红包的个数*/
-					var creatRedpickNum = 20;
+					var creatRedpickNum = 30;
+					var num = 0;
 					/*获取屏幕的可见宽度*/
 					var clientWidth = document.documentElement.clientWidth,
 						clientHeight = document.documentElement.clientHeight;
@@ -104,15 +105,27 @@ require(['../require/config'],function(){
 			    		return $div;
 			    	}
 			       	var pickBox = $(".redpick_rain");
-			       	for (var i = 0; i < creatRedpickNum;i++) {
-			       		var el = creatRedpick(i);
-			       		pickBox.append(el);
-			       	};
+			       
+			       	/*for (var i = 0; i < creatRedpickNum;i++) {
+			       		
+			       	};*/
+			       	/*做判断分时段去初始化创建红包*/
+			       	var t = setInterval(function(){
+			       		if (num <= creatRedpickNum) {
+			       			console.log(num)
+			       			var el = creatRedpick(num);
+			       			pickBox.append(el);
+			       			num ++;
+			       			
+			       		}else{
+			       			clearInterval(t);
+			       		}
+			       	},100)
 			       	
 			       	/*红包运动*/
 			       	function redpickRun(el){
-			       		var t = randomInteger(-120,-clientHeight)
-			       			l = randomInteger(-120,720)
+			       		var t = randomInteger(-(clientHeight),-120),
+			       			l = randomInteger(-120,720);
 						el.css({
 			    			width:"106px",
 							height:"122px",
@@ -123,7 +136,7 @@ require(['../require/config'],function(){
 			    		el.animate({
 			    			top:(clientHeight+122)+"px",
 			    			left:( randomInteger(-106,106+clientWidth) )+"px"
-			    		},randomInteger(5000,8000),function(){
+			    		},randomInteger(4000,8000),function(){
 			    			redpickRun(el)
 			    		})
 			       }
@@ -143,38 +156,60 @@ require(['../require/config'],function(){
 				apiData:function(d){
 					var couponRainData = d.data.couponRain,
 						adInfoList = d.data.adInfoList;
-					pub.couponRainId = couponRainData.id;
+					
 					//果然好规则初始化
 					pub.redEnvelopesRain.coupon_rain.activeRule(d.data.grhDesc);
 					//果然好广告轮播处理
 					if (adInfoList) {
 						pub.redEnvelopesRain.coupon_rain.activeBanner(adInfoList)
 					}
-					//系统时间开始时间结束时间
-					pub.systemTime = Date.parse(d.data.systemTime);
-					pub.startTime = Date.parse(couponRainData.startTime);
-					pub.stopTime = Date.parse(couponRainData.stopTime);
-					
-					if (pub.startTime > pub.stopTime) {
-						console.log("时间设置有误")
-					}else{
-						if (pub.systemTime < pub.startTime) {
-							var h = (pub.startTime - pub.systemTime)/1000;
-							pub.redpick_center_time.attr("time",h).removeClass("hidden");
-							pub.redEnvelopesRain.coupon_rain.redpickTime.init();
-							pub.redpick_center_btn_box.addClass("active");
-							
-						} else if (pub.systemTime >= pub.startTime && pub.systemTime <= pub.stopTime){
-							
-							pub.redpick_center_btn_box.removeClass("hidden").addClass("active_start");
-							console.log("活动进行中")
-							pub.redEnvelopesRain.coupon_rain_rcd_list.init();
-						} else if (pub.systemTime > pub.stopTime){
-							pub.redpick_center_btn_box.removeClass("hidden").addClass("active_end");
-							console.log("活动已经结束")
-							pub.redEnvelopesRain.coupon_rain_rcd_list.init();
+					//判断活动不为空
+					if (couponRainData) {
+						pub.couponRainId = couponRainData.id;
+						//系统时间开始时间结束时间
+						pub.systemTime = Date.parse(d.data.systemTime);
+						pub.startTime = Date.parse(couponRainData.startTime);
+						pub.stopTime = Date.parse(couponRainData.stopTime);
+						
+						if (pub.startTime > pub.stopTime) {
+							console.log("时间设置有误")
+						}else{
+							if (pub.systemTime < pub.startTime) {
+								var h = (pub.startTime - pub.systemTime)/1000;
+								
+								var arr = pub.redEnvelopesRain.coupon_rain.changeTime(h);
+								pub.redpick_center_time.find('.redpick_center_time_number_box').eq(0).html(arr[0]).end().eq(1).html(arr[1]).end().eq(2).html(arr[2]).end();
+								pub.redpick_center_time.removeClass("hidden")
+								
+								pub.redEnvelopesRain.coupon_rain.redpickTime.init();
+								pub.redpick_center_btn_box.addClass("active");
+								pub.redpick_center_time.attr("time",h-1);
+								
+							} else if (pub.systemTime >= pub.startTime && pub.systemTime <= pub.stopTime){
+								
+								pub.redpick_center_btn_box.removeClass("hidden").addClass("active_start");
+								console.log("活动进行中")
+								pub.redEnvelopesRain.coupon_rain_rcd_list.init();
+							} else if (pub.systemTime > pub.stopTime){
+								pub.redpick_center_btn_box.removeClass("hidden").addClass("active_end");
+								console.log("活动已经结束")
+								pub.redEnvelopesRain.coupon_rain_rcd_list.init();
+							}
 						}
+						if(pub.isrefresh){
+					 		pub.pullInstance.pullDownSuccess();
+					 	}
+					} else{
+						pub.redpick_center_btn_box.html("暂无活动！").css({
+							"text-align": "center",
+							"font-size": "36px"
+						})
+						pub.redpick_center_winningRecord_box.addClass("hidden")
+						if(pub.isrefresh){
+					 		pub.pullInstance.pullDownSuccess();
+					 	}
 					}
+					
 					
 					
 				},
@@ -185,11 +220,16 @@ require(['../require/config'],function(){
 						html += "<div class='swiper-slide'><img src = '"+d[i].adLogo+"' /></div>"
 					}
 					$(".redPick_top_banner .swiper-wrapper").append(html);
-					var swiper = new Swiper(".redPick_top_banner",{
-						direction: 'horizontal',
-						loop: true,
-				    	autoplay:5000,
-					});
+					console.log(pub.swiperBanner)
+					if (!pub.swiperBanner) {
+						pub.swiperBanner = new Swiper(".redPick_top_banner",{
+							direction: 'horizontal',
+							loop: true,
+					    	autoplay:5000,
+						});
+					}else{
+						pub.swiperBanner.init();
+					}
 				},
 				//活动规则
 				activeRule:function(d){
@@ -215,10 +255,11 @@ require(['../require/config'],function(){
 								pub.redpick_center_time.attr("time",d-1);
 							}else{
 								pub.redpick_center_time.addClass("hidden");
-								
+								pub.redpick_center_btn_box.removeClass("active").addClass("active_start")
 								clearInterval(time);
 							}
 						},1000)
+						
 					}
 				}
 			},
@@ -255,7 +296,6 @@ require(['../require/config'],function(){
 			},
 			coupon_rain_rcd_list:{
 				init:function(){
-					
 					common.ajaxPost($.extend({},{
 						method : 'coupon_rain_rcd_list',
 						couponRainId:pub.couponRainId,
@@ -284,7 +324,9 @@ require(['../require/config'],function(){
 						}else{
 							pub.swiper.init();
 						}
+						pub.redpick_center_winningRecord_box.removeClass("hidden")
 					}
+					
 				}
 			},
 			eventHandle:{
@@ -296,18 +338,20 @@ require(['../require/config'],function(){
 						var l = $(this).is(".float_left"),
 							r = $(this).is(".float_right");
 						if (l) {
-							console.log("跳转优惠卷")
+							common.jumpLinkPlainApp("优惠卷管理","html/cuopon_management.html")
 						}
 						if (r) {
 							pub.rule_box_wrap.removeClass("hidden");
 						}
 					});
 					//红包规则
-					$(".rule_box_wrap").on("click",function(){
+					$(".rule_box_wrap").on("click",function(e){
+						common.stopEventBubble(e)
 						$(this).addClass("hidden")
 					});
 					//点击抢红包按钮红包雨显示
-					pub.redpick_center_btn_box.on("click",function(){
+					pub.redpick_center_btn_box.on("click",function(e){
+						common.stopEventBubble(e)
 						if ($(this).is(".active_start")) {
 							pub.redpick_rain_wrap.removeClass("hidden");
 							$(document).css({"overflow":"hidden"});
@@ -320,7 +364,8 @@ require(['../require/config'],function(){
 						}
 					});
 					//红包雨中点击红包
-					pub.redpick_rain_wrap.on("click","div[data-id]",function(){
+					pub.redpick_rain_wrap.on("click","div[data-id]",function(e){
+						common.stopEventBubble(e)
 						if(pub.redRain){
 							pub.redRain = false;
 							pub.redEnvelopesRain.coupon_user_raffle.init();
@@ -329,11 +374,13 @@ require(['../require/config'],function(){
 						
 					});
 					//红包雨点击关闭按钮
-					pub.redpick_rain_wrap.on("click",".redpick_rain_del",function(){
+					pub.redpick_rain_wrap.on("click",".redpick_rain_del",function(e){
+						common.stopEventBubble(e)
 						pub.redpick_rain_wrap.addClass("hidden");
 					});
 					//抽红包之后点击消失
-					pub.winning_box_wrap.on("click",function(){
+					pub.winning_box_wrap.on("click",function(e){
+						common.stopEventBubble(e)
 						pub.winning_box_wrap.addClass("hidden")
 					})
 				}
@@ -343,6 +390,37 @@ require(['../require/config'],function(){
 		pub.init = function(){
 			pub.moduleId == 'redEnvelopesRain' && pub.redEnvelopesRain.init();
 		};
-		pub.init();
+		$(document).ready(function(){
+		 	pub.init();
+		 	window.pub = pub;
+		 	setTimeout(document.getElementById('wrapper').style.left = '0', 500);
+	 		var wh = document.documentElement.clientHeight;
+			
+			pub.info = {
+				"pullDownLable":"下拉刷新...",
+				"pullingDownLable":"松开刷新...",
+				"pullUpLable":"下拉加载更多...",
+				"pullingUpLable":"松开加载更多...",
+				"loadingLable":"加载中..."
+			}
+			function pullDownAction () {
+				setTimeout(function () {
+					pub.isrefresh = true;
+					pub.redEnvelopesRain.coupon_rain.init(); // 模块初始化接口数据处理
+				}, 1000);	
+			}
+			var $listWrapper = $('.main');
+
+	        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
+	            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
+	             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
+	
+	            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
+	            onPullDown: function () {
+	                pullDownAction();
+	            },
+	        });
+			
+	 	})
 	})
 });

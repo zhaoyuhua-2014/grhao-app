@@ -31,9 +31,9 @@
 .redpick_center_time_dian_box{width: 60px;height: 170px;background: url(../img/dian.png) no-repeat center;}
 
 .redpick_center_btn_box{width: 100%;padding: 16px 72px;height: 120px;background-position: center;background-repeat: no-repeat;margin-top: 34px;}
-.redpick_center_btn_box.active{background-image: url(../img/active.jpg);}
-.redpick_center_btn_box.active_start{background-image:url(../img/active_start.jpg) ;}
-.redpick_center_btn_box.active_end{background-image: url(../img/active_end.jpg);}
+.redpick_center_btn_box.active{background-image: url(../img/active.png);}
+.redpick_center_btn_box.active_start{background-image:url(../img/active_start.png) ;}
+.redpick_center_btn_box.active_end{background-image: url(../img/active_end.png);}
 
 .redpick_center_tips_box p{line-height: 64px;font-size: 24px;color: #FFF;text-align: center;}
 .redpick_center_winningRecord_box{margin: 50px auto;width: 624px;height: 226px; background: url(../img/btn0002.png) no-repeat center top;position: relative;background-color: #FACEA7;

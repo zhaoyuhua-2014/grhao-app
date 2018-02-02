@@ -470,6 +470,24 @@ define(['jquery','mdData','shar1'],function($){
 			this.secretKey.removeItem();
 			this.session.clear();
 		},
+		getLink :function  (link){
+			var wxUrl = '';
+			if (common.EVE) {
+				var wxUrl = 'weixin.grhao.com';
+			}else{
+				
+			}
+	 		var url = '';
+	 		if (link) {
+	 			if (link.indexOf(wxUrl) != -1) {
+	 				url = link.substr((link.indexOf(wxUrl) + wxUrl.length))
+	 				
+	 			}else{
+	 				url = '';
+	 			}
+	 		}
+	 		return url
+	 	},
 		/*新添加的两个方法将所有页面的跳转改为此方法*/
 		// 处理普通的页面跳转
 		jumpLinkPlainApp : function( title , url ){
