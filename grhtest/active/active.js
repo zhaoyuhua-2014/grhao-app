@@ -167,43 +167,79 @@ require(['../require/config'],function(){
 					if (couponRainData) {
 						pub.couponRainId = couponRainData.id;
 						//系统时间开始时间结束时间
-						pub.systemTime = Date.parse(d.data.systemTime);
-						pub.startTime = Date.parse(couponRainData.startTime);
-						pub.stopTime = Date.parse(couponRainData.stopTime);
-						
+						pub.systemTime = new Date(Date.parse((d.data.systemTime).replace(/-/g, "/"))).getTime();
+						pub.startTime = new Date(Date.parse((couponRainData.startTime).replace(/-/g, "/"))).getTime();
+						pub.stopTime = new Date(Date.parse((couponRainData.stopTime).replace(/-/g, "/"))).getTime();
 						if (pub.startTime > pub.stopTime) {
 							console.log("时间设置有误")
 						}else{
-							if (pub.systemTime < pub.startTime) {
-								var h = (pub.startTime - pub.systemTime)/1000;
+							/*
+							 * couponRainData.status
+							 0新建 1上架（进行中或未开始），2已结束 -1下架
+							 * */
+							if (pub.redpick_center_btn_box.is(".active")) {
+								pub.redpick_center_btn_box.removeClass("active");
+							}
+							if (pub.redpick_center_btn_box.is(".active_start")) {
+								pub.redpick_center_btn_box.removeClass("active_start");
+							}
+							if (pub.redpick_center_btn_box.is(".active_end")) {
+								pub.redpick_center_btn_box.removeClass("active_end");
+							}
+							if (pub.redpick_center_btn_box.is(".active_null")) {
+								pub.redpick_center_btn_box.removeClass("active_null");
+							}
+							if (couponRainData.status == '2') {
+								if (pub.redpick_center_btn_box.is(".hidden")) {
+									pub.redpick_center_btn_box.removeClass("hidden");
+								}
 								
-								var arr = pub.redEnvelopesRain.coupon_rain.changeTime(h);
-								pub.redpick_center_time.find('.redpick_center_time_number_box').eq(0).html(arr[0]).end().eq(1).html(arr[1]).end().eq(2).html(arr[2]).end();
-								pub.redpick_center_time.removeClass("hidden")
-								
-								pub.redEnvelopesRain.coupon_rain.redpickTime.init();
-								pub.redpick_center_btn_box.addClass("active");
-								pub.redpick_center_time.attr("time",h-1);
-								
-							} else if (pub.systemTime >= pub.startTime && pub.systemTime <= pub.stopTime){
-								
-								pub.redpick_center_btn_box.removeClass("hidden").addClass("active_start");
-								console.log("活动进行中")
-								pub.redEnvelopesRain.coupon_rain_rcd_list.init();
-							} else if (pub.systemTime > pub.stopTime){
-								pub.redpick_center_btn_box.removeClass("hidden").addClass("active_end");
+								pub.redpick_center_btn_box.addClass("active_end");
 								console.log("活动已经结束")
 								pub.redEnvelopesRain.coupon_rain_rcd_list.init();
+							} else{
+								if (pub.systemTime < pub.startTime) {
+									var h = (pub.startTime - pub.systemTime)/1000;
+									
+									var arr = pub.redEnvelopesRain.coupon_rain.changeTime(h);
+									pub.redpick_center_time.find('.redpick_center_time_number_box').eq(0).html(arr[0]).end().eq(1).html(arr[1]).end().eq(2).html(arr[2]).end();
+									pub.redpick_center_time.removeClass("hidden")
+									
+									pub.redEnvelopesRain.coupon_rain.redpickTime.init();
+									pub.redpick_center_btn_box.addClass("active");
+									pub.redpick_center_time.attr("time",h-1);
+									
+								} else if (pub.systemTime >= pub.startTime && pub.systemTime <= pub.stopTime){
+									
+									pub.redpick_center_btn_box.removeClass("hidden").addClass("active_start");
+									console.log("活动进行中")
+									pub.redEnvelopesRain.coupon_rain_rcd_list.init();
+								} else if (pub.systemTime > pub.stopTime){
+									pub.redpick_center_btn_box.removeClass("hidden").addClass("active_end");
+									console.log("活动已经结束")
+									pub.redEnvelopesRain.coupon_rain_rcd_list.init();
+								}else{
+									
+								}
 							}
 						}
 						if(pub.isrefresh){
 					 		pub.pullInstance.pullDownSuccess();
 					 	}
 					} else{
-						pub.redpick_center_btn_box.html("暂无活动！").css({
-							"text-align": "center",
-							"font-size": "36px"
-						})
+						if (pub.redpick_center_btn_box.is(".active")) {
+							pub.redpick_center_btn_box.removeClass("active");
+						}
+						if (pub.redpick_center_btn_box.is(".active_start")) {
+							pub.redpick_center_btn_box.removeClass("active_start");
+						}
+						if (pub.redpick_center_btn_box.is(".active_end")) {
+							pub.redpick_center_btn_box.removeClass("active_end");
+						}
+						pub.redpick_center_btn_box.addClass("active_null");
+						
+						pub.redpick_center_time.removeClass("hidden");
+						pub.redpick_center_time.find('.redpick_center_time_number_box').eq(0).html("00").end().eq(1).html("00").end().eq(2).html("00").end();
 						pub.redpick_center_winningRecord_box.addClass("hidden")
 						if(pub.isrefresh){
 					 		pub.pullInstance.pullDownSuccess();
@@ -234,20 +270,24 @@ require(['../require/config'],function(){
 				//活动规则
 				activeRule:function(d){
 					pub.rule_box_wrap.data("data",d);
-					pub.rule_box_wrap.find(".rule_box_center").html("<p class='text'>"+d.desc+"</p>")
+					pub.rule_box_wrap.find(".rule_box_center").html("<p class='text'>"+(d.desc).replace(/\r\n/g, "<br />")+"</p>")
 				},
 				/*将毫秒转换为时分秒*/
 				changeTime:function(a){
 					var arr = [],m='';
 					arr[0] = parseInt(a/3600) < 10 ? "0"+parseInt(a/3600) :  parseInt(a/3600);
 					arr[1] = parseInt((a%3600)/60) < 10 ? "0"+parseInt((a%3600)/60) : parseInt((a%3600)/60);
-					arr[2] = (a%3600)%60 < 10 ? "0"+(a%3600)%60 : (a%3600)%60; 
-					console.log(arr);
+					arr[2] = (a%3600)%60 < 10 ? "0"+(a%3600)%60 : (a%3600)%60;
 					return arr;
 				},
 				redpickTime:{
 					init:function(){
-						var time = setInterval(function(){
+						if (pub.isrefresh) {
+							console.log(pub.isrefresh)
+							clearInterval(window.redTime);
+							
+						}
+						window.redTime = setInterval(function(){
 							var d = pub.redpick_center_time.attr("time");
 							if (d>0) {
 								var arr = pub.redEnvelopesRain.coupon_rain.changeTime(d);
@@ -256,10 +296,9 @@ require(['../require/config'],function(){
 							}else{
 								pub.redpick_center_time.addClass("hidden");
 								pub.redpick_center_btn_box.removeClass("active").addClass("active_start")
-								clearInterval(time);
+								clearInterval(window.redTime);
 							}
 						},1000)
-						
 					}
 				}
 			},
@@ -270,17 +309,44 @@ require(['../require/config'],function(){
 						userId : pub.userId,
 						couponRainId:pub.couponRainId,
 					},{}), function( d ){
+						/*
+						COUPON_RAIN_NOT_EXIST("100806"),//红包活动不存在
+						COUPON_RAIN_STATUS_ERROR("100807"),//红包活动已结束
+						COUPON_RAIN_LIMIT("100808"),//用户获得红包个数已达上限
+						 * */
 						d.statusCode == "100000" && pub.redEnvelopesRain.coupon_user_raffle.apiData( d );
 						
 						if (d.statusCode != "100000") {
-							if (d.statusCode == "100803") {
+							if (d.statusCode == "100806") {
+								common.prompt("红包活动不存在")
+								pub.redRain = true;
+								pub.redEnvelopesRain.coupon_rain_rcd_list.init();
+							}else if(d.statusCode == "100807"){
+								pub.redpick_rain_wrap.addClass("hidden");
 								
+								pub.winning_box_wrap.find(".winning_box_top").html("红包活动已结束<br />请您下次早点来哦！")
+								
+								pub.winning_box_wrap.fadeIn();
+								pub.redRain = true;
+								pub.redEnvelopesRain.coupon_rain.init();
+								
+							}else if(d.statusCode == "100808"){
+								pub.redpick_rain_wrap.addClass("hidden");
+								
+								pub.winning_box_wrap.find(".winning_box_top").html("您已抢过红包了<br />请下次活动再来哦！")
+								
+								pub.winning_box_wrap.fadeIn();
+								
+								pub.redRain = true;
+								pub.redEnvelopesRain.coupon_rain_rcd_list.init();
 							}else{
 								common.prompt( d.statusStr );
+								
+								pub.redRain = true;
+								pub.redEnvelopesRain.coupon_rain_rcd_list.init();
 							}
 						}
-						pub.redRain = true;
-						pub.redEnvelopesRain.coupon_rain_rcd_list.init();
+						
 					});
 				},
 				apiData:function(d){
@@ -288,10 +354,12 @@ require(['../require/config'],function(){
 					if (d.data == 0) {
 						pub.winning_box_wrap.find(".winning_box_top").html("很抱歉<br />这是一个空包哦")
 					} else{
-						pub.winning_box_wrap.find(".winning_box_top").html("恭喜您<br />抽中了"+d.data+"元红包")
+						pub.winning_box_wrap.find(".winning_box_top").html("恭喜您<br />抢到了"+d.data+"元红包")
 					}
 					
-					pub.winning_box_wrap.removeClass("hidden")
+					pub.winning_box_wrap.fadeIn();
+					pub.redRain = true;
+					pub.redEnvelopesRain.coupon_rain_rcd_list.init();
 				}
 			},
 			coupon_rain_rcd_list:{
@@ -309,21 +377,28 @@ require(['../require/config'],function(){
 				apiData:function(d){
 					var html = '',d = d.data.objects;
 					if (d && d.length != 0) {
+						
 						for (var i in d) {
 							html += '<p class="swiper-slide item" >恭喜用户<span>&nbsp;&nbsp;'+d[i].cuserName+'&nbsp;&nbsp;&nbsp;&nbsp;</span>获得'+d[i].money+'元红包</p>'
 						}
 						$('.redpick_center_winningRecord_banner .swiper-wrapper').html(html)
-						if (!pub.swiper) {
-							var swiper = pub.swiper = new Swiper(".redpick_center_winningRecord_banner",{
-								direction: 'vertical',
-								loop: true,
-						    	autoplay:5000,
-						    	slidesPerView:5,
-						    	height: 200,
-							});
+						if (d.length == "5") {
+							$('.redpick_center_winningRecord_banner .swiper-wrapper').css("display","flex")
+							if (!pub.swiper) {
+								var swiper = pub.swiper = new Swiper(".redpick_center_winningRecord_banner",{
+									direction: 'vertical',
+									loop: true,
+							    	autoplay:5000,
+							    	slidesPerView:5,
+							    	height: 200,
+								});
+							}else{
+								pub.swiper.init();
+							}
 						}else{
-							pub.swiper.init();
+							$('.redpick_center_winningRecord_banner .swiper-wrapper').css("display","block")
 						}
+						
 						pub.redpick_center_winningRecord_box.removeClass("hidden")
 					}
 					
@@ -334,27 +409,50 @@ require(['../require/config'],function(){
 					//定义抢红包的状态;
 					var status = 0;
 					
-					$(".redpick_center_top").on("click",".redPick_btn1",function(){
+					$(".redpick_center_top").on("click",".redPick_btn1",function(e){
+						common.stopEventBubble(e)
 						var l = $(this).is(".float_left"),
 							r = $(this).is(".float_right");
 						if (l) {
-							common.jumpLinkPlainApp("优惠卷管理","html/cuopon_management.html")
+							if (pub.logined) {
+								common.jumpLinkPlainApp("优惠卷管理","html/cuopon_management.html");
+							}else{
+								common.jumpLinkPlainApp("登录","html/login.html");
+							}
 						}
 						if (r) {
-							pub.rule_box_wrap.removeClass("hidden");
+							/*pub.rule_box_wrap.removeClass("hidden");
+							pub.rule_box_wrap.find(".rule_box").fadeIn()*/
+							pub.rule_box_wrap.fadeIn()
 						}
 					});
 					//红包规则
 					$(".rule_box_wrap").on("click",function(e){
-						common.stopEventBubble(e)
-						$(this).addClass("hidden")
+						common.stopEventBubble(e);
+						var c = e.target.className;
+						
+						if (c == "redpick_mask rule_box_wrap hidden") {
+							console.log(c)
+							$(this).fadeOut();
+						}
 					});
+					//组织弹框滑动时间触发到body
+					$(".redpick_mask .rule_box_center").on("scroll",function(e){
+						common.stopEventBubble(e);
+					});
+					$(".redpick_mask").on("touchmove",function(e){
+						common.stopEventBubble(e);
+					})
 					//点击抢红包按钮红包雨显示
 					pub.redpick_center_btn_box.on("click",function(e){
 						common.stopEventBubble(e)
 						if ($(this).is(".active_start")) {
-							pub.redpick_rain_wrap.removeClass("hidden");
-							$(document).css({"overflow":"hidden"});
+							if (pub.logined) {
+								pub.redpick_rain_wrap.removeClass("hidden");
+								$(document).css({"overflow":"hidden"});
+							}else{
+								common.jumpLinkPlainApp("登录","html/login.html");
+							}
 						}
 						if ($(this).is(".active")) {
 							console.log("活动未开始")
@@ -369,9 +467,7 @@ require(['../require/config'],function(){
 						if(pub.redRain){
 							pub.redRain = false;
 							pub.redEnvelopesRain.coupon_user_raffle.init();
-							
 						}
-						
 					});
 					//红包雨点击关闭按钮
 					pub.redpick_rain_wrap.on("click",".redpick_rain_del",function(e){
@@ -380,8 +476,11 @@ require(['../require/config'],function(){
 					});
 					//抽红包之后点击消失
 					pub.winning_box_wrap.on("click",function(e){
-						common.stopEventBubble(e)
-						pub.winning_box_wrap.addClass("hidden")
+						common.stopEventBubble(e);
+						var c = e.target.className;
+						if (c == "btn_true") {
+							$(this).fadeOut();
+						}
 					})
 				}
 			}

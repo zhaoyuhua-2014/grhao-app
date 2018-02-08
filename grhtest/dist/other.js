@@ -26,7 +26,7 @@ require(['../require/config'],function () {
 			orderCode: pub.orderCode,
 		};
 	}else{
-		pub.moduleId != 'rechargeExplain' && common.jumpLinkPlain( '../index.html' ); // 未登录回到首页
+		pub.moduleId != 'rechargeExplain' && common.goHomeApp(); // 未登录回到首页
 	}
 	pub.PAGE_INDEX = common.PAGE_INDEX; // 索引
 	pub.PAGE_SIZE = common.PAGE_SIZE; // 页面显示数据个数
@@ -70,6 +70,7 @@ require(['../require/config'],function () {
 
 				},pub.userBasicParam),function( d ){
 					d.statusCode == "100000" && common.goBackApp(1,true,"html/order_management.html");
+					d.statusCode != "100000" && common.prompt( d.statusCode );
 				});
 			}
 		},

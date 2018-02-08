@@ -2,7 +2,7 @@ define(function(){
 	require.config(
 	    {
 	    	urlArgs: function(id, url) {
-		        var args = 'v=1';
+		        var args = 'v=0208';
 		        if (url.indexOf('view.html') !== -1) {
 		            args = 'v=2'
 		        }

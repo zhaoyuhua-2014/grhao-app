@@ -808,7 +808,7 @@ background-origin: content-box;-webkit-background-clip: content-box;}
 .set_coupon_box dt {padding-right:36px;}
 .set_coupon_box1 {width:370px;margin-top:20px;height: 80px;font-size:28px;}
 .set_coupon_box1_top {width:370px;height:60px;background:#f5f9e8 url(../img/arrow_right.png) no-repeat right center;border:1px solid #96979B;border-radius:8px;line-height:60px;padding-left:10px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;}
-.set_coupon_box1_bottom {border:1px solid #96979B;background:#F5F9E8;border-top:none;display:none;position:absolute;z-index:5;}
+.set_coupon_box1_bottom {border:1px solid #96979B;background:#F5F9E8;border-top:none;display:none;position:absolute;z-index:5;max-height: 240px;overflow: auto;}
 .set_coupon_box1_bottom p {width: 370px; height:60px;line-height:60px;padding:0 20px;border-bottom:1px solid #96979B;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;}
 .set_charge_style {width:100%;height:100px;background:#ffffff;margin-top:20px;position:relative;}
 .monthCard_introduction {position:absolute;top:39px;right:22px;width:22px;height:22px;background: #3190e8;border-radius: 100%;color:#ffffff;font-size: 16px;line-height: 21px;font-size: 16px;font-weight: 500;text-align: center;}

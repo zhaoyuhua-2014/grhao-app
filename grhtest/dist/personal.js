@@ -26,7 +26,7 @@ require(['../require/config'],function(){
 				tokenId : pub.tokenId
 			}
 		}else{
-			pub.muduleId != "0" && common.jumpLinkPlainApp( '个人中心','my.html' );
+			pub.muduleId != "0" && common.goHomeApp();
 		}
 	
 		// 父模块接口数据 
@@ -510,7 +510,12 @@ require(['../require/config'],function(){
 						html += '		</div>'
 						html += '</div>'           		
 					};
-					$('.cuopon_management_contain').html( html );
+					/*2018-02-06 优惠卷点击下一页覆盖问题*/
+					if (data.pageNo == "1") {
+						$('.cuopon_management_contain').html( html );
+					} else{
+						$(".cuopon_management_contain").append(html)
+					}
 				}
 			},
 			// 优惠券使用说明请求
@@ -601,12 +606,6 @@ require(['../require/config'],function(){
 		// 优惠券 事件命名空间
 		pub.coupon.eventHandle = {
 			init : function(){
-	
-				// 点击跳转到首页
-			    $('.cuopon_management_contain').on('click','.cuopon_status11',function(){
-			    	common.jumpLinkPlain( "../index.html" );
-			    });
-		    	
 		    	// 点击加载更多
 		    	$('.lodemore').on('click',function(){				
 					if ( $(this).html() != '没有更多数据了' ) {

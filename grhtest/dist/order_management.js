@@ -26,7 +26,7 @@ require(['../require/config'],function(){
 				tokenId : pub.tokenId
 			}
 		}else{
-			common.jumpLinkPlain( '../index.html' ); // 未登录跳转
+			common.goHomeApp(); // 未登录跳转
 		}
 	
 		pub.toFixed = common.toFixed; 
@@ -123,7 +123,7 @@ require(['../require/config'],function(){
 		       	   	    html += '                <div class="manage_details_bottom clearfloat">'
 		       	   	    html += '                    <div class="manage_bottom_left">'     		   	                       
 		       	   	    html += '                        <div class="order_bottom_money clearfloat">'
-		       	   	    html += '                            <div class="order_bottom_money_left">￥' + pub.toFixed( v.realPayMoney ) +'</div>'
+		       	   	    html += '                            <div class="order_bottom_money_left">￥' + pub.toFixed( Number(v.realPayMoney) ) +'</div>'
 		       	   	    html += '                            <div class="order_bottom_money_right">共' + v.allGoodsCount + '件商品</div>'
 		       	   	    html += '                        </div>'
 		       	   	    html += '                    </div>'
@@ -412,7 +412,7 @@ require(['../require/config'],function(){
 						firmIdType = firmInfo.type;
 			        $('.orderDetails_no').html( '订单编号：' + orderInfo.orderCode );          
 			        $('.create_time').html( '下单时间：' + orderInfo.createTime );
-			        $('.order_money').html( '订单金额：￥' + pub.toFixed( orderInfo.realPayMoney ) );
+			        $('.order_money').html( '订单金额：￥' + pub.toFixed( Number(orderInfo.realPayMoney) ) );
 			        if (firmIdType == '5') {
 			        	$('.delivery,.take_goods_address_contain,.order_message').addClass("hidden")
 			        	$('.machine_address_wrap').removeClass("hidden");
@@ -507,7 +507,7 @@ require(['../require/config'],function(){
 						html += '           </div>'
 						html += '	    </div>'
 			        	html += '         <div class="gds_right_bottom">'
-			        	html += '			<p class="float_left"><span class="font_color">￥' + pub.toFixed( v.nowPrice ) + '</span></p>'
+			        	html += '			<p class="float_left"><span class="font_color">￥' + pub.toFixed( Number(v.nowPrice) ) + '</span></p>'
 			        	html += '         </div>'            	
 			        	html += '    </dd>'
 			        	html += '</dl>'
@@ -518,8 +518,8 @@ require(['../require/config'],function(){
 			        //支付金额运算详情
 			        if ( orderInfo.activityType == 2 ) { // 秒杀
 			        	$('.list-group1','.order_set_list').show();
-			        	$('.my_order_list1 .order_set_list_right').html( '￥' + pub.toFixed( orderInfo.orderDetailsList[0].goodsAllMoney ) );
-			        	$('.my_order_list7 .order_set_list_right').html( '￥' + pub.toFixed( orderInfo.realPayMoney ) );
+			        	$('.my_order_list1 .order_set_list_right').html( '￥' + pub.toFixed( Number(orderInfo.orderDetailsList[0].goodsAllMoney) ) );
+			        	$('.my_order_list7 .order_set_list_right').html( '￥' + pub.toFixed( Number(orderInfo.realPayMoney) ) );
 			        } else{
 	
 			        	$('.list-group2','.order_set_list').show();
@@ -536,12 +536,16 @@ require(['../require/config'],function(){
 				        })();
 				        // 费用详细
 				        (function(){
+				        	
 							pub.orderDetail.MONEY_DETAIL.forEach(function( v, i ){
-			        			$('.my_order_list' + ( i + 1 ) + ' .order_set_list_right').html( '￥' + pub.toFixed( orderInfo[ v ] ) );
+							//	console.log(v);
+				        	//console.log(i);
+				        	//console.log(Number(orderInfo[ v ]).toFixed(2))
+			        			$('.my_order_list' + ( i + 1 ) + ' .order_set_list_right').html( '￥' + pub.toFixed( Number(orderInfo[ v ] )) );
 			        		});
 			        		
 			        		//orderInfo.payMethod == '5' && $('.my_order_list6').show().find('.order_set_list_right').html( pub.toFixed( orderInfo.mothReduceMoney ) == 0 ? '￥' + pub.toFixed( orderInfo.mothReduceMoney ):'-￥' + pub.toFixed( orderInfo.mothReduceMoney ) );
-			            	$('.my_order_list7 .order_set_list_right').html( '￥' + pub.toFixed( orderInfo.realPayMoney ) );
+			            	$('.my_order_list7 .order_set_list_right').html( '￥' + pub.toFixed( Number(orderInfo.realPayMoney) ) );
 			        	})();
 			    	} 
 			    	// 用户操作处理

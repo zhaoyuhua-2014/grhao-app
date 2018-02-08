@@ -16,7 +16,7 @@ require(['../require/config'],function () {
 	    	pub.sign = md5( pub.source + "key" + common.secretKeyfn() ).toUpperCase();
 	    	pub.tokenId = common.tokenIdfn();
 	    }else{
-	        common.jumpLinkPlain( '../index.html' );
+	        common.goHomeApp();
 	    }
 	
 		pub.bool = common.addressData.getKey(); // addressData 数据存储是否存在
