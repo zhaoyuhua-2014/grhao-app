@@ -60,7 +60,7 @@ require(['../require/config'],function(){
 				init : function(){
 					common.ajaxPost({
 						method : 'goods_first_type',
-						type : pub.goods.type ? pub.goods.type : (pub.firmIdType == "5"? "WATM":"PU_TONG") ,
+						type : pub.goods.type ? pub.goods.type : (pub.firmIdType == "5"? "WATM":"") ,
 						firmId: pub.firmId
 					},function( d ){
 						if ( d.statusCode == "100000" ) {
