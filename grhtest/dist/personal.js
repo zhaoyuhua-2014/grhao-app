@@ -487,11 +487,12 @@ require(['../require/config'],function(){
 					html = '',
 					data = d.data,
 					isLast = data.lastPage;
+					
+					$('.lodemore').html( isLast ? '没有更多数据了' : '点击加载更多数据' ).show();
+				    if( data.list == 0 ){ $('.lodemore').html('没有更多数据了').show(); }
 	
-				     isLast && $('.lodemore').html('没有更多数据了').show();
-				    !isLast && $('.lodemore').html('点击加载更多数据').show();
-				    if( data.list == 0 ){ $('.lodemore').html('没有更多数据了').show();return;  }
-	
+					if (data.totalCount == 0 ) { $('.lodemore').html('暂无优惠卷').show(); return}
+					
 					for(var i in data.list){
 						var lst = data.list[i];
 						html += '<div class="cuopon_management_content clearfloat cuopon_status1' + lst.status + '">'
@@ -561,6 +562,14 @@ require(['../require/config'],function(){
 				apiDataDeal : function( d ){
 	
 			    	var html = '', i = 0;
+			    	
+			    	if (!d.data.length) {
+			    		console.log(d.data.length)
+			    		$(".zs-coupon-box .cuopon_contain").html("<p>暂无在线优惠卷可以领取。</p>");
+			    		$(".cuopon_contain p").css({"text-align":"center",'line-height':'300px',"font-size":'30px'})
+			    		return
+			    	}
+			    	
 			    	for( i in d.data ){
 			    		var list = d.data[i];
 			    		html += '<div class="cuopon_content clearfloat">'
