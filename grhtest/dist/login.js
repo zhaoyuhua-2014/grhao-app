@@ -326,7 +326,11 @@ require(['../require/config'],function(){
 						common.wxLoginApp();
 					}
 				})
-	
+				
+				//点击跳转注册
+				$(".login_regsiter a").on("click",function(){
+					common.jumpLinkPlainApp("注册","html/regsiter.html")
+				})
 				pub.onceRun = common.onceRun( pub.verification.init, pub );
 			}
 		};
