@@ -7,7 +7,7 @@ define(['jquery','mdData','shar1'],function($){
 
 	$.extend(common,{
 		//EVE 作为正式环境和测试环境的开关，为true时为正式环境，为false时为测试环境
-		EVE:true,
+		EVE:false,
 		//API : "http://api.grhao.com/server/api.do", // 接口地址
 		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数
@@ -38,7 +38,9 @@ define(['jquery','mdData','shar1'],function($){
 		//更新日期
 		DATE:"0117",
 	});
-
+	//换肤延时对象
+	common.defHuanfu = $.Deferred();
+	
 	(function(){
 		if (common.EVE) {
 			common.API = "http://api.grhao.com/server/api.do";
@@ -79,6 +81,20 @@ define(['jquery','mdData','shar1'],function($){
 	 *	数据存储 统一管理
 	*/
 	
+	var Local = [
+		'local', // 清空所有local
+		'tokenId', // 存储 tokenId
+		'secretKey', // 存储 secretKey
+		'user_data', // 存储用户信息
+		'jumpMake', // 跳转
+		'orderType', // 1.普通商品 2.秒杀商品 3.预购商品
+		'good', // 购物车商品信息
+		'orderBack', // 订单入口 
+		'openId',
+		'userId',
+		'storeInfo', // 存数据信息
+		'accountRelatived' // 账户关联
+	]
 	common.local = new Memory('clear','local'); // 清空所有local
 	common.session = new Memory('clear','session'); // 清空所有session
 
@@ -133,6 +149,7 @@ define(['jquery','mdData','shar1'],function($){
 
 	common.timestamp = new Memory('timestamp','session'); 
 
+	common.huanfu = new Memory('huanfu','session');
 	// 获取 tokenId 的值
 	common.tokenIdfn = function(){
 		if( this.tokenId.getKey() ){
@@ -205,7 +222,16 @@ define(['jquery','mdData','shar1'],function($){
 			common.session.clear();
 		});
 	};
-
+	common.change_app_theme = function(){
+		common.ajaxPost({
+			method : 'change_app_theme'
+		},function( d ){
+			if (d.statusCode == '100000') {
+				sessionStorage.setItem("huanfu",d.data.type)
+				common.defHuanfu.resolve();
+			}
+		});
+	}
 
 	$.extend(common,{
 

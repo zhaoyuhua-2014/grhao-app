@@ -210,8 +210,23 @@ require(['../require/config'],function(){
 	 			pub.pullInstance.pullDownSuccess();
 	 		}
 		};
+		// 换肤
+		pub.apiHandle.change_app_theme = {
+			init:function(){
+				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
+					$("#zs-cart,.footer").addClass("skin"+sessionStorage.getItem("huanfu"))
+				}
+			}
+		}
 		pub.init = function(){
-	
+			if (!common.huanfu.getKey()) {
+				common.change_app_theme();
+				common.defHuanfu.done(function(){
+					pub.apiHandle.change_app_theme.init();
+				})
+			}else{
+				pub.apiHandle.change_app_theme.init();
+			}
 			pub.apiHandle.reFresh()
 			common.cancelDialogApp();
 			cart.eventHandle.init();
@@ -268,6 +283,7 @@ require(['../require/config'],function(){
 	 		if( goodsTotalNum != 0 ){
 	 			$('.footer_item[data-content]','#foot').attr('data-content',goodsTotalNum);
 	 		}
+	 		
 		};
 		
 		$(document).ready(function(){
@@ -296,6 +312,7 @@ require(['../require/config'],function(){
 	                pullDownAction();
 	            },
 	        });
+	        
 		
 		})
 	})

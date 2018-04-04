@@ -984,9 +984,44 @@ require(['../require/config'],function(){
 			}
 			
 		}
+		// 换肤
+		pub.apiHandle.change_app_theme = {
+			init:function(){
+				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
+					switch( +pub.muduleId ){
+						case 0 : (function(){
+							$(".main_top,.footer,.exit,.zs_address_box").addClass("skin"+sessionStorage.getItem("huanfu"))
+						}()); break;
+						case 1 : (function(){
+							$(".zs_address_box,.zs_phone_box").addClass("skin"+sessionStorage.getItem("huanfu"))
+						}()); break; // 修改个人信息
+						case 2 : break; // 优惠券
+						case 3 : (function(){
+							$(".fruitMall_wrap_top,.fruitMall_wrap_bottom").addClass("skin"+sessionStorage.getItem("huanfu"))
+						}()); break; // 果币
+						case 4 : (function(){
+							$(".pwd_change_reverse").addClass("skin"+sessionStorage.getItem("huanfu"))
+						}()); break; // 修改密码
+						case 5 : (function(){
+							$(".main_tel").addClass("skin"+sessionStorage.getItem("huanfu"))
+						}()); break; // 帮助中心
+						case 6 : break; // 设置模块
+					};
+				}
+			}
+		}
 		// 个人中心初始化函数
 		pub.init = function(){
 	
+			if (!common.huanfu.getKey()) {
+				common.change_app_theme();
+				common.defHuanfu.done(function(){
+					pub.apiHandle.change_app_theme.init();
+				})
+			}else{
+				pub.apiHandle.change_app_theme.init();
+			}
+			
 			pub.muduleId == "1" && pub.userInfoRepaired.init(); // 修改个人信息
 	
 			pub.muduleId == "2" && pub.coupon.init(); // 优惠券

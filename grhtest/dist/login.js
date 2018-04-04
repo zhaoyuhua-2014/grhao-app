@@ -8,9 +8,6 @@ require(['../require/config'],function(){
 		var pub = {};
 		
 		pub.openId = common.openId.getItem();
-	
-		//pub.domain = 'http://weixin.grhao.com';
-		pub.domain = 'http://wxapp.grhao.com';
 		
 		pub.weixinCode = common.getUrlParam('code'); // 获取url参数
 	
@@ -522,8 +519,27 @@ require(['../require/config'],function(){
 				});
 			}
 		};
-	
+		
+		// 换肤
+		pub.apiHandle = {
+			change_app_theme : {
+				init:function(){
+					if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
+						$(".login_main_content,.regsiter_pack,.login_btn").addClass("skin"+sessionStorage.getItem("huanfu"))
+					}
+				}
+			}
+		};
+		
 		pub.init = function(){
+			if (!common.huanfu.getKey()) {
+				common.change_app_theme();
+				common.defHuanfu.done(function(){
+					pub.apiHandle.change_app_theme.init();
+				})
+			}else{
+				pub.apiHandle.change_app_theme.init();
+			}
 	
 			pub.eventHandle.init(); // 公共模块
 			

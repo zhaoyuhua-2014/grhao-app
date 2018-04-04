@@ -1,3 +1,4 @@
+var version = '0.0.2';
 seajs.config({
   // Configure alias
   alias: {
@@ -19,5 +20,8 @@ seajs.config({
   preload: [
     'mobile-util',
     'jquery'
+  ],
+  map:[
+    ['.js','.js?v='+version]//映射规则
   ]
 });

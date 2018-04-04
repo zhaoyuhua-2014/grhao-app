@@ -198,9 +198,26 @@ require(['../require/config'],function () {
 				common.prompt('服务异常，请稍后重试 saveLoginInfo');
 			}
 		};
-		
+		//换肤
+		pub.apiHandle = {
+			change_app_theme : {
+				init:function(){
+					if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
+						$(".login_main_content,.address_reverse").addClass("skin"+sessionStorage.getItem("huanfu"))
+					}
+				}
+			}
+		}
 		// 模块初始化
 		pub.init = function(){
+			if (!common.huanfu.getKey()) {
+				common.change_app_theme();
+				common.defHuanfu.done(function(){
+					pub.apiHandle.change_app_theme.init();
+				})
+			}else{
+				pub.apiHandle.change_app_theme.init();
+			}
 			pub.paramListInit(); // 参数初始化
 			if (pub.muduleId == "bindUser") {
 				pub.bindUser.init();

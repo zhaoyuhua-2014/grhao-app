@@ -597,9 +597,26 @@ require(['../require/config'],function () {
 				pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 			});
 		};
-	
+		
+		// 换肤
+		pub.apiHandle.change_app_theme = {
+			init:function(){
+				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
+					$(".order_goods_contain_details,.order_submit").addClass("skin"+sessionStorage.getItem("huanfu"))
+				}
+			}
+		}
+		
 		// 模块初始化
 		pub.init = function(){
+			if (!common.huanfu.getKey()) {
+				common.change_app_theme();
+				common.defHuanfu.done(function(){
+					pub.apiHandle.change_app_theme.init();
+				})
+			}else{
+				pub.apiHandle.change_app_theme.init();
+			}
 			pub.orderType = common.orderType.getItem() || 1; // 接收订单类型  主要指商品类型1.普通，2.秒杀，3.预购
 			pub.goodsInfoApi = cart.goodlist1(); // 接收接口所需字段
 			pub.tabIndex = common.addType.getKey() ? common.addType.getItem() : 0;// 配送方式 tab 索引

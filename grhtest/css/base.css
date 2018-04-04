@@ -75,7 +75,7 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .triangle-btn.gray{width:30px;height:30px;border-top:6px solid #666666;border-left:6px solid #666666;margin-top:21px;margin-left: 23px;}
 
 /* public style */
-.footer_item, #gw_car,.index_loge,.index_tit,.all_bg1, .index_rigth,.all_bg2,.all_bg3,.all_bg4,.all_bg5,.index_center_center{background: url(../img/index_sprites1.png) no-repeat;}
+.footer_item, #gw_car,.index_loge,.all_bg1, .index_rigth,.all_bg2,.all_bg3,.all_bg4,.all_bg5,.index_center_center{background: url(../img/index_sprites1.png) no-repeat;}
 
 /*首页/我 公用底部*/
 .footer{font-size: 24px;}
@@ -143,9 +143,10 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 /*首页样式*/
 .index_header {position:relative;left:0;top:0;}
 .index_loge {position:absolute;left:0;top:0;width:190px;height:96px;padding:6px 25px;background-position: 0 -10px}
-.index_tit {position:absolute;left:190px;top:0;height:96px;width:350px;background-position:-118px -348px;font-size:28px;padding:7px 10px;overflow: hidden;}
-.index_tit p {height:38px;line-height:38px;color:rgb(51,51,51);padding-left: 14px;white-space: nowrap;}
-.all_bg1{display: inline-block;width: 60px;height: 37px;background-position: -200px -30px;}
+.index_tit {position:absolute;left:190px;top:7px;height:82px;width:350px;font-size:28px;padding-left: 10px;overflow: hidden;border-left: 5px solid #a1ca3a;}
+.index_tit p {height:38px;line-height:38px;color:rgb(51,51,51);padding-left: 14px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden}
+.index_tit p:first-child{width: 278px;}
+.all_bg1{float:right;width: 60px;height: 37px;background-position: -200px -35px;}
 .index_rigth {position:absolute;right:0;top:0;text-align:center;height:96px;width:110px;padding-top:17px;z-index:10;background-position: 6px -116px}
 /*.index_center_wrap {width:100%;height:330px;padding:20px 0;background:#f0f0f0;position: relative;}
 .index_center_wrap dl{position: absolute;width: 50%;height: 140px;font-size: 28px;background: #ffffff;}
@@ -187,7 +188,8 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .index_inner dl dd{height: 80px;background: #FFFFFF;line-height:40px;color:rgb(90,94,95);}
 .index_inner dl dd p {text-align:center;width: 238px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;}
 .index_inner dl dd p span{white-space: nowrap;text-overflow: ellipsis;overflow: hidden;}
-
+.index_inner dl dd p span.float_left{padding-left:20px;width:115px;text-align:left}
+.index_inner dl dd p span.float_right{color:rgb(254,120,49);padding-right:15px;width:118px;text-align:right;}
 /*新增*/
 .index_banner .swiper-slide a{display: block;width: 700px;height: 310px; margin: 0 auto;border-radius:34px ;overflow: hidden;padding-top: 10px;}
 .index_center_wrap {width:100%;height:210px;background:#f0f0f0;position: relative;overflow: hidden;margin-bottom: 20px;}
@@ -308,6 +310,9 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .add_num {float:right;}
 .minus_num,.show_num {float:left;}
 .show_num {width:50px;line-height:50px;text-align:center;background: #ffffff;}
+.good_number .add_num,.gd_number .add_num,.good_number .minus_num,.gd_number .minus_num{width: 52px;height: 52px;}
+.good_number .minus_num.gd_number .minus_num{background: url(../img/btn_m.png);}
+.good_number .add_num,.gd_number .add_num{background: url(../img/btn_a.png);}
 /*[module-id="goods"] .show_num,[module-id="goodsDetail"] .show_num{display:none;}
 [module-id="goods"] .minus_num,[module-id="goodsDetail"] .minus_num{display:none;}*/
 .click_load {height:60px;line-height:60px;text-align:center;font-size:28px;}
@@ -1118,3 +1123,243 @@ to {
 .swiper_content{overflow: hidden; position: relative;width: 100%;height: 100%;}
 .swiper_content .slide{position: relative;float: left;height: 100%;visibility: visible;background-color: #000;display: -webkit-box;-webkit-box-pack: center;-webkit-box-align: center;}
 .swiper_content img{width: 100%;}
+/*购物车页面*/
+/*常购商品页面*/
+.often_shop_main_wrap .main ul{width:100%;margin-top:10px;background:#FFF}
+.line-wrapper{width:100%;height:220px;overflow:hidden;background: #F7F7F7;margin-bottom: 20px;}
+.line-scroll-wrapper{height:200;width:950px}
+.line-normal-wrapper{float:left;width:750px;height:200px}
+.line-normal-avatar-wrapper{float:left;width:200px;height:200px;padding:20px}
+.line-normal-avatar-wrapper img{width:100%;height:100%}
+.line-normal-info-wrapper{float:left;width:448px;height:200px;padding-top:18px;}
+.often_shop_goods_top p{float:left;font-size:28px;color:#999999}
+.often_shop_goods_top .often_shop_goods_tit{width: 320px;line-height: 60px;color: #393737;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;}
+.often_shop_goods_top .often_shop_goods_icon{line-height: 50px;color: #ff7b29;font-size: 32px;}
+.often_shop_goods_top .often_shop_goods_icon del{color: #c1c1c1;font-size: 28px;}
+.often_shop_goods_top.often_shop_show p{line-height: 50px;}
+.often_shop_color{color:#F76A10;font-size:30px}
+.line-btn-delete{float:left;width:200px;height:200px}
+.line-btn-delete button{width:100%;height:100%;background:#ff3b30;border:none;font-size:28px;font-family:'Microsoft Yahei';color:#fff}
+/*copy_grhao-h5 2018-04-03*/
+/*新增订单详情-2018-03-29*/
+.order_set_list li:last-child .order_set_list_right{color: #fe7831;}
+/*换肤需要*/
+/*第二套皮肤*/
+
+/*个人中心页面未登录状态下的登录按钮*/
+.main_top_login.skin2{background: #e5892b;}
+/*登录页面登录按钮*/
+.login_main_content.skin2 #get_verify_code,.login_main_content.skin2 #time,.login_btn.skin2{background: #E5892B;}
+/*注册页面*/
+.regsiter_pack.skin2 .regsiter_btn,.regsiter_pack.skin2 #reg_time,.regsiter_pack.skin2 #reg_verify_code{background: #E5892B;}
+/*首页*/
+.index_header.skin2 .index_tit{border-left-color: #E5892B;}
+.index_header.skin2 .index_tit .all_bg1{background-image: url(../img/skin2.png);background-repeat: no-repeat;background-position:8px -264px;}
+.index_header.skin2 .index_rigth{background-image: url(../img/skin2.png);background-position: -294px -252px;}
+.index_inner.skin2 dl dd span.float_right{color:#Eb4040;}
+
+/*更多商品*/
+.more_top_wrap.skin2 .more_first_click,.more_bottom_wrap.skin2 .more_two_click{border-color: #E5892B;color: #E5892B;}
+.more_bottom_wrap.skin2 .good_picre span{color: #EB4040;}
+.more_bottom_wrap.skin2 .minus_num{background: url(../img/skip2-@2x.png) no-repeat 0 0;background-size: 52px;}
+.more_bottom_wrap.skin2 .add_num{background: url(../img/skip2add@2x.png) no-repeat 0 0;background-size: 52px;}
+/*购物车*/
+#zs-cart.skin2 .often_shop_goods_icon{color: #EB4040;}
+#zs-cart.skin2 #select-delete,#zs-cart.skin2 #total .totalmoney{color: #EB4040;}
+#zs-cart.skin2 #total .settle{background: url(../img/skip2submit@2x.png) no-repeat 0 0;background-size: 198px 100px;}
+/*我*/
+.main_top.skin2 .main_top_login{background: #E5892B;}
+.exit.skin2{background: #EC4040;}
+/*商品详情*/
+.goodsDetails_box1.skin2 .gd_price span{color: #EB4040;}
+.goodsDetails_box1.skin2 .minus_num{background: url(../img/skip2-@2x.png) no-repeat 0 0;background-size: 52px;}
+.goodsDetails_box1.skin2 .add_num{background: url(../img/skip2add@2x.png) no-repeat 0 0;background-size: 52px;}
+.goodsDetails_box2.skin2 h4 span{background: #E5892B;}
+/*搜索+门店*/
+.header_contain.skin2 .search_btn{color: #E5892B;}
+.store_box.skin2 .location_content {background: #FFF url(../img/skin2.png) no-repeat -472px -250px;}
+.store_box.skin2 .location_content .float_right{background: url(../img/skip2map@2x.png) no-repeat center ;}
+.store_box.skin2 .business_timer{background: url(../img/skin2.png) no-repeat -420px -240px;}
+.store_top.skin2 .store_item.active{color: #E5892B;border-bottom-color: #E5892B;background: url(../img/skip2-down.png) no-repeat 198px 26px;background-size:26px ;}
+.store_top.skin2 .filter_panel1 span.active,.store_top.skin2 .filter_panel3 span.active,.store_top.skin2 .filter_panel2 .filter_panel_right span.active{color: #E5892B;background: url(../img/skip2-dui.png) no-repeat 90% center;}
+.store_top.skin2 .filter_panel2 .filter_panel_left span.active{color: #E5892B;}
+/*提交订单*/
+.order_goods_contain_details.skin2 .font_color{color: #EB4040;}
+.order_submit.skin2 .order_submit_left{color: #EB4040;}
+.order_submit.skin2 .order_submit_right{background: url(../img/skip2submit@2x.png) no-repeat 0 0;background-size: 220px 110px;}
+/*修改个人信息*/
+.zs_address_box.skin2 .main_reverse,.zs_phone_box.skin2 .phone_submit,.zs_phone_box.skin2 #phone_verify_code1{background: #E5892B;}
+/*果币商城*/
+.fruitMall_wrap_top.skin2 .fruitMall_wrap_content div{background-image:url(../img/skin2_fruit.png) ;}
+/*更换密码*/
+.pwd_change_reverse.skin2{background: #E5892B;}
+/*帮助中心*/
+.main_tel.skin2{background-color: #E5892B;}
+/*订单管理*/
+.order_manage_list.skin2 li.actived{color: #E5892B;border-bottom-color: #E5892B;}
+.management_contain.skin2 .order_num_right,.management_contain.skin2 .order_bottom_money{color: #EB4040;}
+/*订单详情*/
+.order_details.skin2 .order_status{color: #EB4040;}
+
+.position-label-box.skin2{background: #FFF url(../img/skin2_add@2x.png) no-repeat 658px 14px;color: #E5892B;}
+.machine_address_wrap.skin2 .machine_address{color:#EB4040;background: url(../img/skin2_add@2x.png) no-repeat right center;}
+.order_set_list.skin2 li:last-child .order_set_list_right{color: #EB4040;}
+/*预购订单管理*/
+.myOrder_management_top.skin2 li.actived{color: #E5892B;border-bottom-color: #E5892B;}
+/*预购订单详情*/
+/*地址管理*/
+.add_address.skin2{background-color:#E5892B ;}
+/*修改或新增手机号*/
+.address_reverse.skin2{background-color:#E5892B ;}
+/*充值页面和支付页面*/
+.month_recharge_content.skin2 .month_sign1,.month_recharge_content.skin2 .count-left-money em{color: #EB4040;}
+.pay_style_box.skin2 .pay_style_item .count-left-money em{color:#EB4040 ;}
+.pay_style_box.skin2 #get_verify_code{background: #E5892B;}
+
+/*第三套皮肤*/
+
+/*个人中心页面未登录状态下的登录按钮*/
+.main_top_login.skin3{background: #35af64;}
+/*登录页面登录按钮*/
+.login_main_content.skin3 #get_verify_code,.login_main_content.skin3 #time,.login_btn.skin3{background: #35af64;}
+/*注册页面*/
+.regsiter_pack.skin3 .regsiter_btn,.regsiter_pack.skin3 #reg_time,.regsiter_pack.skin3 #reg_verify_code{background: #35af64;}
+/*首页*/
+.index_header.skin3 .index_tit{border-left-color: #35af64;}
+.index_header.skin3 .index_tit .all_bg1{background-image: url(../img/skin3.png);background-repeat: no-repeat;background-position:8px -264px;}
+.index_header.skin3 .index_rigth{background-image: url(../img/skin3.png);background-position: -294px -252px;}
+.index_inner.skin3 dl dd span.float_right{color:#Eb4040;}
+
+/*更多商品*/
+.more_top_wrap.skin3 .more_first_click,.more_bottom_wrap.skin3 .more_two_click{border-color: #35af64;color: #35af64;}
+.more_bottom_wrap.skin3 .good_picre span{color: #EB4040;}
+.more_bottom_wrap.skin3 .minus_num{background: url(../img/skip3-@2x.png) no-repeat 0 0;background-size: 52px;}
+.more_bottom_wrap.skin3 .add_num{background: url(../img/skip3add@2x.png) no-repeat 0 0;background-size: 52px;}
+/*购物车*/
+#zs-cart.skin3 .often_shop_goods_icon{color: #EB4040;}
+#zs-cart.skin3 #select-delete,#zs-cart.skin3 #total .totalmoney{color: #EB4040;}
+#zs-cart.skin3 #total .settle{background: url(../img/skip3submit@2x.png) no-repeat 0 0;background-size: 198px 100px;}
+/*我*/
+.main_top.skin3 .main_top_login{background: #35af64;}
+.exit.skin3{background: #EC4040;}
+/*商品详情*/
+.goodsDetails_box1.skin3 .gd_price span{color: #EB4040;}
+.goodsDetails_box1.skin3 .minus_num{background: url(../img/skip3-@2x.png) no-repeat 0 0;background-size: 52px;}
+.goodsDetails_box1.skin3 .add_num{background: url(../img/skip3add@2x.png) no-repeat 0 0;background-size: 52px;}
+.goodsDetails_box2.skin3 h4 span{background: #35af64;}
+/*搜索+门店*/
+.header_contain.skin3 .search_btn{color: #35af64;}
+.store_box.skin3 .location_content{background: #FFF url(../img/skin3.png) no-repeat -472px -250px;}
+.store_box.skin3 .location_content .float_right{background: url(../img/skip3map@2x.png) no-repeat center ;}
+.store_box.skin3 .business_timer{background: url(../img/skin3.png) no-repeat -420px -240px;}
+.store_top.skin3 .store_item.active{color: #35af64;border-bottom-color: #35af64;background: url(../img/skip3-down.png) no-repeat 198px 26px;background-size:26px ;}
+.store_top.skin3 .filter_panel1 span.active,.store_top.skin3 .filter_panel3 span.active,.store_top.skin3 .filter_panel2 .filter_panel_right span.active{color: #35af64;background: url(../img/skip3-dui.png) no-repeat 90% center;}
+.store_top.skin3 .filter_panel2 .filter_panel_left span.active{color: #35af64;}
+/*提交订单*/
+.order_goods_contain_details.skin3 .font_color{color: #EB4040;}
+.order_submit.skin3 .order_submit_left{color: #EB4040;}
+.order_submit.skin3 .order_submit_right{background: url(../img/skip3submit@2x.png) no-repeat 0 0;background-size: 220px 110px;}
+/*修改个人信息*/
+.zs_address_box.skin3 .main_reverse,.zs_phone_box.skin3 .phone_submit,.zs_phone_box.skin3 #phone_verify_code1{background: #35af64;}
+/*果币商城*/
+.fruitMall_wrap_top.skin3 .fruitMall_wrap_content div{background-image:url(../img/skin3_fruit.png) ;}
+/*更换密码*/
+.pwd_change_reverse.skin3{background: #35af64;}
+/*帮助中心*/
+.main_tel.skin3{background-color: #35af64;}
+/*订单管理*/
+.order_manage_list.skin3 li.actived{color: #35af64;border-bottom-color: #35af64;}
+.management_contain.skin3 .order_num_right,.management_contain.skin3 .order_bottom_money{color: #EB4040;}
+/*订单详情*/
+.order_details.skin3 .order_status{color: #EB4040;}
+
+.position-label-box.skin3{background: #FFF url(../img/skin3_add@2x.png) no-repeat 658px 14px;color: #35af64;}
+.machine_address_wrap.skin3 .machine_address{color:#35af64;background: url(../img/skin3_add@2x.png) no-repeat right center;}
+.order_set_list.skin3 li:last-child .order_set_list_right{color: #EB4040;}
+/*预购订单管理*/
+.myOrder_management_top.skin3 li.actived{color: #35af64;border-bottom-color: #35af64;}
+/*预购订单详情*/
+
+/*地址管理*/
+.add_address.skin3{background-color:#35af64 ;}
+/*修改或新增手机号*/
+.address_reverse.skin3{background-color:#35af64 ;}
+/*充值页面和支付页面*/
+.month_recharge_content.skin3 .month_sign1,.month_recharge_content.skin3 .count-left-money em{color: #EB4040;}
+.pay_style_box.skin3 .pay_style_item .count-left-money em{color:#EB4040 ;}
+.pay_style_box.skin3 #get_verify_code{background: #35af64;}
+
+/*第四套皮肤*/
+
+/*个人中心页面未登录状态下的登录按钮*/
+.main_top_login.skin4{background: #ca8b48;}
+/*登录页面登录按钮*/
+.login_main_content.skin4 #get_verify_code,.login_main_content.skin4 #time,.login_btn.skin4{background: #ca8b48;}
+/*注册页面*/
+.regsiter_pack.skin4 .regsiter_btn,.regsiter_pack.skin4 #reg_time,.regsiter_pack.skin4 #reg_verify_code{background: #ca8b48;}
+/*首页*/
+.index_header.skin4 .index_tit{border-left-color: #ca8b48;}
+.index_header.skin4 .index_tit .all_bg1{background-image: url(../img/skin4.png);background-repeat: no-repeat;background-position:8px -264px;}
+.index_header.skin4 .index_rigth{background-image: url(../img/skin4.png);background-position: -294px -252px;}
+.index_inner.skin4 dl dd span.float_right{color:#Eb4040;}
+
+/*更多商品*/
+.more_top_wrap.skin4 .more_first_click,.more_bottom_wrap.skin4 .more_two_click{border-color: #ca8b48;color: #ca8b48;}
+.more_bottom_wrap.skin4 .good_picre span{color: #EB4040;}
+.more_bottom_wrap.skin4 .minus_num{background: url(../img/skip4-@2x.png) no-repeat 0 0;background-size: 52px;}
+.more_bottom_wrap.skin4 .add_num{background: url(../img/skip4add@2x.png) no-repeat 0 0;background-size: 52px;}
+/*购物车*/
+#zs-cart.skin4 .often_shop_goods_icon{color: #EB4040;}
+#zs-cart.skin4 #select-delete,#zs-cart.skin4 #total .totalmoney{color: #EB4040;}
+#zs-cart.skin4 #total .settle{background: url(../img/skip4submit@2x.png) no-repeat 0 0;background-size: 198px 100px;}
+/*我*/
+.main_top.skin4 .main_top_login{background: #E9953d;}
+.exit.skin4{background: #EC4040;}
+/*商品详情*/
+.goodsDetails_box1.skin4 .gd_price span{color: #EB4040;}
+.goodsDetails_box1.skin4 .minus_num{background: url(../img/skip4-@2x.png) no-repeat 0 0;background-size: 52px;}
+.goodsDetails_box1.skin4 .add_num{background: url(../img/skip4add@2x.png) no-repeat 0 0;background-size: 52px;}
+.goodsDetails_box2.skin4 h4 span{background: #ca8b48;}
+/*搜索+门店*/
+.header_contain.skin4 .search_btn{color: #ca8b48;}
+.store_box.skin4 .location_content{background: #FFF url(../img/skin4.png) no-repeat -472px -250px;}
+.store_box.skin4 .location_content .float_right{background: url(../img/skip4map@2x.png) no-repeat center ;}
+.store_box.skin4 .business_timer{background: url(../img/skin4.png) no-repeat -420px -240px;}
+
+.store_top.skin4 .store_item.active{color: #ca8b48;border-bottom-color: #ca8b48;background: url(../img/skip4-down.png) no-repeat 198px 26px;background-size:26px ;}
+.store_top.skin4 .filter_panel1 span.active,.store_top.skin4 .filter_panel3 span.active,.store_top.skin4 .filter_panel2 .filter_panel_right span.active{color: #ca8b48;background: url(../img/skip4-dui.png) no-repeat 90% center;}
+.store_top.skin4 .filter_panel2 .filter_panel_left span.active{color: #ca8b48;}
+
+/*提交订单*/
+.order_goods_contain_details.skin4 .font_color{color: #EB4040;}
+.order_submit.skin4 .order_submit_left{color: #EB4040;}
+.order_submit.skin4 .order_submit_right{background: url(../img/skip4submit@2x.png) no-repeat 0 0;background-size: 220px 110px;}
+/*修改个人信息*/
+.zs_address_box.skin4 .main_reverse,.zs_phone_box.skin4 .phone_submit,.zs_phone_box.skin4 #phone_verify_code1{background: #ca8b48;}
+/*果币商城*/
+.fruitMall_wrap_top.skin4 .fruitMall_wrap_content div{background-image:url(../img/skin4_fruit.png) ;}
+/*更换密码*/
+.pwd_change_reverse.skin4{background: #ca8b48;}
+/*帮助中心*/
+.main_tel.skin4{background-color: #ca8b48;}
+/*订单管理*/
+.order_manage_list.skin4 li.actived{color: #ca8b48;border-bottom-color: #ca8b48;}
+.management_contain.skin4 .order_num_right,.management_contain.skin4 .order_bottom_money{color: #EB4040;}
+/*订单详情*/
+.order_details.skin4 .order_status{color: #EB4040;}
+
+.position-label-box.skin4{background: #FFF url(../img/skin4_add@2x.png) no-repeat 658px 14px;color: #ca8b48;}
+.machine_address_wrap.skin4 .machine_address{color:#ca8b48;background: url(../img/skin4_add@2x.png) no-repeat right center;}
+.order_set_list.skin4 li:last-child .order_set_list_right{color: #EB4040;}
+/*预购订单管理*/
+.myOrder_management_top.skin4 li.actived{color: #ca8b48;border-bottom-color: #ca8b48;}
+/*预购订单详情*/
+
+/*地址管理*/
+.add_address.skin4{background-color:#ca8b48 ;}
+/*修改或新增手机号*/
+.address_reverse.skin4{background-color:#ca8b48 ;}
+/*充值页面和支付页面*/
+.month_recharge_content.skin4 .month_sign1,.month_recharge_content.skin4 .count-left-money em{color: #EB4040;}
+.pay_style_box.skin4 .pay_style_item .count-left-money em{color:#EB4040 ;}
+.pay_style_box.skin4 #get_verify_code{background: #ca8b48;}

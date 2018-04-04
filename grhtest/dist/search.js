@@ -616,8 +616,26 @@ require(['../require/config'],function () {
 			pub.store.apiHandle.init();
 			pub.store.eventHandle.init();
 		}
+		// 换肤
+		pub.apiHandle = {
+			change_app_theme : {
+				init:function(){
+					if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
+						$(".store_box,.store_top,.header_contain").addClass("skin"+sessionStorage.getItem("huanfu"))
+					}
+				}
+			}
+		};
 		// 模块初始化
 		pub.init = function(){
+			if (!common.huanfu.getKey()) {
+				common.change_app_theme();
+				common.defHuanfu.done(function(){
+					pub.apiHandle.change_app_theme.init();
+				})
+			}else{
+				pub.apiHandle.change_app_theme.init();
+			}
 			pub.paramListInit(); // 参数初始化
 			pub.muduleId == "search" && pub.search.init();
 			pub.muduleId == "store" && pub.store.init();

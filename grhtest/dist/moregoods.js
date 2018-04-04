@@ -196,16 +196,16 @@ require(['../require/config'],function(){
 						html += '			<span class="good_picre" id="_more_"><span id="_more_">￥' + obj.nowPrice + '</span>&nbsp;<del>￥' + obj.nomalPrice + '</del></span>'
 						html += '			<span class="good_number clearfloat" id="_more_">'
 						if ( gdnum ) {
-							html += '					<div class="minus_num" id="_more_"><img src="../img/btn_m.png" id="_more_"/></div>'
+							html += '					<div class="minus_num" id="_more_"></div>'
 							html += '					<div class="show_num" zs-goodsId="' + obj.id + '" id="_more_">' + gdnum + '</div>'
-							html += '					<div class="add_num" id="_more_"><img src="../img/btn_a.png" id="_more_"/></div>'
+							html += '					<div class="add_num" id="_more_"></div>'
 						} else{
 							if ( obj.packageNum == 0) {
 								html +=  '		<div style="color:#FFFFFF,background:red,text-align:center" id="_more_">已售罄</div>'
 							}else{
-								html += '					<div class="minus_num" id="_more_" style="display:none"><img id="_more_" src="../img/btn_m.png"/></div>'
+								html += '					<div class="minus_num" id="_more_" style="display:none"></div>'
 								html += '					<div class="show_num" id="_more_" style="display:none" zs-goodsId="' + obj.id + '">0</div>'
-								html += '					<div class="add_num" id="_more_"><img src="../img/btn_a.png" id="_more_"/></div>'
+								html += '					<div class="add_num" id="_more_"></div>'
 							}
 						}
 						html += '			</span>'
@@ -687,13 +687,28 @@ require(['../require/config'],function(){
 	            }
 			}
 		};
-	
+		// 换肤
+		pub.apiHandle.change_app_theme = {
+			init:function(){
+				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
+					$(".more_top_wrap,.more_bottom_wrap,.goodsDetails_box1,.goodsDetails_box2").addClass("skin"+sessionStorage.getItem("huanfu"))
+				}
+			}
+		}
 	
 		pub.init = function(){
-	
+			if (!common.huanfu.getKey()) {
+				common.change_app_theme();
+				common.defHuanfu.done(function(){
+					pub.apiHandle.change_app_theme.init();
+				})
+			}else{
+				pub.apiHandle.change_app_theme.init();
+			}
 			pub.moduleId == "goods" && pub.goods.init();
 			pub.moduleId == "goodsDetail" && pub.goodsDetail.init();
 			pub.eventHandle.init();
+			
 	
 		}
 		

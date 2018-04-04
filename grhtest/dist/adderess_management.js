@@ -211,18 +211,32 @@ require(['../require/config'],function () {
 	    			index = $(this).parents('.contain_address').index(),
 	    			addrInfo = common.JSONStr( $.data($('body')[0],'addressList')[index] ); // 取出数据并存储
 					common.addressData.setItem( addrInfo );
-	//             window.location.replace( 'order_set_charge.html?dom=dom' + Math.floor(Math.random() * 100000 ) );
-	                // common.historyReplace( '../index.html' );
 	                common.goBackApp(1,true,'html/order_set_charge.html')
 				});
 	    		!common.addType.getItem() && $('.address_management').off('click','.management_address'); // 判断是否从订单进入
 	    	},
 	    };
-	
+	    
+		//换肤
+		pub.apiHandle.change_app_theme = {
+			init:function(){
+				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
+					$(".add_address").addClass("skin"+sessionStorage.getItem("huanfu"))
+				}
+			}
+		}
 	
 	
 	    // 模块初始化
 	    pub.init = function(){
+	    	if (!common.huanfu.getKey()) {
+				common.change_app_theme();
+				common.defHuanfu.done(function(){
+					pub.apiHandle.change_app_theme.init();
+				})
+			}else{
+				pub.apiHandle.change_app_theme.init();
+			}
 			pub.apiHandle.init();
 			pub.eventHandle.init();
 	    };

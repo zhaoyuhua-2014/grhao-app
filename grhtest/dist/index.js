@@ -194,8 +194,8 @@ require(['../require/config'],function () {
 					html += '	<dd>'
 					html += '		<p>' + goodsInfo.goodsName + '</p>'
 					html += '		<p class="clearfloat">'
-					html += '			<span class="float_left" style="padding-left:20px;width:115px;text-align:left">'+ goodsInfo.specInfo + '</span>'
-					html += '			<span class="float_right" style="color:rgb(254,120,49);padding-right:15px;width:118px;text-align:right;">￥'+ goodsInfo.nowPrice + '</span>'
+					html += '			<span class="float_left">'+ goodsInfo.specInfo + '</span>'
+					html += '			<span class="float_right">￥'+ goodsInfo.nowPrice + '</span>'
 					html += '		</p>'
 					html += '	</dd>'
 					html += '</dl>'
@@ -324,6 +324,14 @@ require(['../require/config'],function () {
 		pub.apiHandle.cancleFn = function(){
 			pub.apiHandle.choice_firm.init()
 		}
+		//换肤
+		pub.apiHandle.change_app_theme = {
+			init:function(){
+				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
+					$(".index_header,.index_inner,.footer").addClass("skin"+sessionStorage.getItem("huanfu"))
+				}
+			}
+		}
 	 	// 事件处理初始化
 		pub.eventHandle = {
 			
@@ -332,21 +340,7 @@ require(['../require/config'],function () {
 				$('.index_inner').on('click', "dl", function() {
 					common.jumpLinkPlainApp( "商品详情", "html/goodsDetails.html?goodsId=" + $(this).attr("data") );
 				});
-	
-				/*$(".index_center_wrap").on('click', "dl", function() {
-					if(!$(this).is(".notClick")){
-						common.first_data.removeItem();
-						common.two_data.removeItem();
-						var i = $(this).attr("data");
-						var pathNameTitle = ['礼盒套餐','钜惠活动','秒杀换购','预购活动']
-						var pathNames = ["html/moregoods.html?type=TAO_CAN","html/moregoods.html?type=JU_HUI","html/seckill.html","html/pre.html"];
-						i == "3" && common.seckill.setItem('1');
-						common.jumpLinkPlainApp( pathNameTitle[i -1],pathNames[ i - 1 ] );	
-					}
-				});
-				$(".index_center_wrap").on('click', ".index_center_center", function() {
-					common.jumpLinkPlainApp("充值优惠","html/month_service.html");
-				});*/
+				
 				$(".index_rigth").on("click",function(){
 					var url = '/html/search.html'
 					if (common.isApp()) {
@@ -367,60 +361,48 @@ require(['../require/config'],function () {
 						console.log("this is not grhao App!")
 					}
 				})
-				//common.jumpLinkSpecial('.index_rigth','html/search.html'); //跳转搜索页面
-				//common.jumpLinkSpecialApp( '.index_tit','门店选择','html/store1.html'); // 跳转到门店
 				$(".index_tit").on('click',function(){
 					common.jumpLinkPlainApp('门店选择','html/store1.html');
 				});
-				/*$(".swiper-wrapper").on("touchstart",'a',function(e){
-					var _touch = e.originalEvent.targetTouches[0];
-　　					pub.touch_start= _touch.pageX;
-				});
-				$(".swiper-wrapper").on("touchmove",'a',function(e){
-					var _touch = e.originalEvent.targetTouches[0];
-　　					pub.touch_move= _touch.pageX;
-				});*/
 				$(".index_banner .swiper-wrapper").on("click",'a',function(e){
-					//if (Math.abs(pub.touch_start - pub.touch_move) < 100) {
-						var urlArr = [{
-							url:'goodsDetails.html',
-							tit:"商品详情"
-						},{
-							url:"moregoods.html?type=JU_HUI",
-							tit:"钜惠活动"
-						},{
-							url:"moregoods.html?type=TAO_CAN",
-							tit:"礼盒套餐"
-						},{
-							url:'seckill.html',
-							tit:"秒杀换购"
-						},{
-							url:'pre.html',
-							tit:"预购活动"
-						},{
-							url:'seckillDetaila.html',
-							tit:"换购商品详情"
-						},{
-							url:'seckillDetail.html',
-							tit:"秒杀商品详情"
-						},{
-							url:'preDetails.html',
-							tit:"预购商品详情"
-						},{
-							url:'month_service.html',
-							tit:"充值优惠"
-						}]
-						var url = $(this).attr("url");
-						if (url) {
-							url = url.substr(1);
-							for (var i =0; i< urlArr.length;i++) {
-								if(url.indexOf(urlArr[i].url) >0){
-									common.jumpLinkPlainApp(urlArr[i].tit , url);
-									return ;
-								}
+					var urlArr = [{
+						url:'goodsDetails.html',
+						tit:"商品详情"
+					},{
+						url:"moregoods.html?type=JU_HUI",
+						tit:"钜惠活动"
+					},{
+						url:"moregoods.html?type=TAO_CAN",
+						tit:"礼盒套餐"
+					},{
+						url:'seckill.html',
+						tit:"秒杀换购"
+					},{
+						url:'pre.html',
+						tit:"预购活动"
+					},{
+						url:'seckillDetaila.html',
+						tit:"换购商品详情"
+					},{
+						url:'seckillDetail.html',
+						tit:"秒杀商品详情"
+					},{
+						url:'preDetails.html',
+						tit:"预购商品详情"
+					},{
+						url:'month_service.html',
+						tit:"充值优惠"
+					}]
+					var url = $(this).attr("url");
+					if (url) {
+						url = url.substr(1);
+						for (var i =0; i< urlArr.length;i++) {
+							if(url.indexOf(urlArr[i].url) >0){
+								common.jumpLinkPlainApp(urlArr[i].tit , url);
+								return ;
 							}
 						}
-					//}
+					}
 				});
 				$(".index_center_banner").on("click","dl",function(){
 					var nood = $(this),
@@ -442,11 +424,6 @@ require(['../require/config'],function () {
 				$(".order_refund").on("click",".makeSure",function(){
 					$(".order_refund").hide();
 					$("body").css("overflow-y","auto");
-					/*pub.firmId = common.user_datafn().firmId;
-					common.firmId.setItem(common.user_datafn().firmId);
-					common.good.removeItem();
-					pub.apiHandle.firm_default.init();
-					pub.apiHandle.main_page_goods.init();*/
 					pub.apiHandle.trueFn();
 					
 				});
@@ -455,6 +432,14 @@ require(['../require/config'],function () {
 	
 	 	// 模块初始化
 	 	pub.init = function(){
+	 		if (!common.huanfu.getKey()) {
+				common.change_app_theme();
+				common.defHuanfu.done(function(){
+					pub.apiHandle.change_app_theme.init();
+				})
+			}else{
+				pub.apiHandle.change_app_theme.init();
+			}
 	
 	 		pub.paramListInit(); // 参数初始化
 	

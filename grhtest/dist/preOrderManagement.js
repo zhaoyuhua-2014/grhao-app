@@ -406,6 +406,10 @@ require(['../require/config'],function(){
 			    	})();
 	
 			    	pub.preOrderDetail.apiHandle.order_details.htmlRender( d ); // 渲染商品信息
+			    	if (pub.isrefresh) {
+				 		//pub.iscroll.resetload();
+				 		pub.pullInstance.pullDownSuccess();
+				 	}
 				},
 				apiData1 : function( d ){ // 尾款订单
 	
@@ -488,6 +492,10 @@ require(['../require/config'],function(){
 			    		$('.my_order_list4').show().find(".order_set_list_right").html('-￥' + common.toFixed( d.orderInfo.mothReduceMoney ));
 			    	};
 			    	$('.my_order_list5').show().find(".order_set_list_right").html('￥' + common.toFixed( d.orderInfo.realPayMoney ));
+					if (pub.isrefresh) {
+				 		//pub.iscroll.resetload();
+				 		pub.pullInstance.pullDownSuccess();
+				 	}
 				},
 				htmlRender :function( d ){
 					if( d.orderInfo ){ //尾款订单
@@ -639,7 +647,31 @@ require(['../require/config'],function(){
 		pub.apiHandle = {};
 	
 		// 
+		//换肤
+		pub.apiHandle.change_app_theme = {
+			init:function(){
+				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
+					switch( pub.moduleId ){
+						case 'preOrderManagement' : (function(){
+							$(".myOrder_management_top,.management_contain").addClass("skin"+sessionStorage.getItem("huanfu"))
+						})(); break;
+						case 'preOrderDetail' :  (function(){
+							$(".order_details,.pickUpcode-box,.position-label-box,.delivery,.take_goods_address_contain,.order_goods_contain_details,.order_set_list").addClass("skin"+sessionStorage.getItem("huanfu"))
+						})();  break;
+					}
+					
+				}
+			}
+		}
 		pub.init = function(){
+			if (!common.huanfu.getKey()) {
+				common.change_app_theme();
+				common.defHuanfu.done(function(){
+					pub.apiHandle.change_app_theme.init();
+				})
+			}else{
+				pub.apiHandle.change_app_theme.init();
+			}
 			pub.moduleId == 'preOrderManagement' && pub.preOrderManagement.init();
 			pub.moduleId == 'preOrderDetail' && pub.preOrderDetail.init();
 		};
@@ -667,9 +699,12 @@ require(['../require/config'],function(){
 			function pullDownAction () {
 				setTimeout(function () {
 					pub.isrefresh = true;
+					console.log(pub.moduleId)
 					if (pub.moduleId == 'preOrderManagement') {
 						pub.PAGE_INDEX = common.PAGE_INDEX; // 索引
 						pub.preOrderManagement.apiHandle.init();
+					} if (pub.moduleId == 'preOrderDetail') {
+						pub.preOrderDetail.init()
 					}
 				}, 1000);
 			}

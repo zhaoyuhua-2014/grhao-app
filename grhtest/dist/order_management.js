@@ -672,8 +672,32 @@ require(['../require/config'],function(){
 	
 		// 事件处理
 		pub.eventHandle = {};
+		//换肤
+		pub.apiHandle.change_app_theme = {
+			init:function(){
+				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
+					switch( pub.moduleId ){
+						case 'orderManagement' : (function(){
+							$(".order_manage_list,.management_contain").addClass("skin"+sessionStorage.getItem("huanfu"))
+						})(); break;
+						case 'orderDetail' :  (function(){
+							$(".order_details,.pickUpcode-box,.position-label-box,.delivery,.machine_address_wrap,.take_goods_address_contain,.order_goods_contain_details,.order_set_list").addClass("skin"+sessionStorage.getItem("huanfu"))
+						})();  break;
+					}
+					
+				}
+			}
+		}
 		// 初始化
 		pub.init = function(){
+			if (!common.huanfu.getKey()) {
+				common.change_app_theme();
+				common.defHuanfu.done(function(){
+					pub.apiHandle.change_app_theme.init();
+				})
+			}else{
+				pub.apiHandle.change_app_theme.init();
+			}
 			pub.moduleId == 'orderManagement' && pub.orderManagement.init();
 			pub.moduleId == 'orderDetail' && pub.orderDetail.init();
 		};
