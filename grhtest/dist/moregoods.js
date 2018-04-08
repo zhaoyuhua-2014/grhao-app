@@ -698,10 +698,10 @@ require(['../require/config'],function(){
 	
 		pub.init = function(){
 			if (!common.huanfu.getKey()) {
-				/*common.change_app_theme();
+				common.getChangeSkin();
 				common.defHuanfu.done(function(){
 					pub.apiHandle.change_app_theme.init();
-				})*/
+				})
 			}else{
 				pub.apiHandle.change_app_theme.init();
 			}

@@ -746,6 +746,37 @@ define(['jquery','mdData','shar1'],function($){
 			}else{
 				console.log("this is not grhao App!")
 			}
+		},
+		getChangeSkin:function(){
+			if (common.isPhone()) {
+				common.creatScript();
+				if (common.isApple()) {
+					try{
+						window.webkit.messageHandlers.getChangeSkin.postMessage('');
+					}catch(e){
+						console.log("调用ios方法replaceLocation出错")
+					}
+				} else if(common.isAndroid()){
+					try{
+						android.getChangeSkin()
+					}catch(e){
+						console.log("调用Android方法replaceLocation出错")
+					}
+				}
+				common.defHuanfu.resolve();
+			}else{
+				console.log("this is not grhao App!")
+			}
+		},
+		creatScript:function(){
+			var html = '';
+				html += '<script>'
+				html +=	'function changeSkin(d){'
+				html +=	'	localStorage.setItem("huanfu",JSON.parse(d).type);'
+				html +=	'	pub.apiHandle.change_app_theme.init();'
+				html +=	'}'
+				html += '<\/script>'
+			$("body").append(html)
 		}
 	});
 

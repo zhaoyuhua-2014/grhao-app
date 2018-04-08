@@ -437,7 +437,7 @@ require(['../require/config'],function () {
 	 	// 模块初始化
 	 	pub.init = function(){
 	 		if (!common.huanfu.getKey()) {
-				common.change_app_theme();
+				common.getChangeSkin();
 				common.defHuanfu.done(function(){
 					pub.apiHandle.change_app_theme.init();
 				})

@@ -607,5 +607,6 @@ require(['../require/config'],function () {
  	};
 
 	pub.init();
+	window.pub = pub;
 	})
 })
