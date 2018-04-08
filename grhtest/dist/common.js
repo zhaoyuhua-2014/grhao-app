@@ -772,7 +772,6 @@ define(['jquery','mdData','shar1'],function($){
 			var html = '';
 				html += '<script>'
 				html +=	'function changeSkin(d){'
-				html += '   alert(d);'
 				html +=	'	sessionStorage.setItem("huanfu",JSON.parse(d).type);'
 				html +=	'	pub.apiHandle.change_app_theme.init();'
 				html +=	'}'
