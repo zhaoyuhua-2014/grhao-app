@@ -36,7 +36,7 @@ define(['jquery','mdData','shar1'],function($){
 		//全局的延时函数
 		DTD : $.Deferred(),
 		//更新日期
-		DATE:"0117",
+		DATE:"0408",
 	});
 	//换肤延时对象
 	common.defHuanfu = $.Deferred();

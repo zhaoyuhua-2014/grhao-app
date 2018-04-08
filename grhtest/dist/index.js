@@ -332,6 +332,10 @@ require(['../require/config'],function () {
 				}
 			}
 		}
+		//app 换肤
+		pub.apiHandle.changeSkin = function (){
+			
+		}
 	 	// 事件处理初始化
 		pub.eventHandle = {
 			
@@ -433,10 +437,10 @@ require(['../require/config'],function () {
 	 	// 模块初始化
 	 	pub.init = function(){
 	 		if (!common.huanfu.getKey()) {
-				common.change_app_theme();
+				/*common.change_app_theme();
 				common.defHuanfu.done(function(){
 					pub.apiHandle.change_app_theme.init();
-				})
+				})*/
 			}else{
 				pub.apiHandle.change_app_theme.init();
 			}
