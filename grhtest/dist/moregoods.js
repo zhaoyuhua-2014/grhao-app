@@ -697,7 +697,6 @@ require(['../require/config'],function(){
 		}
 	
 		pub.init = function(){
-			alert(common.huanfu.getKey())
 			if (!common.huanfu.getKey()) {
 				/*common.change_app_theme();
 				common.defHuanfu.done(function(){
