@@ -678,10 +678,10 @@ require(['../require/config'],function(){
 				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
 					switch( pub.moduleId ){
 						case 'orderManagement' : (function(){
-							$(".order_manage_list,.management_contain").addClass("skin"+sessionStorage.getItem("huanfu"))
+							$(".order_manage_list,.management_contain").addClass("skin"+localStorage.getItem("huanfu"))
 						})(); break;
 						case 'orderDetail' :  (function(){
-							$(".order_details,.pickUpcode-box,.position-label-box,.delivery,.machine_address_wrap,.take_goods_address_contain,.order_goods_contain_details,.order_set_list").addClass("skin"+sessionStorage.getItem("huanfu"))
+							$(".order_details,.pickUpcode-box,.position-label-box,.delivery,.machine_address_wrap,.take_goods_address_contain,.order_goods_contain_details,.order_set_list").addClass("skin"+localStorage.getItem("huanfu"))
 						})();  break;
 					}
 					

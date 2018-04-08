@@ -512,7 +512,7 @@ require(['../require/config'],function(){
 		pub.apiHandle.change_app_theme = {
 			init:function(){
 				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
-					$(".month_recharge_content,.month_pay_style,.zs-pay,.pay_style_box").addClass("skin"+sessionStorage.getItem("huanfu"))
+					$(".month_recharge_content,.month_pay_style,.zs-pay,.pay_style_box").addClass("skin"+localStorage.getItem("huanfu"))
 				}
 			}
 		}

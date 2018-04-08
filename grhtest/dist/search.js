@@ -621,7 +621,7 @@ require(['../require/config'],function () {
 			change_app_theme : {
 				init:function(){
 					if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
-						$(".store_box,.store_top,.header_contain").addClass("skin"+sessionStorage.getItem("huanfu"))
+						$(".store_box,.store_top,.header_contain").addClass("skin"+localStorage.getItem("huanfu"))
 					}
 				}
 			}

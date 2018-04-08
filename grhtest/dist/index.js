@@ -328,7 +328,7 @@ require(['../require/config'],function () {
 		pub.apiHandle.change_app_theme = {
 			init:function(){
 				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
-					$(".index_header,.index_inner,.footer").addClass("skin"+sessionStorage.getItem("huanfu"))
+					$(".index_header,.index_inner,.footer").addClass("skin"+localStorage.getItem("huanfu"))
 				}
 			}
 		}
@@ -437,10 +437,10 @@ require(['../require/config'],function () {
 	 	// 模块初始化
 	 	pub.init = function(){
 	 		if (!common.huanfu.getKey()) {
-				/*common.change_app_theme();
+				common.change_app_theme();
 				common.defHuanfu.done(function(){
 					pub.apiHandle.change_app_theme.init();
-				})*/
+				})
 			}else{
 				pub.apiHandle.change_app_theme.init();
 			}

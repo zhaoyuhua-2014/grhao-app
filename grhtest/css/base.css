@@ -311,8 +311,8 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .minus_num,.show_num {float:left;}
 .show_num {width:50px;line-height:50px;text-align:center;background: #ffffff;}
 .good_number .add_num,.gd_number .add_num,.good_number .minus_num,.gd_number .minus_num{width: 52px;height: 52px;}
-.good_number .minus_num.gd_number .minus_num{background: url(../img/btn_m.png);}
-.good_number .add_num,.gd_number .add_num{background: url(../img/btn_a.png);}
+.good_number .minus_num,.gd_number .minus_num{background: url(../img/btn_m.png) no-repeat;}
+.good_number .add_num,.gd_number .add_num{background: url(../img/btn_a.png) no-repeat;}
 /*[module-id="goods"] .show_num,[module-id="goodsDetail"] .show_num{display:none;}
 [module-id="goods"] .minus_num,[module-id="goodsDetail"] .minus_num{display:none;}*/
 .click_load {height:60px;line-height:60px;text-align:center;font-size:28px;}

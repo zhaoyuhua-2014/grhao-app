@@ -221,7 +221,7 @@ require(['../require/config'],function () {
 		pub.apiHandle.change_app_theme = {
 			init:function(){
 				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
-					$(".add_address").addClass("skin"+sessionStorage.getItem("huanfu"))
+					$(".add_address").addClass("skin"+localStorage.getItem("huanfu"))
 				}
 			}
 		}

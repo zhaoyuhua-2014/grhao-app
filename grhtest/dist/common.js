@@ -149,7 +149,7 @@ define(['jquery','mdData','shar1'],function($){
 
 	common.timestamp = new Memory('timestamp','session'); 
 
-	common.huanfu = new Memory('huanfu','session');
+	common.huanfu = new Memory('huanfu','local');
 	// 获取 tokenId 的值
 	common.tokenIdfn = function(){
 		if( this.tokenId.getKey() ){
