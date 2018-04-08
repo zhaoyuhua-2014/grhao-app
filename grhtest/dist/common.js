@@ -149,7 +149,7 @@ define(['jquery','mdData','shar1'],function($){
 
 	common.timestamp = new Memory('timestamp','session'); 
 
-	common.huanfu = new Memory('huanfu','local');
+	common.huanfu = new Memory('huanfu','session');
 	// 获取 tokenId 的值
 	common.tokenIdfn = function(){
 		if( this.tokenId.getKey() ){
@@ -772,7 +772,8 @@ define(['jquery','mdData','shar1'],function($){
 			var html = '';
 				html += '<script>'
 				html +=	'function changeSkin(d){'
-				html +=	'	localStorage.setItem("huanfu",JSON.parse(d).type);'
+				html += '   alert(d);'
+				html +=	'	sessionStorage.setItem("huanfu",JSON.parse(d).type);'
 				html +=	'	pub.apiHandle.change_app_theme.init();'
 				html +=	'}'
 				html += '<\/script>'

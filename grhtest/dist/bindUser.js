@@ -203,7 +203,7 @@ require(['../require/config'],function () {
 			change_app_theme : {
 				init:function(){
 					if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
-						$(".login_main_content,.address_reverse").addClass("skin"+localStorage.getItem("huanfu"))
+						$(".login_main_content,.address_reverse").addClass("skin"+sessionStorage.getItem("huanfu"))
 					}
 				}
 			}

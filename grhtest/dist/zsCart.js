@@ -214,7 +214,7 @@ require(['../require/config'],function(){
 		pub.apiHandle.change_app_theme = {
 			init:function(){
 				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
-					$("#zs-cart,.footer").addClass("skin"+localStorage.getItem("huanfu"))
+					$("#zs-cart,.footer").addClass("skin"+sessionStorage.getItem("huanfu"))
 				}
 			}
 		}

@@ -602,7 +602,7 @@ require(['../require/config'],function () {
 		pub.apiHandle.change_app_theme = {
 			init:function(){
 				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
-					$(".order_goods_contain_details,.order_submit").addClass("skin"+localStorage.getItem("huanfu"))
+					$(".order_goods_contain_details,.order_submit").addClass("skin"+sessionStorage.getItem("huanfu"))
 				}
 			}
 		}

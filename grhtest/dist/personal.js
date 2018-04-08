@@ -990,20 +990,20 @@ require(['../require/config'],function(){
 				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
 					switch( +pub.muduleId ){
 						case 0 : (function(){
-							$(".main_top,.footer,.exit,.zs_address_box").addClass("skin"+localStorage.getItem("huanfu"))
+							$(".main_top,.footer,.exit,.zs_address_box").addClass("skin"+sessionStorage.getItem("huanfu"))
 						}()); break;
 						case 1 : (function(){
-							$(".zs_address_box,.zs_phone_box").addClass("skin"+localStorage.getItem("huanfu"))
+							$(".zs_address_box,.zs_phone_box").addClass("skin"+sessionStorage.getItem("huanfu"))
 						}()); break; // 修改个人信息
 						case 2 : break; // 优惠券
 						case 3 : (function(){
-							$(".fruitMall_wrap_top,.fruitMall_wrap_bottom").addClass("skin"+localStorage.getItem("huanfu"))
+							$(".fruitMall_wrap_top,.fruitMall_wrap_bottom").addClass("skin"+sessionStorage.getItem("huanfu"))
 						}()); break; // 果币
 						case 4 : (function(){
-							$(".pwd_change_reverse").addClass("skin"+localStorage.getItem("huanfu"))
+							$(".pwd_change_reverse").addClass("skin"+sessionStorage.getItem("huanfu"))
 						}()); break; // 修改密码
 						case 5 : (function(){
-							$(".main_tel").addClass("skin"+localStorage.getItem("huanfu"))
+							$(".main_tel").addClass("skin"+sessionStorage.getItem("huanfu"))
 						}()); break; // 帮助中心
 						case 6 : break; // 设置模块
 					};

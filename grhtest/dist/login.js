@@ -525,7 +525,7 @@ require(['../require/config'],function(){
 			change_app_theme : {
 				init:function(){
 					if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
-						$(".login_main_content,.regsiter_pack,.login_btn").addClass("skin"+localStorage.getItem("huanfu"))
+						$(".login_main_content,.regsiter_pack,.login_btn").addClass("skin"+sessionStorage.getItem("huanfu"))
 					}
 				}
 			}

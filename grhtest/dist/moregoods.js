@@ -691,7 +691,7 @@ require(['../require/config'],function(){
 		pub.apiHandle.change_app_theme = {
 			init:function(){
 				if (common.huanfu.getItem() && common.huanfu.getItem() != 1) {
-					$(".more_top_wrap,.more_bottom_wrap,.goodsDetails_box1,.goodsDetails_box2").addClass("skin"+localStorage.getItem("huanfu"))
+					$(".more_top_wrap,.more_bottom_wrap,.goodsDetails_box1,.goodsDetails_box2").addClass("skin"+sessionStorage.getItem("huanfu"))
 				}
 			}
 		}
