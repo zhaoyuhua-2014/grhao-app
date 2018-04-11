@@ -555,6 +555,8 @@ require(['../require/config'],function(){
 	
 	        // 充值环境 执行余额
 	        pub.isRecharge &&  pub.apiHandle.user_month_card.init();
+	        
+	        $("body").fadeIn(300)
 	    }
 	   	
 	   	pub.init();

@@ -169,6 +169,7 @@ require(['../require/config'],function () {
 				pub.apiHandle.change_app_theme.init();
 			}
 	    	pub.addrFix.init();  // 编辑和添加
+	    	$("body").fadeIn(300)
 	    };
 	    pub.init();
 	    window.pub = pub;

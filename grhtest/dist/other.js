@@ -603,6 +603,8 @@ require(['../require/config'],function () {
  		pub.moduleId == 'payResult' && pub.payRusult.init();
  		pub.moduleId == 'rechargeExplain' && pub.payExplain.init();
  		pub.moduleId == 'rechargeRecord' && pub.rechargeRecord.init();
+ 		
+ 		$("body").fadeIn(300)
 
  	};
 

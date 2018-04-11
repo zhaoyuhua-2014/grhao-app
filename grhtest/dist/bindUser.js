@@ -223,6 +223,7 @@ require(['../require/config'],function () {
 				pub.bindUser.init();
 				pub.bindUser.eventHandle.init();
 			}
+			$("body").fadeIn(300)
 		};
 	 	pub.init();
 	 	window.pub = pub;

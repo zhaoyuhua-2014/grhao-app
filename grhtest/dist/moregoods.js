@@ -708,6 +708,7 @@ require(['../require/config'],function(){
 			pub.moduleId == "goods" && pub.goods.init();
 			pub.moduleId == "goodsDetail" && pub.goodsDetail.init();
 			pub.eventHandle.init();
+			$("body").fadeIn(300)
 			
 	
 		}

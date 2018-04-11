@@ -460,6 +460,7 @@ require(['../require/config'],function () {
 	 		common.lazyload(); // 懒加载
 	 		
 	 		pub.eventHandle.init(); // 模块初始化事件处理
+	 		$("body").fadeIn(300)
 	 	};
 	 	
 	 	$(document).ready(function(){

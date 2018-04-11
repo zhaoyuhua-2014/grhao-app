@@ -283,7 +283,7 @@ require(['../require/config'],function(){
 	 		if( goodsTotalNum != 0 ){
 	 			$('.footer_item[data-content]','#foot').attr('data-content',goodsTotalNum);
 	 		}
-	 		
+	 		$("body").fadeIn(300)
 		};
 		
 		$(document).ready(function(){

@@ -1,5 +1,5 @@
 html { height:100%;font-family:"微软雅黑", "Helvetica Neue", Helvetica, STHeiTi, Arial, sans-serif; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 62.5%; }
-body { margin: 0; color: #333333; background-color: white; height: 100%; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+body { margin: 0; color: #333333; background-color: white; height: 100%; overflow-x: hidden; -webkit-overflow-scrolling: touch; display: ;}
 
 article, aside, details, figcaption, figure, footer, header, main, nav, section, summary { display: block; }
 
@@ -1127,7 +1127,7 @@ to {
 /*常购商品页面*/
 .often_shop_main_wrap .main ul{width:100%;margin-top:10px;background:#FFF}
 .line-wrapper{width:100%;height:220px;overflow:hidden;background: #F7F7F7;margin-bottom: 20px;}
-.line-scroll-wrapper{height:200;width:950px}
+.line-scroll-wrapper{height:200px;width:950px}
 .line-normal-wrapper{float:left;width:750px;height:200px}
 .line-normal-avatar-wrapper{float:left;width:200px;height:200px;padding:20px}
 .line-normal-avatar-wrapper img{width:100%;height:100%}
@@ -1202,7 +1202,7 @@ to {
 .order_details.skin2 .order_status{color: #EB4040;}
 
 .position-label-box.skin2{background: #FFF url(../img/skin2_add@2x.png) no-repeat 658px 14px;color: #E5892B;}
-.machine_address_wrap.skin2 .machine_address{color:#EB4040;background: url(../img/skin2_add@2x.png) no-repeat right center;}
+.machine_address_wrap.skin2 .machine_address{color:#E5892B;background: url(../img/skin2_add@2x.png) no-repeat right center;}
 .order_set_list.skin2 li:last-child .order_set_list_right{color: #EB4040;}
 /*预购订单管理*/
 .myOrder_management_top.skin2 li.actived{color: #E5892B;border-bottom-color: #E5892B;}

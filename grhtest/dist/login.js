@@ -546,6 +546,7 @@ require(['../require/config'],function(){
 			pub.send_sms_type == '5' && pub.login.eventHandle.init(); // 登录初始化
 			
 			pub.send_sms_type == '1' && pub.register.eventHandle.init(); // 注册初始化
+			$("body").fadeIn(300)
 		};
 		pub.init();
 		window.pub = pub;

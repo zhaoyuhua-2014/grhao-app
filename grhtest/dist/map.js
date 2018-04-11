@@ -136,6 +136,7 @@ require(['../require/config'],function () {
         }
 		pub.init = function(){
 			pub.Map.init();
+			$("body").fadeIn(300)
 		};
 	 	pub.init();
 	 	window.pub = pub;

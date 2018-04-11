@@ -85,19 +85,6 @@ require(['../require/config'],function(){
 						method : 'logout',
 						tokenId : pub.tokenId
 					},function( d ){
-						if ( d.statusCode == '100000' ) {
-							common.session.clear();
-							if (common.isApp()) {
-								try{
-									common.isApple() ? window.webkit.messageHandlers.exit1.postMessage('') : android.exit1();
-								}catch(e){
-									console.log("调用APP端退出方法出错")
-								}
-							}
-							location.replace( location.href );
-						} else{
-							common.prompt( d.statusStr );
-						}
 						/*通知APP刷新页面*/
 						common.tellRefreshAPP();
 						/*清除本地购物车数据*/
@@ -109,6 +96,18 @@ require(['../require/config'],function(){
 						common.secretKey.removeItem();
 						common.user_data.removeItem();
 						/*移除门店相关信息*/
+						if ( d.statusCode == '100000' ) {}
+						var huanfu = common.huanfu.getItem();
+							common.session.clear();
+							common.huanfu.setItem(huanfu);
+						if (common.isApp()) {
+							try{
+								common.isApple() ? window.webkit.messageHandlers.exit1.postMessage('') : android.exit1();
+							}catch(e){
+								console.log("调用APP端退出方法出错")
+							}
+						}
+						location.replace( location.href );
 					},function( d ){
 						common.tellRefreshAPP();
 						common.good.removeItem();
@@ -1043,6 +1042,7 @@ require(['../require/config'],function(){
 				common.orderColumn.removeItem();
 				common.preColumn.removeItem();
 			}
+			$("body").fadeIn(300)
 		};
 		$(document).ready(function(){
 		 	pub.init();

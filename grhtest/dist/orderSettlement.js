@@ -648,6 +648,8 @@ require(['../require/config'],function () {
 			pub.apiHandle.storeInfo.init(); // 门店信息
 			
 			pub.eventHandle.init();
+			
+			$("body").fadeIn(300)
 	
 		};
 		pub.init();

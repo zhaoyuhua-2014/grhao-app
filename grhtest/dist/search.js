@@ -639,6 +639,7 @@ require(['../require/config'],function () {
 			pub.paramListInit(); // 参数初始化
 			pub.muduleId == "search" && pub.search.init();
 			pub.muduleId == "store" && pub.store.init();
+			$("body").fadeIn(300)
 		};
 	 	pub.init();
 	 	window.pub = pub;

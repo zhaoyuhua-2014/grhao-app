@@ -239,6 +239,7 @@ require(['../require/config'],function () {
 			}
 			pub.apiHandle.init();
 			pub.eventHandle.init();
+			$("body").fadeIn(300)
 	    };
 	    pub.init();
 	    window.pub = pub;

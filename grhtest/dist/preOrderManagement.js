@@ -674,6 +674,7 @@ require(['../require/config'],function(){
 			}
 			pub.moduleId == 'preOrderManagement' && pub.preOrderManagement.init();
 			pub.moduleId == 'preOrderDetail' && pub.preOrderDetail.init();
+			$("body").fadeIn(300)
 		};
 		
 		$(document).ready(function(){

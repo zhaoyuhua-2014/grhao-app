@@ -1249,7 +1249,7 @@ require(['../require/config'],function () {
 			}
 			pub.moduleId == 'preBuy' && pub.preBuy.init(); // 预购列表
 			pub.moduleId == 'preBuyDetail' && pub.preBuyDetail.init(); // 预购详情
-			
+			$("body").fadeIn(300)
 		}
 		
 		pub.init();

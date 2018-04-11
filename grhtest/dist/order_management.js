@@ -681,7 +681,7 @@ require(['../require/config'],function(){
 							$(".order_manage_list,.management_contain").addClass("skin"+sessionStorage.getItem("huanfu"))
 						})(); break;
 						case 'orderDetail' :  (function(){
-							$(".order_details,.pickUpcode-box,.position-label-box,.delivery,.machine_address_wrap,.take_goods_address_contain,.order_goods_contain_details,.order_set_list").addClass("skin"+localStorage.getItem("huanfu"))
+							$(".order_details,.pickUpcode-box,.position-label-box,.delivery,.machine_address_wrap,.take_goods_address_contain,.order_goods_contain_details,.order_set_list").addClass("skin"+sessionStorage.getItem("huanfu"))
 						})();  break;
 					}
 					
@@ -700,6 +700,7 @@ require(['../require/config'],function(){
 			}
 			pub.moduleId == 'orderManagement' && pub.orderManagement.init();
 			pub.moduleId == 'orderDetail' && pub.orderDetail.init();
+			$("body").fadeIn(300)
 		};
 		
 		$(document).ready(function(){
