@@ -420,7 +420,7 @@ require(['../require/config'],function(){
 			        		
 			        	}else{
 			        		$('.watm_info_wrap').removeClass("hidden");
-			        		$(".watm_info").html("<p>手机号："+orderInfo.customMobile+"</p><p>提货码："+ orderInfo.pickUpCode +"</p>");
+			        		$(".watm_info").html("<p>订单号后五位："+orderInfo.orderCode.substring(orderInfo.orderCode.length - 5 ,orderInfo.orderCode.length)+"</p><p>提货码："+ orderInfo.pickUpCode +"</p>");
 			        		if (orderInfo.orderStatus == 3 && $(".watm_info_wrap").find('p.msg').length == 0) {
 			        			$(".watm_info_wrap").append("<p class='msg' style='color:#df3a1f;font-size:26px;line-height:40px;text-align:center'>请于今日22:00前去自助售货机取货</p>")
 			        		}
