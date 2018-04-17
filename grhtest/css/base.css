@@ -122,6 +122,10 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .zs-parent_node{position:absolute; z-index:10; -webkit-transition:all 0.5s cubic-bezier( 0.39,-0.4,0.5,0 ) 0s;transition:all 0.5s cubic-bezier( 0.39,-0.4,0.5,0 ) 0s;-ms-transition:all 0.5s cubic-bezier( 0.39,-0.4,0.5,0 ) 0s; -moz-transition:all 0.5s cubic-bezier( 0.39,-0.4,0.5,0 ) 0s;-o-transition:all 0.5s cubic-bezier( 0.39,-0.4,0.5,0 ) 0s;}
 .zs-child_node{width:20px; height:20px; border-radius:50%; background-color:#f9b52c; -webkit-transition:all 0.5s linear 0s;transition:all 0.5s linear 0s;-ms-transition:all 0.5s linear 0s;-moz-transition:all 0.5s linear 0s;-o-transition:all 0.5s linear 0s; }
 
+
+/*选中点 购物车-支付方式-取货方式-默认地址*/
+.pay_style_item,.bg_select,#zs-cart .list .select,#total #all-select,.set_charge_contact_right li,.default_address{background:url(../img/cart2.png) no-repeat;}
+
 /*公用功能性类*/
 /*左右浮动*/
 .float_left{float: left;}
@@ -930,16 +934,15 @@ background-origin: content-box;-webkit-background-clip: content-box;}
 #total .detail{width:523px;border-top:2px solid #dfdfdf;height:98px;float:left;display:inline-block;padding:30px 0;}
 #total .detail-list:nth-child(1){float:left;width:160px;}
 #total .detail-list:nth-child(3){float:right;}
-#total .detail-list:nth-child(1) p{padding-left:30px;}
+
 #total #select-delete{float:left;font-size: 30px;color:#ff7b29;float:left;padding-top:3px;}
 #total .detail-list p{font-size: 32px;}
 #total .detail-list:nth-child(1) span:nth-child(2){display:inline-block;margin-left: 7px;}
-#total .detail-list:nth-child(1) #all-select span:first-child{float:left;margin-top:5px;}
 #total .detail-list:nth-child(3) p{margin-right:18px;}
 #total .detail-list:nth-child(3) span:nth-child(2){color:#ff7b29;max-width: 295px;display:inline-block;}
-#empty-cart{ text-align: center; padding-top: 20%;display:none;}
-
-
+#total #all-select{padding-left:76px;background-position: 30px 4px;}
+#total #all-select.selected{background-position: -734px 4px;}
+#empty-cart{ text-align: center; padding-top: 20%;}
 /*可以改变wrapper和scroller的样式来调节这个iscroll组件的使用*/
 			#wrapper {
 				position:absolute; z-index:1;
