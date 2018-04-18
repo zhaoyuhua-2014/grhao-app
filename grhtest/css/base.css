@@ -910,7 +910,7 @@ background-origin: content-box;-webkit-background-clip: content-box;}
 #zs-cart .delete-btn{position:absolute;top:0;right:-120px;height:206px;width:120px;color:#ffffff;font-size: 30px;line-height: 206px;background: #ff3b30;text-align:center;}
 #zs-cart .sub-ul-box{display:inline-block;height:168px;}
 #zs-cart .sub-list{float:left;height:192px;}
-#zs-cart .sub-list:nth-child(1){width:72px;text-align: center;padding-top:70px;}
+#zs-cart .sub-list:nth-child(1){width:72px;}
 #zs-cart .sub-list:nth-child(2){width:520px;}
 #zs-cart .sub-list:nth-child(3){width:126px;}
 #zs-cart .unselect-dot{border:2px solid #909090;width:33px;height:33px;display:inline-block;border-radius:50%;}
@@ -943,6 +943,17 @@ background-origin: content-box;-webkit-background-clip: content-box;}
 #total #all-select{padding-left:76px;background-position: 30px 4px;}
 #total #all-select.selected{background-position: -734px 4px;}
 #empty-cart{ text-align: center; padding-top: 20%;}
+
+#zs-cart .sub-list{background-image: url(../img/cart2.png) ;background-repeat:no-repeat ;}
+#zs-cart .sub-list[data-type='-1']{background-position: 24px center ;}
+#zs-cart .sub-list[data-type='0']{background-position: 24px center ;}
+#zs-cart .sub-list[data-type='1']{background-position: -740px center ;}
+
+.line-normal-wrapper[data-type='-1']{}
+.line-normal-avatar-wrapper{}
+.often_shop_goods_top .msg{padding: 15px 24px;font-size: 28px;color: red;}
+.line-normal-avatar-wrapper .goods-type{width:36px ;height: 40px;top: 20px;left: 20px;}
+[v-cloak] {display: none;}
 /*可以改变wrapper和scroller的样式来调节这个iscroll组件的使用*/
 			#wrapper {
 				position:absolute; z-index:1;

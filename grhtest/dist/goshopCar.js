@@ -55,6 +55,7 @@ define(['common'],function(common){
 				$('.totalmoney','#total').html('¥' + goshopCar.getgoodsMoney() );
 				$('.footer_item[data-content]').attr('data-content',num );
 			}
+			
 		},
 
 		creat : function(id,name,price,logo,specifications,maxCount,packageNum, oldPrice, status ){ // 创建一个单品

@@ -28,37 +28,78 @@ require(['../require/config'],function(){
 					if ( d.statusCode == "100000" ) {
 						common.orderType.setItem( '1' );
 						common.jumpLinkPlainApp("订单结算", "html/order_set_charge.html" );
+					}else if (d.statusCode == "100613"){
+						pub.shop_cart_submit.apiData(d)
 					}else{
 						common.prompt( d.statusStr );
 					}
 					$(".settle").css("background-color","#ff7b29").html("结算")
 				})
+			},
+			apiData:function(d){
+				var arr1 = cart.allgoods();//本地存储的商品数组
+				var arr2 = d.data;//后台返回的商品数组
+				var arr = [],index=[],istrue = null;
+				if (arr1.length !=0) {
+					for (var i = 0; i < arr1.length ; i++) {
+						var id = arr1[i].id;
+						istrue = true;
+						for (var j in arr2) {
+							if (id  == j) {
+								arr1[i] = pub.shop_cart_submit.datadiff(arr1[i],arr2[j]);
+								index.push(i)
+								delete arr2.j;
+								arr.unshift(arr1[i]);
+								istrue = false;
+								break;
+							}
+						}
+						if (istrue) {
+							arr.push(arr1[i])
+						}
+					}
+				}
+				pub.Vue.goodsObj = {};
+				setTimeout(function(){
+					pub.Vue.goodsObj = arr;
+					localStorage.setItem("good",JSON.stringify(arr));
+					common.prompt( d.statusStr );
+				},100)
+			},
+			datadiff:function(arr1,arr2){
+				arr1['msg'] = arr2;
+				return arr1;
+			},
+			scrollCount:function(index){
+				/*var h = document.documentElement.clientHeight;
+				var innerH = h - $(".header_wrap").height() - $(".footer_wrap").height() - $("#total").height();
+				var hall = $("#app").height();
+				
+				var indexh = $(".line-wrapper").height() * (index+1);
+				console.log(hall)
+				console.log(indexh);
+				console.log(innerH)
+				console.log($(document).scrollTop())*/
+				
 			}
 		};
 		
 		//确定方法
 		pub.apiHandle = {
 			trueFn:function(){
-				pub.dealNode.each(function(){
-					var dataId = $(this).parents('.line-wrapper').attr('data');
-					for(var i = 0; i < pub.dataSourse.length; i++ ){
-						if( dataId ==  pub.dataSourse[i].id ){
-							pub.dataSourse.splice(i,1);i--;
-						}
+				var $this = pub.Vue;
+				var obj = []
+				for(var i = 0, len = $this.goodsObj.length; i < len; i++) {
+					var list = $this.goodsObj[i];
+					if (list['status'] == 0) {
+						obj.push(list);
 					}
-				});
-				common.good.setItem( common.JSONStr( pub.dataSourse ) );
-				var removeNode = pub.dealNode.parents('.line-wrapper').remove();
-				removeNode = null;
-				$('.totalmoney','#total').text('¥0.00');
-				if( $('.line-wrapper','#ul-box').length == 0 ){
-					$('#empty-cart').show().appendTo('#ul-box');
-					//pub.myScroll.refresh();
-					pub.pullInstance.pullDownSuccess();
 				}
-				$('#all-select','#total').find('span:eq(0)').removeClass('select-dot').addClass('unselect-dot');
-				cart.style_change();
-				common.setShopCarNum_ShoppingCartApp(cart.getgoodsNum())
+	        	$this.goodsObj = obj;
+	        	$this.isChooseAll();
+	        	$this.calTotalMoney()
+	        	$this.updataLocal();
+	        	cart.style_change();
 			}
 		}
 		//取消方法
@@ -67,12 +108,10 @@ require(['../require/config'],function(){
 		}
 		//刷新问题
 		pub.apiHandle.reFresh = function(){
-			var goodsTotalNum = common.getTotal();
-	 		if( goodsTotalNum == 0 ){
-	 			$('#empty-cart').show().appendTo('#ul-box');
-	 		}else{
-	 			cart.car_goods();
-	 		}
+			pub.allgoodsList = cart.allgoodsId();
+			if (pub.allgoodsList != '') {
+				pub.refresh_shopcart.init();
+			}
 	 		if (pub.isrefresh) {
 	 			pub.isrefresh = false;
 	 			pub.pullInstance.pullDownSuccess();
@@ -86,6 +125,74 @@ require(['../require/config'],function(){
 				}
 			}
 		}
+		//更新购物车
+		pub.refresh_shopcart = {
+			init:function(){
+				common.ajaxPost($.extend({}, {
+					method : 'refresh_shopcart',
+					gids : pub.allgoodsList
+				}),function( d ){
+					if ( d.statusCode == "100000" ) {
+						var arr1 = cart.allgoods();//本地存储的商品数组
+						var arr2 = d.data;//后台返回的商品数组
+						var arr = []
+						if (arr1.length !=0) {
+							for (var i = 0; i < arr1.length ; i++) {
+								var id = arr1[i].id;
+								for (var j = 0; j < arr2.length ; j++) {
+									var id2 = arr2[j].id;
+									if (id  == id2) {
+										var z = pub.refresh_shopcart.datadiff(arr1[i],arr2[j]);
+										arr2.splice(j,1);
+										arr.push(z);
+										break;
+									}
+								}
+							}
+						}
+						pub.Vue.goodsObj = arr
+					}else{
+						common.prompt( d.statusStr );
+					}
+				},function( d ){
+					common.prompt( d.statusStr );
+				},function(){
+				})
+			},
+			datadiff: function(arr1,arr2){
+				var obj = {};
+				obj['id'] = arr1['id'];
+				obj['type'] = arr1['type'];
+				obj['name'] = arr2['goodsName'];
+				obj['sum'] = arr1['sum'];
+				obj['price'] = arr2['nowPrice'];//*"price":0.01,"
+				obj['logo'] = arr2['goodsLogo'];
+				obj['specifications'] = arr2['specInfo'];
+				obj['maxCount'] = arr2['maxBuyNum'];
+				obj['packageNum'] = arr2['packageNum'];
+				obj['status'] = arr1['status'];
+				obj['updata'] = arr2['status'] == -1 ? false :true;
+				obj['oldPrice'] = arr2['nomalPrice'];
+				obj['msg'] = '';
+				if (!obj['updata']) {
+					obj['msg'] = '已下架';
+				} else{
+					
+					if (arr2['purchaseQuantity'] != 0) {
+						obj['msg'] = arr2['purchaseQuantity']+'份起购';
+					}
+					if (arr1['maxCount'] != arr2['maxBuyNum']) {
+						if (!!arr2['maxBuyNum'] && !!arr1['maxCount']) {
+							if (parseInt(arr1['sum']) > parseInt(arr2['maxBuyNum'])) {
+								obj['msg'] = '限购'+arr2['maxBuyNum']+'件';
+							}
+						}
+					}
+					
+				}
+				return obj;
+			}
+		}
 		var goodsObj = cart.allgoods();
 		pub.init = function(){
 			if (!common.huanfu.getKey()) {
@@ -96,6 +203,7 @@ require(['../require/config'],function(){
 			}else{
 				pub.apiHandle.change_app_theme.init();
 			}
+			
 			pub.apiHandle.reFresh()
 			common.cancelDialogApp();
 			cart.style_change();
@@ -139,12 +247,14 @@ require(['../require/config'],function(){
 						var flag = true;
 						var str = '';
 						var $this = this;
-						
+						if ($this.goodsObj.length == 0) {
+							common.prompt('购物车为空');
+							return;
+						}
 						for(var i = 0, len = this.goodsObj.length; i < len; i++) {
 							var good = $this.goodsObj[i];
 							if ($this.allChecked) {
 								$this.goodsObj[i]['status'] = 0;
-								
 							} else{
 								$this.goodsObj[i]['status'] = 1;
 							}
@@ -161,14 +271,11 @@ require(['../require/config'],function(){
 						var good = this.goodsObj[index];
 						if (good['status'] == '0') {
 							this.goodsObj[index]['status'] = 1;
-							this.updataLocal()
-							
 						}else if (good['status'] == '1') {
 							this.goodsObj[index]['status'] = 0;
 							this.allChecked = false;
-							this.updataLocal()
 						}
-						
+						this.updataLocal()
 						this.isChooseAll();
 						this.calTotalMoney();
 					},
@@ -279,20 +386,17 @@ require(['../require/config'],function(){
 						if ($this.goodsObj.length == 0) {
 							common.prompt('购物车为空')
 						}else{
-							$this.isChoose() ? common.dialog.init().show("确定删除？", function() {}, function() {
-					        	for(var i = 0, len = $this.goodsObj.length; i < len; i++) {
-									var list = $this.goodsObj[i];
-									if (list['status'] == 0) {
-										obj.push(list);
-									}
+							if ($this.isChoose()) {
+								var data = {
+									type:1,
+									title:'确定删除？',
+									canclefn:'cancleFn',
+									truefn:'trueFn'
 								}
-					        	$this.goodsObj = obj;
-					        	$this.isChooseAll();
-					        	$this.calTotalMoney()
-					        	$this.updataLocal();
-					        	cart.style_change();
-					        	
-					        }) : common.prompt('您还没有选择商品哦')
+								common.alertMaskApp(JSON.stringify(data));
+							} else{
+								common.prompt('您还没有选择商品哦');
+							}
 						}
 					},
 					//单个删除操作
@@ -309,11 +413,11 @@ require(['../require/config'],function(){
 			        	$this.isChooseAll();
 			        	$this.calTotalMoney()
 			        	$this.updataLocal();
-			        	cart.style_change();
 					},
 					//本地数据的更新
 					updataLocal : function(){
 						common.good.setItem(JSON.stringify(this.goodsObj));
+						common.setShopCarNum_ShoppingCartApp(cart.getgoodsNum())
 						cart.style_change();
 						
 					},
@@ -333,9 +437,8 @@ require(['../require/config'],function(){
 							}
 							
 						}else{
-							
 							common.jumpMake.setItem("13");
-							common.jumpLinkPlain("login.html")
+							common.jumpLinkPlainApp("登录", "html/login.html" );
 							
 						}
 						

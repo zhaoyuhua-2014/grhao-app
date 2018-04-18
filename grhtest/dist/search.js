@@ -407,6 +407,8 @@ require(['../require/config'],function () {
 					pub.store.apiHandle.choice_firm.init();
 				}else{
 					common.firmId.setItem(pub.firmIdTemp);
+					common.good.removeItem();
+					common.setShopCarNumApp(0);
 					common.goBackApp(1,true,'index.html');
 				}
 			},
