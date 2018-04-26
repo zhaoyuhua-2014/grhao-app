@@ -44,7 +44,7 @@
 										<div class="often_shop_goods_top clearfloat">
 											<div class="oprate float_left">
 												<span class="minus_num actived" v-on:click="numChange(index, -1)" v-bind:class="{ 'disable' : item.sum==1 }">－</span>
-												<input type="number" class="show_num" v-on:blur="numEntry(index)" v-model="item.sum">
+												<input type="number" class="show_num" v-on:blur="numEntry(index)" v-on:focus="aler(index)" v-model="item.sum" autocomplete = "off">
 												<span class="add_num" @click="numChange(index,1)">+</span>
 											</div>
 											<div class="float_right msg" v-text="item.msg">
@@ -69,7 +69,7 @@
 					</li>
 					<li id="select-delete" @click="delGoods()">删除</li>
 					<li class="detail-list">
-						<p><span>合计:&nbsp;</span><span class="totalmoney" v-html="totalMoney.toFixed(2)"></span></p>
+						<p><span>合计:&nbsp;</span><span class="totalmoney" v-html="'￥'+totalMoney.toFixed(2)"></span></p>
 					</li>
 				</ul>
 				<div class="settle" @click="submitgoshop()">结算</div>

@@ -49,7 +49,14 @@ input:disabled{
 	opacity: 1;
 }
 
-
+[contenteditable = "true"], input, textarea {
+    -webkit-user- select: auto!important;
+    -khtml-user-select: auto!important;
+    -moz-user-select: auto!important;
+    -ms-user-select: auto!important;
+    -o-user-select: auto!important;
+    user-select: auto!important;
+}
 
 
 
@@ -922,7 +929,7 @@ background-origin: content-box;-webkit-background-clip: content-box;}
 #zs-cart .dec{color:#393737;width:320px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;}
 #zs-cart .unit{color:#999999;}
 #zs-cart .oprate{margin-top: 20px;width:176px;height:48px;border:1px solid #999;}
-#zs-cart .oprate span,#zs-cart .oprate input{display:inline-block;color:#666666;font-size: 30px;text-align: center;line-height: 44px;-webkit-user-select:none}
+#zs-cart .oprate span,#zs-cart .oprate input{display:inline-block;color:#666666;font-size: 30px;text-align: center;line-height: 44px;}
 #zs-cart .oprate .minus_num,#zs-cart .oprate .add_num{width:48px;height:48px;display: block;}
 #zs-cart .oprate .show_num{width:76px;border-left:1px solid #999;border-right:1px solid #999;float:left;height:44px;display:inline-block;}
 #zs-cart .curPrice{font-size:32px;color:#ff7b29;margin-top: 10px;}

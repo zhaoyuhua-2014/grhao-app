@@ -58,30 +58,40 @@ define(['common'],function(common){
 			
 		},
 
-		creat : function(id,name,price,logo,specifications,maxCount,packageNum, oldPrice, status ){ // 创建一个单品
+		creat : function(id,name,price,logo,specifications,maxCount,packageNum, oldPrice,  type ,purchasequantity  ){ // 创建一个单品
 			var goodsInfo = new Object();
 				goodsInfo.id = parseInt(id);
+				goodsInfo.type = type;//1表示普通商品2表示秒杀商品
 		        goodsInfo.name = name;
-		        goodsInfo.sum = 1;
-		        goodsInfo.price = parseFloat(price);
-		        goodsInfo.logo = logo;
-		        goodsInfo.specifications = specifications;
-		        goodsInfo.maxCount = maxCount;
-		        goodsInfo.packageNum = packageNum;
-		        goodsInfo.status = status == undefined ? 1 : 0  ;
-		        goodsInfo.oldPrice = oldPrice;
+		        console.log(purchasequantity != 0)
+		       	if (purchasequantity != '' && purchasequantity != '0') {
+		       		goodsInfo.sum = purchasequantity;//商品数量
+		       	}else{
+		       		goodsInfo.sum = 1;//商品数量
+		       	}
+		        
+		        goodsInfo.price = parseFloat(price);//商品价格
+		        goodsInfo.logo = logo;//商品logo
+		        goodsInfo.specifications = specifications;//商品描述
+		        goodsInfo.maxCount = maxCount;//最大购买数量
+		        goodsInfo.packageNum = packageNum;//库存数量
+		        goodsInfo.status = 1;//本地商品是否选择
+		        goodsInfo.updata = true;
+		        goodsInfo.purchasequantity = purchasequantity;//多少起购
+		        goodsInfo.oldPrice = oldPrice;//原始价格
+		        goodsInfo.msg = '';//提示信息
 	        return goodsInfo;
 		},
 		//添加商品
-		addgoods : function ( id, name, price, logo, specifications, maxCount, packageNum, oldPrice, status) {
+		addgoods : function ( id, name, price, logo, specifications, maxCount, packageNum, oldPrice,  type ,purchasequantity ) {
 
 		    if ( typeof localStorage.good  == "undefined" ) {
 				
-		    	var singleGoods = goshopCar.creat(id,name,price,logo,specifications,maxCount,packageNum, oldPrice, status );
+		    	var singleGoods = goshopCar.creat(id,name,price,logo,specifications,maxCount,packageNum, oldPrice,  type ,purchasequantity  );
 		    	var arr = [];
 		    	arr.push(singleGoods);
 		    		localStorage.good = JSON.stringify( arr );
-		        return 1;
+		        return singleGoods.sum;
 		    } else{
 
 		    	var localGoodsList = JSON.parse( localStorage.good ); // 本地商品列表
@@ -98,11 +108,11 @@ define(['common'],function(common){
 		        };
 
 
-		        var singleGoods = goshopCar.creat( id,name,price,logo,specifications,maxCount,packageNum, oldPrice, status );
+		        var singleGoods = goshopCar.creat( id,name,price,logo,specifications,maxCount,packageNum, oldPrice,  type ,purchasequantity  );
 		        	localGoodsList.push( singleGoods );
 		        	localStorage.good = JSON.stringify( localGoodsList );
 
-	            return 1;
+	            return singleGoods.sum;
 		     
 		    };
 		},
@@ -113,16 +123,28 @@ define(['common'],function(common){
 
 			for (var i in localGoodsList ) {
 				if ( localGoodsList[i].id == id ) {
-		       		//之前已经有此类商品了
-		       		if ( localGoodsList[i].sum == 1 ) {
-		       			localGoodsList.splice(i,1);
-		       			localStorage.good = JSON.stringify( localGoodsList );
-		       			return 0;
-		       		} else{
-		       			localGoodsList[i].sum = parseInt( localGoodsList[i].sum, 10 ) - 1;
-		            	localStorage.good = JSON.stringify( localGoodsList );
-		            	return localGoodsList[i].sum;
-		       		};
+					if (localGoodsList[i].purchasequantity != 0) {
+						if (localGoodsList[i].sum <= localGoodsList[i].purchasequantity) {
+							localGoodsList.splice(i,1);
+			       			localStorage.good = JSON.stringify( localGoodsList );
+			       			return 0;
+						}else{
+							localGoodsList[i].sum = parseInt( localGoodsList[i].sum, 10 ) - 1;
+			            	localStorage.good = JSON.stringify( localGoodsList );
+			            	return localGoodsList[i].sum;
+						}
+					}else{
+						//之前已经有此类商品了
+			       		if ( localGoodsList[i].sum == 1 ) {
+			       			localGoodsList.splice(i,1);
+			       			localStorage.good = JSON.stringify( localGoodsList );
+			       			return 0;
+			       		} else{
+			       			localGoodsList[i].sum = parseInt( localGoodsList[i].sum, 10 ) - 1;
+			            	localStorage.good = JSON.stringify( localGoodsList );
+			            	return localGoodsList[i].sum;
+			       		};
+					}
 		    	};
 			}
 		},

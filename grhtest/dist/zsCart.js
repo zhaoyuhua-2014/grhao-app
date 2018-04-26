@@ -71,15 +71,7 @@ require(['../require/config'],function(){
 				return arr1;
 			},
 			scrollCount:function(index){
-				/*var h = document.documentElement.clientHeight;
-				var innerH = h - $(".header_wrap").height() - $(".footer_wrap").height() - $("#total").height();
-				var hall = $("#app").height();
 				
-				var indexh = $(".line-wrapper").height() * (index+1);
-				console.log(hall)
-				console.log(indexh);
-				console.log(innerH)
-				console.log($(document).scrollTop())*/
 				
 			}
 		};
@@ -150,7 +142,8 @@ require(['../require/config'],function(){
 								}
 							}
 						}
-						pub.Vue.goodsObj = arr
+						pub.Vue.goodsObj = arr;
+						pub.Vue.updataLocal()
 					}else{
 						common.prompt( d.statusStr );
 					}
@@ -168,6 +161,7 @@ require(['../require/config'],function(){
 				obj['price'] = arr2['nowPrice'];//*"price":0.01,"
 				obj['logo'] = arr2['goodsLogo'];
 				obj['specifications'] = arr2['specInfo'];
+				obj['purchasequantity'] = arr2['purchaseQuantity'];
 				obj['maxCount'] = arr2['maxBuyNum'];
 				obj['packageNum'] = arr2['packageNum'];
 				obj['status'] = arr1['status'];
@@ -177,12 +171,14 @@ require(['../require/config'],function(){
 				if (!obj['updata']) {
 					obj['msg'] = '已下架';
 				} else{
-					
 					if (arr2['purchaseQuantity'] != 0) {
-						obj['msg'] = arr2['purchaseQuantity']+'份起购';
-					}
-					if (arr1['maxCount'] != arr2['maxBuyNum']) {
-						if (!!arr2['maxBuyNum'] && !!arr1['maxCount']) {
+						if (obj['sum'] < arr2['purchaseQuantity']) {
+							obj['msg'] = arr2['purchaseQuantity']+'份起购';
+						}else if (parseInt(arr1['sum']) > parseInt(arr2['maxBuyNum'])) {
+							obj['msg'] = '限购'+arr2['maxBuyNum']+'件';
+						}
+					}else{
+						if (obj['maxCount'] != 0) {
 							if (parseInt(arr1['sum']) > parseInt(arr2['maxBuyNum'])) {
 								obj['msg'] = '限购'+arr2['maxBuyNum']+'件';
 							}
@@ -222,7 +218,7 @@ require(['../require/config'],function(){
 		        	console.log("created			//创建完成")
 		        	this.isChooseAll()
 		        	this.calTotalMoney();
-		        	cart.htmlInit();
+		        	
 		        	
 		        },
 		        beforeMount : function(){
@@ -237,6 +233,7 @@ require(['../require/config'],function(){
 		        		$(item).find('.line-normal-wrapper').css("margin-left","0px");
 		        	})
 		        	$("#app").height($("#ul-box").height())
+		        	cart.htmlInit();
 		        },
 				methods: {
 					getCardNum: function (data, on) {  
@@ -322,6 +319,7 @@ require(['../require/config'],function(){
 					numChange: function(index, numChange) {
 						var goods = this.goodsObj[index],
 							oThis = this;
+						goods.sum = parseInt(goods.sum);
 						if(numChange == 1) {
 							goods.sum++;
 						} else if(numChange == -1) {
@@ -332,8 +330,23 @@ require(['../require/config'],function(){
 							goods.sum = 1;
 						}
 						
+						if (goods.purchasequantity != 0) {
+							if (goods.sum < goods.purchasequantity) {
+								goods.sum = goods.purchasequantity;
+								goods.msg = goods.purchasequantity+'份起购';
+								common.prompt("此商品"+goods.purchasequantity+"份起购");
+							}else{
+								goods.msg = ''
+							}
+							if (goods.maxCount != '' && parseInt(goods.maxCount) > 0) {
+								if(parseInt(goods.sum) >= parseInt(goods.maxCount)) {
+									goods.sum = goods.maxCount;
+									goods.msg = ''
+									common.prompt("此商品限购"+goods.maxCount+"件");
+								}
+							}
+						}
 						if (goods.maxCount != '' && parseInt(goods.maxCount) > 0) {
-						
 							if(parseInt(goods.sum) >= parseInt(goods.maxCount)) {
 								goods.sum = goods.maxCount;
 								goods.msg = ''
@@ -344,25 +357,38 @@ require(['../require/config'],function(){
 						this.updataLocal();
 						this.calTotalMoney();
 					},
-			
 					// 用户填写容错处理
 					numEntry: function( index) {
 						var goods = this.goodsObj[index];
+						goods.sum = parseInt(goods.sum);
 						if(goods.sum <= 1) {
 							goods.sum = 1;
 						}
+						if (goods.purchasequantity != 0) {
+							if (goods.sum < goods.purchasequantity) {
+								goods.sum = goods.purchasequantity;
+								goods.msg = goods.purchasequantity+'份起购';
+								common.prompt("此商品"+goods.purchasequantity+"份起购");
+							}else{
+								goods.msg = ''
+							}
+							if (goods.maxCount != '' && parseInt(goods.maxCount) > 0) {
+								if(parseInt(goods.sum) >= parseInt(goods.maxCount)) {
+									goods.sum = goods.maxCount;
+									goods.msg = ''
+									common.prompt("此商品限购"+goods.maxCount+"件");
+								}
+							}
+						}
 						if (goods.maxCount != '' && parseInt(goods.maxCount) > 0) {
-							
 							if(parseInt(goods.sum) >= parseInt(goods.maxCount)) {
 								goods.sum = goods.maxCount;
+								goods.msg = ''
 								common.prompt("此商品限购"+goods.maxCount+"件");
 								
 							}
-						}else{
-							
 						}
 						this.updataLocal();
-						
 						this.calTotalMoney();
 					},
 			

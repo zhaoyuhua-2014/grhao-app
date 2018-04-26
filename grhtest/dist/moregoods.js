@@ -200,7 +200,7 @@ require(['../require/config'],function(){
 							html += '					<div class="show_num" zs-goodsId="' + obj.id + '" id="_more_">' + gdnum + '</div>'
 							html += '					<div class="add_num" id="_more_"></div>'
 						} else{
-							if ( obj.packageNum == 0) {
+							if ( obj.packageNum <= 0) {
 								html +=  '		<div style="color:#FFFFFF,background:red,text-align:center" id="_more_">已售罄</div>'
 							}else{
 								html += '					<div class="minus_num" id="_more_" style="display:none"></div>'
@@ -564,12 +564,14 @@ require(['../require/config'],function(){
 					dataMax = node.attr("data-max"),
 					dataPackagenum = node.attr("data-packagenum"),
 					dataOldPrice = node.attr("data-oldprice"), 
+					purchasequantity = node.attr("data-purchasequantity"),
+					
 					goodNum = cart.callbackgoodsnumber( dataId );
 	
-					if ( goodNum < dataPackagenum ) { // 库存
+					//if ( goodNum < dataPackagenum ) { // 库存
 						if( +dataMax != 0 ){ // 限购
 							if( goodNum < dataMax ){
-								var num1 = cart.addgoods( dataId, dataName, dataPrice, dataLogo, dataSpecInfo, dataMax, dataPackagenum, dataOldPrice );
+								var num1 = cart.addgoods( dataId, dataName, dataPrice, dataLogo, dataSpecInfo, dataMax, dataPackagenum, dataOldPrice , 1 ,purchasequantity );
 								common.tip();
 								common.setShopCarNumApp(cart.getgoodsNum())
 								$this.siblings().eq(1).html( num1 );
@@ -579,15 +581,15 @@ require(['../require/config'],function(){
 								common.prompt( "该商品限购" + dataMax + "件" )
 							}
 						}else{
-							var num1 = cart.addgoods( dataId, dataName, dataPrice, dataLogo, dataSpecInfo, dataMax, dataPackagenum, dataOldPrice);
+							var num1 = cart.addgoods( dataId, dataName, dataPrice, dataLogo, dataSpecInfo, dataMax, dataPackagenum, dataOldPrice , 1 ,purchasequantity);
 							common.tip();
 							common.setShopCarNumApp(cart.getgoodsNum())
 							$this.siblings().eq(1).html( num1 );
 							$('.footer_item[data-content]','#foot').attr('data-content',cart.getgoodsNum());
 						}			
-					} else{
+					/*} else{
 						common.prompt( "库存不足" );
-					}
+					}*/
 				});
 				//减少
 				$(".zs-static-box").on('click','.minus_num',function(e){
