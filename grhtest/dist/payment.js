@@ -59,6 +59,13 @@ require(['../require/config'],function(){
 	    pub.loading = $(".order_refund"); // loading 
 	    pub.smsCode = null;
 	
+		pub.couponInfo = [
+			{ text : '立减优惠：', key : 'derateAmount' , sign :"-￥" }, // 1
+			{ text : '折扣优惠：', key : 'derateAmount', sign : "-￥" }, // 2
+			{ text : '果币', key : 'offScore', sign : "个"}, // 3
+			{ text : '优惠券', key : 'offItemVal', sign : '元'}, // 4
+		];
+		
 		pub.firmIdType = common.firmIdType.getItem();
 	    // 接口数据处理
 	    pub.apiHandle = {
@@ -87,11 +94,27 @@ require(['../require/config'],function(){
 	                node = $(".orderList_details ul li");
 	                pub.orderType = orderInfo.activityType;
 	                pub.isCanPay = orderInfo.isCanPay;
+	                pub.isMachineGoods = orderInfo.isMachineGoods == 1;
 					pub.firmIdType = d.data.firmInfo ? d.data.firmInfo.type : pub.firmIdType;
 					
+					pub.couponStrategy = orderInfo.couponStrategy;//优惠方案3-4分别为赠送果币和优惠卷
+	                
+	                pub.couponStrategyText = (pub.couponStrategy ==3 || pub.couponStrategy ==4) ? (function(){
+	                	return pub.couponInfo[(pub.couponStrategy-1)].text + orderInfo[pub.couponInfo[(pub.couponStrategy-1)].key] + pub.couponInfo[(pub.couponStrategy-1)].sign
+	                })() : null;
+	                
+	                pub.allText =  (!!pub.couponStrategyText ||  (!pub.isMachineGoods && orderInfo.barterCount != 0) ) ? (function(){
+	                	pub.barterText = (!pub.isMachineGoods && orderInfo.barterCount != 0) ?  "<b>" + orderInfo.barterCount + "</b>次换购机会" : "";
+	                	
+	                	return "支付成功后可以获得" + ( (!!pub.couponStrategyText && pub.barterText) ? pub.couponStrategyText + "<br/>" +pub.barterText : (function(){
+	                		return (!!pub.couponStrategyText) ? pub.couponStrategyText : '' + 
+	                				(pub.barterText) ? pub.barterText : '';
+	                	})() )
+	                })(): '';
+	                
 	                // 订单信息
 	                (function(){
-	                    if( pub.isBase ){
+	                    /*if( pub.isBase ){
 	                        if( pub.orderType == "1" ) {
 	                        	if (pub.firmIdType == '5') {
 	                        		node.eq(0).html("订单号:<span>" + orderInfo.orderCode + "</span>")
@@ -120,6 +143,38 @@ require(['../require/config'],function(){
 	                    }
 	                    $(".orderList_intro").html("订单已提交！");
 	                    pub.firmIdType == '5' && $('.pay_gg').html("请于"+pub.appData.data.order_cancel_time+"分钟内完成支付，超时订单将取消！")
+	                    */
+	                    if( pub.isBase ){
+
+	                        var json = {
+	                            1 : ["订单号:<span>" + orderInfo.orderCode + "</span>","订单金额:<span>￥" + orderInfo.realPayMoney + "</span>",pub.allText],
+	                            4 : ["预购商品:<span>" + orderInfo.orderDetailsList[0].goodsName + "</span>","订单号:<span>" + orderInfo.orderCode + "</span>","预购尾款金额:<span>￥" + orderInfo.realPayMoney + "</span>"],
+	                            6 : ["换购商品:<span>" + orderInfo.orderDetailsList[0].goodsName + "</span>","订单号:<span>" + orderInfo.orderCode + "</span>","订单金额:<span>￥" + orderInfo.realPayMoney + "</span>"]
+	                        }[ Number( pub.orderType) ];
+	
+	                        node.eq(0).html( json[0] ).next().html( json[1] ).next().html( json[2] );
+	
+	                        node.eq(3).html( '22:30前付款，预计明日送达' );
+	
+	                        var pay_gg = node.parent().next();
+	                        if( pub.isMachineGoods ){
+	                            $('.pay_gg').html("请于"+pub.appData.data.order_cancel_time+"分钟内完成支付，超时订单将取消！")
+	                        }else{
+	                            pay_gg.html('请于2小时内完成支付，超时订单将取消！');
+	                            node.eq(3).show().html( '22:30前付款，预计明日送达' );
+	                        } 
+							if (Number(pub.orderType == 1)) {
+								if (pub.allText) {
+									node.eq(2).css({"margin-top":"20px","border-top":"1px solid #b2b2b2","padding-top":"20px"})
+									node.eq(3).css({"padding-bottom":"20px"});
+								}else{
+									node.eq(3).show().html( '22:30前付款，预计明日送达' ).css({"margin-top":"20px","border-top":"1px solid #b2b2b2","padding":"20px 0"});
+								}
+							}
+	                    }else{
+	                        node.eq(0).html("预购商品:<span>" + orderInfo.goodsInfo.goodsName + "</span>").next().html("订单号:<span>" + orderInfo.orderCode + "</span>").next().html("预购金额:<span class='font_color'>￥" + orderInfo.frontMoney + "</span>");
+	                    }
+	                    $(".orderList_intro").html("订单已提交！");
 	                   
 	                }());
 	

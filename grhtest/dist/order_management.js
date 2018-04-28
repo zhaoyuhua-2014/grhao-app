@@ -251,9 +251,6 @@ require(['../require/config'],function(){
 	
 				    }else if( status == '-1' ){
 	
-				    	/*$('.order_refund').css({'display':'block'});
-				    	$('.order_refund_confirm').html('确定删除？');
-				    	$("body").css("overflow-y","hidden");*/
 				    	var data = {
 							type:1,
 							title:'确定删除？',
@@ -265,31 +262,6 @@ require(['../require/config'],function(){
 				    }
 				});
 	
-				// 删除确认
-				/*$('.order_refund_choose .makeSure').on('click',function(e){
-	
-					common.stopEventBubble(e);
-	
-					var 
-					source = pub.orderManagement.userBasicParam.source = "orderCode" + pub.orderManagement.orderCode;
-	
-					pub.orderManagement.userBasicParam.sign = md5( source + "key" + common.secretKeyfn() ).toUpperCase();
-	
-					$('.order_refund_confirm').html() == "确定删除？" && pub.orderManagement.apiHandle.order_del.init();
-	
-				    $('.order_refund').hide();
-				    $("body").css("overflow-y","auto");
-			        	            
-			    });*/
-	
-				// 取消
-			   /* $('.order_refund').on("click",function(e){
-					common.stopEventBubble(e);
-					if ( e.target.className == "refund_cancle" || e.target.className == "refund_bg"  ) {
-						$(this).hide();
-						$("body").css("overflow-y","auto");
-					}
-				}); */
 	
 			    //点击跳转订单详情页面
 				$('.order_manage_contain').on('click','.order_manage_content',function(){
@@ -340,7 +312,7 @@ require(['../require/config'],function(){
 			{ text : '立减优惠', label :'-￥', derateAmount : 'derateAmount'},
 			{ text : '折扣优惠', label :'-￥', derateAmount : 'derateAmount'},
 			{ text : '赠送果币', label : "个", derateAmount : 'offScore'},
-			{ text : '赠送优惠卷', label : '张', derateAmount : 'derateAmount'}];
+			{ text : '赠送优惠卷', label : '元', derateAmount : 'offItemVal'}];
 	
 		// 费用详情
 		pub.orderDetail.MONEY_DETAIL = [ 'goodsMoney', 'postCost', 'couponMoney' ];
@@ -354,17 +326,18 @@ require(['../require/config'],function(){
 	
 		// 不同状态 用户操作数据结构
 		pub.orderDetail.OPERATE = [
-	    	{ text : '已退款', className : 'hide', btnText : '' },
-	    	{ text : '退款中', className : 'hide', btnText : '' },
-	    	{ text : '已作废', className : 'delete-btn', btnText : '删除'},
-	    	{ text : '',       className : 'hide', btnText : '' },
-	    	{ text : '待支付', className : 'unpay-operate', btnText : '' },
-	    	{ text : '待支付', className : 'unpay-operate', btnText : '' },
-	    	{ text : '',       className : 'refund-btn', btnText : '退款', pickUpMethod : ['待自提','已付款']},
-	    	{ text : '待收货', className : 'hide', btnText : ''},
-	    	{ text : '已完成', className : 'hide', btnText : ''},
-	    	{ text : '已完成', className : 'hide', btnText : ''},
-	    	{ text : '已签收', className : 'comment-btn', btnText : '评价'}];
+	    	{ text : '订单超时', className : 'delete-btn',btnText : '删除'}, // -4
+	    	{ text : '已退款', className : 'hide', btnText : '' }, // -3
+	    	{ text : '退款中', className : 'hide', btnText : '' }, // -2
+	    	{ text : '已作废', className : 'delete-btn', btnText : '删除'}, // -1
+	    	{ text : '',       className : 'hide', btnText : '' }, // 0 
+	    	{ text : '待支付', className : 'unpay-operate', btnText : '' }, // 1
+	    	{ text : '待支付', className : 'unpay-operate', btnText : '' }, // 2
+	    	{ text : '',       className : 'refund-btn', btnText : '退款', pickUpMethod : ['待自提','已付款']}, // 3
+	    	{ text : '待收货', className : 'hide', btnText : ''}, // 4
+	    	{ text : '已完成', className : 'hide', btnText : '评论'}, // 5
+	    	{ text : '已完成', className : 'hide', btnText : ''}, // 6
+	    	{ text : '已完成', className : 'comment-btn', btnText : '评论'}]; // 7
 	
 	    pub.orderDetail.METHOD = null; // 接收方法
 	
@@ -410,13 +383,15 @@ require(['../require/config'],function(){
 					var orderInfo = d.data.orderInfo;
 					var firmInfo = d.data.firmInfo,
 						firmIdType = firmInfo.type;
+					pub.isMachineGoods = orderInfo.isMachineGoods == 1;
+					
 			        $('.orderDetails_no').html( '订单编号：' + orderInfo.orderCode );          
 			        $('.create_time').html( '下单时间：' + orderInfo.createTime );
 			        $('.order_money').html( '订单金额：￥' + pub.toFixed( Number(orderInfo.realPayMoney) ) );
 			        if (firmIdType == '5') {
 			        	$('.delivery,.take_goods_address_contain,.order_message').addClass("hidden")
 			        	$('.machine_address_wrap').removeClass("hidden");
-			        	if (orderInfo.orderStatus == 1 || orderInfo.orderStatus == 2) {
+			        	if (orderInfo.orderStatus == 1 || orderInfo.orderStatus == 2 || orderInfo.orderStatus == -4) {
 			        		
 			        	}else{
 			        		$('.watm_info_wrap').removeClass("hidden");
@@ -521,8 +496,15 @@ require(['../require/config'],function(){
 			        	$('.my_order_list1 .order_set_list_right').html( '￥' + pub.toFixed( Number(orderInfo.orderDetailsList[0].goodsAllMoney) ) );
 			        	$('.my_order_list7 .order_set_list_right').html( '￥' + pub.toFixed( Number(orderInfo.realPayMoney) ) );
 			        } else{
-	
+						
 			        	$('.list-group2','.order_set_list').show();
+			        	//是否是首单
+						if (orderInfo.orderType == "1") {
+							if (orderInfo.firstOrderOff != '' && orderInfo.firstOrderOff > 0) {
+								$(".order_first_free").find(".float_right").html("-￥"+orderInfo.firstOrderOff).end()
+								$(".order_first_free").css("display","block")
+							} 
+						}
 			        	// 优惠券
 			        	(function(){
 			        		if( 0 < orderInfo.couponStrategy && orderInfo.couponStrategy < 5){
@@ -538,9 +520,6 @@ require(['../require/config'],function(){
 				        (function(){
 				        	
 							pub.orderDetail.MONEY_DETAIL.forEach(function( v, i ){
-							//	console.log(v);
-				        	//console.log(i);
-				        	//console.log(Number(orderInfo[ v ]).toFixed(2))
 			        			$('.my_order_list' + ( i + 1 ) + ' .order_set_list_right').html( '￥' + pub.toFixed( Number(orderInfo[ v ] )) );
 			        		});
 			        		
@@ -549,7 +528,7 @@ require(['../require/config'],function(){
 			        	})();
 			    	} 
 			    	// 用户操作处理
-			    	(function(){
+			    	/*(function(){
 			    		var 
 			    		text = pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 3 ].text, 
 			    		className = pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 3 ].className;
@@ -557,7 +536,26 @@ require(['../require/config'],function(){
 			    		$('.order_situation').addClass( className ).find( '.oprate-btn' ).text( pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 3 ].btnText);
 			    		if( +orderInfo.orderStatus + 3  == 6 ){
 			    			firmIdType == '5' ? $(".order_status").html("待取货"): $('.order_status').html( pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 3 ].pickUpMethod[ orderInfo.pickUpMethod - 1 ] );
-			    		} 
+			    		}
+			    		switch( +orderInfo.orderStatus + 3 ){
+			    			case 6 : 
+				    			(orderInfo.realPayMoney == 0 || orderInfo.realPayMoney == '') ?  $(".order_situation").css("display","none") : ''; break;
+			    		}
+			    		
+			    	})();*/
+			    	// 用户操作处理
+			    	(function(){
+			    		var 
+			    		text = pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 4 ].text, 
+			    		className = pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 4 ].className;
+			    		$('.order_status').html( text );
+			    		$('.order_situation').addClass( className ).find( '.oprate-btn' ).text( pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 4 ].btnText);
+			    		switch( +orderInfo.orderStatus + 3 ){
+			    			case 6 : 
+				    			(orderInfo.realPayMoney == 0 || orderInfo.realPayMoney == '') ?  $(".order_situation").css("display","none") : ''; break;
+			    			case 7 : 
+				    			 $('.order_status').html( (pub.isMachineGoods ? '待取货' : pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 4 ].pickUpMethod[ orderInfo.pickUpMethod - 1 ]) ); break;
+			    		}
 			    	})();
 			    	//添加watm后价格信息显示
 			    	if (firmIdType == '5') {

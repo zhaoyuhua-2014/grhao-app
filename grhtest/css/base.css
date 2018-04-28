@@ -419,8 +419,8 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 /*订单支付*/
 .orderList_details {width:100%;background:#ffffff;}
 .orderList_intro {width:100%;height:116px;font-size:36px;color:rgb(51,51,51);line-height:116px;padding-left:280px;background:url(../img/icon_order.png) no-repeat 230px 36px;}
-.orderList_details ul {width:100%;padding: 20px 0;}
-.orderList_details li {width:720px;height:45px;font-size:26px;padding-left:200px;color:rgb(51,51,51);}
+.orderList_details ul {width:100%;padding: 0 24px;}
+.orderList_details li {font-size:26px;color:rgb(51,51,51);}
 .orderList_details li b {color:#fe5f4c;padding:0 4px;}
 .pay_gg {height:90px;margin:0 20px;font-size:26px;color:rgb(246,65,65);line-height:90px;padding-left:60px;border-top:1px solid #b2b2b2;background:url(../img/icon_horn.png) no-repeat 0 20px;}
 .pay_style {width:100%;height:80px;font-size:26px;color:rgb(51,51,51);padding-left:20px;line-height:80px;}
@@ -841,6 +841,8 @@ background-origin: content-box;-webkit-background-clip: content-box;}
 .order_submit_money {font-size:36px;}
 .order_submit_right {float:right;width:220px;height:110px;background:#93c01d;text-align:center;font-size:30px;color:rgb(255,255,255);}
 
+
+.order_first_free {width: 100%;font-size: 28px;background: #FFF;color: red;display: none;line-height: 44px;}
 /*包月充值*/
 .month_service_banner{width:100%;height:320px;background-color: #FFFFFF; background-image: url(../img/pic_logo_load.png);background-repeat: no-repeat;background-position: center;background-size: 250px 250px;}
 .month_service_banner img{width: 100%;height: 100%;display: none;}

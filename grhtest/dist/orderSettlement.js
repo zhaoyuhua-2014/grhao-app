@@ -60,7 +60,7 @@ require(['../require/config'],function () {
 			{ text : '立减优惠：', key : 'derateAmount' , sign :"-￥" }, // 3
 			{ text : '折扣优惠：', key : 'derateAmount', sign : "-￥" }, // 4
 			{ text : '赠送果币：', key : 'offScore', sign : "个"}, // 5
-			{ text : '赠送优惠券：', key : 'derateAmount', sign : '元券'}, // 6
+			{ text : '赠送优惠券：', key : 'offItemVal', sign : '元'}, // 6
 		];
 	
 		// 普通 命名空间
@@ -133,6 +133,13 @@ require(['../require/config'],function () {
 					.next().show().find(".float_right").html( "￥" + orderInfo.postCost ); // 运费
 					
 					pub.firmIdType == 5 && listNode.eq(1).remove();
+					//是否是首单
+					if (orderInfo.orderType == "1") {
+						if (orderInfo.firstOrderOff != '' && orderInfo.firstOrderOff > 0) {
+							$(".order_first_free").find(".float_right").html("-￥"+orderInfo.firstOrderOff).end()
+							$(".order_first_free").css("display","block")
+						} 
+					}
 					//优惠券金额
 					(function(){
 						if( pub.orderType == "3" ){
@@ -144,12 +151,12 @@ require(['../require/config'],function () {
 					// 优惠券优惠价格信息
 					(function(){
 						if( 0 < orderInfo.couponStrategy && orderInfo.couponStrategy < 5  ){
-							var couponInfo = pub.couponInfo[ +orderInfo.couponStrategy + 1 ];
+							var couponInfo = pub.couponInfo[ +orderInfo.couponStrategy - 1 ];
 							listNode.eq(3).show().find(".float_left").html( couponInfo.text ).next().show().html(function(){
 								var sign = couponInfo.sign;
 								if( sign == '-￥' ) 
-									return sign + couponInfo[key];
-								return couponInfo[key] + sign;
+									return sign + (orderInfo[couponInfo.key] ? orderInfo[couponInfo.key] : '');
+								return (orderInfo[couponInfo.key] ? orderInfo[couponInfo.key] : '') + sign;
 							});
 						}else{
 							listNode.eq(3).hide();
@@ -520,7 +527,11 @@ require(['../require/config'],function () {
 					common.two_data.removeItem();
 					common.addType.removeItem();
 					common.setShopCarNumApp(0);
-					common.jumpLinkPlainApp( "订单支付","html/order_pay.html" );
+					if (d.data.orderStatus == '3') {
+						common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
+					}else{
+						common.jumpLinkPlainApp( "订单支付","html/order_pay.html" );
+					}
 					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 				}else if ( d.statusCode == "100711" ) {
 					common.prompt("地址不在配送范围");
@@ -623,7 +634,7 @@ require(['../require/config'],function () {
 			pub.orderFrom =  pub.isApp ? "APP" : 'H5'; // 生成订单来源方式
 			pub.submitBtn = $('.order_submit_right'); // 提交按钮节点
 			pub.firmId = pub.userData.firmId; // 获取门店ID
-			console.log(pub.userData)
+			
 			// 自动选择 取货方式
 			if( common.addType.getKey() ){
 				pub.tabIndex == 0  && ( pub.addrId = '' );
