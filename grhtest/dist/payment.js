@@ -256,20 +256,10 @@ require(['../require/config'],function(){
 	                pub.isApp && ( pub.aliPayApi.isApp = '1' );
 	                common.ajaxPost($.extend( {},pub.userBasicParam, pub.aliPayApi ),function( d ){
 	                    if ( d.statusCode == '100000' ) {
-	                        if (common.isApple()) {
-	                        	var data = {
-	                        		orderCode:pub.orderCode || d.data.note,
-	                        		productName:'果然好商品',
-	                        		money:pub.money || d.data.payMoney,
-	                        	};
-	                        	pub.apiHandle.order_topay_alipay.apiData(data)
-	                        } else{
-	                        	var html = "";
-		                        $.each( d.data, function( i, v ){
-		                            html += '<input type="hidden" name="' + i + '" id="" value="' + v + '" />';
-		                        });
-		                        $("#form2").append( html ).submit();
-	                        }
+	                        var html = "";
+	                    		html = d.data;
+	                    	$("body").append(html)
+	                        $("form[name = 'punchout_form' ]").submit();
 	                    }else{
 	                        common.prompt( d.statusStr );
 	                    }
