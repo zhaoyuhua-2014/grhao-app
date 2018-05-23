@@ -56,12 +56,12 @@
 			    		<p>支付宝支付</p>
 			    	</div>
 			    	
-			    	<div class="pay_style_item zs-pay-way" pay-way="3">
+			    	<!--<div class="pay_style_item zs-pay-way" pay-way="3">
 			    		<p>银行卡支付</p>
 			    		<div class="pay_style_input content-box">
 				    		<input type="number" id="pay_style_card" value="" placeholder="请输入银行卡号" />
 				    	</div>
-			    	</div>               
+			    	</div> -->              
 			    	
 			    	<form id="form2" action="http://wappaygw.alipay.com/service/rest.htm?_input_charset=utf-8" method="post" style="display: none;"></form>
 			    	<form action="https://wap.lianlianpay.com/payment.htm" method="post" id="form1" style="display: none;">
@@ -89,4 +89,10 @@
 	});
 </script>-->
 <script data-main = "../dist/payment.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	//alipay支付回调
+	function aliPayResult ( d ){
+		pub.apiHandle.order_topay_alipay.alipay_result(d);
+	}
+</script>
 </html>

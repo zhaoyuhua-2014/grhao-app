@@ -201,7 +201,7 @@ require(['../require/config'],function(){
 							html += '					<div class="add_num" id="_more_"></div>'
 						} else{
 							if ( obj.packageNum <= 0) {
-								html +=  '		<div style="color:#FFFFFF,background:red,text-align:center" id="_more_">已售罄</div>'
+								html +=  '		<div style="color:#FFFFFF;background:red;text-align:center" id="_more_">已售罄</div>'
 							}else{
 								html += '					<div class="minus_num" id="_more_" style="display:none"></div>'
 								html += '					<div class="show_num" id="_more_" style="display:none" zs-goodsId="' + obj.id + '">0</div>'

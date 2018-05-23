@@ -23,11 +23,11 @@ require(['../require/config'],function(){
 	    pub.isPre = pub.seachParam == 'pre' ; // 预购支付
 	    pub.isRecharge = pub.seachParam == 'recharge' ; // 充值
 	
-		if (pub.isRecharge && common.isApple()) {
-			pub.seachParam = 'rechargeIos'
+		if (pub.isRecharge && common.isApp()) {
+			pub.seachParam = 'rechargeApp'
 		}
 	
-	    pub.isApp = common.isApp(); // 接收 app 环境
+	    pub.isApp = true; // 接收 app 环境
 	    if( pub.logined ){
 	        pub.tokenId = common.tokenIdfn(); 
 	        pub.userData = common.user_datafn(); // 用户信息
@@ -145,7 +145,7 @@ require(['../require/config'],function(){
 	                    pub.firmIdType == '5' && $('.pay_gg').html("请于"+pub.appData.data.order_cancel_time+"分钟内完成支付，超时订单将取消！")
 	                    */
 	                    if( pub.isBase ){
-
+							pub.money = orderInfo.realPayMoney;
 	                        var json = {
 	                            1 : ["订单号:<span>" + orderInfo.orderCode + "</span>","订单金额:<span>￥" + orderInfo.realPayMoney + "</span>",pub.allText],
 	                            4 : ["预购商品:<span>" + orderInfo.orderDetailsList[0].goodsName + "</span>","订单号:<span>" + orderInfo.orderCode + "</span>","预购尾款金额:<span>￥" + orderInfo.realPayMoney + "</span>"],
@@ -172,6 +172,7 @@ require(['../require/config'],function(){
 								}
 							}
 	                    }else{
+	                    	pub.money = orderInfo.frontMoney;
 	                        node.eq(0).html("预购商品:<span>" + orderInfo.goodsInfo.goodsName + "</span>").next().html("订单号:<span>" + orderInfo.orderCode + "</span>").next().html("预购金额:<span class='font_color'>￥" + orderInfo.frontMoney + "</span>");
 	                    }
 	                    $(".orderList_intro").html("订单已提交！");
@@ -220,6 +221,7 @@ require(['../require/config'],function(){
 	                    }
 	                    pub.loading.hide();
 	                });
+	                
 	            }
 	        },
 	        // 微信
@@ -244,7 +246,7 @@ require(['../require/config'],function(){
 	                        payMoney : pub.payMoney,
 	                        userId : pub.userId,
 	                    },
-	                    'rechargeIos' : {
+	                    'rechargeApp' : {
 	                    	method : 'month_card_ali_pay2',
 	                        payMoney : pub.payMoney,
 	                        userId : pub.userId,
@@ -256,10 +258,19 @@ require(['../require/config'],function(){
 	                pub.isApp && ( pub.aliPayApi.isApp = '1' );
 	                common.ajaxPost($.extend( {},pub.userBasicParam, pub.aliPayApi ),function( d ){
 	                    if ( d.statusCode == '100000' ) {
-	                        var html = "";
+	                        if (pub.isApp) {
+	                        	var data = {
+	                        		orderCode:pub.orderCode || d.data.note,
+	                        		productName:'果然好商品',
+	                        		money:pub.money || d.data.payMoney,
+	                        	};
+	                        	pub.apiHandle.order_topay_alipay.apiData(data)
+	                        } else{
+	                        	var html = "";
 	                    		html = d.data;
-	                    	$("body").append(html)
-	                        $("form[name = 'punchout_form' ]").submit();
+		                    	$("body").append(html)
+		                        $("form[name = 'punchout_form' ]").submit();
+	                        }
 	                    }else{
 	                        common.prompt( d.statusStr );
 	                    }
@@ -270,16 +281,40 @@ require(['../require/config'],function(){
 	                })
 	            },
 	            init1: function(){
-	            	
 	            },
 	            apiData : function( d ){
 	                try{
-	                	console.log(JSON.stringify(d))
-	                    //common.isAndroid() ? android.WXPay( common.JSONStr( d ), pub.wxAppPayWay ) : window.webkit.messageHandlers.WXPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
-	                    window.webkit.messageHandlers.AliPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
+	                	
+	                    common.isAndroid() ? android.GoAliPay( common.JSONStr( d ), pub.wxAppPayWay ) : window.webkit.messageHandlers.AliPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
+	                    //window.webkit.messageHandlers.AliPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
 	                }catch(e){}
 	                pub.loading.hide();
-	            }
+	            },
+	           	alipay_result : function (d){
+	           		/*
+	           		 方法名 aliPayResult
+					参数值1个：成功9000  失败7000  取消8000
+	           		 * */
+	           		if (d) {
+	           			if (d == 9000) {
+	           				if (pub.wxAppPayWay == 1) {
+			           			common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
+			           		} else if (pub.wxAppPayWay == 2) {
+			           			common.jumpLinkPlainApp( "我的预购","html/PreOrder_management.html" );
+			           		} else if (pub.wxAppPayWay == 3) {
+			           			window.location.reload();
+			           		}
+	           			} else if (d == 7000 ) {
+	           				common.prompt("支付失败，请重新支付");
+	           			} else if (d == 8000) {
+	           				common.prompt("取消支付");
+	           			} else {
+	           				console.log("app端传回的参数为"+d)
+	           			}
+	           		}else{
+	           			console.log("app端传回的参数为"+d)
+	           		}
+	           	}
 	        },
 	        // 银行卡
 	        order_topay_llpay : {
@@ -298,7 +333,7 @@ require(['../require/config'],function(){
 	                        payMoney : pub.payMoney,
 	                        userId : pub.userId
 	                    },
-	                    'rechargeIos' : {
+	                    'rechargeApp' : {
 	                        method : 'month_card_ll_pay',
 	                        payMoney : pub.payMoney,
 	                        userId : pub.userId
@@ -376,7 +411,7 @@ require(['../require/config'],function(){
 	                        payMoney : pub.payMoney,
 	                        userId : pub.userId,
 	                    },
-	                    'rechargeIos' : {
+	                    'rechargeApp' : {
 	                        method : "month_card_wx_pay_app",
 	                        payMoney : pub.payMoney,
 	                        userId : pub.userId,

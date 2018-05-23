@@ -59,7 +59,7 @@
 						</dd>
 					</dl>
 				</div>
-				<div class="month_card_recharge_item zs-pay-way" pay-way="3">
+				<!--<div class="month_card_recharge_item zs-pay-way" pay-way="3">
 					<div class="month_card_recharge_item_tit">
 						<div class="mcr_left">快捷支付</div>
 					</div>
@@ -77,7 +77,7 @@
 							</dd>
 						</dl>
 					</div>
-				</div>
+				</div>-->
 			</div>
 			<!--https://mapi.alipay.com/gateway.do?-->
 			<form id="form2" action="http://wappaygw.alipay.com/service/rest.htm?_input_charset=utf-8" method="post" style="display: none;">
@@ -106,4 +106,10 @@
 	});
 </script>-->
 <script data-main = "../dist/payment.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	//alipay支付回调
+	function aliPayResult ( d ){
+		pub.apiHandle.order_topay_alipay.alipay_result(d);
+	}
+</script>
 </html>

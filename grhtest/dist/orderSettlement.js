@@ -132,7 +132,7 @@ require(['../require/config'],function () {
 					listNode.eq(0).show().find(".float_right").html( "￥" + orderInfo.goodsMoney).parent() // 商品总价
 					.next().show().find(".float_right").html( "￥" + orderInfo.postCost ); // 运费
 					
-					pub.firmIdType == 5 && listNode.eq(1).remove();
+					pub.firmIdType == 5 && listNode.eq(1).css("display","none")
 					//是否是首单
 					if (orderInfo.orderType == "1") {
 						if (orderInfo.firstOrderOff != '' && orderInfo.firstOrderOff > 0) {
@@ -145,7 +145,7 @@ require(['../require/config'],function () {
 						if( pub.orderType == "3" ){
 							listNode.eq(2).hide();
 						}else{
-							listNode.eq(2).show().find(".float_right").html( orderInfo.couponMoney > 0 ? "-￥" + orderInfo.couponMoney : "￥0" );
+							listNode.eq(2).show().find(".float_right").html( orderInfo.couponMoney > 0 ? "-￥" + orderInfo.couponMoney : "-￥0" );
 						}
 					}());
 					// 优惠券优惠价格信息
