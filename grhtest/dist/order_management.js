@@ -34,7 +34,7 @@ require(['../require/config'],function(){
 		//  命名空间   订单管理
 		pub.orderManagement = {};
 	
-		pub.orderManagement.orderStatusHash = [ '', 1, 3, 4, 7 ]; // ''，全部，1，待支付，3，已付款，4，待收货，7，已完成 处理 tab
+		pub.orderManagement.orderStatusHash = [ '', 1, 3, 4, 7 ,8]; // ''，全部，1，待支付，3，已付款，4，待收货，7，已完成 处理 tab -----0531新增8.取货中
 		
 		//订单状态
 		//-3已退款、-2退款中、-1已作废、1，2待支付、3已付款、4待收货，5待评价、6已评价、6,7已完成
@@ -53,7 +53,7 @@ require(['../require/config'],function(){
 	
 		!pub.orderManagement.tabIndex && ( pub.orderManagement.tabIndex = '0' ); // tab 不存在默认设置为 0
 	
-		pub.orderManagement.orderStatusLabel = ['订单超时','已退款','退款中','已作废','','待支付','待支付','已付款','待收货','已完成','已完成','待评价']; // 订单状态标签
+		pub.orderManagement.orderStatusLabel = ['订单超时','已退款','退款中','已作废','','待支付','待支付','已付款','待收货','已完成','已完成','待评价','取货中']; // 订单状态标签
 	
 		pub.orderManagement.orderCode = null;  // 订单编号
 	
@@ -337,7 +337,8 @@ require(['../require/config'],function(){
 	    	{ text : '待收货', className : 'hide', btnText : ''}, // 4
 	    	{ text : '已完成', className : 'hide', btnText : '评论'}, // 5
 	    	{ text : '已完成', className : 'hide', btnText : ''}, // 6
-	    	{ text : '已完成', className : 'comment-btn', btnText : '评论'}]; // 7
+	    	{ text : '已完成', className : 'comment-btn', btnText : '评论'}, // 7
+			{ text : '取货中', className : 'hide', btnText : ''}]; // 8
 	
 	    pub.orderDetail.METHOD = null; // 接收方法
 	
@@ -397,9 +398,9 @@ require(['../require/config'],function(){
 			        		$('.watm_info_wrap').removeClass("hidden");
 			        		$(".watm_info").html("<p>订单号后五位："+orderInfo.orderCode.substring(orderInfo.orderCode.length - 5 ,orderInfo.orderCode.length)+"</p><p>提货码："+ orderInfo.pickUpCode +"</p>");
 			        		if (orderInfo.orderStatus == 3 && $(".watm_info_wrap").find('p.msg').length == 0) {
-			        			$(".watm_info_wrap").append("<p class='msg' style='color:#df3a1f;font-size:26px;line-height:40px;text-align:center'>请于今日22:00前去自助售货机取货</p>")
+			        			$(".watm_info_wrap").append("<p class='msg' style='color:#df3a1f;font-size:26px;line-height:40px;text-align:center'>请于今日24点前去售货机取货，过时自动取消订单，支付金额将原路退回。</p>")
 			        		}
-			        		if (orderInfo.orderStatus == 7) {
+			        		if (orderInfo.orderStatus == 7 || orderInfo.orderStatus == 8) {
 			        			var i = ''
 			        			if(orderInfo.watmStatus == '1'){
 			        				

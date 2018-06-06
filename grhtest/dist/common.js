@@ -45,7 +45,7 @@ define(['jquery','mdData','shar1'],function($){
 		if (common.EVE) {
 			common.API = "http://api.grhao.com/server/api.do";
 		}else{//http://61.164.118.194:8090/grh_api/server/api.do/192.168.1.3:80/192.168.1.8:8080
-			common.API = "http://61.164.118.194:8090/grh_api/server/api.do"
+			common.API = "http://61.164.113.168:8090/grh_api/server/api.do"
 		}
 	})(common)
 
