@@ -21,7 +21,7 @@
 				
 			
 				<ul class="ul-box" id="ul-box" v-cloak>
-					<div v-show="!goodsObj || goodsObj.length == 0" id="empty-cart" ><a href="moregoods.html"><img src="../img/epmty_cart.png" alt=""></a></div>
+					<div v-show="!goodsObj || goodsObj.length == 0" id="empty-cart" @click="jumplink()"><img src="../img/epmty_cart.png" alt=""></div>
 					<div v-show="goodsObj && goodsObj.length !=0 " id="good">
 						
 						<li v-for="(item , index ) in goodsObj" :class="['line-wrapper', ]" :data-id="item.goodsId" :data-packageNum="item.packageNum " :data-maxCount="item.maxCount" :data-price="item.price">
@@ -93,6 +93,7 @@
 		    </dl>
 		</div>	
 	</div>
+	<img id = "netWork" style="display: none;" />
 </body>
 	<script src="../outside/vue.js" type="text/javascript" charset="utf-8"></script>
 	<script data-main = "../dist/zsCart.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>

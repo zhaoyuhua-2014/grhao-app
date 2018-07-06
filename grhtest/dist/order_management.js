@@ -396,7 +396,11 @@ require(['../require/config'],function(){
 			        		
 			        	}else{
 			        		$('.watm_info_wrap').removeClass("hidden");
+			        		
 			        		$(".watm_info").html("<p>订单号后五位："+orderInfo.orderCode.substring(orderInfo.orderCode.length - 5 ,orderInfo.orderCode.length)+"</p><p>提货码："+ orderInfo.pickUpCode +"</p>");
+			        		if (orderInfo.orderStatus == 3 && common.isApp()) {
+			        			$(".watm_info").html("<p>订单号后五位："+orderInfo.orderCode.substring(orderInfo.orderCode.length - 5 ,orderInfo.orderCode.length)+"</p><p>提货码："+ orderInfo.pickUpCode +"</p><div id='scanQRCode' class='scanQRCode' style='display:block'></div>");
+			        		}
 			        		if (orderInfo.orderStatus == 3 && $(".watm_info_wrap").find('p.msg').length == 0) {
 			        			$(".watm_info_wrap").append("<p class='msg' style='color:#df3a1f;font-size:26px;line-height:40px;text-align:center'>请于今日24点前去售货机取货，过时自动取消订单，支付金额将原路退回。</p>")
 			        		}
@@ -601,6 +605,7 @@ require(['../require/config'],function(){
 		pub.orderDetail.eventHandle = {
 	
 			init : function(){
+				
 				$('.order_situation').click(function(e){
 					common.stopEventBubble(e);
 					var 
@@ -654,6 +659,10 @@ require(['../require/config'],function(){
 				$(".machine_address_wrap .machine_address").on("click",function(){
 					localStorage.setItem("mapData",JSON.stringify($(this).data()));
 					common.jumpLinkPlainApp("门店位置","html/store_map.html")
+				});
+				//点击扫码
+				$(".watm_info").on("click",".scanQRCode",function(){
+					common.StartToScanPageApp('扫描二维码提货','html/scan.html');
 				})
 			}
 		};
@@ -671,6 +680,113 @@ require(['../require/config'],function(){
 	
 		// 事件处理
 		pub.eventHandle = {};
+		
+		/*------扫码处理-------*/
+		pub.scan = {
+			
+		}
+		pub.scan.scanQRCodeData = {
+			
+		};
+		pub.scan.apiHandle = {
+			init:function(){
+				//alert("scan-apiHandle 初始化")
+				//pub.scan.apiHandle.scan_pick_up.apiData('1');
+			},
+			scan_login_pick_up : {
+				init:function(){
+					common.ajaxPost($.extend({},pub.orderDetail.userBasicParam,{
+						method : 'scan_login_pick_up',
+						uniqueCode : pub.scan.scanQRCodeData.IMEI,//
+						randomCode : pub.scan.scanQRCodeData.UUID,//
+						orderCode : pub.scan.scanQRCodeData.orderCode
+					}),function( d ){
+						switch( +d.statusCode ){
+							case 100000 : pub.scan.apiHandle.scan_login_pick_up.apiData( d ); break;
+							case 100400 : (function(){
+								common.clearData();
+								common.prompt( '身份验证过期，请重新登录' );
+								common.setMyTimeout(function(){
+									common.jumpLinkPlainApp( '登录' , 'login.html' );
+								},2000);
+							}()); break;
+							default : common.prompt1( {flag:1,msg:d.statusStr} );
+						}
+					})
+				},
+				apiData:function(d){
+					$(".watmPickUpGoods").show();
+				}
+			},
+			scan_pick_up : {
+				init:function(){
+					common.ajaxPost($.extend({},pub.orderDetail.userBasicParam,{
+						//2018-06-29 scan_pick_up ---> scan_confirm_pick_up
+						method : 'scan_confirm_pick_up',
+						uniqueCode : pub.scan.scanQRCodeData.IMEI,
+						randomCode : pub.scan.scanQRCodeData.UUID,
+						orderCode : pub.scan.scanQRCodeData.orderCode
+					}),function( d ){
+						switch( +d.statusCode ){
+							case 100000 : pub.scan.apiHandle.scan_pick_up.apiData( d ); break;
+							case 100400 : (function(){
+								common.clearData();
+								common.prompt( '身份验证过期，请重新登录' );
+								common.setMyTimeout(function(){
+									common.jumpLinkPlainApp( '登录','login.html' );
+								},2000);
+							}()); break;
+							default : common.prompt( d.statusStr );
+						}
+					})
+				},
+				apiData:function(d){
+	           		common.confirmBackApp({
+	           			title:"订单详情",
+	           			url:'html/orderDetails.html',
+	           			callBackName:"pub.orderDetail.apiHandle.init()"
+	           		})
+				}
+			},
+			
+		};
+		pub.scan.eventHandle = {
+			init:function(){
+				/*提货按钮*/
+				$(".watmPickUpGoods").on("click",".btn_box p",function(){
+					var className = $(this)[0].className;
+					
+					if (className == 'confirm_btn') {
+						pub.scan.apiHandle.scan_pick_up.init();
+					} else if (className == 'cancle_btn'){
+						common.cancelBackApp();
+					}
+				})
+			}
+		};
+		pub.scan.getScan = function(d){
+			var str = d.substr(1,d.length -2);
+            var arr = str.split(",");
+            var h = "{"
+            for (var i in arr ) {
+            	var n = arr[i].split("=");
+            	h += '"'+ String(n[0]).trim() + '":"'+ String(n[1]).trim() + '",'
+            }
+            h = h.substr(0,h.length -1);
+            h += "}";
+            pub.scan.scanQRCodeData = $.extend({},{
+            	orderCode : pub.orderDetail.orderCode
+            },JSON.parse(h))
+           	
+           	if (pub.scan.scanQRCodeData && pub.scan.scanQRCodeData.NAME == 'PUP') {
+           		pub.scan.apiHandle.scan_login_pick_up.init();
+           	}
+		}
+		//扫码入口
+		pub.scan.init = function(){
+			pub.scan.apiHandle.init();
+			pub.scan.eventHandle.init();
+		}
 		//换肤
 		pub.apiHandle.change_app_theme = {
 			init:function(){
@@ -699,6 +815,7 @@ require(['../require/config'],function(){
 			}
 			pub.moduleId == 'orderManagement' && pub.orderManagement.init();
 			pub.moduleId == 'orderDetail' && pub.orderDetail.init();
+			pub.moduleId == 'scan' && pub.scan.init();
 			$("body").fadeIn(300)
 		};
 		

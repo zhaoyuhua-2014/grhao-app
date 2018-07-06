@@ -338,15 +338,12 @@ require(['../require/config'],function () {
 	
 		// 公共接口
 		pub.apiHandle = {
-	
+			/*
 			// 门店信息
 			storeInfo : {
 				init : function(){
 					var data = { method : 'firm_default',firmId: pub.firmId};
-					/*if( pub.firmId != '0' ){
-						data.method = 'firm_list';
-						data.firmId = pub.firmId;
-					}*/
+					
 					common.ajaxPost( data,function( d ){
 						d.statusCode == "100000" && pub.apiHandle.storeInfo.apiData( d ); 
 					});
@@ -378,6 +375,41 @@ require(['../require/config'],function () {
 					},function( d ){
 						pub.addrDtd.resolve();
 						common.prompt( d.statusStr );
+					});
+				}
+			}*/
+			// 门店信息初始化
+			storeInfo : {
+				init : function(){
+					pub.storeInfo = common.getStoreInfo();
+					if( pub.storeInfo.type == 5 ){
+						$('.set_charge_contact_right').find('.take_own').hide().prev().addClass('actived').html('自助售货机');
+						$('.set_job_time,.set_order_remark').hide(); // 隐藏提货方式 // 隐藏营业时间 // 备注隐藏
+						pub.pickUpMethod = 1;
+					}
+					pub.firmId = pub.storeInfo.id; // 获取门店ID
+					node = $(".set_charge_address2");
+					$(".set_charge_con").show();
+					node.find('.take_goods_phone').html( pub.storeInfo.firmName )
+						.end().find('.set_address_bottom').html( "地址：" + pub.storeInfo.address )
+						.end().find('.set_job_time').html( "营业时间：" + pub.storeInfo.pickUpTime );
+				}
+			},
+			// 默认地址
+			address_default_show : {
+				init : function(){
+					common.ajaxPost($.extend({},{
+						method : 'address_default_show'
+					}, pub.userBasicParam ),function( d ){
+						switch( +d.statusCode ){
+							case 100000 : pub.AddrInfoRender( d.data ); break; // 配送地址渲染
+							case 100300 : 
+							case 100505 : $('.set_charge_address1').find('.group1').hide().next().show().html( "请选择收货地址" ); break;
+						};
+					},function( d ){
+						common.prompt( d.statusStr );
+					},function(){
+						pub.addrDtd.resolve();
 					});
 				}
 			}

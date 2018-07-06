@@ -24,6 +24,7 @@ define(function(){
 	            'dropload':'../outside/dropload',
 	            'pull':'../outside/pull',
 	            'map1':'http://webapi.amap.com/maps?v=1.3&key=68f1f7850d75a2c422f417cc77331395',
+	            'score':'../dist/score'
 	        }
 	    }
 	);

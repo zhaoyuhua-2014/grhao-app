@@ -58,8 +58,16 @@ require(['../require/config'],function () {
 	                        $.removeData($('body')[0],'addressList');
 	                        //window.location.replace( !pub.searchAddr ? 'address_management.html' : 'address_management.html?addr=' + pub.searchAddr);
 	                        /*common.jumpLinkPlainApp( "地址列表",!pub.searchAddr ?'address_management.html' );*/
-	                       common.goBackApp(1,true,!pub.searchAddr ? 'html/address_management.html' : 'html/address_management.html?addr=' + pub.searchAddr)
-						} else{
+	                    	//common.goBackApp(1,true,!pub.searchAddr ? 'html/address_management.html' : 'html/address_management.html?addr=' + pub.searchAddr)
+							common.jsInteractiveApp({
+								name:'goBack',
+								parameter:{
+									'hierarchy':1,
+									'reload':true,
+									'url': !pub.searchAddr ? 'html/address_management.html' : 'html/address_management.html?addr=' + pub.searchAddr
+								}
+							})
+	    				} else{
 							common.prompt( d.statusStr );
 						}
 	    			})
@@ -73,8 +81,16 @@ require(['../require/config'],function () {
 	    				if ( d.statusCode == '100000' ) {
 	                        $.removeData($('body')[0],'addressList');
 	                        //window.location.replace( !pub.searchAddr ? 'address_management.html' : 'address_management.html?addr=' + pub.searchAddr);
-							common.goBackApp(1,true,!pub.searchAddr ? 'html/address_management.html' : 'html/address_management.html?addr=' + pub.searchAddr)
-						}else{
+							//common.goBackApp(1,true,!pub.searchAddr ? 'html/address_management.html' : 'html/address_management.html?addr=' + pub.searchAddr)
+							common.jsInteractiveApp({
+								name:'goBack',
+								parameter:{
+									'hierarchy':1,
+									'reload':true,
+									'url': !pub.searchAddr ? 'html/address_management.html' : 'html/address_management.html?addr=' + pub.searchAddr
+								}
+							})
+	    				}else{
 							common.prompt( d.statusStr )
 						}
 	    			})

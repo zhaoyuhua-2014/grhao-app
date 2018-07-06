@@ -7,7 +7,7 @@ define(['jquery','mdData','shar1'],function($){
 
 	$.extend(common,{
 		//EVE 作为正式环境和测试环境的开关，为true时为正式环境，为false时为测试环境
-		EVE:true,
+		EVE:false,
 		//API : "http://api.grhao.com/server/api.do", // 接口地址
 		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数
@@ -80,8 +80,7 @@ define(['jquery','mdData','shar1'],function($){
 	/**
 	 *	数据存储 统一管理
 	*/
-	
-	var Local = [
+	var locals = [
 		'local', // 清空所有local
 		'tokenId', // 存储 tokenId
 		'secretKey', // 存储 secretKey
@@ -91,65 +90,50 @@ define(['jquery','mdData','shar1'],function($){
 		'good', // 购物车商品信息
 		'orderBack', // 订单入口 
 		'openId',
-		'userId',
-		'storeInfo', // 存数据信息
-		'accountRelatived' // 账户关联
-	]
-	common.local = new Memory('clear','local'); // 清空所有local
-	common.session = new Memory('clear','session'); // 清空所有session
-
-	// local存储
-	common.tokenId = new Memory('tokenId','local'); // 存储 tokenId
-	common.secretKey = new Memory('secretKey','local'); // 存储 secretKey
-	common.user_data = new Memory('user_data','local'); // 存储用户信息
-	common.jumpMake = new Memory('jumpMake','local'); // 跳转
-	common.orderType = new Memory('orderType','local'); // 1.普通商品 2.秒杀商品 3.预购商品
-	common.good = new Memory('good','local'); // 购物车商品信息
-	common.orderBack = new Memory('orderBack','local'); // 订单入口 
+		/*ios 不支持session 改为localstorage*/
+		'addressData', // 存储地址数据
+		'addType', // 标记地址管理页面入口 + 订单结算 tab 切换
+		'orderCode',  // 订单码 / 编号
+		'seckillGood',// 秒杀商品信息
+		/*2017-09-21watm机修改添加*/
+		'firmId',//门店ID
+		'logined', // 登录状态 
+		'firmIdType',//门店类型
+		'websiteNode',//站点编码
+		/*2017-10-24*/
+		'orderColumn',// 订单 tab 
+		'preColumn',// 预购订单 tab 
+		/*2017-12-14*/
+		'allMap',//所有门店地址
+		'mapData',//点击当前门店的地址
+		// app 端字段
+		'appData',// 数据存储
+		'gameType', // 标记游戏页面入口 + 果币商城切换
+		'couponInfoList',//app存储优惠卷列表信息，
+		'couponInfo',//app存储优惠卷信息，
+		
+		
+	].forEach(function( item ){
+		common[item] = new Memory( item, 'local' );
+	});
 	
-	common.openId = new Memory('openId','local'); //  
-	/*ios 不支持session 改为localstorage*/
-	common.addressData = new Memory('addressData','local'); // 存储地址数据
-	common.addType = new Memory('addType','local');  // 标记地址管理页面入口 + 订单结算 tab 切换
-	common.orderCode = new Memory('orderCode','local'); // 订单码 / 编号
-	common.seckillGood = new Memory('seckillGood','local'); // 秒杀商品信息
-	
-	/*2017-09-21watm机修改添加*/
-	common.firmId = new Memory('firmId','local')//门店ID
-	common.logined = new Memory('logined','local'); // 登录状态 
-	common.firmIdType = new Memory('firmIdType','local')//门店类型
-	common.websiteNode = new Memory('websiteNode','local')//站点编码
-	/*2017-10-24*/
-	common.orderColumn = new Memory('orderColumn','local'); // 订单 tab 
-	common.preColumn = new Memory('preColumn','local'); // 预购订单 tab 
-	/*2017-12-14*/
-	common.allMap = new Memory("allMap","local");//所有门店地址
-	common.mapData = new Memory("mapData","local");//点击当前门店的地址
 
 	// session存储
-	common.first_data = new Memory('first_data','session'); //
-	common.two_data = new Memory('two_data','session'); //
-	common.goodid = new Memory('goodid','session'); // 标记临时 id 
-	common.seckill = new Memory('seckill','session'); // 换购 + 秒杀
-	//common.logined = new Memory('logined','session'); // 登录状态 
-	common.sortCouponId = new Memory('sortCouponId','session');
-	//common.addType = new Memory('addType','session');  // 标记地址管理页面入口 + 订单结算 tab 切换
-	//common.addressData = new Memory('addressData','session'); // 存储地址数据
-
-	//common.seckillGood = new Memory('seckillGood','session'); // 秒杀商品信息
-	//common.orderCode = new Memory('orderCode','session'); // 订单码 / 编号
-
-	//common.orderColumn = new Memory('orderColumn','session'); // 订单 tab 
-	//common.preColumn = new Memory('preColumn','session'); // 预购订单 tab 
-
-	common.location = new Memory('location','session');
-
-	// app 端字段
-	common.appData = new Memory('appData','local'); // 数据存储
-
-	common.timestamp = new Memory('timestamp','session'); 
-
-	common.huanfu = new Memory('huanfu','session');
+	var sessions = [
+		'session',// 清空所有session
+		'first_data', // 
+		'two_data',
+		'goodid', // 标记临时 id 
+		'seckill', // 换购 + 秒杀商品信息
+		'sortCouponId',
+		'location',
+		'timestamp', // 
+		'huanfu', //换肤管理
+		
+	].forEach(function( item ){
+		common[item] = new Memory( item, 'session' );
+	});
+	
 	// 获取 tokenId 的值
 	common.tokenIdfn = function(){
 		if( this.tokenId.getKey() ){
@@ -231,7 +215,31 @@ define(['jquery','mdData','shar1'],function($){
 				common.defHuanfu.resolve();
 			}
 		});
-	}
+	};
+	
+	common.getNetwork = function(fn1,fn2){
+		var imgEl = $("#netWork");
+		var reg = /index\.html/g;
+		var regHtml = /\.html/g;
+		if (!regHtml.test(window.location.href)) {
+			var imgPath = 'img/network.jpg';
+		} else{
+			if (reg.test(window.location.href)) {
+				var imgPath = 'img/network.jpg';
+			}else{
+				var imgPath = '../img/network.jpg';
+			}
+		}
+	    var timeStamp = Date.parse(new Date());
+    	imgEl.attr("src", imgPath + "?timestamp=" + timeStamp);
+    	
+    	imgEl.on("error",function(){
+    		fn2()
+    	});
+    	imgEl.on("load",function(){
+    		fn1();
+    	})	
+	};
 
 	$.extend(common,{
 
@@ -371,6 +379,9 @@ define(['jquery','mdData','shar1'],function($){
 		},
 		tip : function(str){
 			var $node = $('.prompt');
+			if ($node) {
+				$('.prompt').remove();
+			}
 			str = str || '已加入购物车';
 			if($node[0]){
 				return;
@@ -527,12 +538,12 @@ define(['jquery','mdData','shar1'],function($){
 			}
 			var jsonObj = {'title':title,"url":'/'+url};
 			console.log(jsonObj)
-			if (common.isApp()) {
+			if (common.isPhone()) {
 				if (common.isApple()) {
 					try{
 						window.webkit.messageHandlers.goToNextLevel.postMessage(jsonObj);
-					}catch(e){
-						console.log("调用ios方法goToNextLevel出错")
+					}catch(err){
+						console.log("调用ios方法goToNextLevel出错");
 					}
 				} else if(common.isAndroid()){
 					try{
@@ -747,6 +758,190 @@ define(['jquery','mdData','shar1'],function($){
 				console.log("this is not grhao App!")
 			}
 		},
+		/*-----2018-0702----*/
+		StartToScanPageApp:function(title , url){
+			
+			url = url || window.location.href;
+			if (common.DATE) {
+				if (url.indexOf("?")>0) {
+					url = url + "&v="+common.DATE;
+				}else{
+					url = url + "?v="+common.DATE;
+				}
+			}
+			var jsonObj = {'title':title,"url":'/'+url};
+			console.log(jsonObj)
+			if (common.isPhone()) {
+				if (common.isApple()) {
+					try{
+						window.webkit.messageHandlers.StartToScanPage.postMessage(jsonObj);
+					}catch(e){
+						console.log("调用ios方法StartToScanPage出错")
+					}
+				} else if(common.isAndroid()){
+					try{
+						android.StartToScanPage(JSON.stringify(jsonObj))
+					}catch(e){
+						console.log("调用Android方法StartToScanPage出错")
+					}
+				}					
+			}else{
+				console.log("this is not grhao App!")
+			}
+		},
+		cancelBackApp:function(){
+			
+			if (common.isPhone()) {
+				if (common.isApple()) {
+					try{
+						window.webkit.messageHandlers.cancelBack.postMessage('');
+					}catch(e){
+						console.log("调用ios方法cancelBack出错")
+					}
+				} else if(common.isAndroid()){
+					try{
+						android.cancelBack()
+					}catch(e){
+						console.log("调用Android方法cancelBack出错")
+					}
+				}					
+			}else{
+				console.log("this is not grhao App!")
+			}
+		},
+		
+		confirmBackApp:function(opt){
+			var title = opt.title,
+				url = opt.url || window.location.href,
+				callBackName = opt.callBackName;
+			var jsonObj = {'title':title,"url":'/'+url,"callBack":callBackName};
+			console.log(jsonObj)
+			if (common.isPhone()) {
+				if (common.isApple()) {
+					try{
+						window.webkit.messageHandlers.confirmBack.postMessage(jsonObj);
+					}catch(e){
+						console.log("调用ios方法confirmBack出错")
+					}
+				} else if(common.isAndroid()){
+					try{
+						android.confirmBack(JSON.stringify(jsonObj))
+					}catch(e){
+						console.log("调用Android方法confirmBack出错")
+					}
+				}					
+			}else{
+				console.log("this is not grhao App!")
+			}
+		},
+		goBackCustomApp:function(opt){
+			var title = opt.title,
+				url = opt.url || window.location.href,
+				callBackName = opt.callBackName;
+			var jsonObj = {'title':title,"url":'/'+url,"callBack":callBackName};
+			console.log(jsonObj)
+			if (common.isPhone()) {
+				if (common.isApple()) {
+					try{
+						window.webkit.messageHandlers.goBackCustom.postMessage(jsonObj);
+					}catch(e){
+						console.log("调用ios方法goBackCustom出错")
+					}
+				} else if(common.isAndroid()){
+					try{
+						android.goBackCustom(JSON.stringify(jsonObj))
+					}catch(e){
+						console.log("调用Android方法goBackCustom出错")
+					}
+				};
+			}else{
+				console.log("this is not grhao App!")
+			}
+		},
+		jumpLinkCustomApp:function(opt){
+			var title = opt.title,
+				url = opt.url || window.location.href,
+				txt = opt.txt || '',
+				imgIcon = opt.imgIcon || '',
+				callBackName = opt.callBackName || '';
+			var jsonObj = {'title':title,"url":'/'+url,"txt":txt,"imgIcon":imgIcon,"callBack":callBackName};
+			console.log(jsonObj)
+			if (common.isPhone()) {
+				if (common.isApple()) {
+					try{
+						window.webkit.messageHandlers.jumpLinkCustom.postMessage(jsonObj);
+					}catch(e){
+						console.log("调用ios方法jumpLinkCustom出错")
+					}
+				} else if(common.isAndroid()){
+					try{
+						android.jumpLinkCustom(JSON.stringify(jsonObj))
+					}catch(e){
+						console.log("调用Android方法jumpLinkCustom出错")
+					}
+				}					
+			}else{
+				console.log("this is not grhao App!")
+			}
+		},
+		/*2018-0703新增调用APP端数据存储获取删除方法*/
+		GetJSMethodApp:function( k ){
+			if (common.isPhone()) {
+				if (common.isApple()) {
+					try{
+						return window.webkit.messageHandlers.GetJSMethod.postMessage(k);
+					}catch(e){
+						console.log("调用ios方法GetJSMethod出错")
+					}
+				} else if(common.isAndroid()){
+					try{
+						return android.GetJSMethod(k);
+					}catch(e){
+						console.log("调用Android方法GetJSMethod出错")
+					}
+				}
+			}else{
+				console.log("this is not grhao App!")
+			}
+		},
+		SetJSMethodApp:function( k , v ){
+			if (common.isPhone()) {
+				if (common.isApple()) {
+					try{
+						window.webkit.messageHandlers.SetJSMethod.postMessage(k,v);
+					}catch(e){
+						console.log("调用ios方法SetJSMethod出错")
+					}
+				} else if(common.isAndroid()){
+					try{
+						android.SetJSMethod(k,v)
+					}catch(e){
+						console.log("调用Android方法SetJSMethod出错")
+					}
+				}					
+			}else{
+				console.log("this is not grhao App!")
+			}
+		},
+		ClearJSMethodApp:function( k ){
+			if (common.isPhone()) {
+				if (common.isApple()) {
+					try{
+						window.webkit.messageHandlers.ClearJSMethod.postMessage(k);
+					}catch(e){
+						console.log("调用ios方法ClearJSMethod出错")
+					}
+				} else if(common.isAndroid()){
+					try{
+						android.ClearJSMethod(JSON.stringify(k))
+					}catch(e){
+						console.log("调用Android方法ClearJSMethod出错")
+					}
+				}					
+			}else{
+				console.log("this is not grhao App!")
+			}
+		},
 		getChangeSkin:function(){
 			if (common.isPhone()) {
 				common.creatScript();
@@ -768,6 +963,161 @@ define(['jquery','mdData','shar1'],function($){
 				console.log("this is not grhao App!")
 			}
 		},
+		/*--------------尝试将所有的APP端交互统一处理---------------*/
+		jsInteractiveApp : function(opt){
+			var _this = this,
+				name = opt.name,
+				parameter = opt.parameter;
+			var info = {};
+				info.name = name;
+			try{
+				if (common.isApple()) {
+					info.eq = 'ios';
+				}
+				if (common.isAndroid()) {
+					info.eq = "android";
+				}
+				
+				if (common.isApp()) {
+					switch (name){
+						//跳转下一页 ----->参数  title 标题 url 跳转链接
+						case 'goToNextLevel':
+							var jsonObj = {'title':parameter.title,"url":'/'+parameter.url};
+							common.isApple() ? window.webkit.messageHandlers.goToNextLevel.postMessage(jsonObj) : android.goToNextLevel(JSON.stringify(jsonObj));
+							break;
+						//跳转到搜索页面
+						case 'goToSearch':
+							var jsonObj = '/'+parameter.url;
+							common.isApple() ? window.webkit.messageHandlers.goToSearch.postMessage(jsonObj) : android.goToSearch(jsonObj);
+							break;
+						//返回上一级 ----->参数  'hierarchy':num 返回的层级数  'reload':type 返回后是否刷新  'url':返回的url  
+						case 'goBack':
+							var jsonObj = {'hierarchy':parameter.num,'reload':parameter.type,'url':'/'+parameter.url};
+							common.isApple() ? window.webkit.messageHandlers.goBack.postMessage(jsonObj) : android.goBack(JSON.stringify(jsonObj));
+							break;
+						//返回主页面----->参数  无
+						case 'goHome':
+							common.isApple() ? window.webkit.messageHandlers.goHome.postMessage('') : android.goHome();
+							break;
+						//设置购物车商品数量----->参数 num Number类型
+						case 'setShopCarNum':
+							var jsonObj = parameter.num;
+							common.isApple() ? window.webkit.messageHandlers.setShopCarNum.postMessage(jsonObj) : android.setShopCarNum(jsonObj);
+							break;
+						//设置购物车商品数量----->参数 num Number类型
+						case 'setShopCarNum_ShoppingCart':
+							var jsonObj = parameter.num;
+							common.isApple() ? window.webkit.messageHandlers.setShopCarNum_ShoppingCart.postMessage(jsonObj) : android.setShopCarNum_ShoppingCart(jsonObj);
+							break;
+						//调用APP用户登录----->参数 无
+						case 'wechatLogin':
+							common.isApple() ? window.webkit.messageHandlers.wechatLogin.postMessage('') : android.wechatLogin();
+							break;
+						//显示遮罩----->参数 无
+						case 'showDialog':
+							common.isApple() ? window.webkit.messageHandlers.showDialog.postMessage('') : android.showDialog();
+							break;
+						//取消遮罩----->参数 无
+						case 'cancelDialog':
+							common.isApple() ? window.webkit.messageHandlers.cancelDialog.postMessage('') : android.cancelDialog();
+							break;
+						//刷新APP----->参数 无
+						case 'tellRefresh':
+							common.isApple() ? window.webkit.messageHandlers.tellRefresh.postMessage('') : android.tellRefresh();
+							break;
+						//显示弹出框----->参数 type:1 弹框的类型  title:弹框的文本,canclefn:取消弹框的事件,truefn:确定弹框的事件
+						case 'alertMask':
+							var jsonObj = {type:parameter.type,title:parameter.title,canclefn:parameter.canclefn,truefn:parameter.truefn};
+							common.isApple() ? window.webkit.messageHandlers.alertMask.postMessage(JSON.stringify(jsonObj)) : android.alertMask(JSON.stringify(jsonObj));
+							break;
+						//定位----->参数 无
+						case 'replaceLocation':
+							common.isApple() ? window.webkit.messageHandlers.replaceLocation.postMessage('') : android.replaceLocation();
+							break;
+						//调用扫码----->参数 title 跳转到页面的标题  url 跳转页面的URl
+						case 'StartToScanPage':
+							var jsonObj = {title:parameter.title,url:'/'+parameter.url}
+							common.isApple() ? window.webkit.messageHandlers.StartToScanPage.postMessage(jsonObj) : android.StartToScanPage(JSON.stringify(jsonObj));
+							break;
+						//取消返回----->参数 无
+						case 'cancelBack':
+							common.isApple() ? window.webkit.messageHandlers.cancelBack.postMessage('') : android.cancelBack();
+							break;
+						//确认返回----->参数 title返回页面的标题  url 返回页面的url  callbackname  返回页面后的回调函数
+						case 'confirmBack':
+							var jsonObj = {title:parameter.title,url:'/'+parameter.url,callbackname:parameter.callbackname}
+							common.isApple() ? window.webkit.messageHandlers.confirmBack.postMessage(jsonObj) : android.confirmBack(JSON.stringify(jsonObj));
+							break;
+						//原生返回按钮自定义回调----->参数  title返回页面的标题  url 返回页面的url  callbackname  返回页面后的回调函数
+						case 'goBackCustom':
+							var jsonObj = {title:parameter.title,url:'/'+parameter.url,callbackname:parameter.callbackname}
+							common.isApple() ? window.webkit.messageHandlers.goBackCustom.postMessage(jsonObj) : android.goBackCustom(JSON.stringify(jsonObj));
+							break;
+						//跳转页面自定义----->参数 {'title':title,"url":'/'+url,"txt":txt,"imgIcon":imgIcon,"callBack":callBackName}; 
+						case 'jumpLinkCustom':
+							var jsonObj = {title:parameter.title,url:'/'+parameter.url,txt:parameter.txt,imgIcon:parameter.imgIcon,callBack:parameter.callBackName};
+							common.isApple() ? window.webkit.messageHandlers.jumpLinkCustom.postMessage(jsonObj) : android.jumpLinkCustom(JSON.stringify(jsonObj));
+							break;
+						//获取APP存储----->参数 key
+						case 'GetJSMethod':
+							var key = parameter.key;
+							common.isApple() ? window.webkit.messageHandlers.GetJSMethod.postMessage(key) : android.GetJSMethod(key);
+							break;
+						//设置APP存储----->参数 key value
+						case 'SetJSMethod':
+							var key = parameter.key,
+								value = parameter.value;
+							common.isApple() ? window.webkit.messageHandlers.SetJSMethod.postMessage(key,value) : android.SetJSMethod(key,value);
+							break;
+						//清除APP存储----->参数 key
+						case 'ClearJSMethodApp':
+							var key = parameter.key;
+							common.isApple() ? window.webkit.messageHandlers.ClearJSMethodApp.postMessage(key) : android.ClearJSMethodApp(key);
+							break;
+						//换肤----->参数 无
+						case 'getChangeSkin':
+							common.isApple() ? window.webkit.messageHandlers.getChangeSkin.postMessage('') : android.getChangeSkin();
+							break;
+						//公用数据传给APP----->参数 无
+						case 'getShare':
+							var jsonObj = parameter.str;
+							common.isApple() ? window.webkit.messageHandlers.getShare.postMessage(jsonObj) : android.getShare(jsonObj);
+							break;	
+						//分享----->参数 无
+						case 'share':
+							common.isApple() ? window.webkit.messageHandlers.share.postMessage('') : android.share();
+							break;	
+						//清除缓存----->参数 无
+						case 'clearCache':
+							common.isApple() ? window.webkit.messageHandlers.clearCache.postMessage('') : android.clearCache();
+							break;
+						//通知刷新 ----调用之后点击原生返回按钮  返回原页面刷新----->参数 无
+						case 'noticeRefresh':
+							common.isApple() ? window.webkit.messageHandlers.noticeRefresh.postMessage('') : android.noticeRefresh();
+							break;
+						//将登录的信息传递给APP----->参数 无
+						case 'saveLoginInfo':
+							var jsonObj = parameter.str;
+							common.isApple() ? window.webkit.messageHandlers.saveLoginInfo.postMessage(jsonObj) : android.saveLoginInfo(jsonObj);
+							break;
+						//退出APP ----调用之后通知APP将缓存的用户数据清除----->参数 无
+						case 'exit1':
+							common.isApple() ? window.webkit.messageHandlers.exit1.postMessage('') : android.exit1();
+							break;
+						default:
+							break;
+					}
+				}else{
+					info.msg = "this is not grhao App" 
+				}
+				
+			}catch(e){
+				console.warn(info)
+			}finally{
+				console.log(info)
+			}
+			
+		},
 		creatScript:function(){
 			var html = '';
 				html += '<script>'
@@ -777,7 +1127,221 @@ define(['jquery','mdData','shar1'],function($){
 				html +=	'}'
 				html += '<\/script>'
 			$("body").append(html)
-		}
+		},
+		prompt1 : function(opt){
+			var obj = this,
+	        	flag = opt.flag,
+	        	msg = opt.msg,
+	        	time = opt.time || 2000,
+	        	callback = null || opt.callback;
+		    if (!$('#modPromptDiv').length) {
+	            $('body').append('<div id="modPromptDiv" class="mod_prompt" style="display: none;"></div><div id="modPromptMask" class="mod_prompt_mask" style="display: none;"></div>');
+	        }else{
+	        	$('#modPromptDiv').remove();
+	        	$('body').append('<div id="modPromptDiv" class="mod_prompt" style="display: none;"></div><div id="modPromptMask" class="mod_prompt_mask" style="display: none;"></div>');
+	        }
+		    var $el = $('#modPromptDiv')
+	          , $cover = $('#modPromptMask');
+		    switch (flag) {
+	        case 1:
+	            $el.html('<p class="text">'+msg+'</p>');
+	            break;
+	        }
+		    setTimeout(function() {
+	            $el.addClass('show fixed').fadeIn(200,function(){
+	            	setTimeout(function(){
+	            		$el.remove();
+	            		if (callback) {
+	            			callback();
+	            		}
+	            	},time)
+	            });
+	            $cover.addClass('show fixed').fadeIn(200,function(){
+	            	setTimeout(function(){
+	            		$cover.remove()
+	            	},time)
+	            });
+	        }, obj.isAndroid() ? 100 : 200);
+	        
+		},
+		createPopup	: function(opt) {
+	        var obj = this,
+	        	flag = opt.flag,
+	        	stopMove = opt.stopMove,
+	        	msg = opt.msg,
+	        	noCoverEvent = opt.noCoverEvent,
+	        	stopMoveFun = function(e) {
+		            e.preventDefault();
+		        },
+		        btnClose = false,
+		        btnConfirm = false,
+		        btnCancel = false,
+		        btnEvent = function() {
+	            	obj.setDelayTime();
+	            	$('#modAlertDiv,#modAlertMask').hide().removeClass(' mod_alert_info show fixed');
+	        	};
+	        if (!$('#modAlertDiv').length) {
+	            $('body').append('<div id="modAlertDiv" class="mod_alert" style="display: none;"></div><div id="modAlertMask" class="mod_alert_mask" style="display: none;"></div>');
+	        }
+	        var $el = $('#modAlertDiv')
+	          , $cover = $('#modAlertMask');
+	        switch (flag) {
+	        case 1:
+	            $el.html('<i class="icon"></i><p>您还没关注京东服务号，<br>关注后才可以收到微信提醒噢~</p><div class="follow"><img src="' + JD.img.getImgUrl('//img11.360buyimg.com/jdphoto/s280x280_jfs/t3469/354/312631197/5626/21e9275b/5806d31eN2884548b.png', 180, 180) + '" alt="京东二维码"><p class="text">长按二维码关注</p></div>');
+	            break;
+	        case 2:
+	            $el.addClass('mod_alert_info');
+	            $el.html('<span class="close"></span><h3 class="title">' + opt.title + '</h3><div class="inner">' + opt.msg + '</div>');
+	            btnClose = 'span.close';
+	            break;
+	        case 3:
+	            if (opt.isNeedInfo)
+	                $el.addClass('mod_alert_info');
+	            $el.html('<p>' + msg + '</p><p class="btns"><a href="javascript:void(0);" class="btn btn_1">' + (opt.btnTxt || '知道了') + '</a></p>');
+	            btnConfirm = 'p.btns';
+	            break;
+	        case 4:
+	            $el.html((opt.icon != 'none' ? ('<i class="icon' + (opt.icon != 'info' ? (' icon_' + opt.icon) : '') + '"></i>') : '') + '<p>' + msg + '</p><p class="btns"><a href="javascript:;" class="btn btn_2">' + opt.cancelText + '</a><a href="javascript:;" class="btn btn_1">' + opt.okText + '</a></p>');
+	            btnConfirm = 'a.btn_1';
+	            btnCancel = 'a.btn_2';
+	            break;
+	        case 5:
+	            msg = '<i class="icon"></i><p>' + msg + '</p><div class="verify_input"><input class="input" type="text" id="verifyInput"><span class="wrap"><img src="' + (obj.priceVerify.img || '//fpoimg.com/75x30') + '" alt="点击刷新" id="verifyCodeImg"></span></div><p class="warn_text" id="warnTip">验证码错误，请重新输入</p>';
+	            $el.html(msg + '<p class="btns"><a href="javascript:void(0);" class="btn btn_1">提交</a></p>');
+	            break;
+	        case 6:
+	            $el.html('<span class="close"></span><i class="icon"></i><p>' + msg + '</p><p class="small">' + opt.small + '</p><p class="btns">' + '<a href="javascript:void(0);" class="btn" style="background: #e4393c;color: #fff">' + opt.btnTxt + '</a></p>');
+	            btnClose = 'span.close';
+	            btnConfirm = 'p.btns';
+	            break;
+	        case 7:
+	            $el.addClass('mod_alert_info');
+	            $el.html('<span class="close"></span><h3 class="title">手机号码登录</h3><div class="verify_inputs"><div class="verify_input"><input class="input" type="tel" mark="phonenum" placeholder="请输入手机号" maxlength="11"></div><div class="verify_input"><input class="input" mark="imgcode" type="text" placeholder="请输入图形码"><span class="wrap" mark="genimgcode"><img mark="img"/></span></div><div class="verify_input"><input class="input" mark="msgcode" type="text" placeholder="请输入验证码"><div class="verify_input_btn" mark="sendcode">发送验证码</div><div class="verify_input_btn type_disabled" style="display:none;"><span mark="sendcodesed"></span>后重发</div></div></div><p class="warn_text" style="display:none;" mark="errtips"></p><p class="btns"><a href="javascript:" class="btn btn_1">登录</a></p>');
+	            btnClose = 'span.close';
+	            btnConfirm = 'p.btns';
+	            break;
+	        case 8:
+	            $el.addClass('mod_alert_info');
+	            $el.html('<span class="close"></span><h3 class="title">历史收货人校验</h3><p class="alignLeft">您已有京东账号，为了保障账号安全，需要对您历史已完成订单的收货人信息进行校验（任意一个即可）</p><div class="verify_input type_no_padding"><input class="input" mark="shname" type="text" placeholder="历史完成订单的收货人姓名"></div><p class="warn_text" style="display:none;" mark="errtips"></p><p class="btns"><a href="javascript:" class="btn btn_1">完成校验去结算</a></p>');
+	            btnClose = 'span.close';
+	            btnConfirm = 'p.btns';
+	            break;
+	        case 9:
+	            $el.html((opt.icon != 'none' ? ('<i class="icon' + (opt.icon != 'info' ? (' icon_' + opt.icon) : '') + '"></i>') : '') + '<p>' + msg + '</p><p class="btns"><a href="javascript:;" class="btn btn_1">' + opt.okText + '</a><a href="javascript:;" class="btn btn_2">' + opt.cancelText + '</a></p>');
+	            btnConfirm = 'a.btn_1';
+	            btnCancel = 'a.btn_2';
+	            break;
+	        }
+	        
+	        setTimeout(function() {
+	            $el.show().addClass('show fixed');
+	            $cover.show().addClass('show fixed');
+	            
+	        }, obj.isAndroid() ? 100 : 200);
+	        
+	        $el.off();
+	        if (btnClose) {
+	            $el.on('click', btnClose, function(e) {
+	                btnEvent();
+	                opt.onClose && opt.onClose();
+	            });
+	        }
+	        if (btnConfirm) {
+	            $el.on('click', btnConfirm, function() {
+	                var keep = false;
+	                if (opt.onConfirm) {
+	                    keep = !!opt.onConfirm();
+	                }
+	                if (keep)
+	                    return;
+	                btnEvent();
+	            });
+	        }
+	        if (btnCancel) {
+	            $el.on('click', btnCancel, function() {
+	                btnEvent();
+	                opt.onCancel && opt.onCancel();
+	            });
+	        }
+	        if (!noCoverEvent) {
+	            $cover.off().on('click', function() {
+	                btnEvent();
+	                opt.onClose && opt.onClose();
+	            });
+	        }
+	        console.log(new Date())
+	       
+	    },
+	    createGamePopup : function(opt) {
+	        var obj = this,
+	        	flag = opt.flag,
+	        	imgUrl = opt.imgUrl,
+	        	msg = opt.msg,
+	        	noCoverEvent = opt.noCoverEvent,
+	        	stopMoveFun = function(e) {
+		            e.preventDefault();
+		        },
+		        btnClose = false,
+		        btnConfirm = false,
+		        btnCancel = false,
+		        btnEvent = function() {
+	            	obj.setDelayTime();
+	            	$('#modGameDiv,#modGameMask').hide().removeClass(' mod_alert_info show fixed');
+	        	};
+	        if (!$('#modGameDiv').length) {
+	            $('body').append('<div id="modGameDiv" class="mod_game" style="display: none;"></div><div id="modGameMask" class="mod_game_mask" style="display: none;"></div>');
+	        }
+	        var $el = $('#modGameDiv')
+	          , $cover = $('#modGameMask');
+	        switch (flag) {
+	        case 1:
+	            $el.html('<span class="close"></span><div class="icon_box"><img src="'+imgUrl+'"/></div><div class="msg">'+msg+'</div><div class="btn" data-url="index.html">去使用</div>');
+	            btnClose = 'span.close';
+	            btnConfirm = 'div.btn'
+	            break;
+	        case 2:
+	            $el.html('<span class="close"></span><div class="icon_box"><img src="'+imgUrl+'"/></div><div class="msg">'+msg+'</div>');
+	            btnClose = 'span.close';
+	            break;  
+	        }
+	         setTimeout(function() {
+	            $el.show().addClass('show fixed');
+	            $cover.show().addClass('show fixed');
+	            
+	        }, obj.isAndroid() ? 100 : 200);
+	        
+	        $el.off();
+	        if (btnClose) {
+	            $el.on('click', btnClose, function(e) {
+	                btnEvent();
+	                opt.onClose && opt.onClose();
+	            });
+	        }
+	        if (btnConfirm) {
+	            $el.on('click', btnConfirm, function() {
+	                var keep = false;
+	                if (opt.onConfirm) {
+	                    keep = !!opt.onConfirm();
+	                }
+	                if (keep)
+	                    return;
+	                btnEvent();
+	            });
+	        }
+	        if (!noCoverEvent) {
+	            $cover.off().on('click', function() {
+	                btnEvent();
+	                opt.onClose && opt.onClose();
+	            });
+	        }
+	        
+	    },
+		setDelayTime : function() {
+	        window.holdAction = true;
+	        setTimeout(function() {
+	            window.holdAction = false;
+	        }, 400);
+	    },
 	});
 
 	$(document).on('click','#prompt-node',function(){

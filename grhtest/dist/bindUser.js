@@ -31,7 +31,14 @@ require(['../require/config'],function () {
 		if (pub.weixinAppId) {
 			
 		}else{
-			common.jumpLinkPlainApp("登录","../html/login.html");
+			//common.jumpLinkPlainApp("登录","../html/login.html");
+			common.jsInteractiveApp({
+				name:'goToNextLevel',
+				parameter:{
+					title:'登录',
+					url:"html/login.html"
+				}
+			})
 		}
 		pub.key = null;// 图片验证码编号
 		// 倒计时
@@ -134,14 +141,28 @@ require(['../require/config'],function () {
 					    mobile : infor.mobile,
 					    sex : infor.sex
 					};
-					// 给app端传用户信息 分享使用
-					common.isApp() && pub.sendToApp( common.JSONStr( d ) ); // 传数据给 APP 端
 					common.user_data.setItem( common.JSONStr(user_data) );
-					localStorage.setItem('tokenId',d.data.tokenId)
-					//common.tokenId.setItem( d.data.tokenId );
+					common.tokenId.setItem( d.data.tokenId );
 					common.secretKey.setItem( d.data.secretKey );
-					common.tellRefreshAPP();
-					common.goHomeApp();
+					// 给app端传用户信息 分享使用
+					if (common.isApp()) {
+						common.jsInteractiveApp({
+							name:'saveLoginInfo',
+							parameter:{
+								str:common.JSONStr( d )
+							}
+						});
+						//pub.sendToApp( common.JSONStr( d ) ); // 传数据给 APP 端
+						common.jsInteractiveApp({
+							name:'tellRefresh'
+						});
+						//common.tellRefreshAPP();
+						common.jsInteractiveApp({
+							name:'goHome'
+						});
+						//common.goHomeApp();
+					}
+					
 				}
 			},
 			eventHandle:{

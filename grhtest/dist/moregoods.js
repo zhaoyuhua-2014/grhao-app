@@ -83,7 +83,7 @@ require(['../require/config'],function(){
 						pub.loading.html('没有更多数据了！');return;
 					}
 	
-					for ( i in data) {
+					for ( i = 0, l = data.length; i < l; i++) {
 						html +='<li class="first_item" data="' + data[i].typeCode + '">' + data[i].typeName + '</li>'
 					}
 					nodeBox.append( html ).width( data.length * 156 + 20 );
@@ -126,7 +126,7 @@ require(['../require/config'],function(){
 						pub.loading.html('没有更多数据了！');return;
 					}
 	
-					for (var i in d) {
+					for (var i = 0, l = d.length; i < l; i++) {
 						html += '<li class="two_item" id="_more_" data="' + d[i].typeCode + '">' + d[i].typeName + '</li>'
 					}
 	
@@ -173,7 +173,7 @@ require(['../require/config'],function(){
 						$(".more_bottom_right").html('');
 					}
 					var html = '',i;
-					for ( i in d.objects ) {
+					for (var i = 0, l = d.objects.length; i < l; i++) {
 						var obj = d.objects[i]
 						var gdnum = cart.callbackgoodsnumber( obj.id );
 						
@@ -293,13 +293,19 @@ require(['../require/config'],function(){
 					}else{
 						pub.loading.show().html("没有更多数据了！");
 					}
-					console.log("loading-click")
 				});
 	
 				//点击商品列表进行增减跳转详情
 				$(".more_bottom_right").on('click','.goods_item',function(e){
 					var goodsId = $(this).attr("data");
-					common.jumpLinkPlainApp( "商品详情","html/goodsDetails.html?goodsId=" + goodsId );
+					//common.jumpLinkPlainApp( "商品详情","html/goodsDetails.html?goodsId=" + goodsId );
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'商品详情',
+							url:'html/goodsDetails.html?goodsId='+ goodsId
+						}
+					})
 				});
 				
 			}
@@ -360,7 +366,7 @@ require(['../require/config'],function(){
 						imgArr = data.goodsPics.trim().split(/\s*@\s*/);
 						imgArr[ imgArr.length - 1 ] == '' && imgArr.pop();
 						
-						for ( i in imgArr ) {
+						for ( var i = 0, l = imgArr.length; i < l; i++) {
 							html += '<div class="swiper-slide "><img src="' + imgArr[ i ] + '" width="100%" /></div>'
 						}
 						return html;
@@ -440,7 +446,7 @@ require(['../require/config'],function(){
 						$(".goodsDetails_box2_comment_box").html('');
 					}
 					var html = '',i;
-					for ( i in d.objects ) {
+					for ( var i = 0, l = d.objects.length; i < l; i++) {
 						html +='<div class="comment_item">'
 						html +='	<dl class="comment_item_top clearfloat">'
 						html +='		<dt class="float_left"><img src="'+d.objects[i].userFaceImg+'"/></dt>'
@@ -573,20 +579,20 @@ require(['../require/config'],function(){
 							if( goodNum < dataMax ){
 								var num1 = cart.addgoods( dataId, dataName, dataPrice, dataLogo, dataSpecInfo, dataMax, dataPackagenum, dataOldPrice , 1 ,purchasequantity );
 								common.tip();
-								common.setShopCarNumApp(cart.getgoodsNum())
+								//common.setShopCarNumApp(cart.getgoodsNum())
 								$this.siblings().eq(1).html( num1 );
-								$('.footer_item[data-content]','#foot').attr('data-content',cart.getgoodsNum());
-								
+								//$('.footer_item[data-content]','#foot').attr('data-content',cart.getgoodsNum());
 							}else{
 								common.prompt( "该商品限购" + dataMax + "件" )
 							}
 						}else{
 							var num1 = cart.addgoods( dataId, dataName, dataPrice, dataLogo, dataSpecInfo, dataMax, dataPackagenum, dataOldPrice , 1 ,purchasequantity);
 							common.tip();
-							common.setShopCarNumApp(cart.getgoodsNum())
+							//common.setShopCarNumApp(cart.getgoodsNum())
 							$this.siblings().eq(1).html( num1 );
-							$('.footer_item[data-content]','#foot').attr('data-content',cart.getgoodsNum());
-						}			
+							//$('.footer_item[data-content]','#foot').attr('data-content',cart.getgoodsNum());
+						}
+						//cart.style_change();
 					/*} else{
 						common.prompt( "库存不足" );
 					}*/
@@ -599,12 +605,13 @@ require(['../require/config'],function(){
 					var dataId = $this.parents('[data-id]').attr("data-id");
 	                var num1 = cart.cutgoods( dataId );
 	                if ( num1 < '1' ) {
+	                	$this.next().html( '0' );
 	                	$this.hide().next().hide();
 	                } else{
 	                    $this.next().html( num1 );
 	            	}
-	                common.setShopCarNumApp(cart.getgoodsNum())
-	                cart.style_change();
+	                //common.setShopCarNumApp(cart.getgoodsNum())
+	                //cart.style_change();
 	            });
 	            $(".zs-static-box").on('DOMNodeInserted','.show_num',function(){
 	               	var $this = $(this);
@@ -763,7 +770,12 @@ require(['../require/config'],function(){
 		
 		            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
 		            onPullDown: function () {
-		                pullDownAction1();
+		            	common.getNetwork(pullDownAction1,pub.pullInstance1.pullDownFailed.bind(pub.pullInstance1))
+		                /*if (window.navigator.onLine) {
+		            		pullDownAction1();	            		
+		            	}else{
+		            		pub.pullInstance1.pullDownFailed()
+		            	}*/
 		            },
 		        });
 		        

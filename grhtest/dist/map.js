@@ -83,12 +83,14 @@ require(['../require/config'],function () {
 						firmId : pub.firmIdTemp
 					}),function( d ){
 						if( d.statusCode == "100000" ){
-							common.tellRefreshAPP()
+							
 							var user_data = common.user_datafn();
 							user_data.firmId = pub.firmIdTemp;
 							common.user_data.setItem( common.JSONStr( user_data ) );
 							common.firmId.setItem(pub.firmIdTemp);
 							common.good.removeItem();
+							
+							common.tellRefreshAPP();
 							common.setShopCarNumApp(0);
 							common.goBackApp(2,true,'index.html');
 						}
@@ -110,7 +112,7 @@ require(['../require/config'],function () {
 						truefn:'trueFn'
 					}
 					common.alertMaskApp(JSON.stringify(data));
-					console.log(this.getExtData())
+					
 					pub.firmIdTemp = this.getExtData().id;
 		        })
 		        new AMap.Marker({

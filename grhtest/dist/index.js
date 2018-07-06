@@ -6,7 +6,6 @@ require(['../require/config'],function () {
 	require(['common','mobileUi','swiperJS','pull'],function(common){
 		
 		
-		
 		var pub = {};
 	
 		pub.openId = common.openId.getItem();
@@ -47,28 +46,33 @@ require(['../require/config'],function () {
 	 				me.firm_default.init(); // 默认门店
 		 			if (common.user_datafn().firmId == '0') {//注册的情况下将APP本地门店ID赋值给当前用户
 		 				pub.apiHandle.choice_firm.init();
-		 			}else {//登录的情况下
+		 			}else {
+		 				//登录的情况下
 		 				if (common.firmId.getItem() != common.user_datafn().firmId) {
-		 					var data = {
-								type:1,
-								title:'是否切换为已绑定门店?',
-								canclefn:'cancleFn',
-								truefn:'trueFn'
-							}
-							common.alertMaskApp(JSON.stringify(data));
+							common.jsInteractiveApp({
+								name:'alertMask',
+								parameter:{
+									type:1,
+									title:'是否切换为已绑定门店?',
+									canclefn:'cancleFn',
+									truefn:'pub.apiHandle.trueFn'
+								}
+							})
 		 				}
 			 		}
 	 			})
 	 		}else{
 	 			me.firm_default.init(); // 默认门店
 	 			if(!common.firmId.getItem()){
-	 				var data = {
-						type:1,
-						title:'请选择门店',
-						canclefn:'cancleFn1',
-						truefn:'trueFn1'
-					}
-					common.alertMaskApp(JSON.stringify(data));
+					common.jsInteractiveApp({
+						name:'alertMask',
+						parameter:{
+							type:1,
+							title:'请选择门店',
+							canclefn:'cancleFn1',
+							truefn:'pub.apiHandle.trueFn1'
+						}
+					})
 	 			}
 	 		}
 	 		
@@ -139,7 +143,7 @@ require(['../require/config'],function () {
 							type:2,
 							title:'请选择门店?',
 							canclefn:'cancleFn',
-							truefn:'trueFn1'
+							truefn:'pub.apiHandle.trueFn1'
 						}
 						common.alertMaskApp(JSON.stringify(data));
 					}else{
@@ -168,7 +172,7 @@ require(['../require/config'],function () {
 				var 
 				html = '',
 				goodsInfo = '';
-				for(var i in data) {
+				for(var i = 0,l = data.length; i < l ; i++) {
 					goodsInfo = data[i].goodsInfo;
 					var arr = [];
 					goodsInfo.isHot == 1 && arr.push('isHot');
@@ -220,7 +224,7 @@ require(['../require/config'],function () {
 				
 				data.adInfoList.length != 0 && common.bannerShow(data.adInfoList, '.index_banner', function( d ){
 					var html = '', i = 0, link = null;
-					for ( i in d ){
+					for ( i =0,l=d.length; i< l; i++ ){
 						link = getLink(d[i].linkUrl)
 						html += '<div class="swiper-slide"><a href="javascript:void(0)" url="'+link+'"><img src="' + d[i].adLogo + '" /></a></div>'
 					}
@@ -272,8 +276,9 @@ require(['../require/config'],function () {
 				if ( o == null || o.length == 0) {
 					$(".index_center_wrap").addClass("hidden");
 				} else{
-					for (var i in o) {
-						link = o[i].appUrl ? o[i].appUrl : '';
+					for (var i = 0 , l = o.length ; i < l ; i++) {
+						
+						link = getActiveUrl(o[i].h5Url);
 						html += '<dl class="swiper-slide" link = "'+link+'" tit= "'+o[i].name+'"><dt><img src="'+o[i].logo+'"/></dt><dd class="ellipsis">'+o[i].name+'</dd></dl>'
 					}
 				}
@@ -282,6 +287,31 @@ require(['../require/config'],function () {
 					direction: 'horizontal',
 					slidesPerView : 4,
 				});
+				
+				
+				//拼接正确的URL
+				function getActiveUrl(d){
+					var locationObj = document.location;
+					if (d) {
+						var urlParameter = d.indexOf('?') > 1 ? d.split('?')[1] : null;
+						var arr = d.split("/"),
+							l = arr.length;
+						var path = function(){
+							if(locationObj.pathname.indexOf(".html") > 1){
+								var arr = locationObj.pathname.split('/'),
+									l = arr.length;
+								arr.splice(l-1,1);
+								return arr.join('/') + '/'
+							}else{
+								return locationObj.pathname;
+							}
+						}
+						//locationObj.protocol+  '//'+ locationObj.hostname + ":"+ locationObj.port + path() +"html/"+arr[l-1];
+						return "html/"+arr[l-1];
+					}else{
+						return null;
+					}
+				}
 			}
 		}
 	 	// app 参数
@@ -302,9 +332,16 @@ require(['../require/config'],function () {
 		 			dStr = common.JSONStr( d );
 		 			common.appData.setItem( dStr ); 
 	 			}
-	 			try{
+	 			
+	 			common.jsInteractiveApp({
+					name:'getShare',
+					parameter:{
+						str:dStr
+					}
+				})
+	 			/*try{
 					common.isAndroid() ? android.getShare( dStr ) : window.webkit.messageHandlers.getShare.postMessage(dStr);
-				}catch(e){}
+				}catch(e){}*/
 	
 	 		}
 	 	};
@@ -318,7 +355,13 @@ require(['../require/config'],function () {
 			pub.apiHandle.firm_default.init();
 		}
 		pub.apiHandle.trueFn1 = function(){
-			common.jumpLinkPlainApp('门店选择','html/store1.html');
+			common.jsInteractiveApp({
+				name:'goToNextLevel',
+				parameter:{
+					title:'门店选择',
+					url:'html/store1.html'
+				}
+			})
 		}
 		//取消方法
 		pub.apiHandle.cancleFn = function(){
@@ -342,31 +385,35 @@ require(['../require/config'],function () {
 			init : function(){
 				//点击跳转详情页面
 				$('.index_inner').on('click', "dl", function() {
-					common.jumpLinkPlainApp( "商品详情", "html/goodsDetails.html?goodsId=" + $(this).attr("data") );
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'商品详情',
+							url:'html/goodsDetails.html?goodsId=' + $(this).attr("data")
+						}
+					})
+					//common.jumpLinkPlainApp( "商品详情", "html/goodsDetails.html?goodsId=" + $(this).attr("data") );
 				});
 				
 				$(".index_rigth").on("click",function(){
-					var url = '/html/search.html'
-					if (common.isApp()) {
-						if (common.isApple()) {
-							try{
-								window.webkit.messageHandlers.goToSearch.postMessage(url);
-							}catch(e){
-								console.log("调用ios方法goToSearch出错")
-							}
-						} else if(common.isAndroid()){
-							try{
-								android.goToSearch(url);
-							}catch(e){
-								console.log("调用ios方法goToSearch出错")
-							}
-						}					
-					}else{
-						console.log("this is not grhao App!")
-					}
+					var url = 'html/search.html';
+					common.jsInteractiveApp({
+						name:'goToSearch',
+						parameter:{
+							url:url
+						}
+					});
 				})
 				$(".index_tit").on('click',function(){
-					common.jumpLinkPlainApp('门店选择','html/store1.html');
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'门店选择',
+							url:'html/store1.html'
+						}
+					})
+					//common.jumpLinkPlainApp('门店选择','html/store1.html');
+					
 				});
 				$(".index_banner .swiper-wrapper").on("click",'a',function(e){
 					var urlArr = [{
@@ -400,23 +447,49 @@ require(['../require/config'],function () {
 					var url = $(this).attr("url");
 					if (url) {
 						url = url.substr(1);
-						for (var i =0; i< urlArr.length;i++) {
+						for (var i =0,l = urlArr.length; i< l;i++) {
 							if(url.indexOf(urlArr[i].url) >0){
-								common.jumpLinkPlainApp(urlArr[i].tit , url);
-								return ;
+								/*common.jumpLinkPlainApp(urlArr[i].tit , url);
+								return ;*/
+								common.jsInteractiveApp({
+									name:'goToNextLevel',
+									parameter:{
+										title:urlArr[i].tit,
+										url:url
+									}
+								})
 							}
 						}
 					}
 				});
+				//活动事件
 				$(".index_center_banner").on("click","dl",function(){
 					var nood = $(this),
 						link = nood.attr("link"),
 						title = nood.attr("tit");
 					if (link != '') {
-						common.jumpLinkPlainApp(title,link);
+						//common.jumpLinkPlainApp(title,link);
+						common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:title,
+								url:link
+							}
+						})
 					}
 					
 				})
+				//确定按钮 -- //取消按钮
+				$(".order_refund").on("click",".makeSure,.refund_cancle",function(){
+					$(".order_refund").hide();
+					$("body").css("overflow-y","auto");
+					if ($(this).is(".makeSure")) {
+						pub.apiHandle.trueFn();						
+					}else{
+						pub.apiHandle.choice_firm.init()
+					}
+				});
+				/*
 				//取消按钮
 				$(".order_refund").on("click",".refund_cancle",function(){
 					$(".order_refund").hide();
@@ -429,8 +502,7 @@ require(['../require/config'],function () {
 					$(".order_refund").hide();
 					$("body").css("overflow-y","auto");
 					pub.apiHandle.trueFn();
-					
-				});
+				});*/
 			}
 	 	};
 	
@@ -486,11 +558,17 @@ require(['../require/config'],function () {
 
 	        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
 	            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
-	             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
+	            distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
 	
 	            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
 	            onPullDown: function () {
-	                pullDownAction();
+	            	//common.getNetwork.bind(this.Pull)(pullDownAction,pub.pullInstance.pullDownFailed)
+	            	common.getNetwork(pullDownAction,pub.pullInstance.pullDownFailed.bind(pub.pullInstance))
+	            	/*if (window.navigator.onLine) {
+	            		pullDownAction();	            		
+	            	}else{
+	            		pub.pullInstance.pullDownFailed()
+	            	}*/
 	            },
 	        });
 			

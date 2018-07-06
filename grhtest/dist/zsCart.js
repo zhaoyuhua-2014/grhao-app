@@ -18,16 +18,23 @@ require(['../require/config'],function(){
 			}
 		};
 	
-	
+		
 		pub.shop_cart_submit = {
 			init : function(){
 				common.ajaxPost($.extend({}, pub.userBasicParam, {
-					method : 'shop_cart_submit',
+					method : 'shop_cart_submit_two',
 					goodsList : pub.goodsList
 				}),function( d ){
 					if ( d.statusCode == "100000" ) {
 						common.orderType.setItem( '1' );
-						common.jumpLinkPlainApp("订单结算", "html/order_set_charge.html" );
+						common.jumpLinkPlainApp("订单结算", "html/orderSettlement.html" );
+						/*common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:'订单结算',
+								url:'html/orderSettlement.html'
+							}
+						})*/
 					}else if (d.statusCode == "100613"){
 						pub.shop_cart_submit.apiData(d)
 					}else{
@@ -413,13 +420,22 @@ require(['../require/config'],function(){
 							common.prompt('购物车为空')
 						}else{
 							if ($this.isChoose()) {
-								var data = {
+								/*var data = {
 									type:1,
 									title:'确定删除？',
 									canclefn:'cancleFn',
 									truefn:'trueFn'
 								}
-								common.alertMaskApp(JSON.stringify(data));
+								common.alertMaskApp(JSON.stringify(data));*/
+								common.jsInteractiveApp({
+									name:'alertMask',
+									parameter:{
+										type:1,
+										title:'确定删除',
+										canclefn:'cancleFn',
+										truefn:'trueFn'
+									}
+								})
 							} else{
 								common.prompt('您还没有选择商品哦');
 							}
@@ -443,9 +459,14 @@ require(['../require/config'],function(){
 					//本地数据的更新
 					updataLocal : function(){
 						common.good.setItem(JSON.stringify(this.goodsObj));
-						common.setShopCarNum_ShoppingCartApp(cart.getgoodsNum())
+						common.setShopCarNum_ShoppingCartApp(cart.getgoodsNum());
+						/*common.jsInteractiveApp({
+							name:'setShopCarNum_ShoppingCart',
+							parameter:{
+								num:cart.getgoodsNum()
+							}
+						})*/
 						cart.style_change();
-						
 					},
 					scrollevent:function(){
 						console.log(this)
@@ -459,15 +480,31 @@ require(['../require/config'],function(){
 								common.prompt("购物车为空");return;
 							}else{
 								$this.isChoose() ? pub.shop_cart_submit.init() : common.prompt('您还没有选择商品哦')
-								
 							}
-							
+							common.couponInfo.removeItem();
+							common.couponInfoList.removeItem();
 						}else{
 							common.jumpMake.setItem("13");
-							common.jumpLinkPlainApp("登录", "html/login.html" );
-							
+							common.jsInteractiveApp({
+								name:'goToNextLevel',
+								parameter:{
+									title:'登录',
+									url:'html/login.html'
+								}
+							})
+							//common.jumpLinkPlainApp("登录", "html/login.html" );
 						}
 						
+					},
+					//点击跳转到更多商品页面
+					jumplink : function(){
+						common.goBackApp(0,true,'html/moregoods.html');
+						console.log("去更多商品页面");
+						//common.goHomeApp();
+						/*common.jsInteractiveApp({
+							name:'goHome',
+							parameter:{}
+						})*/
 					}
 				}
 			})
@@ -498,7 +535,12 @@ require(['../require/config'],function(){
 	
 	            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
 	            onPullDown: function () {
-	                pullDownAction();
+	            	common.getNetwork(pullDownAction,pub.pullInstance.pullDownFailed.bind(pub.pullInstance))
+	                /*if (window.navigator.onLine) {
+	            		pullDownAction();	            		
+	            	}else{
+	            		pub.pullInstance.pullDownFailed()
+	            	}*/
 	            },
 	        });
 	        

@@ -10,7 +10,7 @@ require(['../require/config'],function(){
 		pub.muduleId = $('[module-id]').attr('module-id');
 		pub.userBasicParam = null; // 用来保存必要接口参数
 		pub.timer_id = null; // 定时器ID
-	
+		
 		// 是否登录 
 		pub.logined = common.isLogin();
 	
@@ -33,8 +33,8 @@ require(['../require/config'],function(){
 		pub.apiHandle = {}
 		pub.apiHandle = {
 			init : function(){
-				/*alert(pub.logined);
-				alert(common.isLogin());
+				
+				/*alert(common.isLogin());
 				alert(localStorage.getItem("tokenId"))*/
 				// 登录状态 信息处理
 				if( pub.logined ){
@@ -56,25 +56,25 @@ require(['../require/config'],function(){
 						method : 'userScoCouMon'
 					}),function( d ){
 						pub.apiHandle.userScoCouMon.apiData( d );
-	
 					});
 				},
 				apiData : function( d ){
+					var nodeCard = $("#month_card"),nodeFruit=$("#fruit_money"),nodeCoupon=$('.wo_main_coupon');
 					if ( d.statusCode == "100000" ) {
 						var data = d.data;
-						$("#month_card").html("￥"+data.userMonthCard.systemMoney);
-						$("#fruit_money").html(data.userAccountInfo.score+"枚");
-						$('.wo_main_coupon').html(data.couponCount);
+						nodeCard.html("￥"+data.userMonthCard.systemMoney);
+						nodeFruit.html(data.userAccountInfo.score+"枚");
+						nodeCoupon.html(data.couponCount);
 						common.cancelDialogApp();
 					}else if(  d.statusCode == "100400" ){
 	                        common.prompt( '登录已失效，请重新登陆' );
 	                        common.setMyTimeout(function(){
-	                            common.jumpLinkPlainApp( '登录','login.html' );
+	                            common.jumpLinkPlainApp( '登录','html/login.html' );
 	                        },1000);
 	                }else{
-						$("#month_card").html("￥0");
-						$("#fruit_money").html("0枚");
-						$('.wo_main_coupon').html(0);
+						nodeCard.html("￥0");
+						nodeFruit.html("0枚");
+						nodeCoupon.html(0);
 					}
 				}
 			},
@@ -100,13 +100,8 @@ require(['../require/config'],function(){
 						var huanfu = common.huanfu.getItem();
 							common.session.clear();
 							common.huanfu.setItem(huanfu);
-						if (common.isApp()) {
-							try{
-								common.isApple() ? window.webkit.messageHandlers.exit1.postMessage('') : android.exit1();
-							}catch(e){
-								console.log("调用APP端退出方法出错")
-							}
-						}
+						common.jsInteractiveApp({name:'exit1'})
+						
 						location.replace( location.href );
 					},function( d ){
 						common.tellRefreshAPP();
@@ -120,7 +115,8 @@ require(['../require/config'],function(){
 				}
 			}
 		};
-	
+		
+		
 		// 父模块事件处理 
 		pub.eventHandle = {};
 		pub.eventHandle.init = function(){
@@ -131,14 +127,47 @@ require(['../require/config'],function(){
 			$('.zs_personal').click(function(){
 				var url = $(this).attr('data-url');
 				var tit = $(this).attr("data-title");
+				var right = $(this).attr("data-right");
+				
 				if( pub.logined ){
 					common.addressData.removeItem();
 					common.addType.removeItem();
 					common.orderCode.removeItem();
 					localStorage.removeItem("addId");
-					common.jumpLinkPlainApp( tit,url );
+					if (right) {
+						if (right == 'img') {
+							var l = window.location.href.substring(0, window.location.href.indexOf("/html/"));
+							var imgIcon =  l + '/img/icon_Invalid.png';
+						}/*else if (right == 'txt'){
+							
+						}
+						common.jumpLinkCustomApp({
+							title:tit,
+							url:url,
+							imgIcon:imgIcon,//(function(){pub.couponList.apiHandle.jumpLink()})()
+							callBackName:'pub.couponList.apiHandle.jumpLink()'
+						})*/
+					}/*else{
+						common.jumpLinkPlainApp( tit,url );
+					}*/
+					common.jsInteractiveApp({
+						name:'jumpLinkCustom',
+						parameter:{
+							title:tit,
+							url:url,
+							imgIcon: right == 'img' ? imgIcon : '',//(function(){pub.couponList.apiHandle.jumpLink()})()
+							callBackName:right == 'img' ? 'pub.couponList.apiHandle.jumpLink()' : ''
+						}
+					})
 				}else{
-					common.jumpLinkPlainApp('登录','html/login.html?type='+5);
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'登录',
+							url:'html/login.html?type='+5
+						}
+					})
+					//common.jumpLinkPlainApp('登录','html/login.html?type='+5);
 				}
 			});
 	
@@ -210,7 +239,14 @@ require(['../require/config'],function(){
 			/*新添加点击登录事件*/
 			if (!pub.logined) {
 				$('.main_top_login a').on("click",function(){
-					common.jumpLinkPlainApp('登录','html/login.html?type='+5);
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'登录',
+							url:'html/login.html?type='+5
+						}
+					})
+					//common.jumpLinkPlainApp('登录','html/login.html?type='+5);
 				})
 			}
 			$(".test").on("click",function(){
@@ -411,7 +447,15 @@ require(['../require/config'],function(){
 						common.user_data.setItem( common.JSONStr( user_data ) );
 						common.prompt('修改成功');
 						common.setMyTimeout(function(){
-							common.goBackApp(1,true,'html/my.html');
+							common.jsInteractiveApp({
+								name:'goBack',
+								parameter:{
+									'hierarchy':1,
+									'reload':true,
+									'url':'html/my.html'
+								}
+							})
+							//common.goBackApp(1,true,'html/my.html');
 						},600);
 					}
 				});
@@ -660,7 +704,14 @@ require(['../require/config'],function(){
 				    	}
 			    	} else{
 			    		common.jumpMake.setItem( "8" );
-			    		common.jumpLinkPlainApp( '登录',"login.html" );
+			    		common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:'登录',
+								url:"html/login.html"
+							}
+						})
+			    		//common.jumpLinkPlainApp( '登录',"login.html" );
 			    	}
 			    });
 	
@@ -718,7 +769,14 @@ require(['../require/config'],function(){
 				$('.fruitMall_wrap_content').on("click","div",function(){
 					var url = $(this).attr("data-url"),
 					title = $(this).attr("data-title");
-					common.jumpLinkPlainApp(title , url);
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:title,
+							url:url
+						}
+					})
+					//common.jumpLinkPlainApp(title , url);
 				})
 			},
 		};
@@ -756,7 +814,15 @@ require(['../require/config'],function(){
 						if ( d.statusCode == '100000' ) {
 					    	common.prompt( '修改成功' );
 					    	common.setMyTimeout(function(){
-					    		common.goBackApp(1,true,'html/my.html');
+					    		common.jsInteractiveApp({
+									name:'goBack',
+									parameter:{
+										'hierarchy':1,
+										'reload':true,
+										'url':'html/my.html'
+									}
+								})
+					    		//common.goBackApp(1,true,'html/my.html');
 					    	},500);
 					    } else if ( d.statusCode == '100503' ){						    
 						   common.prompt( '原密码错误' );
@@ -873,7 +939,14 @@ require(['../require/config'],function(){
 					$(".help_wrap").on("click",'li',function(){
 						var url = $(this).attr("data-url"),
 						title = $(this).attr("data-title");
-						common.jumpLinkPlainApp(title , url);
+						common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:title,
+								url:url
+							}
+						})
+						//common.jumpLinkPlainApp(title , url);
 					})
 				}
 			},
@@ -899,7 +972,14 @@ require(['../require/config'],function(){
 		       	$('.about_us').click(function(){
 		       		var url = $(this).attr("data-url"),
 					title = $(this).attr("data-title");
-					common.jumpLinkPlainApp(title , url);
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:title,
+							url:url
+						}
+					})
+					//common.jumpLinkPlainApp(title , url);
 		       	});
 				
 			},
@@ -936,7 +1016,7 @@ require(['../require/config'],function(){
 			if( common.isApp() ){
 				$('#app-clear-cache,#app-share','.zs-setting-box').show().on('click',function(){
 					var isShare = $(this).is('#app-share');
-					if( isShare ){
+					/*if( isShare ){
 						if (common.isAndroid()) {
 							try{
 								android.share()
@@ -964,7 +1044,10 @@ require(['../require/config'],function(){
 								alert("调用Ios方法clearCache出错")
 							}
 						}
-					}
+					}*/
+					common.jsInteractiveApp({
+						name: isShare ? 'share':'clearCache'
+					})
 				});
 			}
 	
@@ -972,6 +1055,457 @@ require(['../require/config'],function(){
 			pub.settings.eventHandle.init();
 			pub.settings.apiHandle.init();
 		};	
+		
+
+	
+		/************************* 新改版优惠券模块2018-06-22 ***************************/
+	
+		// 优惠券 命名空间
+		pub.couponList = {};
+		var COUPON_LIST = pub.couponList;
+		COUPON_LIST.code = "YHQ-DESC";
+	
+		pub.PAGE_SIZE = common.PAGE_SIZE; // 每页显示几条
+		pub.PAGE_INDEX = common.PAGE_INDEX; // 第几页
+		pub.COUPON_TYPES = ['来源:好友推荐赠送','来源:微博晒单成功赠送','来源:微信晒单成功赠送','来源:订单促销活动赠送','来源:随意赠送'];
+		pub.CUOPON_RECEIVE_STATUS = ['立即领取','已领取'];
+	
+		COUPON_LIST.sortCouponId = null;
+	
+		// 优惠券 接口命名空间
+		COUPON_LIST.apiHandle = {
+			init : function(){
+				COUPON_LIST.apiHandle.valid_coupon.init(); // 优惠券 管理 列表
+			},
+			// 优惠券信息列表
+			valid_coupon : {
+				init : function(){
+					common.ajaxPost($.extend({},pub.userBasicParam,{
+						method : 'valid_coupon',
+		    	    	pageNo : pub.PAGE_INDEX,
+		    	    	pageSize : pub.PAGE_SIZE
+					}),function( d ){
+						COUPON_LIST.apiHandle.valid_coupon.apiData( d );
+					})
+				},
+				apiData : function( d ){
+					var 
+					html = '',
+					data = d.data,
+					isLast = data.isLast,
+					couponList = data.objects;
+	
+					$('.lodemore').html( isLast ? '没有更多数据了' : '点击加载更多数据' ).show()
+				    //  isLast && $('.lodemore').html('没有更多数据了').show();
+				    // !isLast && $('.lodemore').html('点击加载更多数据').show();
+				    if( couponList.length == 0 ){ $('.lodemore').html('没有更多数据了').show();  }
+	
+					if (d.data.pageNo == 1 && couponList.length == 0 ) { $('.lodemore').html('暂无优惠卷').show(); return}
+					
+					for(var i in couponList){
+						var lst = couponList[i];
+						html += '<div class="coupon_list_item">'
+						html += '	<div class="coupon_list_item_top clearfloat">'
+						html += '		<div class="float_left">'
+						html += '			<p>'+lst.couponName+'</p><p>有效期至：'+lst.endTime+'</p>'
+						html += '		</div>'
+						html += '		<div class="float_right"><div class="coupon_btn">去使用</div></div>'
+						html += '	</div>'
+						html += '	<div class="coupon_list_item_bg"><img src="../img/coupon_bg.png"></div>'
+						html += '	<div class="coupon_list_item_bottom">'
+						html += '		<p>'+lst.applyTo+'</p>'
+						
+						/*
+						html += '		<p class="color_F73A3A">不可用原因：不在当前门店</p>'
+						*/
+						html += '	</div>'
+						html += '</div>'
+					};
+					$('.cuopon_management_contain').append( html );
+				}
+			},
+			// 优惠券使用说明请求
+			grh_desc : {
+	
+				init : function( code, callback){
+					common.ajaxPost({
+						method : 'grh_desc',
+	    				code : code 
+					},function( d ){
+						callback( d );
+						// COUPON.apiHandle.grh_desc.apiData( d );
+					})
+				},
+				apiData : function( d ){
+					if( d.statusCode == "100000" ){
+						var data = d.data;
+	    				var str = data.desc;
+						$('.alert_title').html( data.title );
+						$('.alert_content').html( str.replace(/\r\n/g, "<br />") );
+	    			}else{
+	    				common.prompt( d.statusStr );
+	    			}
+				}
+			},
+			// 优惠券列表
+			get_sort_coupon : {
+				init : function(){
+					common.ajaxPost({
+						method : 'get_sort_coupon',
+	   	    			userId : pub.userId
+					},function( d ){
+						COUPON_LIST.apiHandle.get_sort_coupon.apiData( d );	
+					})
+				},
+				apiData : function( d ){
+					d.statusCode == "100000" ? COUPON_LIST.apiHandle.get_sort_coupon.apiDataDeal( d ) : common.prompt( d.statusStr );
+				},
+				apiDataDeal : function( d ){
+	
+			    	var html = '', i = 0;
+			    	
+			    	if (!d.data.length) {
+			    		console.log(d.data.length)
+			    		$(".zs-coupon-box .cuopon_contain").html("<p>暂无在线优惠卷可以领取。</p>");
+			    		$(".cuopon_contain p").css({"text-align":"center",'line-height':'300px',"font-size":'30px'})
+			    		return
+			    	}
+			    	for( i in d.data ){
+			    		var list = d.data[i];
+			    		html += '<div class="cuopon_content clearfloat">'
+			    		html += '<div class="cuopon_content_center">'
+			    		html += '<div class="cuopon_title">' + list.sortName + '</div>'
+			    		html += '<ul class="cuopon_message">'
+			    		html += '<li>有效期至：' + list.endTime + '</li>'
+			    		html += '<li>金额要求：单笔订单满' + list.leastOrderMoney + '元</li>'
+			    		html += '</ul>'
+			    		html += '</div>'
+			    		html += '<div class="cuopon_content_right" dataId="' + list.id + '">'
+			    		html += '<div class="cuopon_money">' + list.sortMoney + '元</div>'
+	
+			    		html += '<div class="cuopon_receive cuopon_receive' + list.flag + '">' + pub.CUOPON_RECEIVE_STATUS[ list.flag ] + '</div>' 
+	
+			    		html += '</div>'
+			    		html += '</div>'
+			    	};
+			    	$('.cuopon_contain').html(html);
+			    	$('.cuopon_receive1').css({ 'color':'rgb(51,51,51)', 'border':'none' });
+				}
+			},
+			// 领取优惠券
+			goto_coupon : {
+				init : function(){
+					common.ajaxPost($.extend({},pub.userBasicParam,{
+						method : 'goto_coupon',
+	   	    			sortCouponId : COUPON_LIST.sortCouponId
+					}),function( d ){
+						if( d.statusCode == "100000" ){
+		   	    			$('.cuopon_receive0').css({'color':'rgb(51,51,51)','border':'none'}).html('已领取');
+		   	    			$('.pop').find('.pop_prompt').html('优惠券领取成功');
+		   	    			COUPON_LIST.apiHandle.get_sort_coupon.init(); // 优惠券列表
+		    				COUPON_LIST.sortCouponId = null;
+		   	    		}
+					},function( d ){
+						$('.pop').find('.pop_prompt').html('优惠券领取失败');
+					});
+				}
+			},
+			jumpLink :function(){
+				common.jumpLinkCustomApp({
+					title:'失效劵',
+					url:'html/couponListInvalid.html'
+				})
+			}
+		};
+	
+		// 优惠券 事件命名空间
+		COUPON_LIST.eventHandle = {
+			init : function(){
+	
+				// 点击跳转到首页
+			    $('.cuopon_management_contain').on('click','.coupon_btn',function(){
+			    	common.goHomeApp();
+			    	//common.jumpLinkPlain( "../index.html" );
+			    });
+		    	
+		    	// 点击加载更多
+		    	$('.lodemore').on('click',function(){				
+					if ( $(this).html() != '没有更多数据了' ) {
+						pub.PAGE_INDEX++;
+						COUPON_LIST.apiHandle.valid_coupon.init();
+					}else{
+						$(this).off('click');
+					}				
+				});
+				// 使用规则的弹出 和 隐藏
+	    		common.alertShow('.cuopon_management_top_right',function(){
+	    			COUPON_LIST.apiHandle.grh_desc.init(COUPON_LIST.code,COUPON_LIST.apiHandle.grh_desc.apiData);
+	    		});
+	    		common.alertHide();
+	    		// 优惠券管理 优惠券列表 切换
+	    		var bool = true;
+	    		$('.cuopon_management_top_left').click(function(){
+	    			pub.userInfoRepaired.switchInput.call(COUPON_LIST,'优惠券','.zs-couponManager-box','.zs-coupon-box','在线获取优惠券');
+	    			bool && (function(){
+	    				COUPON_LIST.apiHandle.get_sort_coupon.init();
+	    				//window.history.pushState('','','./couponList.html');
+	    				bool = false;
+	    			}());
+	    		});
+	
+	    		$('.header_left').click(function(){
+	    			console.log($('.zs-coupon-box').is(':visible'))
+					$('.zs-coupon-box').is(':visible') ? pub.userInfoRepaired.switchInput.call(COUPON_LIST,'优惠券管理','.zs-coupon-box','.zs-couponManager-box') : window.history.back();
+				});
+				
+				$(".header_right").on("click",function(){
+					var url = $(this).attr('data-url');
+					common.jumpLinkPlain( url );
+				})
+				/*window.onpopstate = function(){
+					USER_INFO_REPAIRED.switchInput.call(COUPON_LIST,'优惠券管理','.zs-coupon-box','.zs-couponManager-box');
+					$('.pop').hide();
+				}*/
+			}
+		};
+	
+		COUPON_LIST.init = function(){
+			COUPON_LIST.apiHandle.init();
+			COUPON_LIST.eventHandle.init();
+		}
+		
+	/************************* 新改版失效优惠券模块2018-06-22 ***************************/
+	
+		// 优惠券 命名空间
+		pub.couponListInvalid = {};
+		var COUPON_LIST_INVALID = pub.couponListInvalid;
+	
+		// 优惠券 接口命名空间
+		COUPON_LIST_INVALID.apiHandle = {
+			init : function(){
+				COUPON_LIST_INVALID.apiHandle.invalid_coupon.init(); // 优惠券 管理 列表
+			},
+			// 优惠券信息列表
+			invalid_coupon : {
+				init : function(){
+					common.ajaxPost($.extend({},pub.userBasicParam,{
+						method : 'invalid_coupon',
+		    	    	pageNo : pub.PAGE_INDEX,
+		    	    	pageSize : pub.PAGE_SIZE
+					}),function( d ){
+						COUPON_LIST_INVALID.apiHandle.invalid_coupon.apiData( d );
+					})
+				},
+				apiData : function( d ){
+					var 
+					html = '',
+					data = d.data,
+					isLast = data.isLast;
+					couponList = data.objects;
+					
+					$('.lodemore').html( isLast ? '没有更多数据了' : '点击加载更多数据' ).show()
+				    //  isLast && $('.lodemore').html('没有更多数据了').show();
+				    // !isLast && $('.lodemore').html('点击加载更多数据').show();
+				    
+				    if( couponList.length == 0 ){ $('.lodemore').html('没有更多数据了').show();  }
+	
+					if ( data.pageNo == 1 && couponList.length == 0 ) { $('.lodemore').html('暂无失效优惠卷').show(); return}
+					
+					for(var i in couponList){
+						var lst = couponList[i];
+						html += '<div class="coupon_list_item">'
+						html += '	<div class="coupon_list_item_top clearfloat">'
+						html += '		<div class="float_left">'
+						html += '			<p>'+lst.couponName+'</p>'
+						html += '			<p>有效期至：'+lst.endTime+'</p>'
+						html += '		</div>'
+						html += '		<div class="float_right">'
+						if (lst.status == '-1') {
+							html += '			<div class="coupon_btn_invalid">已过期</div>'
+						} else if (lst.status == '2') {
+							html += '			<div class="coupon_btn_invalid">已使用</div>'
+						}
+						html += '		</div>'
+						html += '	</div>'
+						html += '	<div class="coupon_list_item_bg"><img src="../img/coupon_bg.png"></div>'
+						html += '	<div class="coupon_list_item_bottom">'
+						html += '		<p>'+lst.applyTo+'</p>'
+						/*
+						html += '		<p class="color_F73A3A">不可用原因：不在当前门店</p>'
+						*/
+						html += '	</div>'
+						html += '</div>'
+						          		
+					};
+					$('.cuopon_management_contain').append( html );
+					
+				}
+			}
+		};
+	
+		// 优惠券 事件命名空间
+		COUPON_LIST_INVALID.eventHandle = {
+			init : function(){
+		    	// 点击加载更多
+		    	$('.lodemore').on('click',function(){				
+					if ( $(this).html() != '没有更多数据了' ) {
+						pub.PAGE_INDEX++;
+						COUPON_LIST_INVALID.apiHandle.invalid_coupon.init();
+					}else{
+						$(this).off('click');
+					}				
+				});
+			}
+		};
+	
+		COUPON_LIST_INVALID.init = function(){
+			COUPON_LIST_INVALID.apiHandle.init();
+			COUPON_LIST_INVALID.eventHandle.init();
+		}
+		/*--------------------将score模块中的果币模块放入personal模块中（ios返回页面不能获取js执行环境）-------------------------*/
+		/****************************  果币模块  ************************/
+	
+		// 命名空间
+	
+		pub.fruitCoins = {};
+		var FRUIT_COINS = pub.fruitCoins;
+			FRUIT_COINS.gameType = common.gameType.getItem();
+		// 果币 事件命名空间
+		FRUIT_COINS.apiHandle = {
+			init : function(){
+				var me = this;
+				me.user_score.init();
+				me.chance_fruit_coin_num.init();
+				if (common.isAndroid()) {
+					$(".score_top_box .score_icon").css({
+						"top":"-16px",
+						"background-position":"20px 68px"
+					});
+				}
+			},
+			user_score : {
+				init : function(){
+					common.ajaxPost($.extend({},pub.userBasicParam,{
+						method:'user_score'
+					}),function( d ){
+						$(".score_top_box .score_icon").html( d.statusCode == "100000" ? d.data.score : '0' );
+					});
+				}
+			},
+			chance_fruit_coin_num : {
+				init:function(){
+					common.ajaxPost($.extend({},pub.userBasicParam,{
+						method:'chance_fruit_coin_num'
+					}),function( d ){
+						if(d.statusCode == "100000"){
+							$(".count span").html(d.data);
+						}
+					});
+				},
+				apiData:function(){
+					
+				}
+			},
+			game_chance_exchange : {
+				init:function(){
+					common.ajaxPost($.extend({},pub.userBasicParam,{
+						method:'game_chance_exchange'
+					}),function( d ){
+						if ( d.statusCode == "100000" ) {
+							common.prompt1({
+								flag:1,
+								msg:"兑换成功",
+								callback:function(){
+									$(".score_top_box .score_icon").html(d.data.score);
+								}
+							});
+							if (common.gameType.getItem() == '1') {
+		                    	common.goBackCustomApp({
+		                    		title:'抽奖',
+		                    		url:'html/gameTiger.html',
+		                    		callBackName:'pub.gameTiger.apiHandle.game_chance.init()'
+		                    	})
+							}else{
+								common.goBackCustomApp({
+		                    		title:'',
+		                    		url:'html/my.html',//
+		                    		callBackName:'pub.apiHandle.userScoCouMon.init()'
+		                    	})
+							}
+						}else{
+							common.prompt1({
+								flag:1,
+								msg:d.statusStr
+							})
+						}
+					});
+				},
+				apiData:function(){
+					
+				}
+			}
+	
+		};
+		
+		pub.fruitCoins.jumpBack = function(d){
+			alert(d);
+			alert(pub);
+			
+		}
+		// 果币 事件命名空间
+		FRUIT_COINS.eventHandle = {
+			init : function(){
+				
+				// 返回上一页
+	    		common.jumpLinkSpecial('.header_left',function(){ 
+	                if( FRUIT_COINS.gameType ){
+	        			window.location.replace( 'gameTiger.html?dom=dom' + Math.floor(Math.random() * 100000 ) );
+	                }else{
+	                    window.location.replace('my.html');
+	                }
+	    		});
+				$(".header_right").click(function(){
+					var url = $(this).attr("data-url");
+					common.jumpLinkPlain(url);
+				});
+				$(".score_top_box").on("click",".details",function(){
+					var url = $(this).attr("data-url");
+					common.jumpLinkPlainApp("果币明细",url);
+				});
+				$(".score_top_box").on("click",".abort_score",function(){
+					var url = $(this).attr("data-url");
+					common.jumpLinkPlainApp("关于果币",url);
+				});
+				$(".score_main_list").on("click",".exchangeBtn",function(){
+					var count = parseInt($(".score_top_box .score_icon").html());
+					var num = parseInt($(".count span").html());
+					if (num > count) {
+						common.prompt1({
+							flag:1,
+							msg:"果币不足"
+						})
+					}else{
+						common.createPopup({
+		                    flag: 9,
+		                    icon: 'none',
+		                    msg: '确定兑换"一次抽奖机会"',
+		                    okText: '兑换',
+		                    cancelText: '取消',
+		                    onConfirm: function() {
+		                    	FRUIT_COINS.apiHandle.game_chance_exchange.init();
+		                    }
+		                });
+					}
+				})
+			},
+		};
+		// 果币模块初始化
+		FRUIT_COINS.init = function(){
+			FRUIT_COINS.apiHandle.init();
+			FRUIT_COINS.eventHandle.init();
+		};
+		
+		
 		pub.apiHandle.refresh = function(){
 			if (pub.logined) {
 				pub.apiHandle.userScoCouMon.init();
@@ -1033,10 +1567,13 @@ require(['../require/config'],function(){
 	
 			pub.muduleId == "6" && pub.settings.init(); // 设置模块
 	
+			pub.muduleId == "21" && COUPON_LIST.init();//新增优惠劵列表页面
+			pub.muduleId == "22" && COUPON_LIST_INVALID.init();//失效劵列表页面
 	
-	
-	
+			pub.muduleId == "30" && FRUIT_COINS.init();//果币模块
+			
 			if( pub.muduleId == "0" ){
+				common.gameType.removeItem();
 				pub.apiHandle.init(); // 父模块接口数据初始化
 				pub.eventHandle.init(); // 父模块 事件 初始化
 				common.orderColumn.removeItem();
@@ -1078,7 +1615,12 @@ require(['../require/config'],function(){
 		
 		            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
 		            onPullDown: function () {
-		                pullDownAction();
+		            	common.getNetwork(pullDownAction,pub.pullInstance.pullDownFailed.bind(pub.pullInstance))
+		               /* if (window.navigator.onLine) {
+		            		pullDownAction();	            		
+		            	}else{
+		            		pub.pullInstance.pullDownFailed()
+		            	}*/
 		            },
 		        });
 		        $("#wrapper").css('left','0')

@@ -250,7 +250,7 @@ require(['../require/config'],function(){
 			        	common.jumpLinkPlainApp( "订单支付",'html/order_pay.html' );
 			        }else{
 			        	common.orderType.setItem( "3" );
-						common.jumpLinkPlainApp( "订单结算",'html/order_set_charge.html' );
+						common.jumpLinkPlainApp( "订单结算",'html/orderSettlement.html' );
 			        } 			    		
 				});
 	
@@ -599,7 +599,7 @@ require(['../require/config'],function(){
 							var orderType = pub.preOrderDetail.orderCode.substring( 8, 10 );
 							if( orderType == '07' ){ // 尾款 下单
 								common.orderType.setItem("3");
-								common.jumpLinkPlainApp( "订单结算",'html/order_set_charge.html' );
+								common.jumpLinkPlainApp( "订单结算",'html/orderSettlement.html' );
 							}else{
 				                common.jumpLinkPlainApp( "订单支付",'html/order_pay.html' );
 							}

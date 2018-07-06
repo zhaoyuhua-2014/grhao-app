@@ -2,7 +2,7 @@
 
 require(['../require/config'],function () {
 	require(['common','mobileUi','swiperJS'],function(common){
-
+		
 		// 整体 命名空间 ( search + 门店位置 )
 		pub = {};
 	
@@ -540,15 +540,16 @@ require(['../require/config'],function () {
 					pub.firmIdTemp = $this.attr("data");
 					
 					if( !isCur ){
-						/*$(".order_refund").show();
-						$("body").css("overflow-y","hidden");*/
-						var data = {
-							type:1,
-							title:'确定选择该门店?',
-							canclefn:'cancleFn',
-							truefn:'trueFn'
-						}
-						common.alertMaskApp(JSON.stringify(data));
+						
+						common.jsInteractiveApp({
+							name:'alertMask',
+							parameter:{
+								type:1,
+								title:'确定选择该门店?',
+								canclefn:'pub.store.apiHandle.cancleFn()',
+								truefn:'pub.store.apiHandle.trueFn()'
+							}
+						})
 					}
 				});
 				//点击进入地图页面
@@ -563,28 +564,16 @@ require(['../require/config'],function () {
 					}
 					common.allMap.removeItem();
 					common.mapData.setItem(JSON.stringify(mapData))
-					common.jumpLinkPlainApp("门店位置","html/store_map.html")
+					//common.jumpLinkPlainApp("门店位置","html/store_map.html");
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'门店位置',
+							url:'html/store_map.html'
+						}
+					})
 				});
 	
-				//取消按钮
-				$(".order_refund").on("click",".refund_cancle",function(){
-					$(".order_refund").hide();
-					$("body").css("overflow-y","auto");
-					pub.firmIdTemp = null;
-				});
-	
-				//确定按钮
-				$(".order_refund").on("click",".makeSure",function(){
-					$(".order_refund").hide();
-					$("body").css("overflow-y","auto");
-					common.tellRefreshAPP();
-					if (pub.logined) {
-						pub.store.apiHandle.choice_firm.init();
-					}else{
-						common.firmId.setItem(pub.firmIdTemp);
-						common.goBackApp(1,true,'index.html');
-					}
-				});
 				//点击加载更多
 				pub.loading.on('click',function(){
 	
@@ -599,7 +588,14 @@ require(['../require/config'],function () {
 				$(".location_content .float_right").on("click",function(){
 					common.mapData.removeItem();
 					common.allMap.setItem(JSON.stringify($(".location_content").data("allMap")));
-					common.jumpLinkPlainApp("门店位置","html/store_map.html?type=all")
+					//common.jumpLinkPlainApp("门店位置","html/store_map.html?type=all")
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'门店位置',
+							url:'html/store_map.html?type=all'
+						}
+					})
 				})
 			}
 		};

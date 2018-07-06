@@ -101,7 +101,7 @@ require(['../require/config'],function () {
 	                       $( '[addr-id="' + pub.addrId + '"]' ).remove();
 	                       pub.bool && $('[addr-id]').length == 0 && common.addressData.removeItem();
 	                       if (!!common.addType.getItem() && localStorage.getItem("addId") == pub.addrId) {
-	                    	if (common.isApp()) {
+	                    	/*if (common.isApp()) {
 	                    		if (common.isApple()) {
 	                    			try{
 		                    			window.webkit.messageHandlers.noticeRefresh.postMessage('');
@@ -115,7 +115,8 @@ require(['../require/config'],function () {
 		                    			alert("调用Android的方法失败")
 		                    		}
 	                    		}
-	                    	}
+	                    	}*/
+	                    	common.jsInteractiveApp({name:'noticeRefresh'})
 	                       }
 	                    }
 	    			});
@@ -153,17 +154,22 @@ require(['../require/config'],function () {
 	    			// 删除
 	    			if( isDelete ){  
 	    				pub.index = $this.parents('.contain_address').index();
-	    				/*$(".order_refund").show().attr("index",index);
-						$("body").css("overflow-y","hidden");
-						return;*/
-						var data = {
+						/*var data = {
 							type:1,
 							title:'确认删除?',
 							canclefn:'cancleFn',
 							truefn:'trueFn'
 						}
-						common.alertMaskApp(JSON.stringify(data));
-						
+						common.alertMaskApp(JSON.stringify(data));*/
+						common.jsInteractiveApp({
+							name:'alertMask',
+							parameter:{
+								type:1,
+								title:'确认删除?',
+								canclefn:'cancleFn',
+								truefn:'trueFn'
+							}
+						})
 	    			}
 	
 	    			if( isEditor ){
@@ -173,45 +179,48 @@ require(['../require/config'],function () {
 	
 						common.addressData.setItem( addrInfo );
 						//setTimeout(function(){
-							common.jumpLinkPlainApp( "地址列表",!pub.searchAddr ? 'html/address.html' : 'html/address.html?addr=' + pub.searchAddr );
+						//	common.jumpLinkPlainApp( "地址列表",!pub.searchAddr ? 'html/address.html' : 'html/address.html?addr=' + pub.searchAddr );
 						//},1000)
+						common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:'地址列表',
+								url: !pub.searchAddr ? 'html/address.html' : 'html/address.html?addr=' + pub.searchAddr 
+							}
+						})
 	    			}
 				});
-	
-				/*
-				$(".order_refund").on("click",".makeSure",function(){ // 确认按钮
-					var index = $(".order_refund").attr("index"),
-					arr = $.data($("body")[0],"addressList");
-					$(".order_refund").hide();
-					$("body").css("overflow-y","auto");
-					arr.splice(index,1)
-					pub.apiHandle.address_delete.init();  // 删除
-				});*/
-	
-				/*$(".order_refund").on("click",".refund_cancle",function(){ // 取消按钮
-					$(".order_refund").hide();
-					$("body").css("overflow-y","auto");
-				});*/
-				// 点击添加
-				/*common.jumpLinkSpecial(".add_address",function(){
-					pub.bool && common.addressData.removeItem();
-	                !pub.searchAddr ? 'html/address.html' : 'html/address.html?addr=' + pub.searchAddr
-				});*/
 				$(".add_address").on("click",function(){
 					common.addressData.removeItem();
 	                //setTimeout(function(){
-	                	common.jumpLinkPlainApp( "地址列表",!pub.searchAddr ? 'html/address.html' : 'html/address.html?addr=' + pub.searchAddr );
+	                //	common.jumpLinkPlainApp( "地址列表",!pub.searchAddr ? 'html/address.html' : 'html/address.html?addr=' + pub.searchAddr );
 	                //},1000)
+	                common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'地址列表',
+							url: !pub.searchAddr ? 'html/address.html' : 'html/address.html?addr=' + pub.searchAddr 
+						}
+					})
 				})
 	
 				
 	
 	    		$(".address_management").on('click',".management_address",function(){
+	    			
 	    			var 
 	    			index = $(this).parents('.contain_address').index(),
 	    			addrInfo = common.JSONStr( $.data($('body')[0],'addressList')[index] ); // 取出数据并存储
 					common.addressData.setItem( addrInfo );
-	                common.goBackApp(1,true,'html/order_set_charge.html')
+	                //common.goBackApp(1,true,'html/orderSettlement.html')
+	                common.jsInteractiveApp({
+						name:'goBack',
+						parameter:{
+							'hierarchy':1,
+							'reload':true,
+							'url':'html/orderSettlement.html'
+						}
+					})
 				});
 	    		!common.addType.getItem() && $('.address_management').off('click','.management_address'); // 判断是否从订单进入
 	    	},

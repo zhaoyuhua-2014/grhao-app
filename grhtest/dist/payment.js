@@ -158,7 +158,9 @@ require(['../require/config'],function(){
 	
 	                        var pay_gg = node.parent().next();
 	                        if( pub.isMachineGoods ){
-	                            $('.pay_gg').html("请于"+pub.appData.data.order_cancel_time+"分钟内完成支付，超时订单将取消！")
+	                            $('.pay_gg').html("请于"+pub.appData.data.order_cancel_time+"分钟内完成支付，超时订单将取消！");
+	                            node.eq(3).hide();
+	                            node.eq(1).css("margin-bottom",'10px');
 	                        }else{
 	                            pay_gg.html('请于2小时内完成支付，超时订单将取消！');
 	                            node.eq(3).show().html( '22:30前付款，预计明日送达' );
@@ -168,7 +170,9 @@ require(['../require/config'],function(){
 									node.eq(2).css({"margin-top":"20px","border-top":"1px solid #b2b2b2","padding-top":"20px"})
 									node.eq(3).css({"padding-bottom":"20px"});
 								}else{
-									node.eq(3).show().html( '22:30前付款，预计明日送达' ).css({"margin-top":"20px","border-top":"1px solid #b2b2b2","padding":"20px 0"});
+									if (!pub.isMachineGoods) {
+										node.eq(3).show().html( '22:30前付款，预计明日送达' ).css({"margin-top":"20px","border-top":"1px solid #b2b2b2","padding":"20px 0"});
+									}
 								}
 							}
 	                    }else{

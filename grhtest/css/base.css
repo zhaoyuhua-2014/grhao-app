@@ -1386,3 +1386,229 @@ to {
 .month_recharge_content.skin4 .month_sign1,.month_recharge_content.skin4 .count-left-money em{color: #EB4040;}
 .pay_style_box.skin4 .pay_style_item .count-left-money em{color:#EB4040 ;}
 .pay_style_box.skin4 #get_verify_code{background: #ca8b48;}
+
+
+/*新版果币商城--2018/06/21--*/
+
+
+.color_9ACB41{color: #9acb41;}
+.color_F73A3A{color: #f73a3a;}
+.header_right .text{padding-right: 30px;font-size: 28px;}
+.header_right .icon{padding-right: 30px;}
+
+/*果币商城*/
+.score_top_box{height: 148px;padding: 30px 47px;background: #fff;margin-bottom: 30px;}
+.score_top_box .float_left{font-size: 24px;}
+.score_top_box .float_left span{float: left;}
+.score_top_box .float_left .paddingTop{padding-top:54px ;}
+.score_top_box .score_icon{font-size:72px;position: relative;padding-left: 60px;font-weight: 800;top: -28px;padding-right: 6px;min-width: 50px;background-image: url(../img/score_icon_b.png);background-repeat: no-repeat;background-position: 20px 74px;padding-top: 32px;}
+
+/*.score_top_box .score_icon:before{position: absolute;content: "";bottom:12px;left: 20px;width: 36px;height: 36px;background: url(../img/score_icon_b.png) no-repeat center bottom;}
+*/
+.score_top_box .details{width: 60px;height: 30px;border: 1px solid #9ACB41;position: relative;text-align: center;line-height: 30px;font-weight: 400;top: -4px;}
+.score_top_box .float_right{text-align: right;padding-top: 54px;font-size: 24px;position: relative;}
+.score_top_box .abort_score{padding-left: 52px;}
+.score_top_box .abort_score:before{position: absolute;content: "";width: 32px;height: 32px;background: url(../img/score_why1.png) no-repeat center;left: 10px;bottom: 0;}
+.score_main_list .score_list_item{padding: 30px;margin-bottom: 10px;background: #FFF;color: #333;}
+.score_list_item dd{padding-left:30px ;}
+.score_list_item dd p:nth-child(1){height: 64px;line-height: 64px;font-size: 32px;}
+.score_list_item dd p:nth-child(2){height: 52px;line-height: 52px;font-size: 28px;color: #aaa;}
+.score_list_item dd p:nth-child(2) span{padding-left: 38px;padding-right: 10px;position: relative;}
+.score_list_item dd p:nth-child(2) span:before{position: absolute;content: "";width: 28px;height: 28px;background: url(../img/score_icon.png) no-repeat center;left: 0px;bottom: 4px;}
+.score_list_item .float_right{padding-top: 30px;}
+.score_list_item .exchangeBtn{width: 132px;height: 52px;border: 1px solid #9ACB41;color: #9ACB41;border-radius: 26px;font-size: 24px;text-align: center;line-height: 50px;}
+/*果币兑换记录*/
+.scoreRecordExchange_wrap .main{padding-top: 20px;}
+.scoreRecordExchange_wrap .score_list_item{margin-bottom: 20px;}
+.scoreRecordExchange_wrap .score_list_item dd p{line-height: 1;}
+.scoreRecordExchange_wrap .score_list_item dd p:nth-child(1){height: 57px;font-size: 32px;}
+.scoreRecordExchange_wrap .score_list_item dd p:nth-child(2){height: 44px;font-size: 28px;color: #aaa;}
+.scoreRecordExchange_wrap .score_list_item dd p:nth-child(2) span:before{left: 0px;top: 2px;}
+.scoreRecordExchange_wrap .score_list_item dd p:nth-child(3){font-size: 28px;color: #aaa;}
+/*果币明细*/
+.scoreManagement_nav{padding: 20px 24px;margin-bottom: 20px;background: #FFF;}
+.scoreManagement_nav_item{width: 200px;height: 56px;background: #eee;border-radius: 4px;color: #949494;font-size: 28px;text-align: center;line-height: 56px;float: left;margin-right: 36px;}
+.scoreManagement_nav_item:nth-last-child(1){margin-right: 0;}
+.scoreManagement_nav_item.actived{background: #9ACB41;color: #FFF;}
+.scoreManagement_list_item{height: 110px;margin-bottom: 1px;background: #FFF;padding: 12px 30px;}
+.scoreManagement_list_item p:nth-child(1){height: 52px;line-height: 52px;font-size: 28px;color: #494949;}
+.scoreManagement_list_item p:nth-child(2){height: 28px;line-height: 28px;font-size: 24px;color: #949494;}
+.scoreManagement_list_item .float_right b{font-size: 36px;color: #494949;line-height: 80px;}
+/*新增优惠卷页面*/
+.coupon_list_item{width: 100%;height: auto;min-height: 200px;background: #FFF;margin: 20px 0;border-radius: 8px;}
+.coupon_list_item_top{padding: 30px 30px 12px;}
+.coupon_list_item_top .float_left p:nth-child(1){height: 48px;line-height: 48px;font-size: 30px;color: #333;}
+.coupon_list_item_top .float_left p:nth-child(2){height: 50px;line-height: 50px;font-size: 24px;color: #777;}
+.coupon_list_item_top .float_right{padding-top: 22px;}
+.coupon_list_item_top .float_right .coupon_btn{width: 132px;height: 52px;border: 1px solid #9ACB41;color: #9ACB41;font-size: 26px;text-align: center;line-height: 52px;border-radius: 26px;}
+.coupon_list_item_top .float_right .coupon_btn_invalid{width: 110px;height: 64px;text-align: center;line-height: 64px;background: url(../img/coupon_border_bg.png) no-repeat center;font-size: 24px;color: #AAA;}
+.coupon_list_item_bg img{width: 100%;height: 100%;}
+.coupon_list_item_bottom{padding: 0 30px 14px;font-size: 20px;color: #AAA;line-height: 38px;}
+/*抽奖记录*/
+.winRecord_top{height: 88px;line-height:88px;font-size: 30px;color: #333;font-weight: 800;}
+.winRecord_list_item{height: 80px;line-height: 80px;font-size: 24px;color: #898989;text-align: center;}
+.winRecord_top,.winRecord_list_item{border-bottom: 1px solid #E5E5E5;background: #fff;}
+.winRecord_item{float: left;width: 50%;text-align: center;}
+/*老虎机抽奖*/
+.gameTiger_wrap{max-width: 750px;}
+.gameTiger_box{width: 750px;height: 1206px;background:#3B5FFA url(../img/gameTigerBg.png) no-repeat top center;background-size:100% 100%;padding-top: 150px;}
+.gameTiger_mainArea{width: 670px;height: 790px;margin: 0 auto;background: url(../img/gameTigerBoxBg.png) no-repeat center;padding-top: 72px}
+.gameTiger_operateArea{width: 100%;height: 189px;background: url(../img/gameOperateBg.png) no-repeat center;}
+.gameTiger_border{width: 656px;height: 647px;background-repeat: no-repeat;background-position: center;margin: 0 auto;padding-top: 20px;}
+.gameTiger_border.gameTigerLamp1{background-image: url(../img/gameTigerLamp1.png);}
+.gameTiger_border.gameTigerLamp2{background-image: url(../img/gameTigerLamp2.png);}
+
+.gameTiger_box_center{width: 605px;height: 605px;margin: 0 auto;padding: 5px;}
+.gameTiger_bc_top{padding-top: 4px;}
+.gameTiger_box_item{width: 85px;height: 85px;float: left;padding: 5px;position: relative;}
+.gameTiger_box_item.active{background: url(../img/gameTigerActive.png) no-repeat center;}
+.gameTiger_box_item .activeMask{width: 85px;height: 85px; background: url(../img/gameTigerActive.png) no-repeat center;position: absolute;top: 0;left: 0;display: none;}
+.gameTiger_box_item.active .activeMask{display: block;}
+.gameTiger_box_item_inner{width: 75px;height: 75px;border-radius: 10px;overflow: hidden;}
+.gameTiger_box_item_inner img{width: 100%;height: 100%;}
+.gameTiger_bcc_left,.gameTiger_bcc_center,.gameTiger_bcc_right{float: left;}
+.gameTiger_bcc_left .gameTiger_box_item,.gameTiger_bcc_right .gameTiger_box_item{float: none;}
+.gameTiger_bcc_center{width: 425px;min-height: 425px;}
+.gameTiger_bccc_text{text-align: center;padding-top: 120px;color: #FFF;font-size: 36px;}
+.gameTiger_bccc_number_box{width: 216px;height: 154px;padding-top: 36px;margin: 0 auto;}
+.gameTiger_number{width: 78px;height: 116px;margin: 0 15px;background-repeat:no-repeat ;background-position:center ;float: left;}
+.gameTiger_number.number0{background-image:url(../img/number0.png) ;}
+.gameTiger_number.number1{background-image:url(../img/number1.png) ;}
+.gameTiger_number.number2{background-image:url(../img/number2.png) ;}
+.gameTiger_number.number3{background-image:url(../img/number3.png) ;}
+.gameTiger_number.number4{background-image:url(../img/number4.png) ;}
+.gameTiger_number.number5{background-image:url(../img/number5.png) ;}
+.gameTiger_number.number6{background-image:url(../img/number6.png) ;}
+.gameTiger_number.number7{background-image:url(../img/number7.png) ;}
+.gameTiger_number.number8{background-image:url(../img/number8.png) ;}
+.gameTiger_number.number9{background-image:url(../img/number9.png) ;}
+
+.gameTiger_operateArea_left,.gameTiger_operateArea_right{width: 265px;height: 189px;}
+.gameTiger_operateArea_left{padding-left: 75px;padding-top: 25px;}
+.gameTiger_operateArea_ruleBtn{width: 128px;height: 96px;background: url(../img/gameRuleBtn.png) no-repeat center bottom;}
+.gameTiger_operateArea_ruleBtn.down{background: url(../img/gameRuleBtnDown.png) no-repeat center bottom;}
+
+.gameTiger_operateArea_center{width: 220px;height: 189px;position: relative;}
+.gameTiger_operateArea_start{width: 220px;height: 157px;position: absolute;background: url(../img/gameStart.png) no-repeat center bottom;top: -20px;}
+.gameTiger_operateArea_start.down{background: url(../img/gameStartDown.png) no-repeat center bottom;}
+.gameTiger_operateArea_right{padding-left:42px ;padding-right: 50px;padding-top: 18px;}
+.gameTiger_operateArea_text{width: 152px;height: 24px;background: url(../img/gameOperateText.png) no-repeat left center;}
+.gameTiger_operateArea_right_box{padding-top: 5px;}
+.gameTiger_operateArea_sign,.gameTiger_operateArea_exchange{width: 80px;height: 60px;float: left;}
+.gameTiger_operateArea_sign{background: url(../img/gameSign.png) no-repeat center bottom;margin-right: 12px;}
+.gameTiger_operateArea_sign.down{background: url(../img/gameSignDown.png) no-repeat center bottom;}
+.gameTiger_operateArea_sign.no{background: url(../img/gameSignEnd.png) no-repeat center bottom;}
+.gameTiger_operateArea_exchange{background: url(../img/exchangeBth.png) no-repeat center bottom;}
+.gameTiger_operateArea_exchange.down{background: url(../img/exchangeBthDown.png) no-repeat center bottom;}
+/*抽奖规则*/
+.rule_content{padding: 30px 24px;background: #FFF;font-size: 24px;color: #333;}
+/*订单结算*/
+.set_coupon_box_item{width:100%;height:100px;margin-top:20px;padding:0 20px;background:#ffffff;line-height:100px;font-size:30px;color:rgb(51,51,51);}
+.set_coupon_box_item_text{padding-right: 44px;background: url(../img/arrow_right.png) no-repeat right center;min-width: 200px;height: 100px;text-align: right;}
+.set_coupon_box_item_text.color_999{color: #999999;}
+.cuopon_management_contain1 .title , .cuopon_management_contain2 .title{font-size: 24px;color: #6F6F6F;height: 40px;line-height: 40px;}
+
+.select_coupon{display: none;}
+.select_coupon .main{padding-top: 20px;}
+.coupon_list_item.active .coupon_list_item_top{background: url(../img/coupon_active.png) no-repeat right top;}
+.select_coupon .select_coupon_top{width: 100%;height: 80px;line-height: 80px;background: #FFF url(../img/bg_num_b.png) no-repeat 96% center;font-size: 24px;padding: 0 24px;margin-bottom: 20px;}
+.select_coupon .select_coupon_top.active{background-image:url(../img/bg_num_a.png) ;}
+
+/*-------借用京东弹框样式--------*/
+.mod_alert{position: relative; box-sizing: border-box; width: 500px; margin: 20px auto 0; padding: 20px 24px 15px; text-align: center; border-radius: 14px; color: #333; background-color: #fff; overflow: hidden; box-shadow: 0 1px 10px 0 rgba(0,0,0,.3);padding-top: 48px;}
+.mod_alert .icon{display: block; width: 100px; height: 100px; margin: 10px auto 15px; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkBAMAAACCzIhnAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAtUExURUdwTOk7Pek7Peo7PfdLS+0/QPBCQus9Puo7Peo7Peo7Peo8Pus8Puo7Pek7PXsRad8AAAAOdFJOUwDg9ogHIhU3u8yjXlJyJjVnBAAAAuJJREFUWMO9WM9rE1EQ3tJt+iMKgnpQZA/FooKGFhRBIUQLonip9aB4kIiCgrSEil6EIqJehKDiyUNRxIOXEFDUk6h/gIgHj0JS1LTq9zc4b3ebbDczu+/NwTkE9m2+t29mvje/PI+Ry69ePhwf3/bk8A3PTq4+Q1e2v7EADE1hnWyeyUPMLSElK9+yEadL5l97nr+9funYmZuHHpmn9oEsxDmD6BysrD37124bzAsZMW02vV9JLvnvzNp+CVEMgFbfyefM6gfBVnV697p//SRhOrzdPkm7bSDMXkGRtnDm6RKrToEcclfS8iy5p9q3egrYJ9vyK7A1vTYcoFWTIdzrBeBelpOvALtSu5SwWsmkUgPtWlqTyWz2Daa0KQT4m8fx72gljXYi9yPhZx4nHstYzb98DSwnGAHcyYccB3p8ml1/TEFI4YnuQz1tc14W0Emc64sNZGPvZEd66GypY0vXXhN2kNk1mw1ZOKXrmuh2jqHF0Ovjjv41P8DT+HN/mB2DFrP4OVahjE3MW4BZHIiUKZTQtIUU0a6G1uZU4SGkjPHgKM97FkI34AH9nsdPe8g8foTa37KHjIT6B6z2AqQIsn0B7Yo9xC+hSjiekzyEmNkkuiy7QMpEmQH8coEsElXmsdMFcpRcshg6xxoySod6H/PZEjKG36TPpAtkkKzV4D0pQYoUJJdQc4EMY0UDCTDjAhkikhnSOECIkgSpuEB8LcT5YAr1/49fFIRR0FIiPxvGI/JLV4xLFvEVky6yIOYiS+FCEBMupKAkiAlKRdt03At9BaBijwgDrBTGherbhHEpWfASJQshJfESpSQh8fGujBKfkF5ZwsTpVZHEFaWCpiBRlD2K4kpRwnkX3AtFh3K0qS96NaW1XQE/kizgFW2CphlRtDyKxiq/ffP72jdFk6hpRRUNr6atVjTvmhGBZhAR7uY27vC8i85DlXh0s9tldKMZEGnGUJphl2aklj+4+we41lWyUPLC5gAAAABJRU5ErkJggg==) no-repeat; background-size: 100px auto}
+.mod_alert .icon_fail{background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkBAMAAACCzIhnAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAwUExURUdwTOk7Pek7Puo7Pe1AQOo7PfJDQ+o7Peo8Puk7Peo7Pew+Pus8P+o7Pes8Pek7PTAbU/gAAAAPdFJOUwD6UtseiA3AXOujLjxyTY1GP2wAAAMUSURBVFjDnVjNaxNBFB+auImN5lBFEZE0/0GletDLpoj4hVhQRERIPBQRKlaQIl7Sg9KLUEXxJEZQ8aiCd3ux6CkK4rW5elzWuk1Vnm92s9nJzJvd5M0pm5nf/Oa9efO+hCDG/P0304/2Td+9tCaGGydfQn8cvTcEoHQeBsbhd1mIG03QRvAjHXG8Ilftev3gQ8M58/nyQfnlXUhDnJaIvVca8bfz6ZbEvLIj5iTiTkP9y1mWmIs2RLEF4H/X/z3rAnSXaEQeJfeJuSJighoJ+UkjIsxzamKb/cxSxln6WLdtUp4gj3YM4IBdl98ADhl20gI/xTRKLnT16S8Ai2mXfA3gmUGylW5Kb3WaU6RKNIU+GVCXC/+ybHwdfFVphUySkGZB+axnSRJJs5F8lAc3sAw8SkcR3m9kQxxXUUAT9g/jR95D0LdUgK/DQHYCxJZ+PUGnjyY87etr93CQmVhn+Ur2pcRX40W3Oa7oa554sOUjnURnL3p0m4keJ0xIFR7GP1d6ItRhKv5rB3iTOmKsksznImGcSl91UqwJk8TrJNfhNUJt+wPzkwaJsosb3mBBtfsxg2Zwk/XQGD/CL2Gn0fY4B39C6RfsS/QtCqH8LizZ1+g7FKXg+UgJlkX6OVG9NcQFdnlNbTTxTOPq89SXmTqvo8nk4K+w0Zgkoo2mcBP2CBuNSSKuwm/R9qaEhYYgCQ+10rNngoYgQdE3UZ5ZQdNQJPjKNtChmcEuWkyR4J1soaJXBUlDkuCLCtBeiEgkl5MkooQW4wIVn3E9SYL25YsWUL4VaUgS4UBXVID0P1UgSYQAjwNhHIwhPkPJjKtkGAzDLBnG34aRnxjjITPcBcMpMVwfw8Ey3DgnWDBCEiPwMcKrGsTLdBCvaUFcTRVydKqwqqUKakKynXpV1STFiRMSJe0pP+4Qz31N6GkPI7lipHCcRJGRjjKSXk5qzUjgGWWCLJtGLUYYJQ+jsOKUb1gkeiMWiZxSlFHwcspqMTdy8c5pEXAaEYx2B6epwmndcBpEvTaUN0obitPs4rTUsht3/wGACs5tnDrRzgAAAABJRU5ErkJggg==)}
+.mod_alert .icon_success{background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkBAMAAACCzIhnAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAnUExURek7Pf////Wio+tFR+1WWPBvcPvS0/3l5fOPkP7w8Pm+vv/6+ve0tHOH3mIAAANvSURBVFjDrZjPaxNREMe/NEl/SC+vtM2P7aEFLYgeliot6CXVgoqXVCgiemjak54MVdpjCkIRPTSiIurBIIgetypV8NAeBIv/lPNespu3u+/XLs4tm/3sd2b3vXkzA6aw13/WVvwLK2vn76v+RfrS2yeI7PoXB6R8GjG70rIh7xtIWPHEjOz4/K6Ltz5tv/u5/eDMVf6rsGdCdvgtpfkg/O1tCNE9PfKG/38vkC95v/m1ZzqkVifPzyajfcGvdtVImZwo/k2/1F/ElFpK5GPiaTH1SyrkB72bc0xpB74cToRUya3bTGOPybVOCnkEDDGtzQLXksihj2JTj0zXB3+HyCZwhxnsFbAYR6Z9jAYmxGuj0IwhW8AuM1oliqaHVOum2MM3UOxIyHeriJC5KyFtjDKrhTcJpBY+wGjkSjdCtkI3jUYBL0VIA8PMwdZRChHya84Fmeh5xpFvPdpuDdzoI+2ej3bbEu+MkLKjX8KzlkAqKAZuiFfnX5yQhzjFHO0DRgTSxrIrMsmDAav6OHZFZlDoEDLjHIoI5piQSfu6l3fAKiEPMeaO7FP8EKCzTZFLYHVr9OV5Kf4iQxWwRb+JKO96QAc165qk7LMrrcwuKtYXtomBCkW+i0nb9iKRwUO9dSxjH5etItJC/4oxrFtWWEyEr7JhHFkyWFyEdso42ub9lRBhBxhFw/wlEyL0LUuENDOIsGlC6mhlEKFEUTQjKRGB+OhkEGFVFAgJMojQuizAtJDTInwpmxxTiAjHYuFvtCwiqTdWiw5qnQg7JET+lJXooNaJiE/ZkPZPDZKMUoRuKcWX5awkoxSh5D9Ei381dhosGkUoK40ntthARi0itlh8I0cyGhGxkRPpIpTRiDCeLhJJqS+jExFJaSaR+noyOhFKfcepBCtktCIiwabSOJfRiog0njosSGZBJ9I/LFJH0iyv8udMR9JU8okko03tvYNvInW8HmlF6HidUx7iE1qR/iGuKBU+d82lQp6CJEfZk6O4omBGMpZw7KV7oXgzfzlK9GLGojdPae1WwE/JBXyONiFPM5Kj5XFrrJZivVg5e/vmZW8SeRqytKKFpqLhXcjW8OZpq3nzjmzNe54RQZ5BRI5xh2Go8vR/jm7yDIjCMZQvjaFKJ7Zh12HmYRdjQWKkFjhM4QaDu+fKwd0/wqiyF0KTO2IAAAAASUVORK5CYII=)}
+.mod_alert .icon_wait{background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAMAAABHPGVmAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAzUExURUdwTOo7PfBDQ+o7Pek7Pes8Puo7Pe0/QOo7Peo7Pv9PT+k7Peo7Pes+P+o7Pes8Puk7PTwESt8AAAAQdFJOUwDAEJb5O4Ee3mEFz+wqr0wNnWqNAAADoElEQVRo3r1aSaKkIAwFZAa17n/abgL6rRJNVIStwDPzBGPEJZTTEw82Shlt4JN2SrCWy7jBfirLDs60QRh1FWAF0uNTBOHCB13BPWGcGeR6kwxJDKMR3gszJgGFzcfBPIaQXCu/3+CV5vIRjFgh+Bk3hOMrzGWmzXGRK/qHZtEM665xii/HPGW7dwWGm8tkXPmzAhNn4n4/ZB5rf4V4r7MMB9IpkS2DX7axwmMKywzQLd0dpXdAjEVRRhCHVXcwPFPwhxFhggKM6babEBOgKJyOwd/3RFlrzmgxgKGf+dSMYs5l/hCDMX0mfR+aYBSU4I/pHBqEOX980wx65VkLFNCx+UDotlFuIGxd+MknSMUaLZVsn+88QiKw6ktmi4X4seb8K/eJWEOGZdFEonqO77mf9EGOLUFG+athRh5byC12FWuR5ocQe6y96aoDjhyrirffpAAhJxHkFgjo0oYUIIS1BmFfpAiEkLsgQIrY6LT17UFAKsvPB8z53gQBBQtFo9Md5g0Qkw6OKx5nb4DADr0qgXsHxC1qazY60BoE9NYUtHNu3QeBLa5YoiaAePO/zvIXQXSxR4tvTURPkILKaa13FcRY5KTKQhHpKBLZ47fXHZzWS82NZKQ+/ZoArIAE010F/FeSCsJRBXKfKElhPZZgwX4CyWtCQqcOQdBUMF8/oaZY49fCNrQUyYwi6GHJPSoL43NmAoefRCs3Xycl4pXbCIKzmAveFC6/i1DqGjCUSNDDJVP+WZTkPJlhBGumZNnzLy2SVGT4tJMMwsy3XIhtgQxCZBcrle0fIbQiPLOLJvilRv8SCYUBWfAkFS5Z/ycOynihdMgemdJcBBWmGGOpN6Re+erih+IpFmMkuZVcOc2/lbIcGc2taKqbk/O+/MMZlq+nuHrQDl0zT0Nz9ZSgle6L4jipQoMWJfwOVR8yI7XAJvxSEolQ3SIkbsclkaCkRLHOfYub2JISEZK7A/8W6MldlzS1S8Ldp3ToUgR1KedYl8K0R4ndp1nQp+3RpYFz2oq6C7JrRZ011QqI2a9T37VvquUgzls21SrtwZNG5732YP2+w5btLZB6y/a4+XyHXUfN5y5t9IYDgdObeow2ugxpGo2bNFay9hicMd9jBPhsmMmIw8xHY1lPHcuuVe71AfOYB8zB0G3p3VE56zL0Z32eL/z92ZsPMVifJyWsy+OYb5jXnvlkbrz+YCk9e+jw9Kqw7fVHZAvjHjyH+wcZlX49hDQ7vAAAAABJRU5ErkJggg==)}
+.mod_alert .close{padding: 12px; position: absolute; top: 0; right: 0; z-index: 2}
+.mod_alert .close::after{content: ""; display: block; width: 20px; height: 20px; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWBAMAAAA2mnEIAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAVUExUReXl5ebm5kdwTOXl5ebm5ufn5+Xl5VD/Mk8AAAAGdFJOU9QVANO/FldPzRUAAAB6SURBVBjTXY/RDYAgEENLTO4bYYIjcQUnIH47Ah/G/UeQ6yEm8tX0cW2Kmoo/rTjC0PFCbA50D1BxkFtCcdDtguKg210TmG3agNmmO1jNplZZeA/W3Mz9axXMP7mtMm4tO45My2Y5vJIAXkkAtwmQ3y0Svo3nhbl9qw/RCiDBoV2GgQAAAABJRU5ErkJggg==) 50% no-repeat; background-size: 11px auto}
+.mod_alert p{font-size: 28px; line-height: 40px;}
+.mod_alert p + .small{margin-top: 8px}
+.mod_alert p.medium{font-size: 14px}
+.mod_alert p.small{font-size: 12px; color: #999}
+.mod_alert p.alignLeft{text-align: left}
+.mod_alert small{font-size: 12px; color: #999}
+.mod_alert hr{height: 1px; background: #e5e5e5; border: none; margin: 0 15px}
+.mod_alert .btns{position: relative; display: -webkit-box; display: -webkit-flex; display: flex; margin: 15px -15px 0}
+.mod_alert .btns:last-child{margin: 36px -15px -15px}
+.mod_alert .btns:last-child::after{display: none}
+.mod_alert .btns::after{content: ""; position: absolute; z-index: 1; pointer-events: none; background-color: #e5e5e5; height: 1px; left: 0; right: 0; bottom: 0}
+@media only screen and (-webkit-min-device-pixel-ratio: 2){.mod_alert .btns::after{-webkit-transform:scaleY(.5); -webkit-transform-origin: 50% 100%}}
+.mod_alert .btns .btn{-webkit-box-flex: 1; -webkit-flex: 1; flex: 1; text-align: center}
+.mod_alert .btns .btn + .btn::after{content: ""; position: absolute; z-index: 1; pointer-events: none; background-color: #B5B6B1; width: 1px; top: 0; bottom: 0; left: 0}
+@media only screen and (-webkit-min-device-pixel-ratio: 2){.mod_alert .btns .btn + .btn::after{-webkit-transform:scaleX(.5); -webkit-transform-origin: 0 50%}}
+.mod_alert .btn{position: relative; width: 100px; height: 70px; line-height: 70px; background: #fff; color: #333; font-size: 30px}
+.mod_alert .btn::before{content: ""; position: absolute; z-index: 1; pointer-events: none; background-color: #B5b6b1; height: 1px; left: 0; right: 0; top: 0}
+@media only screen and (-webkit-min-device-pixel-ratio: 2){.mod_alert .btn::before{-webkit-transform:scaleY(.5); -webkit-transform-origin: 50% 0}}
+.mod_alert .btn.disabled{color: rgba(51,51,51,.3)}
+.mod_alert .btn_1{color: #9ACB41}
+.mod_alert .disabled span{margin-left: 5px; color: #9ACB41}
+.mod_alert.fixed{display: none; z-index: 899; position: fixed; left: 50%; top: 50%; margin: auto; -webkit-transform: translate(-50%,-50%); transform: translate(-50%,-50%)}
+.mod_alert.one_line{width: auto; overflow: hidden; white-space: nowrap; max-width: 270px; padding: 10px 15px; color: #fff; background: rgba(0,0,0,.8)}
+.mod_alert_black{text-align: center}
+.mod_alert_black .mod_alert{display: inline-block; width: auto; min-width: 128px; max-width: 270px; background-color: rgba(0,0,0,.7); padding-top: 15px}
+.mod_alert_black .mod_alert p{color: #fff}
+.mod_alert_black .mod_alert .icon_fail{background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkBAMAAACCzIhnAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAwUExURUdwTP///////////////////////////////////////////////////////////0Q+7AIAAAAPdFJOUwD6UQjeJIcWXMu16zmbcqzkWYgAAAMaSURBVFjDrVg7aBRRFH3sx11jYhERCYqT1DZr4wctbBREZBRMo4iBWIgIWbER0SQgKIigopXNbuOvWr+dsCuCChaxUCyjlWUYGGN2N3q8M+t8dt59M8vFVyw7M++88+7vvXuvUsy4fO3JvWebD94/814NNi5+RjgOXx8AUDyNvnHgSBZitobEaP9IR1yxvFljD29OXtg5+eHsHe/J+ZqGOOkhxs5Vguf8Ow/kfDEjdniIx5X4q/wNDzNtQpSbgKvtfNYGuvMGXTUIcVV/v4swHV5v2wjBrlYmzHNWEPOePRmZTyUyyAOTlMfJPFXt7TFgq1mX34H9yXfDTbgtM2TYRjf5+SPwKM3Il4DXGsnvVE/KLyZpTgBT6d63BnjVpy4bf7J8fAluXGm7M0l8mruxx5kMSfyxiOXoIQfUsyFDwHhMeLeaDSGBIwU0sGWQc+QNOqGnAt8GgawHAk/fE6HTRwMvQn1tHAxyNNBZ0co2SmAapxedI3DDE2Ivo7ncoUC3eRuf/D/nsRI6X21Uh0zgafD3Fjb9s+q+0KHhjGskVvS90POSkhWqzvs/qpNEy5ThVH1tR6L0fQ9JolVIGM+Ca+N+n9No+hdZwm36PYVfxhnaGnP46Ruybp6SXGLIN6aNefOc5ApluKQkOBXzTpL7zFuoEq5tllfXRo32NBIPz+Q0Xecz5DIFrBptp5OoBXKFOWxQJhqdRG0nkyz4xmFpGBIy/Co5Z10ZaBgSMswKyTOleBqOhKJsmeJZv+x6kzkSskmHFN1SLA1LQhHVJghz2XrTWRJVJIjNQTwaloQgrmqCO1uJhiUhl+wqCxXF0rAkKg9HAhFsTCC+QMkCUwocRuCWAucXhJggkAXHheBQEhx9ggNWcIxLLgvBlSS4+ATXa/wSz/GXeDVxicdThQKfKrQSqUI8IVnHRdVEu5JMSGJpT+4lE7ultyqZ9giSK0EKJ0kUBemoIOmVpNaCBF5QJkiKEUHJIyissss3pZVvgiJRUooKCl5JWS0o3iUtAkkjQtDuMDdVMP0/WzeSBpGkDSVpdklaatmNu78NQuAatu2vXgAAAABJRU5ErkJggg==)}
+.mod_alert_black .mod_alert .icon_success{background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAMAAABHPGVmAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAzUExURUdwTP///////////////////////////////////////////////////////////////8/RimEAAAAQdFJOUwAVCMTyVGog4qLUkCo9ga9ti6GsAAADJklEQVRo3r2aSYKEIAxFmScFvf9puw1oaZUoUYBNL9rySfITCIGQwkG9ChN3RsxCGMenoDwlNYeW1swnw1hZCTQGN18MF8a3BKr4fDu4ejMfPYjtTcLZIP2oKWNUj14G63b/HPRThN3ewYNnvw8wH/gKEvYJhg0rYpLs4jE5rc8NDMuQSU7u3t5UJWUYibNUcrcr/JlMGI6wmRQoxA4jJM4bQuFsrATCMzSaakKrRUcJ8IKg0SZO44no42TM7eeNwHAPU8UInjE3v/bwLZY9zREMAlj4yy8BxvAm24FqxHjnj/Aup4Zrv1BgKPJyKKBkNMZ4FUaicJa35kAqjPybJOiqzmoKGjvJMHoRlmN1IGyJF/HrfH6jPGRULp/MT40lSbVx9j5m6jnk4xbDfvQgqm7WqPhWmK4UIT/Ror/m5kjl4Y4egIn42hB/nMpwprf3g++9Aj6S9SFyrybVwiOrV9RuWqoFRH3cMC6zYi0gbPHDuC1lljQZdltoXRW3U5ZxvVuDRFRYp063KCKFykKbatjlLNKmZCVbQVuwEk4ZfS3+NpsC3jFOd0GLcs2/w+KfNow4BQppjDdjQKB7sNrQjAG5V0EoqmYMmEMAkflmDPDGBEYbmzFAXhySCm3GAPE60BhrxiAMImTJLu0YhEBmFI/TYxEjvv9xDi5jREs9NVchI04i73hGKzCi47MS/q+2h9eMJOFsMPKLpb+YkYIxm1amfHlXzkhpJZsgY1Fv3zFSgsyn+hwFw0ip/mLROqegGGnRulp+zyg4Rlp+LzcSvxQkI20krrdE3xQkY9sSXW/ujhQsY9vc3WxT9xQ0AzIjLdhwfyh4xrbhvi0dEoXhGbvS4bYIihSDZ+yKoPtyTq99IBxjX84VFKaJgmQcCtOCEhsoWMahxC45LNBccOzB+uGwoM+xR5cDnD5HUV0O1focD3Y56OxzZNvn8LnLMXqfhkC91ka4aG10adL0aTf1aZz1aQH2aWb2acv2aTDvWuU4b6Ba5aRL05/0ub5AulzEIH2ulBDk5ZjZPr6D0/6aT7R38wtLMVU0v3qVzJa/RKZJzfHmOtwfmAFYjRpHm7sAAAAASUVORK5CYII=)}
+.mod_alert_info{padding-top: 0; padding-bottom: 0}
+.mod_alert_info .btns:last-child{margin-bottom: 0}
+.mod_alert_info .title{padding: 0 30px; height: 46px; line-height: 46px; font-size: 16px; font-weight: 400; position: relative}
+.mod_alert_info .title::after{content: ""; position: absolute; z-index: 1; pointer-events: none; background-color: #e5e5e5; height: 1px; left: 0; right: 0; bottom: 0; margin: 0 -15px}
+@media only screen and (-webkit-min-device-pixel-ratio: 2){.mod_alert_info .title::after{-webkit-transform:scaleY(.5); -webkit-transform-origin: 50% 100%}}
+.mod_alert_info .inner{position: relative; margin: 12px 0; text-align: left; max-height: 199px; overflow: auto; -webkit-overflow-scrolling: touch}
+.mod_alert_info .inner dl + dl:not(:last-child){margin-bottom: 8px}
+.mod_alert_info .inner dt{font-size: 14px; font-weight: 400; color: #333; margin-bottom: 4px}
+.mod_alert_info .inner dd,.mod_alert_info .inner li{font-size: 12px; color: #999}
+.mod_alert_info .inner ~ .btns{margin-top: 12px}
+.mod_alert_info .scrollbox{position: relative}
+.mod_alert_info .scrollbox::before{content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 25px; background: -webkit-linear-gradient(top,hsla(0,0%,100%,.5),#fff); background: linear-gradient(180deg,hsla(0,0%,100%,.5),#fff); z-index: 1}
+.mod_alert_info .scrollbox .inner{padding-bottom: 25px}
+.mod_alert_info .scrollbox ~ .btns{margin-top: 15px}
+.mod_alert_loading{background: none}
+.mod_alert_large{width: 290px}
+.mod_alert_mask{display: none; position: fixed; left: 0; top: 0; bottom: 0; right: 0; width: 100%; height: 100%; background: rgba(0,0,0,.3); z-index: 898}
+.mod_alert.show,.mod_alert_mask.show{display: block}
+
+/*仿京东的弹框*/
+.mod_prompt{position: relative; box-sizing: border-box; margin: 0 auto; padding: 54px 50px; text-align: center; border-radius: 14px; color: #FFF; background-color: #333; overflow: hidden; box-shadow: 0 1px 10px 0 rgba(0,0,0,.3)}
+.mod_prompt.fixed {display: none;z-index: 600;position: fixed;left: 50%;top: 50%;margin: auto;-webkit-transform: translate(-50%,-50%);transform: translate(-50%,-50%);}
+.mod_prompt.show{display: block;}
+.mod_prompt .text{font-size: 30px;}
+.mod_prompt_mask{display: none; position: fixed; left: 0; top: 0; bottom: 0; right: 0; width: 100%; height: 100%; background: rgba(0,0,0,0); z-index: 898}
+.mod_prompt.show,.mod_prompt_mask.show{display: block}
+
+
+.mod_game{position: relative; box-sizing: border-box;width: 500px; margin: 0 auto; padding-top: 100px;padding-bottom: 30px; text-align: center; border-radius: 14px; color: #333; background-color: #FFF; overflow: hidden; box-shadow: 0 1px 10px 0 rgba(0,0,0,.3)}
+.mod_game.fixed {display: none;z-index: 600;position: fixed;left: 50%;top: 50%;margin: auto;-webkit-transform: translate(-50%,-50%);transform: translate(-50%,-50%);}
+.mod_game.show{display: block;}
+.mod_game .close{width: 48px;height: 48px;display: block;position: absolute;top: 20px;right: 20px;background: url(../img/gameTigerClose.png) no-repeat center;}
+.mod_game .icon_box{width: 200px;height: 200px;margin: 0 auto;background: url(../img/pic_logo_load.png) no-repeat center;background-size:100% ;};
+
+
+.mod_game .icon_box img{width: 100%;height: 100%;}
+.mod_game .msg{font-size: 30px;padding-top: 60px;padding-bottom: 30px;font-weight: 800;}
+.mod_game .btn{width: 216px;height: 66px;color:#fff;line-height: 66px;font-size: 28px;border-radius: 33px;background: #9ACB41;margin: 0 auto;}
+
+.mod_game .icon_box img{width: 100%;height: 100%;}
+.mod_game .msg{font-size: 30px;padding-top: 60px;padding-bottom: 30px;font-weight: 800;}
+.mod_game .btn{width: 216px;height: 66px;color:#fff;line-height: 66px;font-size: 28px;border-radius: 33px;background: #9ACB41;margin: 0 auto;}
+
+.mod_game_mask{display: none; position: fixed; left: 0; top: 0; bottom: 0; right: 0; width: 100%; height: 100%; background: rgba(0,0,0,.5); z-index: 500}
+.mod_game.show,.mod_game_mask.show{display: block}
+
+/*订单详情页面-添加扫一扫*/
+
+/*之前的优化*/
+.watm_info{width: 460px;}
+.watm_info .scanQRCode{width: 48px;height: 48px;background: url(../img/scan_icon.png) no-repeat center;position: absolute;right: 30px;top: 50px;display: none;}
+
+
+.watmPickUpGoods{width: 100%;height: 100%;min-height: 600px;position: relative;background: #FFF;padding-top: 304px;display: none;}
+.watmPickUpGoods .watm_icon{width: 174px;height: 200px;display: block;margin: 0 auto;}
+.watmPickUpGoods p.txt{text-align: center;font-size: 32px;color: #949494;height: 150px;padding-top: 40px;}
+.watmPickUpGoods .btn_box{padding: 10px 70px;position: absolute;left: 0;bottom: 0;background: #FFF;text-align: center;font-size: 32px;width: 100%;}
+.watmPickUpGoods .btn_box p{width: 100%;height: 88px;line-height: 88px;margin: 20px auto;border-radius: 6px;overflow: hidden;}
+
+
+.watmPickUpGoods .confirm_btn{color: #FFF;background: #94c11e;}
+.watmPickUpGoods .cancle_btn{color: #94c11e;background: #FFF;border: 1px solid #94C11E;}

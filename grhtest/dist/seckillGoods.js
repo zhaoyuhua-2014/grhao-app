@@ -357,7 +357,7 @@ require(['../require/config'],function () {
 					}),function( d ){
 						if ( d.statusCode == "100000" ) {
 							common.orderType.setItem( '1' );
-							common.jumpLinkPlainApp( "order_set_charge.html" );
+							common.jumpLinkPlainApp( '订单结算',"orderSettlement.html" );
 						}else{
 							common.prompt( d.statusStr );
 						}
@@ -486,7 +486,7 @@ require(['../require/config'],function () {
 						    common.orderType.setItem( '2' );
 						    common.seckillGood.setItem( common.JSONStr( seckill_good ) );
 						    common.setMyTimeout(function(){
-						    	common.jumpLinkPlainApp( "订单结算",'html/order_set_charge.html' );
+						    	common.jumpLinkPlainApp( "订单结算",'html/orderSettlement.html' );
 						    },500);
 	
 						}else{
@@ -1002,7 +1002,7 @@ require(['../require/config'],function () {
 	
 					if ( d.data.order.isSavePreOrder == "0" ) {
 						common.orderCode.setItem( d.data.order.preOrderCode );
-						common.jumpLinkPlainApp( "订单提交","html/order_set_charge.html" );
+						common.jumpLinkPlainApp( "订单提交","html/orderSettlement.html" );
 					} else if( d.data.order.isSavePreOrder == "1" ){
 						common.orderCode.setItem( d.data.order.preOrderCode );
 						common.jumpLinkPlainApp( "订单支付","html/order_pay.html" );

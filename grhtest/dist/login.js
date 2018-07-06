@@ -127,11 +127,11 @@ require(['../require/config'],function(){
 				    sex : infor.sex
 				};
 				// 给app端传用户信息 分享使用
-				common.isApp() && pub.sendToApp( common.JSONStr( d ) ); // 传数据给 APP 端
+				
 				common.user_data.setItem( common.JSONStr(user_data) );
-				localStorage.setItem('tokenId',d.data.tokenId)
-				//common.tokenId.setItem( d.data.tokenId );
+				common.tokenId.setItem( d.data.tokenId );
 				common.secretKey.setItem( d.data.secretKey );
+				common.isApp() && pub.sendToApp( common.JSONStr( d ) ); // 传数据给 APP 端
 				common.tellRefreshAPP()
 				common.setMyTimeout(function(){
 					var 
@@ -326,7 +326,14 @@ require(['../require/config'],function(){
 				
 				//点击跳转注册
 				$(".login_regsiter a").on("click",function(){
-					common.jumpLinkPlainApp("注册","html/regsiter.html")
+					//common.jumpLinkPlainApp("注册","html/regsiter.html");
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'注册',
+							url:'html/regsiter.html'
+						}
+					})
 				})
 				pub.onceRun = common.onceRun( pub.verification.init, pub );
 			}
@@ -343,7 +350,14 @@ require(['../require/config'],function(){
 						pub.login.apiHandle.apiData(d);		                
 		            }else if(d.statusCode == '100200'){
 		        		common.openId.setItem( openId ); // 存opendId
-		        		common.jumpLinkPlainApp("绑定注册","html/bindUser.html");
+		        		common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:'绑定注册',
+								url:'html/bindUser.html'
+							}
+						})
+		        		//common.jumpLinkPlainApp("绑定注册","html/bindUser.html");
 		            }else{
 		            	common.prompt( d.statusStr );
 		            }

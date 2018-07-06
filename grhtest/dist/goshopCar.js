@@ -63,7 +63,6 @@ define(['common'],function(common){
 				goodsInfo.id = parseInt(id);
 				goodsInfo.type = type;//1表示普通商品2表示秒杀商品
 		        goodsInfo.name = name;
-		        console.log(purchasequantity != 0)
 		       	if (purchasequantity != '' && purchasequantity != '0') {
 		       		goodsInfo.sum = purchasequantity;//商品数量
 		       	}else{
@@ -172,6 +171,12 @@ define(['common'],function(common){
 		    	for ( i in localGoodsList) {
 		    		total += parseInt( localGoodsList[i].sum, 10 );
 		    	}
+		    	common.jsInteractiveApp({
+		    		name:'setShopCarNum',
+					parameter:{
+						num:total
+					}
+		    	})
 		    	return total;
 			}
 			return 0;
@@ -344,7 +349,7 @@ define(['common'],function(common){
 						var num = goshopCar.addgoods( goodId );
 						$this.prev().val( num );
 						goshopCar.style_change();
-						common.setShopCarNum_ShoppingCartApp(goshopCar.getgoodsNum())
+						//common.setShopCarNum_ShoppingCartApp(goshopCar.getgoodsNum())
 					}
 				} else{
 					common.prompt( "库存不足" );
@@ -365,7 +370,7 @@ define(['common'],function(common){
 				var num = goshopCar.cutgoods( id );
 				$this.next().val( num );
 				goshopCar.style_change();
-				common.setShopCarNum_ShoppingCartApp(goshopCar.getgoodsNum())
+				//common.setShopCarNum_ShoppingCartApp(goshopCar.getgoodsNum())
 			});
 			
 		},

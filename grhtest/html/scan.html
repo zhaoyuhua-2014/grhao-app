@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta charset="UTF-8">
+		<meta http-equiv="Content-Security-Policy" content=" script-src 'self' 'unsafe-inline' 'unsafe-eval' http://api.grhao.com/server/api.do http://61.164.113.168:8090/grh_api/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'  " >
+		<meta name="viewport" content="width=720,user-scalable=0"/>
+		<meta content="telephone=no, address=no" name="format-detection" />
+		<title>扫描二维码提货</title>
+		<link rel="stylesheet" type="text/css" href="../css/rest.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+	</head>
+	<body module-id="scan">
+		<div id="watmPickUpGoods" class="watmPickUpGoods">
+			<img class="watm_icon" src="../img/watm_icon.png" alt="" />
+			<p class="txt">即将在WATM自助售货机上面取货</p>
+			<div class="btn_box">
+				<p class="confirm_btn">确认提货</p>
+				<p class="cancle_btn">取消</p>
+			</div>
+		</div>
+	</body>
+	<script data-main = "../dist/order_management.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		// 取消交互逻辑
+		function cancleFn(){
+		};
+		// 确定交互逻辑
+		function trueFn(){
+			pub.orderManagement.apiHandle.trueFn();
+		};
+	</script>
+</html>
