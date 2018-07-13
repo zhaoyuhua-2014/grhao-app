@@ -1,5 +1,5 @@
 var common = {
-	EVE:false
+	EVE:true
 };
 (function(){
 	var m = document.createElement("meta"),

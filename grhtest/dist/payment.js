@@ -306,7 +306,22 @@ require(['../require/config'],function(){
 			           		} else if (pub.wxAppPayWay == 2) {
 			           			common.jumpLinkPlainApp( "我的预购","html/PreOrder_management.html" );
 			           		} else if (pub.wxAppPayWay == 3) {
-			           			window.location.reload();
+			           			//window.location.reload();
+			           			
+			           			if (common.isApp()) {
+			           				if (common.isAndroid()) {
+			           					pub.apiHandle.user_month_card.init();
+			           					setTimeout(function(){
+					           				common.goBackCustomApp({
+					                    		title:'',
+					                    		url:'html/my.html',
+					                    		callBackName:'pub.apiHandle.userScoCouMon.init()'
+						                    });
+					           			},800)
+			           				}else{
+			           					window.location.reload();
+			           				}
+			           			}
 			           		}
 	           			} else if (d == 7000 ) {
 	           				common.prompt("支付失败，请重新支付");
@@ -435,6 +450,38 @@ require(['../require/config'],function(){
 	                    common.isAndroid() ? android.WXPay( common.JSONStr( d ), pub.wxAppPayWay ) : window.webkit.messageHandlers.WXPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
 	                }catch(e){}
 	                pub.loading.hide();
+	            },
+	            wxpay_result : function(d){
+	            	/*
+	           		 方法名 aliPayResult
+					参数值1个：成功9000  失败7000  取消8000
+	           		 * */
+	           		if (d) {
+	           			if (d == 9000) {
+	           				if (pub.wxAppPayWay == 1) {
+			           			common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
+			           		} else if (pub.wxAppPayWay == 2) {
+			           			common.jumpLinkPlainApp( "我的预购","html/PreOrder_management.html" );
+			           		} else if (pub.wxAppPayWay == 3) {
+			           			//window.location.reload();
+			           			pub.apiHandle.user_month_card.init();
+			           			setTimeout(function(){
+			           				common.goBackCustomApp({
+			                    		title:'',
+			                    		url:'html/my.html',
+			                    		callBackName:'pub.apiHandle.userScoCouMon.init()'
+				                    });
+			           			},800)
+			           			
+			           		}
+	           			} else if (d == 7000 ) {
+	           				common.prompt("支付失败，请重新支付");
+	           			} else {
+	           				console.log("app端传回的参数为"+d)
+	           			}
+	           		}else{
+	           			console.log("app端传回的参数为"+d)
+	           		}
 	            }
 	        }
 	    };

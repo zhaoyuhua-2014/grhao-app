@@ -579,7 +579,7 @@ require(['../require/config'],function(){
 							if( goodNum < dataMax ){
 								var num1 = cart.addgoods( dataId, dataName, dataPrice, dataLogo, dataSpecInfo, dataMax, dataPackagenum, dataOldPrice , 1 ,purchasequantity );
 								common.tip();
-								//common.setShopCarNumApp(cart.getgoodsNum())
+								common.setShopCarNumApp(cart.getgoodsNum())
 								$this.siblings().eq(1).html( num1 );
 								//$('.footer_item[data-content]','#foot').attr('data-content',cart.getgoodsNum());
 							}else{
@@ -588,11 +588,11 @@ require(['../require/config'],function(){
 						}else{
 							var num1 = cart.addgoods( dataId, dataName, dataPrice, dataLogo, dataSpecInfo, dataMax, dataPackagenum, dataOldPrice , 1 ,purchasequantity);
 							common.tip();
-							//common.setShopCarNumApp(cart.getgoodsNum())
+							common.setShopCarNumApp(cart.getgoodsNum())
 							$this.siblings().eq(1).html( num1 );
 							//$('.footer_item[data-content]','#foot').attr('data-content',cart.getgoodsNum());
 						}
-						//cart.style_change();
+						cart.style_change();
 					/*} else{
 						common.prompt( "库存不足" );
 					}*/
@@ -610,8 +610,8 @@ require(['../require/config'],function(){
 	                } else{
 	                    $this.next().html( num1 );
 	            	}
-	                //common.setShopCarNumApp(cart.getgoodsNum())
-	                //cart.style_change();
+	                common.setShopCarNumApp(cart.getgoodsNum())
+	                cart.style_change();
 	            });
 	            $(".zs-static-box").on('DOMNodeInserted','.show_num',function(){
 	               	var $this = $(this);

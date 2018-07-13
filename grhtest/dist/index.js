@@ -54,8 +54,8 @@ require(['../require/config'],function () {
 								parameter:{
 									type:1,
 									title:'是否切换为已绑定门店?',
-									canclefn:'cancleFn',
-									truefn:'pub.apiHandle.trueFn'
+									canclefn:'pub.apiHandle.cancleFn()',
+									truefn:'pub.apiHandle.trueFn()'
 								}
 							})
 		 				}
@@ -69,8 +69,8 @@ require(['../require/config'],function () {
 						parameter:{
 							type:1,
 							title:'请选择门店',
-							canclefn:'cancleFn1',
-							truefn:'pub.apiHandle.trueFn1'
+							canclefn:'',
+							truefn:'pub.apiHandle.trueFn1()'
 						}
 					})
 	 			}
@@ -101,6 +101,7 @@ require(['../require/config'],function () {
 				
 				common.firmId.setItem(d.id);
 				pub.firmId = d.id;
+				
 				common.websiteNode.setItem(d.websiteNode);
 				pub.websiteNode = d.websiteNode;
 				
@@ -139,13 +140,22 @@ require(['../require/config'],function () {
 							common.setShopCarNumApp(0)
 						}*/
 					}else if(d.statusCode == '100901'){
+						common.jsInteractiveApp({
+							name:'alertMask',
+							parameter:{
+								type:2,
+								title:'请选择门店',
+								canclefn:'',
+								truefn:'pub.apiHandle.trueFn1()'
+							}
+						})/*
 						var data = {
 							type:2,
 							title:'请选择门店?',
-							canclefn:'cancleFn',
+							canclefn:'',
 							truefn:'pub.apiHandle.trueFn1'
 						}
-						common.alertMaskApp(JSON.stringify(data));
+						common.alertMaskApp(JSON.stringify(data));*/
 					}else{
 						common.prompt(d.statusStr)
 					}

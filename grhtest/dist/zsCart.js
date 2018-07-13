@@ -18,7 +18,6 @@ require(['../require/config'],function(){
 			}
 		};
 	
-		
 		pub.shop_cart_submit = {
 			init : function(){
 				common.ajaxPost($.extend({}, pub.userBasicParam, {
@@ -27,14 +26,13 @@ require(['../require/config'],function(){
 				}),function( d ){
 					if ( d.statusCode == "100000" ) {
 						common.orderType.setItem( '1' );
-						common.jumpLinkPlainApp("订单结算", "html/orderSettlement.html" );
-						/*common.jsInteractiveApp({
+						common.jsInteractiveApp({
 							name:'goToNextLevel',
 							parameter:{
 								title:'订单结算',
 								url:'html/orderSettlement.html'
 							}
-						})*/
+						})
 					}else if (d.statusCode == "100613"){
 						pub.shop_cart_submit.apiData(d)
 					}else{
@@ -270,8 +268,6 @@ require(['../require/config'],function(){
 			
 					// 单个选择
 					choose: function(index, item) {
-						console.log(index);
-						console.log(item)
 						var good = this.goodsObj[index];
 						if (good['status'] == '0') {
 							this.goodsObj[index]['status'] = 1;
@@ -459,14 +455,15 @@ require(['../require/config'],function(){
 					//本地数据的更新
 					updataLocal : function(){
 						common.good.setItem(JSON.stringify(this.goodsObj));
-						common.setShopCarNum_ShoppingCartApp(cart.getgoodsNum());
-						/*common.jsInteractiveApp({
+						var n = cart.getgoodsNum();
+						//common.setShopCarNum_ShoppingCartApp(n);
+						common.jsInteractiveApp({
 							name:'setShopCarNum_ShoppingCart',
 							parameter:{
-								num:cart.getgoodsNum()
+								num:n
 							}
-						})*/
-						cart.style_change();
+						})
+						cart.style_change(n);
 					},
 					scrollevent:function(){
 						console.log(this)
@@ -498,13 +495,13 @@ require(['../require/config'],function(){
 					},
 					//点击跳转到更多商品页面
 					jumplink : function(){
-						common.goBackApp(0,true,'html/moregoods.html');
+						//common.goBackApp(0,true,'html/moregoods.html');
 						console.log("去更多商品页面");
 						//common.goHomeApp();
-						/*common.jsInteractiveApp({
+						common.jsInteractiveApp({
 							name:'goHome',
 							parameter:{}
-						})*/
+						})
 					}
 				}
 			})

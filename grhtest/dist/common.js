@@ -7,7 +7,7 @@ define(['jquery','mdData','shar1'],function($){
 
 	$.extend(common,{
 		//EVE 作为正式环境和测试环境的开关，为true时为正式环境，为false时为测试环境
-		EVE:false,
+		EVE:true,
 		//API : "http://api.grhao.com/server/api.do", // 接口地址
 		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数
@@ -1055,6 +1055,13 @@ define(['jquery','mdData','shar1'],function($){
 							break;
 						//跳转页面自定义----->参数 {'title':title,"url":'/'+url,"txt":txt,"imgIcon":imgIcon,"callBack":callBackName}; 
 						case 'jumpLinkCustom':
+							/*if (common.DATE) {
+								if (parameter.url.indexOf("?")>0) {
+									parameter.url = parameter.url + "&v="+common.DATE;
+								}else{
+									parameter.url = parameter.url + "?v="+common.DATE;
+								}
+							}*/
 							var jsonObj = {title:parameter.title,url:'/'+parameter.url,txt:parameter.txt,imgIcon:parameter.imgIcon,callBack:parameter.callBackName};
 							common.isApple() ? window.webkit.messageHandlers.jumpLinkCustom.postMessage(jsonObj) : android.jumpLinkCustom(JSON.stringify(jsonObj));
 							break;

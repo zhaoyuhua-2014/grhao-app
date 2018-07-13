@@ -40,9 +40,13 @@ define(['common'],function(common){
 			
 			$('#zs-cart .ul-box').html( html );
 		},
-		style_change : function(){
+		style_change : function(n){
 			//根据商品总数和总价变化对应的样式
-			var num = goshopCar.getgoodsNum();
+			if (n) {
+				var num = n;
+			}else{
+				var num = goshopCar.getgoodsNum();
+			}
 			if ( num == '0' ) {
 
 				$('#empty-cart').show().appendTo('#ul-box');
@@ -171,12 +175,6 @@ define(['common'],function(common){
 		    	for ( i in localGoodsList) {
 		    		total += parseInt( localGoodsList[i].sum, 10 );
 		    	}
-		    	common.jsInteractiveApp({
-		    		name:'setShopCarNum',
-					parameter:{
-						num:total
-					}
-		    	})
 		    	return total;
 			}
 			return 0;
