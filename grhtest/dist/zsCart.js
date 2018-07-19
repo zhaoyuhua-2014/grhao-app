@@ -204,7 +204,7 @@ require(['../require/config'],function(){
 			}else{
 				pub.apiHandle.change_app_theme.init();
 			}
-			
+			common.addressData.getKey() && common.addressData.removeItem();
 			pub.apiHandle.reFresh()
 			common.cancelDialogApp();
 			cart.style_change();
@@ -489,15 +489,11 @@ require(['../require/config'],function(){
 									url:'html/login.html'
 								}
 							})
-							//common.jumpLinkPlainApp("登录", "html/login.html" );
 						}
 						
 					},
 					//点击跳转到更多商品页面
 					jumplink : function(){
-						//common.goBackApp(0,true,'html/moregoods.html');
-						console.log("去更多商品页面");
-						//common.goHomeApp();
 						common.jsInteractiveApp({
 							name:'goHome',
 							parameter:{}

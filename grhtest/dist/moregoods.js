@@ -67,7 +67,10 @@ require(['../require/config'],function(){
 							pub.goods.apiHandle.goods_first_type.apiData( d );
 						}else{
 							common.prompt( d.statusStr );
-							common.cancelDialogApp();
+							//common.cancelDialogApp();
+							common.jsInteractiveApp({
+								name:'cancelDialog'
+							});
 						}
 					})
 				},
@@ -111,7 +114,10 @@ require(['../require/config'],function(){
 						if(d.statusCode == "100000") {
 							pub.goods.apiHandle.goods_second_type.apiData( d );
 						} else{
-							common.cancelDialogApp();
+							//common.cancelDialogApp();
+							common.jsInteractiveApp({
+								name:'cancelDialog'
+							});
 						}
 					})
 				},
@@ -162,7 +168,10 @@ require(['../require/config'],function(){
 								pub.loading.show().html("没有更多数据了！");
 							}
 						} else{
-							common.cancelDialogApp();
+							//common.cancelDialogApp();
+							common.jsInteractiveApp({
+								name:'cancelDialog'
+							});
 						}
 					});
 				},
@@ -220,7 +229,10 @@ require(['../require/config'],function(){
 					}else{
 						pub.loading.show().html("点击加载更多！");
 					};
-					common.cancelDialogApp();
+					//common.cancelDialogApp();
+					common.jsInteractiveApp({
+						name:'cancelDialog'
+					});
 					if (pub.isrefresh) {
 						pub.pullInstance1.pullDownSuccess();
 					}
@@ -298,7 +310,6 @@ require(['../require/config'],function(){
 				//点击商品列表进行增减跳转详情
 				$(".more_bottom_right").on('click','.goods_item',function(e){
 					var goodsId = $(this).attr("data");
-					//common.jumpLinkPlainApp( "商品详情","html/goodsDetails.html?goodsId=" + goodsId );
 					common.jsInteractiveApp({
 						name:'goToNextLevel',
 						parameter:{
@@ -573,23 +584,35 @@ require(['../require/config'],function(){
 					purchasequantity = node.attr("data-purchasequantity"),
 					
 					goodNum = cart.callbackgoodsnumber( dataId );
-	
+					
 					//if ( goodNum < dataPackagenum ) { // 库存
 						if( +dataMax != 0 ){ // 限购
 							if( goodNum < dataMax ){
 								var num1 = cart.addgoods( dataId, dataName, dataPrice, dataLogo, dataSpecInfo, dataMax, dataPackagenum, dataOldPrice , 1 ,purchasequantity );
-								common.tip();
-								common.setShopCarNumApp(cart.getgoodsNum())
 								$this.siblings().eq(1).html( num1 );
+								common.tip();
+								//common.setShopCarNumApp(cart.getgoodsNum())
+								common.jsInteractiveApp({
+									name:'setShopCarNum',
+									parameter:{
+										num:cart.getgoodsNum()
+									}
+								});
 								//$('.footer_item[data-content]','#foot').attr('data-content',cart.getgoodsNum());
 							}else{
 								common.prompt( "该商品限购" + dataMax + "件" )
 							}
 						}else{
 							var num1 = cart.addgoods( dataId, dataName, dataPrice, dataLogo, dataSpecInfo, dataMax, dataPackagenum, dataOldPrice , 1 ,purchasequantity);
-							common.tip();
-							common.setShopCarNumApp(cart.getgoodsNum())
 							$this.siblings().eq(1).html( num1 );
+							common.tip();
+							//common.setShopCarNumApp(cart.getgoodsNum())
+							common.jsInteractiveApp({
+								name:'setShopCarNum',
+								parameter:{
+									num:cart.getgoodsNum()
+								}
+							});
 							//$('.footer_item[data-content]','#foot').attr('data-content',cart.getgoodsNum());
 						}
 						cart.style_change();
@@ -610,7 +633,13 @@ require(['../require/config'],function(){
 	                } else{
 	                    $this.next().html( num1 );
 	            	}
-	                common.setShopCarNumApp(cart.getgoodsNum())
+	                //common.setShopCarNumApp(cart.getgoodsNum())
+	                common.jsInteractiveApp({
+						name:'setShopCarNum',
+						parameter:{
+							num:cart.getgoodsNum()
+						}
+					});
 	                cart.style_change();
 	            });
 	            $(".zs-static-box").on('DOMNodeInserted','.show_num',function(){

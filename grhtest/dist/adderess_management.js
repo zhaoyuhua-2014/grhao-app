@@ -16,7 +16,10 @@ require(['../require/config'],function () {
 	    	pub.sign = md5( pub.source + "key" + common.secretKeyfn() ).toUpperCase();
 	    	pub.tokenId = common.tokenIdfn();
 	    }else{
-	        common.goHomeApp();
+	        //common.goHomeApp();
+	        common.jsInteractiveApp({
+				name:'goHome'
+			})
 	    }
 	
 		pub.bool = common.addressData.getKey(); // addressData 数据存储是否存在
@@ -60,7 +63,8 @@ require(['../require/config'],function () {
 						html += '	         <div class="management_address_name">' + obj.consignee + '</div>'
 						html += '	         <div class="management_address_phone">' + obj.mobile + '</div>'
 						html += '        </div>'
-						html += '       <div class="management_address_bottom">' + obj.provinceName + obj.cityName + obj.countyName + obj.street + '</div>'
+						html += '       <div class="management_address_bottom">' + obj.provinceName + obj.cityName + obj.countyName +"&nbsp;&nbsp;"+  obj.addName + '</div>'
+						html += '       <div class="management_address_bottom" style="font-size:24px">' + obj.address + obj.street + '</div>'
 					    html += '    </div>'
 						html += '	<div class="address_set clearfloat" >'
 						
@@ -101,22 +105,22 @@ require(['../require/config'],function () {
 	                       $( '[addr-id="' + pub.addrId + '"]' ).remove();
 	                       pub.bool && $('[addr-id]').length == 0 && common.addressData.removeItem();
 	                       if (!!common.addType.getItem() && localStorage.getItem("addId") == pub.addrId) {
-	                    	/*if (common.isApp()) {
-	                    		if (common.isApple()) {
-	                    			try{
-		                    			window.webkit.messageHandlers.noticeRefresh.postMessage('');
-		                    		}catch(e){
-		                    			alert("调用IOS的方法失败")
+		                    	/*if (common.isApp()) {
+		                    		if (common.isApple()) {
+		                    			try{
+			                    			window.webkit.messageHandlers.noticeRefresh.postMessage('');
+			                    		}catch(e){
+			                    			alert("调用IOS的方法失败")
+			                    		}
+		                    		}else if (common.isAndroid()) {
+		                    			try{
+			                    			android.noticeRefresh()
+			                    		}catch(e){
+			                    			alert("调用Android的方法失败")
+			                    		}
 		                    		}
-	                    		}else if (common.isAndroid()) {
-	                    			try{
-		                    			android.noticeRefresh()
-		                    		}catch(e){
-		                    			alert("调用Android的方法失败")
-		                    		}
-	                    		}
-	                    	}*/
-	                    	common.jsInteractiveApp({name:'noticeRefresh'})
+		                    	}*/
+		                    	common.jsInteractiveApp({name:'noticeRefresh'})
 	                       }
 	                    }
 	    			});
@@ -178,13 +182,12 @@ require(['../require/config'],function () {
 	    				addrInfo = common.JSONStr( $.data($('body')[0],'addressList')[index] );
 	
 						common.addressData.setItem( addrInfo );
-						//setTimeout(function(){
-						//	common.jumpLinkPlainApp( "地址列表",!pub.searchAddr ? 'html/address.html' : 'html/address.html?addr=' + pub.searchAddr );
-						//},1000)
+						common.addObj.getItem() && common.addObj.removeItem();
+						
 						common.jsInteractiveApp({
 							name:'goToNextLevel',
 							parameter:{
-								title:'地址列表',
+								title:'修改地址',
 								url: !pub.searchAddr ? 'html/address.html' : 'html/address.html?addr=' + pub.searchAddr 
 							}
 						})
@@ -192,13 +195,12 @@ require(['../require/config'],function () {
 				});
 				$(".add_address").on("click",function(){
 					common.addressData.removeItem();
-	                //setTimeout(function(){
-	                //	common.jumpLinkPlainApp( "地址列表",!pub.searchAddr ? 'html/address.html' : 'html/address.html?addr=' + pub.searchAddr );
-	                //},1000)
+					common.addObj.getItem() && common.addObj.removeItem();
+	                
 	                common.jsInteractiveApp({
 						name:'goToNextLevel',
 						parameter:{
-							title:'地址列表',
+							title:'新增地址',
 							url: !pub.searchAddr ? 'html/address.html' : 'html/address.html?addr=' + pub.searchAddr 
 						}
 					})
@@ -210,17 +212,48 @@ require(['../require/config'],function () {
 	    			
 	    			var 
 	    			index = $(this).parents('.contain_address').index(),
-	    			addrInfo = common.JSONStr( $.data($('body')[0],'addressList')[index] ); // 取出数据并存储
-					common.addressData.setItem( addrInfo );
+	    			d = $.data($('body')[0],'addressList')[index];
+	    			if (!d.latitude && !d.longitude) {
+	    				/*common.dialog.init({btns : [
+							{ klass : 'dialog-confirm-btn', txt : '确认'}
+						]});
+		                common.dialog.show('当前地址没有定位信息，请先编辑然后选择地址定位信息？',function(){
+		                	
+		                });
+		                */
+		               	common.jsInteractiveApp({
+							name:'alertMask',
+							parameter:{
+								type:2,
+								title:'地址没有定位信息，请先编辑',
+								canclefn:'',
+								truefn:''
+							}
+						})
+	    			} else{
+	    				var addrInfo = common.JSONStr( d ); // 取出数据并存储
+						common.addressData.setItem( addrInfo );
+	                	common.jsInteractiveApp({
+							name:'goBack',
+							parameter:{
+								'num':1,
+								'type':1,
+								'url':'html/orderSettlement.html'
+							}
+						})
+	    			}
+	    			
+	    			//addrInfo = common.JSONStr( $.data($('body')[0],'addressList')[index] ); // 取出数据并存储
+					//common.addressData.setItem( addrInfo );
 	                //common.goBackApp(1,true,'html/orderSettlement.html')
-	                common.jsInteractiveApp({
+	                /*common.jsInteractiveApp({
 						name:'goBack',
 						parameter:{
 							'hierarchy':1,
 							'reload':true,
 							'url':'html/orderSettlement.html'
 						}
-					})
+					})*/
 				});
 	    		!common.addType.getItem() && $('.address_management').off('click','.management_address'); // 判断是否从订单进入
 	    	},
@@ -248,6 +281,7 @@ require(['../require/config'],function () {
 			}
 			pub.apiHandle.init();
 			pub.eventHandle.init();
+			common.addObj.getItem() && common.addObj.removeItem();
 			$("body").fadeIn(300)
 	    };
 	    pub.init();

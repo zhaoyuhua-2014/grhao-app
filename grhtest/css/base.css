@@ -1612,3 +1612,12 @@ to {
 
 .watmPickUpGoods .confirm_btn{color: #FFF;background: #94c11e;}
 .watmPickUpGoods .cancle_btn{color: #94c11e;background: #FFF;border: 1px solid #94C11E;}
+
+
+/*地址相关------------------2018-07-17 --------------------------*/
+.person_message{height: auto;}
+.person_message .readtext {height: auto;}
+#person_area{height: auto;min-height: 87px;line-height: 87px; background: url(../img/arrow_right.png) no-repeat right center; color:#999 ; }
+.readtext .name {color: #333;line-height: 50px;}
+.readtext .address {color: #666;line-height: 40px;font-size: 24px;}
+ 

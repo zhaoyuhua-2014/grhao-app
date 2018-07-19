@@ -557,7 +557,15 @@ require(['../require/config'],function(){
 							if(pub.preOrderDetail.API_METHOD == 'order_refund'){
 								location.replace( location.href );
 							}else{
-								common.goBackApp(1,true,"html/PreOrder_management.html")
+								//common.goBackApp(1,true,"html/PreOrder_management.html")
+								common.jsInteractiveApp({
+									name:'goBack',
+									parameter:{
+										'num':1,
+										'type':1,
+										'url':'html/PreOrder_management.html'
+									}
+								})
 							}
 						}else{
 							common.prompt( d.strStatus );

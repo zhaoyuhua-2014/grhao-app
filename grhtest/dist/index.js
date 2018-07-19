@@ -148,14 +148,7 @@ require(['../require/config'],function () {
 								canclefn:'',
 								truefn:'pub.apiHandle.trueFn1()'
 							}
-						})/*
-						var data = {
-							type:2,
-							title:'请选择门店?',
-							canclefn:'',
-							truefn:'pub.apiHandle.trueFn1'
-						}
-						common.alertMaskApp(JSON.stringify(data));*/
+						})
 					}else{
 						common.prompt(d.statusStr)
 					}
@@ -342,16 +335,12 @@ require(['../require/config'],function () {
 		 			dStr = common.JSONStr( d );
 		 			common.appData.setItem( dStr ); 
 	 			}
-	 			
 	 			common.jsInteractiveApp({
 					name:'getShare',
 					parameter:{
 						str:dStr
 					}
 				})
-	 			/*try{
-					common.isAndroid() ? android.getShare( dStr ) : window.webkit.messageHandlers.getShare.postMessage(dStr);
-				}catch(e){}*/
 	
 	 		}
 	 	};
@@ -402,7 +391,7 @@ require(['../require/config'],function () {
 							url:'html/goodsDetails.html?goodsId=' + $(this).attr("data")
 						}
 					})
-					//common.jumpLinkPlainApp( "商品详情", "html/goodsDetails.html?goodsId=" + $(this).attr("data") );
+					
 				});
 				
 				$(".index_rigth").on("click",function(){
@@ -422,7 +411,7 @@ require(['../require/config'],function () {
 							url:'html/store1.html'
 						}
 					})
-					//common.jumpLinkPlainApp('门店选择','html/store1.html');
+					
 					
 				});
 				$(".index_banner .swiper-wrapper").on("click",'a',function(e){
@@ -459,8 +448,7 @@ require(['../require/config'],function () {
 						url = url.substr(1);
 						for (var i =0,l = urlArr.length; i< l;i++) {
 							if(url.indexOf(urlArr[i].url) >0){
-								/*common.jumpLinkPlainApp(urlArr[i].tit , url);
-								return ;*/
+								
 								common.jsInteractiveApp({
 									name:'goToNextLevel',
 									parameter:{
@@ -478,7 +466,7 @@ require(['../require/config'],function () {
 						link = nood.attr("link"),
 						title = nood.attr("tit");
 					if (link != '') {
-						//common.jumpLinkPlainApp(title,link);
+						
 						common.jsInteractiveApp({
 							name:'goToNextLevel',
 							parameter:{
@@ -499,20 +487,6 @@ require(['../require/config'],function () {
 						pub.apiHandle.choice_firm.init()
 					}
 				});
-				/*
-				//取消按钮
-				$(".order_refund").on("click",".refund_cancle",function(){
-					$(".order_refund").hide();
-					$("body").css("overflow-y","auto");
-					pub.apiHandle.choice_firm.init()
-				});
-	
-				//确定按钮
-				$(".order_refund").on("click",".makeSure",function(){
-					$(".order_refund").hide();
-					$("body").css("overflow-y","auto");
-					pub.apiHandle.trueFn();
-				});*/
 			}
 	 	};
 	

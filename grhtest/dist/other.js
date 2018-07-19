@@ -69,8 +69,21 @@ require(['../require/config'],function () {
 					goodsComments : pub.evaluate.goodsComments
 
 				},pub.userBasicParam),function( d ){
-					d.statusCode == "100000" && common.goBackApp(1,true,"html/order_management.html");
-					d.statusCode != "100000" && common.prompt( d.statusCode );
+					//d.statusCode == "100000" && common.goBackApp(1,true,"html/order_management.html");
+					
+					if (d.statusCode == "100000") {
+						common.jsInteractiveApp({
+							name:'goBack',
+							parameter:{
+								'num':1,
+								'type':1,
+								'url':'html/order_management.html'
+							}
+						})
+					}else{
+						common.prompt( d.statusCode );
+					}
+					
 				});
 			}
 		},
@@ -502,11 +515,26 @@ require(['../require/config'],function () {
 			common.jumpLinkSpecialApp('.discount_pay','',function(){
 				if( pub.logined ){
 					common.orderCode.removeItem();
-					common.jumpLinkPlainApp( '账户充值','html/month_recharge.html?search=recharge' );
+					//common.jumpLinkPlainApp( '账户充值','html/month_recharge.html?search=recharge' );
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'账户充值',
+							url:'html/month_recharge.html?search=recharge'
+						}
+					})
 				}else{
 				   	common.jumpMake.setItem( "7" );
-				   	common.jumpLinkPlainApp( '登录',"html/login.html?type="+7 );
+				   	//common.jumpLinkPlainApp( '登录',"html/login.html?type="+7 );
+				   	common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'登录',
+							url:"html/login.html?type="+7
+						}
+					})
 				}
+				
 			});
 		}
 	};
