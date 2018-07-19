@@ -446,7 +446,7 @@ require(['../require/config'],function () {
 				pub.addrId = d.id; // 接收地址ID
 				$('.set_charge_contact').attr( 'addr-id', pub.addrId ); // 暂存 ID
 				$('.set_charge_address1').find('.set_address_top').show().find('.take_goods_name').html( d.consignee )
-				.next().html( d.mobile ).parent().next().html( d.provinceName + d.cityName + d.countyName + d.street );
+				.next().html( d.mobile ).parent().next().html( d.provinceName + d.cityName + d.countyName + d.address + d.addName + d.street );
 				
 			}
 			
