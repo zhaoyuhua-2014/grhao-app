@@ -170,7 +170,10 @@ require(['../require/config'],function(){
 					//common.jumpLinkPlainApp('登录','html/login.html?type='+5);
 				}
 			});
-	
+			$("#imgIframe").on("load",function(){
+				var value = document.getElementById("imgIframe").contentWindow.document.body.innerHTML;
+				window.top.postMessage('123456', '*');
+			})
 			// 点击退出
 			$('.exit').on('click',function(){
 		    	pub.apiHandle.logout.init();
@@ -252,6 +255,10 @@ require(['../require/config'],function(){
 			$(".test").on("click",function(){
 				common.jumpLinkPlainApp("测试专用","html/test.html");
 			})
+			window.addEventListener("message", function(e){
+            	console.log(e.data);
+                
+            }, false);
 		};
 	
 		
@@ -948,7 +955,13 @@ require(['../require/config'],function(){
 						})
 						//common.jumpLinkPlainApp(title , url);
 					})
+					$(".help_content").on("click",".help_chat",function(){
+						common.jsInteractiveApp({
+							name:'goChat'
+						})
+					})
 				}
+				
 			},
 		};
 		// 帮助模块初始化

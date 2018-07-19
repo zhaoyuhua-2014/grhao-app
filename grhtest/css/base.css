@@ -1612,3 +1612,10 @@ to {
 
 .watmPickUpGoods .confirm_btn{color: #FFF;background: #94c11e;}
 .watmPickUpGoods .cancle_btn{color: #94c11e;background: #FFF;border: 1px solid #94C11E;}
+
+/*帮助中心新增客服*/
+.main_tel{width:550px;height:80px;border-radius:10px;padding-left:210px;background:#93c01d url(../img/icon_cellphone.png) no-repeat 150px center;}
+.help_content{margin:120px auto;font-size:30px;line-height:80px;}
+.help_item{width:550px;height:80px;margin: 20px auto;border-radius:10px;background-color:#93C01D ;background-position-y:center ;background-repeat: no-repeat;color: #FFF;}
+.help_item.help_tel{background-image:url(../img/icon_cellphone.png) ;background-position-x: 150px;padding-left: 210px;}
+.help_item.help_chat{background-image:url(../img/icon_chat.png) ;background-position-x: 170px;padding-left: 230px;}

@@ -7,7 +7,7 @@ define(['jquery','mdData','shar1'],function($){
 
 	$.extend(common,{
 		//EVE 作为正式环境和测试环境的开关，为true时为正式环境，为false时为测试环境
-		EVE:true,
+		EVE:false,
 		//API : "http://api.grhao.com/server/api.do", // 接口地址
 		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数
@@ -1110,6 +1110,15 @@ define(['jquery','mdData','shar1'],function($){
 						//退出APP ----调用之后通知APP将缓存的用户数据清除----->参数 无
 						case 'exit1':
 							common.isApple() ? window.webkit.messageHandlers.exit1.postMessage('') : android.exit1();
+							break;
+						//进入客服 ----调用之后通知APP----->参数 无
+						case 'goChat':
+							common.isApple() ? window.webkit.messageHandlers.goChat.postMessage('') : android.goChat();
+							break;
+						//更新用户信息 ----调用之后通知APP----->参数 无
+						case 'updateUserInfo':
+							var jsonObj = parameter.str;
+							common.isApple() ? window.webkit.messageHandlers.updateUserInfo.postMessage(jsonObj) : android.updateUserInfo(jsonObj);
 							break;
 						default:
 							break;
