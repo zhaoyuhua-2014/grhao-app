@@ -42,6 +42,9 @@ require(['../require/config'],function(){
 					$('.my_islogin,.main_top_right,.exit').css({'display':'block'});
 					$('.my_name').html( common.user_datafn().petName );
 					pub.apiHandle.userScoCouMon.init(); // 包月卡余额 + 果币 + 优惠券数量
+					
+					var h = common.API +"?method=face_img_upload"
+					$("#form2").attr("action",h)
 				}else{
 					$('.main_top_right,.exit').css({'display':'none'});	 
 			        $('.my_nologin').css({'display':'block'});
@@ -256,8 +259,7 @@ require(['../require/config'],function(){
 				common.jumpLinkPlainApp("测试专用","html/test.html");
 			})
 			window.addEventListener("message", function(e){
-            	console.log(e.data);
-                
+            	console.log(e);
             }, false);
 		};
 	
@@ -446,6 +448,7 @@ require(['../require/config'],function(){
 					sex : pub.userInfoRepaired.sex_num
 				}),function( d ){
 					if ( d.statusCode=="100000" ) {
+						
 						var user_data = common.user_datafn();
 						user_data.petName = pub.userInfoRepaired.petName;
 						user_data.realName = pub.userInfoRepaired.realName;
@@ -453,12 +456,29 @@ require(['../require/config'],function(){
 						user_data.sex = pub.userInfoRepaired.sex_num;
 						common.user_data.setItem( common.JSONStr( user_data ) );
 						common.prompt('修改成功');
+						
+						var obj = {
+							data:{
+								cuserInfo:d.data,
+								secretKey:common.secretKey.getItem(),
+								tokenId:common.tokenId.getItem(),
+								userAccountInfo:'',
+								userMonthCard:''
+							}
+						}
+						var data = $.extend({},d, obj);
+						common.jsInteractiveApp({
+							name:'updateUserInfo',
+							parameter:{
+								str:JSON.stringify(data)
+							}
+						});
 						common.setMyTimeout(function(){
 							common.jsInteractiveApp({
 								name:'goBack',
 								parameter:{
-									'hierarchy':1,
-									'reload':true,
+									'num':1,
+									'type':1,
 									'url':'html/my.html'
 								}
 							})

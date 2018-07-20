@@ -195,6 +195,12 @@ define(['jquery','mdData','shar1'],function($){
 				localStorage.setItem('tokenId',d.data.tokenId)
 				common.secretKey.setItem( d.data.secretKey );
 				common.logined.setItem('logined');
+				common.jsInteractiveApp({
+					name:'updateUserInfo',
+					parameter:{
+						str:JSON.stringify(d)
+					}
+				});
 			}
 			common.DTD.resolve();
 

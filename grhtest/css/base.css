@@ -1619,3 +1619,4 @@ to {
 .help_item{width:550px;height:80px;margin: 20px auto;border-radius:10px;background-color:#93C01D ;background-position-y:center ;background-repeat: no-repeat;color: #FFF;}
 .help_item.help_tel{background-image:url(../img/icon_cellphone.png) ;background-position-x: 150px;padding-left: 210px;}
 .help_item.help_chat{background-image:url(../img/icon_chat.png) ;background-position-x: 170px;padding-left: 230px;}
+.help_content .msg{text-align: center;font-size: 24px;color: #999;}

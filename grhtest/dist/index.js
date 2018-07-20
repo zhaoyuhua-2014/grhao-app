@@ -236,7 +236,7 @@ require(['../require/config'],function () {
 					var html = '', i = 0, link = null;
 					for ( i =0,l=d.length; i< l; i++ ){
 						link = getLink(d[i].linkUrl)
-						html += '<div class="swiper-slide"><a href="javascript:void(0)" url="'+link+'"><img src="' + d[i].adLogo + '" /></a></div>'
+						html += '<div class="swiper-slide"><a href="javascript:void(0)" data-title="'+d[i].note+'" url="'+link+'"><img src="' + d[i].adLogo + '" /></a></div>'
 					}
 					return html;
 				},'.swiper-pagination',pub.isrefresh);
@@ -422,6 +422,7 @@ require(['../require/config'],function () {
 							url:'html/store1.html'
 						}
 					})
+					//alert("门店选择")
 					//common.jumpLinkPlainApp('门店选择','html/store1.html');
 					
 				});
@@ -454,22 +455,17 @@ require(['../require/config'],function () {
 						url:'month_service.html',
 						tit:"充值优惠"
 					}]
-					var url = $(this).attr("url");
+					var url = $(this).attr("url"),
+						title = $(this).attr("data-title");
+					console.log(url)
 					if (url) {
-						url = url.substr(1);
-						for (var i =0,l = urlArr.length; i< l;i++) {
-							if(url.indexOf(urlArr[i].url) >0){
-								/*common.jumpLinkPlainApp(urlArr[i].tit , url);
-								return ;*/
-								common.jsInteractiveApp({
-									name:'goToNextLevel',
-									parameter:{
-										title:urlArr[i].tit,
-										url:url
-									}
-								})
+						common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:title,
+								url:url
 							}
-						}
+						})
 					}
 				});
 				//活动事件

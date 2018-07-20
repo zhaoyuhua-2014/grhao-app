@@ -78,6 +78,7 @@ require(['../require/config'],function(){
 		pub.login = {};
 		// 给AAP传数据
 		pub.sendToApp = function( userInfo ){
+			console.log(userInfo)
 			try{
 				common.isAndroid() ? android.saveLoginInfo( userInfo ) : window.webkit.messageHandlers.saveLoginInfo.postMessage(userInfo);
 			}catch(e){
