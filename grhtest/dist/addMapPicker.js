@@ -3567,16 +3567,19 @@ require(['../require/config'],function () {
 			};
 			//APP调用定位
 			pub.appLocationInit = function(){
-				pub.locationInfo = localStorage.getItem("location");
-				
-				if (pub.locationInfo && JSON.parse(pub.locationInfo).longitude) {
-					pub.appLocation([JSON.parse(pub.locationInfo).longitude , JSON.parse(pub.locationInfo).latitude]);
-				}else{
-					try {
-						pub.replaceLocationApp();
-					}catch(e){
+				pub.replaceLocationApp()
+				setTimeout(function(){
+					pub.locationInfo = localStorage.getItem("location");
+					
+					if (pub.locationInfo && JSON.parse(pub.locationInfo).longitude) {
+						pub.appLocation([JSON.parse(pub.locationInfo).longitude , JSON.parse(pub.locationInfo).latitude]);
+					}else{
+						try {
+							pub.replaceLocationApp();
+						}catch(e){
+						}
 					}
-				}
+				},500)
 			}
 			//保存定位的内部函数使用
 			pub.appLocation = function(){

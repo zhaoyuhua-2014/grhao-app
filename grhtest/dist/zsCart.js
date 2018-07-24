@@ -26,6 +26,7 @@ require(['../require/config'],function(){
 				}),function( d ){
 					if ( d.statusCode == "100000" ) {
 						common.orderType.setItem( '1' );
+						common.addressData.removeItem();
 						common.jsInteractiveApp({
 							name:'goToNextLevel',
 							parameter:{

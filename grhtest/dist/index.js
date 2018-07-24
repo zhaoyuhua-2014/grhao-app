@@ -228,8 +228,8 @@ require(['../require/config'],function () {
 				data.adInfoList.length != 0 && common.bannerShow(data.adInfoList, '.index_banner', function( d ){
 					var html = '', i = 0, link = null;
 					for ( i =0,l=d.length; i< l; i++ ){
-						link = getLink(d[i].linkUrl)
-						html += '<div class="swiper-slide"><a href="javascript:void(0)" url="'+link+'"><img src="' + d[i].adLogo + '" /></a></div>'
+						link = d[i].linkUrl ? pub.apiHandle.getActiveUrl(d[i].linkUrl) : null;
+						html += '<div class="swiper-slide"><a href="javascript:void(0)" data-title="'+d[i].note+'" url="'+link+'"><img src="' + d[i].adLogo + '" /></a></div>'
 					}
 					return html;
 				},'.swiper-pagination',pub.isrefresh);
@@ -243,18 +243,6 @@ require(['../require/config'],function () {
 			 	if(pub.isrefresh){
 			 		pub.pullInstance.pullDownSuccess();
 			 		common.lazyload(); // 懒加载
-			 	}
-			 	function getLink (link){
-			 		var wxUrl = 'weixin.grhao.com';
-			 		var url = '';
-			 		if (link) {
-			 			if (link.indexOf(wxUrl) != -1) {
-			 				url = link.substr((link.indexOf(wxUrl) + wxUrl.length))
-			 			}else{
-			 				url = '';
-			 			}
-			 		}
-			 		return url
 			 	}
 	 		}
 	 	};
@@ -315,6 +303,28 @@ require(['../require/config'],function () {
 						return null;
 					}
 				}
+			}
+		}
+		pub.apiHandle.getActiveUrl = function(d){
+			var locationObj = document.location;
+			if (d) {
+				var urlParameter = d.indexOf('?') > 1 ? d.split('?')[1] : null;
+				var arr = d.split("/"),
+					l = arr.length;
+				var path = function(){
+					if(locationObj.pathname.indexOf(".html") > 1){
+						var arr = locationObj.pathname.split('/'),
+							l = arr.length;
+						arr.splice(l-1,1);
+						return arr.join('/') + '/'
+					}else{
+						return locationObj.pathname;
+					}
+				}
+				//locationObj.protocol+  '//'+ locationObj.hostname + ":"+ locationObj.port + path() +"html/"+arr[l-1];
+				return "html/"+arr[l-1];
+			}else{
+				return null;
 			}
 		}
 	 	// app 参数
@@ -415,49 +425,17 @@ require(['../require/config'],function () {
 					
 				});
 				$(".index_banner .swiper-wrapper").on("click",'a',function(e){
-					var urlArr = [{
-						url:'goodsDetails.html',
-						tit:"商品详情"
-					},{
-						url:"moregoods.html?type=JU_HUI",
-						tit:"钜惠活动"
-					},{
-						url:"moregoods.html?type=TAO_CAN",
-						tit:"礼盒套餐"
-					},{
-						url:'seckill.html',
-						tit:"秒杀换购"
-					},{
-						url:'pre.html',
-						tit:"预购活动"
-					},{
-						url:'seckillDetaila.html',
-						tit:"换购商品详情"
-					},{
-						url:'seckillDetail.html',
-						tit:"秒杀商品详情"
-					},{
-						url:'preDetails.html',
-						tit:"预购商品详情"
-					},{
-						url:'month_service.html',
-						tit:"充值优惠"
-					}]
-					var url = $(this).attr("url");
+					
+					var url = $(this).attr("url"),
+						title = $(this).attr("data-title");
 					if (url) {
-						url = url.substr(1);
-						for (var i =0,l = urlArr.length; i< l;i++) {
-							if(url.indexOf(urlArr[i].url) >0){
-								
-								common.jsInteractiveApp({
-									name:'goToNextLevel',
-									parameter:{
-										title:urlArr[i].tit,
-										url:url
-									}
-								})
+						common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:title,
+								url:url
 							}
-						}
+						})
 					}
 				});
 				//活动事件
