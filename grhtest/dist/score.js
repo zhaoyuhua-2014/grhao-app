@@ -5,7 +5,7 @@
 * personal scirpt for Zhangshuo Guoranhao
 */ 
 require(['../require/config'],function(){
-	require(['common',"pull"],function(common){
+	require(['common'],function(common){
 	
 		// 命名空间
 		var pub = {};
@@ -38,7 +38,15 @@ require(['../require/config'],function(){
 				tokenId : pub.tokenId
 			}
 		}else{
-			pub.muduleId != "0" && common.isApp() ? common.goHomeApp() : common.jumpLinkPlain( 'my.html' );
+			pub.muduleId != "0" && common.isApp() ? (function(){
+				common.jsInteractiveApp({
+					name:'goToNextLevel',
+					parameter:{
+						title:'登录',
+						url:'html/login.html'
+					}
+				})
+			})() : ''
 		}
 	
 		// 父模块接口数据 
