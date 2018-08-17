@@ -153,6 +153,7 @@ require(['../require/config'],function(){
 					}
 				}
 				var data = $.extend({},d, obj);
+				
 				common.jsInteractiveApp({
 					name:'updateUserInfo',
 					parameter:{
@@ -219,6 +220,7 @@ require(['../require/config'],function(){
 		   		e.stopPropagation()
 		   	})
 			$("#loginPhoto").on('change',function(){
+				
 				var Orientation = null;
 				
 		    	$("#cuserId").val( pub.userId );
@@ -261,7 +263,7 @@ require(['../require/config'],function(){
 			                //如果图片大小小于200kb，则直接上传
 			                if (ll <= 200 *1024) {
 			                    img = null;
-			                    $(".loginPhoto").attr("src",result);
+			                    //$(".loginPhoto").attr("src",result);
 			                    
 			                    upload(result, Orientation);
 			                    return;
@@ -274,7 +276,7 @@ require(['../require/config'],function(){
 			                }
 			                function callback() {
 			                    var data = compress(img);
-			                    $(".loginPhoto").attr("src",result)
+			                    //$(".loginPhoto").attr("src",result)
 			                    upload(data,Orientation);
 			                    img = null;
 			                }
@@ -354,6 +356,7 @@ require(['../require/config'],function(){
 		        return ndata;
 		    };
 	        function upload(basestr, Orientation) {
+	        
 		        var basestr = basestr.split(",")[1];
 		        
 		       	var formdata = $.extend({},{
@@ -618,22 +621,9 @@ require(['../require/config'],function(){
 						common.user_data.setItem( common.JSONStr( user_data ) );
 						common.prompt('修改成功');
 						
-						var obj = {
-							data:{
-								cuserInfo:d.data,
-								secretKey:common.secretKey.getItem(),
-								tokenId:common.tokenId.getItem(),
-								userAccountInfo:'',
-								userMonthCard:''
-							}
-						}
-						var data = $.extend({},d, obj);
-						common.jsInteractiveApp({
-							name:'updateUserInfo',
-							parameter:{
-								str:JSON.stringify(data)
-							}
-						});
+						
+						pub.apiHandle.updateUserInfo(d);
+						
 						common.setMyTimeout(function(){
 							common.jsInteractiveApp({
 								name:'goBack',
@@ -1210,35 +1200,7 @@ require(['../require/config'],function(){
 			if( common.isApp() ){
 				$('#app-clear-cache,#app-share','.zs-setting-box').show().on('click',function(){
 					var isShare = $(this).is('#app-share');
-					/*if( isShare ){
-						if (common.isAndroid()) {
-							try{
-								android.share()
-							}catch(e){
-								alert("调用Android方法share出错")
-							}
-						} else if(common.isApple()){
-							try{
-								window.webkit.messageHandlers.share.postMessage('');
-							}catch(e){
-								alert("调用Ios方法share出错")
-							}
-						}
-					}else{
-						if (common.isAndroid()) {
-							try{
-								android.clearCache()
-							}catch(e){
-								alert("调用Android方法clearCache出错")
-							}
-						} else if(common.isApple()){
-							try{
-								window.webkit.messageHandlers.clearCache.postMessage('');
-							}catch(e){
-								alert("调用Ios方法clearCache出错")
-							}
-						}
-					}*/
+					
 					common.jsInteractiveApp({
 						name: isShare ? 'share':'clearCache'
 					})
@@ -1642,8 +1604,7 @@ require(['../require/config'],function(){
 		};
 		
 		pub.fruitCoins.jumpBack = function(d){
-			alert(d);
-			alert(pub);
+			
 			
 		}
 		// 果币 事件命名空间
