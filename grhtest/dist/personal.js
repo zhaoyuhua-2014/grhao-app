@@ -42,6 +42,9 @@ require(['../require/config'],function(){
 					$('.my_islogin,.main_top_right,.exit').css({'display':'block'});
 					$('.my_name').html( common.user_datafn().petName );
 					pub.apiHandle.userScoCouMon.init(); // 包月卡余额 + 果币 + 优惠券数量
+					
+					var h = common.API +"?method=face_img_upload"
+					$("#form2").attr("action",h)
 				}else{
 					$('.main_top_right,.exit').css({'display':'none'});	 
 			        $('.my_nologin').css({'display':'block'});
@@ -113,6 +116,50 @@ require(['../require/config'],function(){
 						common.user_data.removeItem();
 					});
 				}
+			},
+			img_upload:function(data,el){
+				$.ajax({
+					type:"POST",
+					url:common.API,
+					dataType:"JSON",
+					data:data,
+			        //processData : false, // 不处理发送的数据，因为data值是Formdata对象，不需要对数据做处理
+			        //contentType : false, // 不设置Content-type请求头
+					success:function(d){
+						if( d.statusCode == "100000" ){
+							var user_data = common.user_datafn();
+							user_data.faceImg = d.data.faceImg;
+							
+							common.user_data.setItem( common.JSONStr( user_data ) );
+							
+							$(el).attr('src',d.data.faceImg+"?rom="+Math.floor(Math.random()*1000000 ))
+							
+							pub.apiHandle.updateUserInfo(d);
+							
+						}else{
+							common.prompt( d.statusCode );
+						}
+					}
+				});
+			},
+			updateUserInfo:function(d){
+				var obj = {
+					data:{
+						cuserInfo:d.data,
+						secretKey:common.secretKey.getItem(),
+						tokenId:common.tokenId.getItem(),
+						userAccountInfo:'',
+						userMonthCard:''
+					}
+				}
+				var data = $.extend({},d, obj);
+				
+				common.jsInteractiveApp({
+					name:'updateUserInfo',
+					parameter:{
+						str:JSON.stringify(data)
+					}
+				});
 			}
 		};
 		
@@ -170,7 +217,11 @@ require(['../require/config'],function(){
 					//common.jumpLinkPlainApp('登录','html/login.html?type='+5);
 				}
 			});
-	
+			$("#imgIframe").on("load",function(){
+				var value = document.getElementById("imgIframe").contentWindow.document.body.innerHTML;
+				/*window.top.postMessage('123456', '*');*/
+				console.log(1)
+			})
 			// 点击退出
 			$('.exit').on('click',function(){
 		    	pub.apiHandle.logout.init();
@@ -179,6 +230,7 @@ require(['../require/config'],function(){
 		   		e.stopPropagation()
 		   	})
 			$("#loginPhoto").on('change',function(){
+				
 				var Orientation = null;
 				
 		    	$("#cuserId").val( pub.userId );
@@ -188,8 +240,10 @@ require(['../require/config'],function(){
 				var tar = this,
 					files = tar.files,
 					fNum = files.length,
-					URL = window.URL || window.webkitURL;
-				if( !files[0] ) return;
+					URL = window.URL || window.webkitURL,
+					file = files[0];
+					if( !file ) return;
+					
 				require(['exif'],function(){
 					EXIF.getData(files[0], function() {  
 			            //alert(EXIF.pretty(this));  
@@ -197,6 +251,7 @@ require(['../require/config'],function(){
 			            //alert(EXIF.getTag(this, 'Orientation'));   
 			            Orientation = EXIF.getTag(this, 'Orientation');
 			            //alert(Orientation)
+			            /*
 			            $("#angle").val(Orientation);
 						for( var i = 0; i < fNum; i++ ){
 							if( files[i].type.search(/image/) >= 0){
@@ -204,11 +259,136 @@ require(['../require/config'],function(){
 								document.getElementsByClassName('loginPhoto')[0].src = blob;
 							}
 						};
-						$("#form2").submit();
-			            //return;  
+						*/
+						
+						
+						var fr = new FileReader();
+						
+						
+						fr.onload = function () {
+			                var result = this.result;
+			                var img = new Image();
+		                	img.src = result;
+							var ll = imgsize(result);
+			                //如果图片大小小于200kb，则直接上传
+			                if (ll <= 200 *1024) {
+			                    img = null;
+			                    //$(".loginPhoto").attr("src",result);
+			                    
+			                    upload(result, Orientation);
+			                    return;
+			                }
+							// 图片加载完毕之后进行压缩，然后上传
+			                if (img.complete) {
+			                    callback();
+			                } else {
+			                    img.onload = callback;
+			                }
+			                function callback() {
+			                    var data = compress(img);
+			                    //$(".loginPhoto").attr("src",result)
+			                    upload(data,Orientation);
+			                    img = null;
+			                }
+			
+			            };
+			            /*
+			            FileReader.readAsArrayBuffer()
+						开始读取指定的 Blob中的内容, 一旦完成, result 属性中保存的将是被读取文件的 ArrayBuffer 数据对象.
+						FileReader.readAsBinaryString() 
+						开始读取指定的Blob中的内容。一旦完成，result属性中将包含所读取文件的原始二进制数据。
+						FileReader.readAsDataURL()
+						开始读取指定的Blob中的内容。一旦完成，result属性中将包含一个data: URL格式的字符串以表示所读取文件的内容。
+						FileReader.readAsText()
+						开始读取指定的Blob中的内容。一旦完成，result属性中将包含一个字符串以表示所读取的文件内容。
+			            */
+		                fr.readAsDataURL(file);
+		                //fr.readAsText(file);
+		                //fr.readAsArrayBuffer(file)
+		                //fr.readAsBinaryString(file)
+		                
 			        });
 				})
 			});
+			
+			function compress(img) {
+		        var initSize = img.src.length;
+		        var w = img.width;
+		        var h = img.height;
+				var canvas = document.createElement("canvas");
+		        //如果图片大于四百万像素，计算压缩比并将大小压至400万以下
+		        var ratio;
+		        if ((ratio = w * h / 4000000)>1) {
+		            ratio = Math.sqrt(ratio);
+		            w /= ratio;
+		            h /= ratio;
+		        }else {
+		            ratio = 1;
+		        }
+		
+		        canvas.width = w;
+		        canvas.height = h;
+				var ctx = canvas.getContext("2d");
+				//        铺底色
+		        ctx.fillStyle = "#fff";
+		        ctx.fillRect(0, 0, canvas.width, canvas.height);
+		
+		        //如果图片像素大于100万则使用瓦片绘制
+		        var count;
+		        var tCanvas = document.createElement("canvas");
+		        
+		        if ((count = w * h / 1000000) > 1) {
+		            count = ~~(Math.sqrt(count)+1); //计算要分成多少块瓦片
+		
+					//            计算每块瓦片的宽和高
+		            var nw = ~~(w / count);
+		            var nh = ~~(h / count);
+					
+					var tctx = tCanvas.getContext('2d')
+		            tCanvas.width = nw;
+		            tCanvas.height = nh;
+		            for (var i = 0; i < count; i++) {
+		                for (var j = 0; j < count; j++) {
+		                    tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh);
+		
+		                    ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh);
+		                }
+		            }
+		        } else {
+		            ctx.drawImage(img, 0, 0, w, h);
+		        }
+		
+		        //进行最小压缩
+		        var ndata = canvas.toDataURL('image/jpeg', 0.1);
+		
+		        tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0;
+		
+		        return ndata;
+		    };
+	        function upload(basestr, Orientation) {
+	        
+		        var basestr = basestr.split(",")[1];
+		        
+		       	var formdata = $.extend({},{
+					"method":"face_img_upload_two",
+		        	"angle":Orientation,
+		        	"faceimg":basestr,
+				}, pub.userBasicParam);
+				
+		        pub.apiHandle.img_upload(formdata , ".loginPhoto");
+		        
+		    };
+	        //计算图片文件的大小
+			function imgsize(str){
+				var str=str.substring(22);
+				var equalIndex= str.indexOf('=');
+				if(str.indexOf('=')>0){
+				    str=str.substring(0, equalIndex);
+				}
+				var strLength=str.length;
+				var fileLength=parseInt(strLength-(strLength/8)*2);
+				return fileLength
+			}
 			function obj2str(o){
 			   var r = [];
 			   if(typeof o == "string" || o == null) {
@@ -252,6 +432,9 @@ require(['../require/config'],function(){
 			$(".test").on("click",function(){
 				common.jumpLinkPlainApp("测试专用","html/test.html");
 			})
+			window.addEventListener("message", function(e){
+            	console.log(e);
+            }, false);
 		};
 	
 		
@@ -439,6 +622,7 @@ require(['../require/config'],function(){
 					sex : pub.userInfoRepaired.sex_num
 				}),function( d ){
 					if ( d.statusCode=="100000" ) {
+						
 						var user_data = common.user_datafn();
 						user_data.petName = pub.userInfoRepaired.petName;
 						user_data.realName = pub.userInfoRepaired.realName;
@@ -446,6 +630,10 @@ require(['../require/config'],function(){
 						user_data.sex = pub.userInfoRepaired.sex_num;
 						common.user_data.setItem( common.JSONStr( user_data ) );
 						common.prompt('修改成功');
+						
+						
+						pub.apiHandle.updateUserInfo(d);
+						
 						common.setMyTimeout(function(){
 							common.jsInteractiveApp({
 								name:'goBack',
@@ -948,7 +1136,13 @@ require(['../require/config'],function(){
 						})
 						//common.jumpLinkPlainApp(title , url);
 					})
+					$(".help_content").on("click",".help_chat",function(){
+						common.jsInteractiveApp({
+							name:'goChat'
+						})
+					})
 				}
+				
 			},
 		};
 		// 帮助模块初始化
@@ -1016,35 +1210,7 @@ require(['../require/config'],function(){
 			if( common.isApp() ){
 				$('#app-clear-cache,#app-share','.zs-setting-box').show().on('click',function(){
 					var isShare = $(this).is('#app-share');
-					/*if( isShare ){
-						if (common.isAndroid()) {
-							try{
-								android.share()
-							}catch(e){
-								alert("调用Android方法share出错")
-							}
-						} else if(common.isApple()){
-							try{
-								window.webkit.messageHandlers.share.postMessage('');
-							}catch(e){
-								alert("调用Ios方法share出错")
-							}
-						}
-					}else{
-						if (common.isAndroid()) {
-							try{
-								android.clearCache()
-							}catch(e){
-								alert("调用Android方法clearCache出错")
-							}
-						} else if(common.isApple()){
-							try{
-								window.webkit.messageHandlers.clearCache.postMessage('');
-							}catch(e){
-								alert("调用Ios方法clearCache出错")
-							}
-						}
-					}*/
+					
 					common.jsInteractiveApp({
 						name: isShare ? 'share':'clearCache'
 					})
@@ -1448,8 +1614,7 @@ require(['../require/config'],function(){
 		};
 		
 		pub.fruitCoins.jumpBack = function(d){
-			alert(d);
-			alert(pub);
+			
 			
 		}
 		// 果币 事件命名空间

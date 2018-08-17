@@ -84,11 +84,7 @@ require(['../require/config'],function(){
 					str:userInfo
 				}
 			})
-			/*try{
-				common.isAndroid() ? android.saveLoginInfo( userInfo ) : window.webkit.messageHandlers.saveLoginInfo.postMessage(userInfo);
-			}catch(e){
-				common.prompt('服务异常，请稍后重试 saveLoginInfo');
-			}*/
+			
 		};
 		//通知APP段刷新
 		pub.tellRefreshAPP = function(){

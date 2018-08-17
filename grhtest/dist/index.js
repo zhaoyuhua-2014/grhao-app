@@ -421,11 +421,8 @@ require(['../require/config'],function () {
 							url:'html/store1.html'
 						}
 					})
-					
-					
 				});
 				$(".index_banner .swiper-wrapper").on("click",'a',function(e){
-					
 					var url = $(this).attr("url"),
 						title = $(this).attr("data-title");
 					if (url) {
@@ -444,7 +441,6 @@ require(['../require/config'],function () {
 						link = nood.attr("link"),
 						title = nood.attr("tit");
 					if (link != '') {
-						
 						common.jsInteractiveApp({
 							name:'goToNextLevel',
 							parameter:{
@@ -453,7 +449,6 @@ require(['../require/config'],function () {
 							}
 						})
 					}
-					
 				})
 				//确定按钮 -- //取消按钮
 				$(".order_refund").on("click",".makeSure,.refund_cancle",function(){

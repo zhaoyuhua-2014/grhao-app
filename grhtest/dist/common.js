@@ -195,6 +195,12 @@ define(['jquery','mdData','shar1'],function($){
 				localStorage.setItem('tokenId',d.data.tokenId)
 				common.secretKey.setItem( d.data.secretKey );
 				common.logined.setItem('logined');
+				common.jsInteractiveApp({
+					name:'updateUserInfo',
+					parameter:{
+						str:JSON.stringify(d)
+					}
+				});
 			}
 			common.DTD.resolve();
 
@@ -1112,6 +1118,14 @@ define(['jquery','mdData','shar1'],function($){
 						//微信登录
 						case 'wxLoginApp':
 							common.isApple() ? window.webkit.messageHandlers.wechatLogin.postMessage('') : android.wxLoginApp();
+						//进入客服 ----调用之后通知APP----->参数 无
+						case 'goChat':
+							common.isApple() ? window.webkit.messageHandlers.goChat.postMessage('') : android.goChat();
+							break;
+						//更新用户信息 ----调用之后通知APP----->参数 无
+						case 'updateUserInfo':
+							var jsonObj = parameter.str;
+							common.isApple() ? window.webkit.messageHandlers.updateUserInfo.postMessage(jsonObj) : android.updateUserInfo(jsonObj);
 							break;
 						default:
 							break;

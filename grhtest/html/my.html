@@ -31,8 +31,8 @@
 						</div>
 						<dl class="my_islogin clearfloat">
 							<dt class="my_login">
-							    <img class="loginPhoto"/>
-							    <form id="form2" action="http://api.grhao.com/server/api.do?method=face_img_upload" enctype="multipart/form-data" method="post" target="formImg">
+							    <img class="loginPhoto"/><!--- http://api.grhao.com/server/api.do?method=face_img_upload-->
+							    <form id="form2" action="http://61.164.113.168:8090/grh_api/server/api.do?method=face_img_upload" enctype="multipart/form-data" method="post" target="formImg">
 							    	<input type="file" accept="image/*" id='loginPhoto' name="faceimg"/>
 							    	<input type="hidden" name="userId" id="cuserId" value="" />
 							    	<input type="hidden" name="tokenId" id="tokenId" value="" />
@@ -41,7 +41,7 @@
 							    	<input type="hidden" name="angle" id="angle" value="" />
 							    	<!--<input type="hidden" name="method" id="" value="face_img_upload" />-->
 							    </form>
-							    <iframe style="display: none;" name="formImg"></iframe>
+							    <iframe style="display: none;" id="imgIframe" name="formImg"></iframe>
 						    </dt>
 						    <dd class="my_islogin_right">
 						    	<div class="my_islogin_right_top clearfloat">
@@ -110,7 +110,7 @@
 			zs.init();	
 		});
 	</script>-->
-	<script data-main = "../dist/personal.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+	<script data-main = "../dist/personal.js?v=0817" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
 		function setAppVersion(n){
 			if (typeof n == 'string') {
