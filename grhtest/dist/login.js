@@ -125,7 +125,8 @@ require(['../require/config'],function(){
 				    realName : infor.realName,
 				    idCard : infor.idcard,
 				    mobile : infor.mobile,
-				    sex : infor.sex
+				    sex : infor.sex,
+				    isRegOpenfire : infor.isRegOpenfire
 				};
 				// 给app端传用户信息 分享使用
 				
@@ -480,7 +481,8 @@ require(['../require/config'],function(){
 				    realName : data.realName,
 				    idCard : data.idCard,
 				    mobile : data.mobile,
-				    sex : data.sex
+				    sex : data.sex,
+				    isRegOpenfire : data.isRegOpenfire
 				};
 				common.user_data.setItem( common.JSONStr(user_data) );
 				common.tokenId.setItem( d.data.tokenID );

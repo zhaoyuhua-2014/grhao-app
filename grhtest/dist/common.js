@@ -7,7 +7,7 @@ define(['jquery','mdData','shar1'],function($){
 
 	$.extend(common,{
 		//EVE 作为正式环境和测试环境的开关，为true时为正式环境，为false时为测试环境
-		EVE:true,
+		EVE:false,
 		//API : "http://api.grhao.com/server/api.do", // 接口地址
 		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数
@@ -189,18 +189,19 @@ define(['jquery','mdData','shar1'],function($){
 				    realName : infor.realName,
 				    idCard : infor.idcard,
 				    mobile : infor.mobile,
-				    sex : infor.sex
+				    sex : infor.sex,
+				    isRegOpenfire : infor.isRegOpenfire
 				};
 				common.user_data.setItem( common.JSONStr(user_data) );
 				localStorage.setItem('tokenId',d.data.tokenId)
 				common.secretKey.setItem( d.data.secretKey );
 				common.logined.setItem('logined');
-				common.jsInteractiveApp({
+				/*common.jsInteractiveApp({
 					name:'updateUserInfo',
 					parameter:{
 						str:JSON.stringify(d)
 					}
-				});
+				});*/
 			}
 			common.DTD.resolve();
 
@@ -429,7 +430,8 @@ define(['jquery','mdData','shar1'],function($){
 					realName : userInfo.realName,
 					idCard : userInfo.idCard,
 					mobile : userInfo.mobile,
-					sex : userInfo.sex
+					sex : userInfo.sex,
+					isRegOpenfire : userInfo.isRegOpenfire
 				}
 			}
 		},

@@ -139,7 +139,8 @@ require(['../require/config'],function () {
 					    realName : infor.realName,
 					    idCard : infor.idcard,
 					    mobile : infor.mobile,
-					    sex : infor.sex
+					    sex : infor.sex,
+					    isRegOpenfire : infor.isRegOpenfire
 					};
 					common.user_data.setItem( common.JSONStr(user_data) );
 					common.tokenId.setItem( d.data.tokenId );
