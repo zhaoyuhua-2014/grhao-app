@@ -217,6 +217,28 @@ require(['../require/config'],function(){
 					//common.jumpLinkPlainApp('登录','html/login.html?type='+5);
 				}
 			});
+			$(".zs_onlineChat").on("click",function(){
+				if( pub.logined ){
+					if (common.user_datafn().isRegOpenfire == 1) {
+						common.jsInteractiveApp({
+							name:'goChat'
+						})
+					}else{
+						pub.iminfo_regist();
+					}
+				}else{
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'登录',
+							url:'html/login.html?type='+5
+						}
+					})
+					//common.jumpLinkPlainApp('登录','html/login.html?type='+5);
+				}
+			})
+			
+			
 			$("#imgIframe").on("load",function(){
 				var value = document.getElementById("imgIframe").contentWindow.document.body.innerHTML;
 				/*window.top.postMessage('123456', '*');*/

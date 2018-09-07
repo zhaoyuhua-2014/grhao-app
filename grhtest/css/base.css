@@ -1629,3 +1629,15 @@ to {
 .help_item.help_tel{background-image:url(../img/icon_cellphone.png) ;background-position-x: 150px;padding-left: 210px;}
 .help_item.help_chat{background-image:url(../img/icon_chat.png) ;background-position-x: 170px;padding-left: 230px;}
 .help_content .msg{text-align: center;font-size: 24px;color: #999;}
+
+
+/*
+ 重写我页面图标样式
+ * */
+.main_bottom dl.icon_address{background-position:0 -279px;}
+.main_bottom dl.icon_shop{background-position:0 -379px;}
+.main_bottom dl.icon_rechange{background-position:0 -479px;}
+.main_bottom dl.icon_password{background-position:0 -579px;}
+.main_bottom dl.icon_help{background-position:0 -679px;}
+.main_bottom dl.icon_set{background-position:0 -779px;}
+.main_bottom dl.icon_chat{background:url(../img/icon_chat1.png) no-repeat left center;}
