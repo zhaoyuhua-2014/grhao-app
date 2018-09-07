@@ -78,13 +78,20 @@ require(['../require/config'],function(){
 		pub.login = {};
 		// 给AAP传数据
 		pub.sendToApp = function( userInfo ){
-			console.log(userInfo)
-			try{
-				common.isAndroid() ? android.saveLoginInfo( userInfo ) : window.webkit.messageHandlers.saveLoginInfo.postMessage(userInfo);
-			}catch(e){
-				common.prompt('服务异常，请稍后重试 saveLoginInfo');
-			}
+			common.jsInteractiveApp({
+				name:'saveLoginInfo',
+				parameter:{
+					str:userInfo
+				}
+			})
+			
 		};
+		//通知APP段刷新
+		pub.tellRefreshAPP = function(){
+			common.jsInteractiveApp({
+				name:'tellRefresh'
+			})
+		}
 	
 		pub.get_weixin_code  = function(){
 	        common.ajaxPost({
@@ -134,7 +141,7 @@ require(['../require/config'],function(){
 				common.tokenId.setItem( d.data.tokenId );
 				common.secretKey.setItem( d.data.secretKey );
 				common.isApp() && pub.sendToApp( common.JSONStr( d ) ); // 传数据给 APP 端
-				common.tellRefreshAPP()
+				common.isApp() && pub.tellRefreshAPP() //通知APP端刷新
 				common.setMyTimeout(function(){
 					var 
 					bool = common.goodid.getKey(),
@@ -159,18 +166,47 @@ require(['../require/config'],function(){
 							bool && common.goodid.removeItem();
 							common.jumpMake.removeItem();
 							
-							pub.jumpMake  == 3 && common.goBackApp(1,true,'html/seckill.html' ); // 秒杀详情 -> 秒杀换购 列表
+							
+							/*pub.jumpMake  == 3 && common.goBackApp(1,true,'html/seckill.html' ); // 秒杀详情 -> 秒杀换购 列表
 							pub.jumpMake  == 4 && common.goBackApp( 1,true,'html/pre.html' ); // 预购详情 -> 预购列表
 							pub.jumpMake  == 12 && common.goBackApp( 1,true,'html/seckill.html' ); // 换购详情 -> 秒杀换购 列表
 							pub.jumpMake  == 9 && common.goBackApp( 1,true,'html/moregoods.html' ); // 商品详情 -> 商品详情列表
-		
-							common.goBackApp(  1,true,pathNames[ pub.jumpMake-1 ] );
+							*/
+							//common.goBackApp(  1,true,pathNames[ pub.jumpMake-1 ] );
+							
+							var backUrl = '';
+							if (pub.jumpMake  == 3 ) {
+								backUrl = 'html/seckill.html';
+							} else if (pub.jumpMake  == 4) {
+								backUrl = 'html/pre.html';
+							} else if (pub.jumpMake  == 12) {
+								backUrl = 'html/seckill.html';
+							} else if (pub.jumpMake  == 9) {
+								backUrl = 'html/moregoods.html';
+							} else {
+								backUrl = pathNames[ pub.jumpMake-1 ]
+							}
+							//common.goBackApp(  1,true,pathNames[ pub.jumpMake-1 ] );
+							common.jsInteractiveApp({
+								name:'goBack',
+								parameter:{
+									num:1,
+									type:1,
+									url:backUrl
+								}
+							})
 						}else{
-							common.goHomeApp();
+							//common.goHomeApp();
+							common.jsInteractiveApp({
+								name:'goHome'
+							})
 						}
 					}else{
 						bool && common.goodid.removeItem();
-						common.goHomeApp();
+						//common.goHomeApp();
+						common.jsInteractiveApp({
+							name:'goHome'
+						})
 					}
 				},500);
 			},
@@ -214,8 +250,6 @@ require(['../require/config'],function(){
 		//微信自动登录成功回调函数
 		pub.login.apiHandle.trueFn = function(d){
 			
-			//sessionStorage.setItem("weixinAppId",d);
-			//common.jumpLinkPlainApp("绑定账号","../html/bindUser.html");
 			var d = JSON.parse(d);
 			pub.weixin_login.init(d.openid);
 		};
@@ -322,13 +356,17 @@ require(['../require/config'],function(){
 					var nood = $(this),
 						iswx = nood.is(".login_wx");
 					if (iswx) {
-						common.wxLoginApp();
+						//common.wxLoginApp();
+						common.jsInteractiveApp({
+							name:'wxLoginApp',
+							parameter:{}
+						})
 					}
 				})
 				
 				//点击跳转注册
 				$(".login_regsiter a").on("click",function(){
-					//common.jumpLinkPlainApp("注册","html/regsiter.html");
+					
 					common.jsInteractiveApp({
 						name:'goToNextLevel',
 						parameter:{
@@ -359,7 +397,7 @@ require(['../require/config'],function(){
 								url:'html/bindUser.html'
 							}
 						})
-		        		//common.jumpLinkPlainApp("绑定注册","html/bindUser.html");
+		        		
 		            }else{
 		            	common.prompt( d.statusStr );
 		            }
@@ -461,7 +499,7 @@ require(['../require/config'],function(){
 					    $('.pop').css({'display':'block'});
 						$('.pop_makeSure').on('click',function(){
 							$('.pop').css({'display':'none'});
-						})					    
+						})
 				    }else{
 				    	common.prompt( d.statusStr );
 				    }
@@ -496,8 +534,12 @@ require(['../require/config'],function(){
 					if( t == 0 ){
 						clearInterval(time);
 						time = null;
-						common.tellRefreshAPP();
-						common.goHomeApp();
+						common.isApp() && pub.tellRefreshAPP();
+						//common.goHomeApp();
+						common.jsInteractiveApp({
+							name:'goHome',
+							parameter:{}
+						})
 					}else{
 						$('.regsiter_time').html( t );					
 					}

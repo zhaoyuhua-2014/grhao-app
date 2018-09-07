@@ -168,10 +168,10 @@ require(['../require/config'],function(){
 		pub.eventHandle = {};
 		pub.eventHandle.init = function(){
 	
-			common.jumpLinkSpecialApp('.main_top_right','个人信息修改','html/message_change.html'); // 进入个人信息修改
+			//common.jumpLinkSpecialApp('.main_top_right','个人信息修改','html/message_change.html'); // 进入个人信息修改
 	
 			// 订单管理 + 我的预购 + 优惠券 + 收货地址 + 果币商城 + 在线充值 + 修改密码 + 帮助中心 + 设置
-			$('.zs_personal').click(function(){
+			$('.zs_personal,.main_top_right').click(function(){
 				var url = $(this).attr('data-url');
 				var tit = $(this).attr("data-title");
 				var right = $(this).attr("data-right");
@@ -185,17 +185,27 @@ require(['../require/config'],function(){
 						if (right == 'img') {
 							var l = window.location.href.substring(0, window.location.href.indexOf("/html/"));
 							var imgIcon =  l + '/img/icon_Invalid.png';
+							common.jsInteractiveApp({
+								name:'jumpLinkCustom',
+								parameter:{
+									title:tit,
+									url:url,
+									imgIcon: right == 'img' ? imgIcon : '',//(function(){pub.couponList.apiHandle.jumpLink()})()
+									callBackName:right == 'img' ? 'pub.couponList.apiHandle.jumpLink()' : ''
+								}
+							})
 						}
+					}else{
+						//common.jumpLinkPlainApp( tit,url );
+						common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:tit,
+								url:url
+							}
+						})
 					}
-					common.jsInteractiveApp({
-						name:'jumpLinkCustom',
-						parameter:{
-							title:tit,
-							url:url,
-							imgIcon: right == 'img' ? imgIcon : '',//(function(){pub.couponList.apiHandle.jumpLink()})()
-							callBackName:right == 'img' ? 'pub.couponList.apiHandle.jumpLink()' : ''
-						}
-					})
+					
 				}else{
 					common.jsInteractiveApp({
 						name:'goToNextLevel',
@@ -982,8 +992,8 @@ require(['../require/config'],function(){
 					    		common.jsInteractiveApp({
 									name:'goBack',
 									parameter:{
-										'hierarchy':1,
-										'reload':true,
+										'num':1,
+										'type':1,
 										'url':'html/my.html'
 									}
 								})
@@ -1646,13 +1656,26 @@ require(['../require/config'],function(){
 					var url = $(this).attr("data-url");
 					common.jumpLinkPlain(url);
 				});
-				$(".score_top_box").on("click",".details",function(){
+				/*$(".score_top_box").on("click",".details",function(){
 					var url = $(this).attr("data-url");
 					common.jumpLinkPlainApp("果币明细",url);
 				});
 				$(".score_top_box").on("click",".abort_score",function(){
 					var url = $(this).attr("data-url");
 					common.jumpLinkPlainApp("关于果币",url);
+				});*/
+				$(".score_top_box").on("click",".details,.abort_score",function(){
+					var url = $(this).attr("data-url");
+					var isDetail = $(this).hasClass(".details"),
+						isAboutScore = $(this).hasClass(".abort_score");
+					
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title: isDetail ? '果币明细' : isAboutScore ? '关于果币' : '',
+							url:url
+						}
+					})
 				});
 				$(".score_main_list").on("click",".exchangeBtn",function(){
 					var count = parseInt($(".score_top_box .score_icon").html());

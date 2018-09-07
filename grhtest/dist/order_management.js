@@ -26,7 +26,10 @@ require(['../require/config'],function(){
 				tokenId : pub.tokenId
 			}
 		}else{
-			common.goHomeApp(); // 未登录跳转
+			//common.goHomeApp(); // 未登录跳转
+			common.jsInteractiveApp({
+				name:'goHome'
+			})
 		}
 	
 		pub.toFixed = common.toFixed; 
@@ -242,13 +245,23 @@ require(['../require/config'],function(){
 	
 				    if( status == '1' || status == '2' ){   // 去支付
 	
-			    	    common.jumpLinkPlainApp( "订单支付",'html/order_pay.html' );
-	
+						common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:'订单支付',
+								url:'html/order_pay.html'
+							}
+						})
 				    }else if( status == '7' ){ // 评价
 	
 				    	common.orderColumn.removeItem();
-				    	common.jumpLinkPlainApp( '订单评价','html/order_evaluation.html' );
-	
+						common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:'订单评价',
+								url:'html/order_evaluation.html'
+							}
+						})
 				    }else if( status == '-1' ){
 	
 				    	var data = {
@@ -257,8 +270,16 @@ require(['../require/config'],function(){
 							canclefn:'cancleFn',
 							truefn:'trueFn'
 						}
-						common.alertMaskApp(JSON.stringify(data));
-	
+						//common.alertMaskApp(JSON.stringify(data));
+						common.jsInteractiveApp({
+							name:'alertMask',
+							parameter:{
+								type:1,
+								title:'确定删除?',
+								canclefn:'cancleFn',
+								truefn:'trueFn'
+							}
+						})
 				    }
 				});
 	
@@ -272,8 +293,13 @@ require(['../require/config'],function(){
 					common.orderBack.setItem( '1' );
 					common.orderCode.setItem( $this.attr('dataCode') ); //存储订单编号
 	
-				    activityType == 5  && common.jumpLinkPlainApp( '订单详情','html/preOrderDetail.html' ); // 预购订单详情
-				    activityType != 5 && common.jumpLinkPlainApp( '订单详情','html/orderDetails.html' ); // 普通订单详情
+				    common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'订单详情',
+							url:activityType == 5 ? 'html/preOrderDetail.html' : 'html/orderDetails.html'
+						}
+					})
 	
 				}); 
 			},
@@ -583,7 +609,15 @@ require(['../require/config'],function(){
 					}),function( d ){
 						if ( d.statusCode == '100000' ){
 							//if(pub.orderDetail.METHOD == 'order_del'){
-							common.goBackApp(1,true,"html/order_management.html")
+							//common.goBackApp(1,true,"html/order_management.html")
+							common.jsInteractiveApp({
+								name:'goBack',
+								parameter:{
+									num:1,
+									type:1,
+									url:'html/order_management.html'
+								}
+							})
 							//}
 							//common.jumpLinkPlainApp( pub.orderDetail.TIT_RELATED[pub.orderDetail.METHOD],pub.orderDetail.URL_RELATED[ pub.orderDetail.METHOD ] );
 						}else if( d.statusCode == common.SESSION_EXPIRE_CODE ){
@@ -621,8 +655,14 @@ require(['../require/config'],function(){
 					if( className ){
 						if( commentBtn ){ 
 							common.orderColumn.removeItem();
-							common.jumpLinkPlainApp( "评价",'html/order_evaluation.html' );
-	
+							//common.jumpLinkPlainApp( "评价",'html/order_evaluation.html' );
+							common.jsInteractiveApp({
+								name:'goToNextLevel',
+								parameter:{
+									title:'评价',
+									url:'html/order_evaluation.html'
+								}
+							})
 						}else if( key ){
 	
 							$('.order_refund_confirm').html( pub.orderDetail.TIP_MESSAGE[ key ].text );
@@ -637,11 +677,29 @@ require(['../require/config'],function(){
 								canclefn:'cancleFn',
 								truefn:'trueFn'
 							}
-							common.alertMaskApp(JSON.stringify(data));
+							//common.alertMaskApp(JSON.stringify(data));
+							common.jsInteractiveApp({
+								name:'alertMask',
+								parameter:{
+									type:1,
+									title:pub.orderDetail.TIP_MESSAGE[ key ].text,
+									canclefn:'cancleFn',
+									truefn:'trueFn'
+								}
+							})
 						}
 					}
-	
+					
 					/paying/.test(e.target.className) && common.jumpLinkPlainApp( "订单支付",'html/order_pay.html' ); // 去支付
+					if (/paying/.test(e.target.className)) {
+						common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:'订单支付',
+								url:'html/order_pay.html'
+							}
+						})
+					}
 				});
 	
 			    //点击确定
@@ -658,7 +716,13 @@ require(['../require/config'],function(){
 	
 				$(".machine_address_wrap .machine_address").on("click",function(){
 					localStorage.setItem("mapData",JSON.stringify($(this).data()));
-					common.jumpLinkPlainApp("门店位置","html/store_map.html")
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'门店位置',
+							url:'html/store_map.html'
+						}
+					})
 				});
 				//点击扫码
 				$(".watm_info").on("click",".scanQRCode",function(){
@@ -741,11 +805,19 @@ require(['../require/config'],function(){
 					})
 				},
 				apiData:function(d){
-	           		common.confirmBackApp({
+	           		/*common.confirmBackApp({
 	           			title:"订单详情",
 	           			url:'html/orderDetails.html',
 	           			callBackName:"pub.orderDetail.apiHandle.init()"
-	           		})
+	           		})*/
+	           		common.jsInteractiveApp({
+						name:'confirmBack',
+						parameter:{
+							title:"订单详情",
+		           			url:'html/orderDetails.html',
+		           			callBackName:"pub.orderDetail.apiHandle.init()"
+						}
+					})
 				}
 			},
 			
@@ -759,7 +831,10 @@ require(['../require/config'],function(){
 					if (className == 'confirm_btn') {
 						pub.scan.apiHandle.scan_pick_up.init();
 					} else if (className == 'cancle_btn'){
-						common.cancelBackApp();
+						//common.cancelBackApp();
+						common.jsInteractiveApp({
+							name:'cancelBack'
+						})
 					}
 				})
 			}

@@ -48,7 +48,10 @@ require(['../require/config'],function(){
 	            tokenId : pub.tokenId
 	        };
 	    }else{
-	        common.jumpLinkPlainApp("登录",'html/index.html'); // 未登录跳到首页
+	        //common.jumpLinkPlainApp("登录",'html/index.html'); // 未登录跳到首页
+	        common.jsInteractiveApp({
+				name:'goHome'
+			})
 	    }
 	
 	    pub.orderType = null; // 订单类型 4.尾款订单
@@ -214,14 +217,35 @@ require(['../require/config'],function(){
 	                },pub.userBasicParam,pub.vipCardPayApi),function( d ){
 	                    if ( d.statusCode == "100000" ) {
 	                    	if (pub.seachParam == "pre") {
-	                    		common.jumpLinkPlainApp( "我的预购","html/PreOrder_management.html" );
+	                    		//common.jumpLinkPlainApp( "我的预购","html/PreOrder_management.html" );
+	                    		common.jsInteractiveApp({
+									name:'goToNextLevel',
+									parameter:{
+										title:'我的预购',
+										url:'html/PreOrder_management.html'
+									}
+								})
 	                    	}else{	
-	                        	common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
+	                        	//common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
+	                        	common.jsInteractiveApp({
+									name:'goToNextLevel',
+									parameter:{
+										title:'订单管理',
+										url:'html/order_management.html'
+									}
+								})
 	                    	}
 	                    }else if( d.statusCode == "100802" ){
 	                        common.prompt( "验证码输入有误!" );
 	                    } else{
-	                        common.jumpLinkPlainApp( "支付结果","html/pay_result.html" );
+	                        //common.jumpLinkPlainApp( "支付结果","html/pay_result.html" );
+	                    	common.jsInteractiveApp({
+								name:'goToNextLevel',
+								parameter:{
+									title:'支付结果',
+									url:'html/pay_result.html'
+								}
+							})
 	                    }
 	                    pub.loading.hide();
 	                });
@@ -302,9 +326,23 @@ require(['../require/config'],function(){
 	           		if (d) {
 	           			if (d == 9000) {
 	           				if (pub.wxAppPayWay == 1) {
-			           			common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
+			           			//common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
+			           			common.jsInteractiveApp({
+									name:'goToNextLevel',
+									parameter:{
+										title:'订单管理',
+										url:'html/order_management.html'
+									}
+								})
 			           		} else if (pub.wxAppPayWay == 2) {
-			           			common.jumpLinkPlainApp( "我的预购","html/PreOrder_management.html" );
+			           			//common.jumpLinkPlainApp( "我的预购","html/PreOrder_management.html" );
+			           			common.jsInteractiveApp({
+									name:'goToNextLevel',
+									parameter:{
+										title:'我的预购',
+										url:'html/PreOrder_management.html'
+									}
+								})
 			           		} else if (pub.wxAppPayWay == 3) {
 			           			//window.location.reload();
 			           			
@@ -401,7 +439,7 @@ require(['../require/config'],function(){
 	                    }else if(  d.statusCode == "100400" ){
 	                        common.prompt( '登录已失效，请重新登陆' );
 	                        common.setMyTimeout(function(){
-	                            common.jumpLinkPlainApp( 'login.html' );
+	                            common.jumpLinkPlainApp( '登录','html/login.html' );
 	                        },1000);
 	                    }
 	
@@ -459,9 +497,23 @@ require(['../require/config'],function(){
 	           		if (d) {
 	           			if (d == 9000) {
 	           				if (pub.wxAppPayWay == 1) {
-			           			common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
+			           			//common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
+			           			common.jsInteractiveApp({
+									name:'goToNextLevel',
+									parameter:{
+										title:'订单管理',
+										url:'html/order_management.html'
+									}
+								})
 			           		} else if (pub.wxAppPayWay == 2) {
-			           			common.jumpLinkPlainApp( "我的预购","html/PreOrder_management.html" );
+			           			//common.jumpLinkPlainApp( "我的预购","html/PreOrder_management.html" );
+			           			common.jsInteractiveApp({
+									name:'goToNextLevel',
+									parameter:{
+										title:'我的预购',
+										url:'html/PreOrder_management.html'
+									}
+								})
 			           		} else if (pub.wxAppPayWay == 3) {
 			           			//window.location.reload();
 			           			pub.apiHandle.user_month_card.init();
@@ -635,7 +687,14 @@ require(['../require/config'],function(){
 	            $(".month_pay_deal,.month_record,.pay_style_msg a").on("click",function(){
 	            	var url = $(this).attr("data-url"),
 					title = $(this).attr("data-title");
-					common.jumpLinkPlainApp(title , url);
+					//common.jumpLinkPlainApp(title , url);
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:title,
+							url:url
+						}
+					})
 	            })
 	        }
 	    };

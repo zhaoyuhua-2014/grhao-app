@@ -440,12 +440,16 @@ require(['../require/config'],function () {
 		};
 		// 地址渲染
 		pub.AddrInfoRender = function( d ){
-			pub.addrId = d.id; // 接收地址ID
-			$('.set_charge_contact').attr( 'addr-id', pub.addrId ); // 暂存 ID
-			$('.set_charge_address1').find('.set_address_top').show().find('.take_goods_name').html( d.consignee )
-			.next().html( d.mobile ).parent().next().html( d.provinceName + d.cityName + d.countyName + d.street );
-	
-			common.addressData.getKey() && common.addressData.removeItem();
+			if (!d.latitude && !d.longitude ) {
+				$('.set_charge_address1').find('.group1').hide().next().show().html( "请选择收货地址" );
+			} else{
+				pub.addrId = d.id; // 接收地址ID
+				$('.set_charge_contact').attr( 'addr-id', pub.addrId ); // 暂存 ID
+				$('.set_charge_address1').find('.set_address_top').show().find('.take_goods_name').html( d.consignee )
+				.next().html( d.mobile ).parent().next().html( d.provinceName + d.cityName + d.countyName + d.address + d.addName + d.street );
+				
+			}
+			
 			pub.addrDtd.resolve();
 		};
 		// 公共事件处理函数
@@ -512,7 +516,14 @@ require(['../require/config'],function () {
 					if($(".set_charge_contact").attr("addr-id")){
 						window.localStorage.setItem("addId",$(".set_charge_contact").attr("addr-id"))
 					}
-					common.jumpLinkPlainApp( '地址列表',"html/address_management.html" );
+					//common.jumpLinkPlainApp( '地址列表',"html/address_management.html" );
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'地址列表',
+							url:'html/address_management.html'
+						}
+					})
 				});
 	
 				// 提交订单
@@ -571,16 +582,26 @@ require(['../require/config'],function () {
 						}
 					}
 					common.good.setItem( common.JSONStr( goodsCart ) ); // 存储数据
-	
+					common.addressData.getKey() && common.addressData.removeItem();
 					common.first_data.removeItem();
 					common.two_data.removeItem();
 					common.addType.removeItem();
 					common.setShopCarNumApp(0);
-					if (d.data.orderStatus == '3') {
+					/*if (d.data.orderStatus == '3') {
 						common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
 					}else{
 						common.jumpLinkPlainApp( "订单支付","html/order_pay.html" );
-					}
+					}*/
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter: d.data.orderStatus == '3' ? {
+										title:'订单管理',
+										url:'html/address_management.html'
+									} : {
+										title:'订单支付',
+										url:'html/order_pay.html'
+									}
+					})
 					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 				}else if ( d.statusCode == "100711" ) {
 					common.prompt("地址不在配送范围");
@@ -616,8 +637,16 @@ require(['../require/config'],function () {
 					common.orderBack.setItem( "1" );
 					common.seckillGood.removeItem();
 					common.addType.removeItem();
+					common.addressData.getKey() && common.addressData.removeItem();
 					common.historyReplace( 'order_management.html' );
-					common.jumpLinkPlainApp( "订单支付","html/order_pay.html" );
+					//common.jumpLinkPlainApp( "订单支付","html/order_pay.html" );
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'订单支付',
+							url:'html/order_pay.html'
+						}
+					})
 					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 				}else if ( d.statusCode == "100711" ) {
 					common.prompt("地址不在配送范围");
@@ -648,7 +677,15 @@ require(['../require/config'],function () {
 				if ( d.statusCode == "100000" ) {
 					common.orderCode.setItem( d.data.orderCode );
 					common.addType.removeItem();
-					common.jumpLinkPlainApp( "订单支付","html/order_pay.html" );
+					common.addressData.getKey() && common.addressData.removeItem();
+					//common.jumpLinkPlainApp( "订单支付","html/order_pay.html" );
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'订单支付',
+							url:'html/order_pay.html'
+						}
+					})
 					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 				}else if ( d.statusCode == "100711" ) {
 					common.prompt( "地址不在配送范围" );
@@ -771,7 +808,15 @@ require(['../require/config'],function () {
 							'id':couponId,
 							'couponMoney':couponMoney
 						}));
-						common.goBackApp(1,true,'html/orderSettlement.html');
+						//common.goBackApp(1,1,'html/orderSettlement.html');
+						common.jsInteractiveApp({
+							name:'goBack',
+							parameter:{
+								'num':1,
+								'type':1,
+								'url':'html/orderSettlement.html'
+							}
+						})
 					}else{
 						/*pub.switchInput("订单结算",".select_coupon",".orderSettlement")*/
 					};
@@ -798,7 +843,15 @@ require(['../require/config'],function () {
 						$(".cuopon_management_contain1 .coupon_list_item.active").removeClass("active");
 					}
 					common.couponInfo.setItem(JSON.stringify({}))
-					common.goBackApp(1,true,'html/orderSettlement.html');
+					//common.goBackApp(1,true,'html/orderSettlement.html');
+					common.jsInteractiveApp({
+						name:'goBack',
+						parameter:{
+							'num':1,
+							'type':1,
+							'url':'html/orderSettlement.html'
+						}
+					})
 				})
 			}
 		}

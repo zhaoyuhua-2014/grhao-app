@@ -38,7 +38,6 @@ require(['../require/config'],function () {
         			for (var i in data) {
         				pub.Map.creatMake(map,data[i],i)
         			}
-        			console.log(map)
         		}else{
         			if (pub.mapData && !!pub.mapData.longitude) {
 			        	var  map = new AMap.Map("container", {
@@ -90,9 +89,26 @@ require(['../require/config'],function () {
 							common.firmId.setItem(pub.firmIdTemp);
 							common.good.removeItem();
 							
-							common.tellRefreshAPP();
-							common.setShopCarNumApp(0);
-							common.goBackApp(2,true,'index.html');
+							//common.tellRefreshAPP();
+							common.jsInteractiveApp({
+								name:'tellRefresh'
+							});
+							//common.setShopCarNumApp(0);
+							common.jsInteractiveApp({
+								name:'setShopCarNum',
+								parameter:{
+									num:'0'
+								}
+							});
+							//common.goBackApp(2,true,'index.html');
+							common.jsInteractiveApp({
+								name:'goBack',
+								parameter:{
+									num:2,
+									type:1,
+									url:'index.html'
+								}
+							})
 						}
 					})
 				}
@@ -111,8 +127,16 @@ require(['../require/config'],function () {
 						canclefn:'cancleFn',
 						truefn:'trueFn'
 					}
-					common.alertMaskApp(JSON.stringify(data));
-					
+					//common.alertMaskApp(JSON.stringify(data));
+					common.jsInteractiveApp({
+						name:'alertMask',
+						parameter:{
+							type:1,
+							title:'确定选择该门店',
+							canclefn:'cancleFn',
+							truefn:'trueFn'
+						}
+					})
 					pub.firmIdTemp = this.getExtData().id;
 		        })
 		        new AMap.Marker({
@@ -123,12 +147,24 @@ require(['../require/config'],function () {
         	},
         	//确定方法
 			trueFn:function(){
-				common.tellRefreshAPP();
+				
 				if (pub.logined) {
 					pub.Map.choice_firm.init();
 				}else{
+					//common.tellRefreshAPP();
+					common.jsInteractiveApp({
+						name:'tellRefresh'
+					});
 					common.firmId.setItem(pub.firmIdTemp);
-					common.goBackApp(2,true,'index.html');
+					//common.goBackApp(2,true,'index.html');
+					common.jsInteractiveApp({
+						name:'goBack',
+						parameter:{
+							num:2,
+							type:1,
+							url:'index.html'
+						}
+					})
 				}
 			},
 			//取消方法

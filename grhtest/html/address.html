@@ -7,7 +7,7 @@
 	--><meta name="viewport" content="width=720,user-scalable=no"/>
     <meta content="telephone=no, address=no" name="format-detection" />	
     <link rel="stylesheet" href="../css/base.css" />
-    <link rel="stylesheet" type="text/css" href="../css/LArea.css"/>
+   <!-- <link rel="stylesheet" type="text/css" href="../css/LArea.css"/>-->
     <script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body ontouchstart>
@@ -30,12 +30,14 @@
 				<li>
 					<label for="" class="person_address">联系方式：</label><input type="text" id="person_phone" value="" placeholder="请输入联系方式" autocomplete="off" />
 				</li>
-				<li>
-					<label for="" class="person_address">所在地区：</label><input type="text" id="person_area" value="" placeholder="请输入所在地区"  readonly="readonly"/>
-					<input id="value1" type="hidden" value="20,234,504">
+				<li class="readtext clearfloat">
+					<label for="" class="person_address float_left">收货地址：</label>
+					<!--<input type="text" id="person_area" value="" placeholder="请选择地址"  readonly="readonly"/>-->
+					<div id="person_area" class="person_area float_right">请选择收货地址</div>
 				</li>
 				<li>
-					<label for="" class="person_address">详细地址：</label><input type="text" id="person_moreAddress" value="" placeholder="请输入详细地址" autocomplete="off" />
+					<label for="" class="person_address">门牌号：</label>
+					<input type="text" id="person_moreAddress" value="" placeholder="例：5号楼203室"  autocomplete="off" />
 				</li>
 			</ul>
 		    <button class="address_reverse" id="btn_save">保存</button>
@@ -52,6 +54,6 @@
 		zs.init();
 	});
 </script>-->
-<script data-main = "../dist/addressfix.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+<script data-main = "../dist/addressfix.js?v=0720" src="../require/require.js?v=0720" type="text/javascript" charset="utf-8"></script>
 
 </html>

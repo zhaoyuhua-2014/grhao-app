@@ -111,7 +111,7 @@ define(['jquery','mdData','shar1'],function($){
 		'gameType', // 标记游戏页面入口 + 果币商城切换
 		'couponInfoList',//app存储优惠卷列表信息，
 		'couponInfo',//app存储优惠卷信息，
-		
+		'addObj',//新增地图选择地址使用
 		
 	].forEach(function( item ){
 		common[item] = new Memory( item, 'local' );
@@ -581,7 +581,7 @@ define(['jquery','mdData','shar1'],function($){
 		},
 		goBackApp:function(num,type,url){
 			num = num || 1,
-			type = num || true;
+			type = num || 1;
 			var jsonObj = {'hierarchy':num,'reload':type,'url':'/'+url};
 			if (common.isPhone()) {
 				if (common.isApple()) {
@@ -1007,6 +1007,7 @@ define(['jquery','mdData','shar1'],function($){
 						//返回上一级 ----->参数  'hierarchy':num 返回的层级数  'reload':type 返回后是否刷新  'url':返回的url  
 						case 'goBack':
 							var jsonObj = {'hierarchy':parameter.num,'reload':parameter.type,'url':'/'+parameter.url};
+							
 							common.isApple() ? window.webkit.messageHandlers.goBack.postMessage(jsonObj) : android.goBack(JSON.stringify(jsonObj));
 							break;
 						//返回主页面----->参数  无
@@ -1033,7 +1034,7 @@ define(['jquery','mdData','shar1'],function($){
 							break;
 						//取消遮罩----->参数 无
 						case 'cancelDialog':
-							common.isApple() ? window.webkit.messageHandlers.cancelDialog.postMessage('') : android.cancelDialog();
+							common.isApple() ? /*window.webkit.messageHandlers.cancelDialog.postMessage('')*/ console.log("ios not cancelDialog") : android.cancelDialog();
 							break;
 						//刷新APP----->参数 无
 						case 'tellRefresh':
@@ -1069,13 +1070,6 @@ define(['jquery','mdData','shar1'],function($){
 							break;
 						//跳转页面自定义----->参数 {'title':title,"url":'/'+url,"txt":txt,"imgIcon":imgIcon,"callBack":callBackName}; 
 						case 'jumpLinkCustom':
-							/*if (common.DATE) {
-								if (parameter.url.indexOf("?")>0) {
-									parameter.url = parameter.url + "&v="+common.DATE;
-								}else{
-									parameter.url = parameter.url + "?v="+common.DATE;
-								}
-							}*/
 							var jsonObj = {title:parameter.title,url:'/'+parameter.url,txt:parameter.txt,imgIcon:parameter.imgIcon,callBack:parameter.callBackName};
 							common.isApple() ? window.webkit.messageHandlers.jumpLinkCustom.postMessage(jsonObj) : android.jumpLinkCustom(JSON.stringify(jsonObj));
 							break;
@@ -1116,6 +1110,10 @@ define(['jquery','mdData','shar1'],function($){
 						case 'noticeRefresh':
 							common.isApple() ? window.webkit.messageHandlers.noticeRefresh.postMessage('') : android.noticeRefresh();
 							break;
+						//通知刷新 ----调用之后所有以及view刷新----->参数 无
+						case 'tellRefreshAPP':
+							common.isApple() ? window.webkit.messageHandlers.tellRefreshAPP.postMessage('') : android.tellRefreshAPP();
+							break;
 						//将登录的信息传递给APP----->参数 无
 						case 'saveLoginInfo':
 							var jsonObj = parameter.str;
@@ -1125,6 +1123,9 @@ define(['jquery','mdData','shar1'],function($){
 						case 'exit1':
 							common.isApple() ? window.webkit.messageHandlers.exit1.postMessage('') : android.exit1();
 							break;
+						//微信登录
+						case 'wxLoginApp':
+							common.isApple() ? window.webkit.messageHandlers.wechatLogin.postMessage('') : android.wxLoginApp();
 						//进入客服 ----调用之后通知APP----->参数 无
 						case 'goChat':
 							common.isApple() ? window.webkit.messageHandlers.goChat.postMessage('') : android.goChat();

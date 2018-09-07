@@ -148,14 +148,7 @@ require(['../require/config'],function () {
 								canclefn:'',
 								truefn:'pub.apiHandle.trueFn1()'
 							}
-						})/*
-						var data = {
-							type:2,
-							title:'请选择门店?',
-							canclefn:'',
-							truefn:'pub.apiHandle.trueFn1'
-						}
-						common.alertMaskApp(JSON.stringify(data));*/
+						})
 					}else{
 						common.prompt(d.statusStr)
 					}
@@ -235,7 +228,7 @@ require(['../require/config'],function () {
 				data.adInfoList.length != 0 && common.bannerShow(data.adInfoList, '.index_banner', function( d ){
 					var html = '', i = 0, link = null;
 					for ( i =0,l=d.length; i< l; i++ ){
-						link = getLink(d[i].linkUrl)
+						link = d[i].linkUrl ? pub.apiHandle.getActiveUrl(d[i].linkUrl) : null;
 						html += '<div class="swiper-slide"><a href="javascript:void(0)" data-title="'+d[i].note+'" url="'+link+'"><img src="' + d[i].adLogo + '" /></a></div>'
 					}
 					return html;
@@ -250,18 +243,6 @@ require(['../require/config'],function () {
 			 	if(pub.isrefresh){
 			 		pub.pullInstance.pullDownSuccess();
 			 		common.lazyload(); // 懒加载
-			 	}
-			 	function getLink (link){
-			 		var wxUrl = 'weixin.grhao.com';
-			 		var url = '';
-			 		if (link) {
-			 			if (link.indexOf(wxUrl) != -1) {
-			 				url = link.substr((link.indexOf(wxUrl) + wxUrl.length))
-			 			}else{
-			 				url = '';
-			 			}
-			 		}
-			 		return url
 			 	}
 	 		}
 	 	};
@@ -324,6 +305,28 @@ require(['../require/config'],function () {
 				}
 			}
 		}
+		pub.apiHandle.getActiveUrl = function(d){
+			var locationObj = document.location;
+			if (d) {
+				var urlParameter = d.indexOf('?') > 1 ? d.split('?')[1] : null;
+				var arr = d.split("/"),
+					l = arr.length;
+				var path = function(){
+					if(locationObj.pathname.indexOf(".html") > 1){
+						var arr = locationObj.pathname.split('/'),
+							l = arr.length;
+						arr.splice(l-1,1);
+						return arr.join('/') + '/'
+					}else{
+						return locationObj.pathname;
+					}
+				}
+				//locationObj.protocol+  '//'+ locationObj.hostname + ":"+ locationObj.port + path() +"html/"+arr[l-1];
+				return "html/"+arr[l-1];
+			}else{
+				return null;
+			}
+		}
 	 	// app 参数
 	 	pub.apiHandle.system_config_constant = {
 	 		init : function(){
@@ -342,16 +345,12 @@ require(['../require/config'],function () {
 		 			dStr = common.JSONStr( d );
 		 			common.appData.setItem( dStr ); 
 	 			}
-	 			
 	 			common.jsInteractiveApp({
 					name:'getShare',
 					parameter:{
 						str:dStr
 					}
 				})
-	 			/*try{
-					common.isAndroid() ? android.getShare( dStr ) : window.webkit.messageHandlers.getShare.postMessage(dStr);
-				}catch(e){}*/
 	
 	 		}
 	 	};
@@ -402,7 +401,7 @@ require(['../require/config'],function () {
 							url:'html/goodsDetails.html?goodsId=' + $(this).attr("data")
 						}
 					})
-					//common.jumpLinkPlainApp( "商品详情", "html/goodsDetails.html?goodsId=" + $(this).attr("data") );
+					
 				});
 				
 				$(".index_rigth").on("click",function(){
@@ -422,42 +421,10 @@ require(['../require/config'],function () {
 							url:'html/store1.html'
 						}
 					})
-					//alert("门店选择")
-					//common.jumpLinkPlainApp('门店选择','html/store1.html');
-					
 				});
 				$(".index_banner .swiper-wrapper").on("click",'a',function(e){
-					var urlArr = [{
-						url:'goodsDetails.html',
-						tit:"商品详情"
-					},{
-						url:"moregoods.html?type=JU_HUI",
-						tit:"钜惠活动"
-					},{
-						url:"moregoods.html?type=TAO_CAN",
-						tit:"礼盒套餐"
-					},{
-						url:'seckill.html',
-						tit:"秒杀换购"
-					},{
-						url:'pre.html',
-						tit:"预购活动"
-					},{
-						url:'seckillDetaila.html',
-						tit:"换购商品详情"
-					},{
-						url:'seckillDetail.html',
-						tit:"秒杀商品详情"
-					},{
-						url:'preDetails.html',
-						tit:"预购商品详情"
-					},{
-						url:'month_service.html',
-						tit:"充值优惠"
-					}]
 					var url = $(this).attr("url"),
 						title = $(this).attr("data-title");
-					console.log(url)
 					if (url) {
 						common.jsInteractiveApp({
 							name:'goToNextLevel',
@@ -474,7 +441,6 @@ require(['../require/config'],function () {
 						link = nood.attr("link"),
 						title = nood.attr("tit");
 					if (link != '') {
-						//common.jumpLinkPlainApp(title,link);
 						common.jsInteractiveApp({
 							name:'goToNextLevel',
 							parameter:{
@@ -483,7 +449,6 @@ require(['../require/config'],function () {
 							}
 						})
 					}
-					
 				})
 				//确定按钮 -- //取消按钮
 				$(".order_refund").on("click",".makeSure,.refund_cancle",function(){
@@ -495,20 +460,6 @@ require(['../require/config'],function () {
 						pub.apiHandle.choice_firm.init()
 					}
 				});
-				/*
-				//取消按钮
-				$(".order_refund").on("click",".refund_cancle",function(){
-					$(".order_refund").hide();
-					$("body").css("overflow-y","auto");
-					pub.apiHandle.choice_firm.init()
-				});
-	
-				//确定按钮
-				$(".order_refund").on("click",".makeSure",function(){
-					$(".order_refund").hide();
-					$("body").css("overflow-y","auto");
-					pub.apiHandle.trueFn();
-				});*/
 			}
 	 	};
 	

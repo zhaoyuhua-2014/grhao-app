@@ -5,7 +5,7 @@
 * personal scirpt for Zhangshuo Guoranhao
 */ 
 require(['../require/config'],function(){
-	require(['common',"pull"],function(common){
+	require(['common'],function(common){
 	
 		// 命名空间
 		var pub = {};
@@ -38,7 +38,15 @@ require(['../require/config'],function(){
 				tokenId : pub.tokenId
 			}
 		}else{
-			pub.muduleId != "0" && common.isApp() ? common.goHomeApp() : common.jumpLinkPlain( 'my.html' );
+			pub.muduleId != "0" && common.isApp() ? (function(){
+				common.jsInteractiveApp({
+					name:'goToNextLevel',
+					parameter:{
+						title:'登录',
+						url:'html/login.html'
+					}
+				})
+			})() : ''
 		}
 	
 		// 父模块接口数据 
@@ -158,11 +166,25 @@ require(['../require/config'],function(){
 				});
 				$(".score_top_box").on("click",".details",function(){
 					var url = $(this).attr("data-url");
-					common.jumpLinkPlainApp("果币明细",url);
+					//common.jumpLinkPlainApp("果币明细",url);
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'果币明细',
+							url:url
+						}
+					})
 				});
 				$(".score_top_box").on("click",".abort_score",function(){
 					var url = $(this).attr("data-url");
-					common.jumpLinkPlainApp("关于果币",url);
+					//common.jumpLinkPlainApp("关于果币",url);
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'关于果币',
+							url:url
+						}
+					})
 				});
 				$(".score_main_list").on("click",".exchangeBtn",function(){
 					var count = parseInt($(".score_top_box .score_icon").html());
@@ -923,9 +945,23 @@ require(['../require/config'],function(){
 							common.gameType.setItem("1");
 							/*common.jumpLinkPlain(url)*/
 							if (dom.is(".gameTiger_operateArea_ruleBtn")) {
-								common.jumpLinkPlainApp("抽奖规则" ,"html/"+url);
+								//common.jumpLinkPlainApp("抽奖规则" ,"html/"+url);
+								common.jsInteractiveApp({
+									name:'goToNextLevel',
+									parameter:{
+										title:'抽奖规则',
+										url:"html/"+url
+									}
+								})
 							}else if (dom.is(".gameTiger_operateArea_exchange")){
-								common.jumpLinkPlainApp("果币商城" ,"html/"+url);
+								//common.jumpLinkPlainApp("果币商城" ,"html/"+url);
+								common.jsInteractiveApp({
+									name:'goToNextLevel',
+									parameter:{
+										title:'果币商城',
+										url:"html/"+url
+									}
+								})
 							}
 						},200)
 					}

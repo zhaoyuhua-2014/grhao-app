@@ -194,11 +194,20 @@ require(['../require/config'],function () {
 					pathNameTitle = ['秒杀商品详情','预购详情','换购商品详情'],
 					pathNames = [ "html/seckillDetail.html", "html/preDetails.html", "html/seckillDetaila.html" ],
 					goodsId = $this.attr("data-id");
+					var title = '商品详情',
+						url = "html/goodsDetails.html?goodsId=" + goodsId;
+						
 					if( 1 < type && type < 5){
-						common.jumpLinkPlainApp( pathNameTitle[type - 2],pathNames[type-2] + '?goodsId=' + goodsId );
-					}else{
-						common.jumpLinkPlainApp( '商品详情',"html/goodsDetails.html?goodsId=" + goodsId );
+						title = pathNameTitle[type - 2];
+						url = pathNames[type-2] + '?goodsId=' + goodsId
 					}
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:title,
+							url:url
+						}
+					})
 				});
 	
 			}
@@ -314,11 +323,11 @@ require(['../require/config'],function () {
 						    geolocation.getCurrentPosition();
 						    AMap.event.addListener(geolocation, 'complete', function(e){
 						    	console.log(e);
-						    	alert(e.type)
+						    	//alert(e.type)
 						    });//onComplete返回定位信息
 						    AMap.event.addListener(geolocation, 'error',function(e){
 						    	console.log(e);
-						    	alert(e.type)
+						    	//alert(e.type)
 						    } );      //onError返回定位出错信息
 						});
 					});
@@ -374,8 +383,22 @@ require(['../require/config'],function () {
 							common.user_data.setItem( common.JSONStr( user_data ) );
 							common.firmId.setItem(pub.firmIdTemp);
 							common.good.removeItem();
-							common.setShopCarNumApp(0);
-							common.goBackApp(1,true,'index.html');
+							//common.setShopCarNumApp(0);
+							common.jsInteractiveApp({
+								name:'setShopCarNum',
+								parameter:{
+									num:'0'
+								}
+							});
+							//common.goBackApp(1,true,'index.html');
+							common.jsInteractiveApp({
+								name:'goBack',
+								parameter:{
+									num:1,
+									type:1,
+									url:'index.html'
+								}
+							})
 						}
 					})
 				}
@@ -408,8 +431,23 @@ require(['../require/config'],function () {
 				}else{
 					common.firmId.setItem(pub.firmIdTemp);
 					common.good.removeItem();
-					common.setShopCarNumApp(0);
-					common.goBackApp(1,true,'index.html');
+					//common.setShopCarNumApp(0);
+					common.jsInteractiveApp({
+						name:'setShopCarNum',
+						parameter:{
+							num:'0'
+						}
+					});
+					//common.goBackApp(1,true,'index.html');
+					common.jsInteractiveApp({
+						name:'goBack',
+						parameter:{
+							num:1,
+							type:1,
+							url:'index.html'
+						}
+					})
+					
 				}
 			},
 			//取消方法
