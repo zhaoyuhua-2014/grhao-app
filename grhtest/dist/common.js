@@ -202,6 +202,12 @@ define(['jquery','mdData','shar1'],function($){
 						str:JSON.stringify(d)
 					}
 				});*/
+				common.jsInteractiveApp({
+					name:'saveLoginInfo',
+					parameter:{
+						str:common.JSONStr( d )
+					}
+				});
 			}
 			common.DTD.resolve();
 

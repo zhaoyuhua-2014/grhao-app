@@ -134,7 +134,7 @@ require(['../require/config'],function(){
 							
 							$(el).attr('src',d.data.faceImg+"?rom="+Math.floor(Math.random()*1000000 ))
 							
-							//pub.apiHandle.updateUserInfo(d);
+							pub.apiHandle.updateUserInfo(d);
 							
 						}else{
 							common.prompt( d.statusCode );
@@ -154,12 +154,12 @@ require(['../require/config'],function(){
 				}
 				var data = $.extend({},d, obj);
 				
-				/*common.jsInteractiveApp({
-					name:'updateUserInfo',
+				common.jsInteractiveApp({
+					name:'saveLoginInfo',
 					parameter:{
-						str:JSON.stringify(data)
+						str:common.JSONStr( data )
 					}
-				});*/
+				});
 			}
 		};
 		
@@ -622,7 +622,7 @@ require(['../require/config'],function(){
 						common.prompt('修改成功');
 						
 						
-						//pub.apiHandle.updateUserInfo(d);
+						pub.apiHandle.updateUserInfo(d);
 						
 						common.setMyTimeout(function(){
 							common.jsInteractiveApp({
@@ -1127,7 +1127,7 @@ require(['../require/config'],function(){
 						//common.jumpLinkPlainApp(title , url);
 					})
 					$(".help_content").on("click",".help_chat",function(){
-						
+						alert(common.user_datafn().isRegOpenfire);
 						if (common.user_datafn().isRegOpenfire == 1) {
 							common.jsInteractiveApp({
 								name:'goChat'
@@ -1165,9 +1165,14 @@ require(['../require/config'],function(){
 					    isRegOpenfire:v.isRegOpenfire
 					};
 					common.user_data.setItem( common.JSONStr(user_data) );
-					common.jsInteractiveApp({
-						name:'goChat'
-					})
+					alert(common.user_datafn().isRegOpenfire);
+					if (common.user_datafn().isRegOpenfire != 1) {
+						common.prompt( "网络异常，请点击重试");
+					}else{
+						common.jsInteractiveApp({
+							name:'goChat'
+						})
+					}
 	            }else{
 	                common.prompt( "网络异常，请点击重试");
 	            };
