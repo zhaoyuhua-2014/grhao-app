@@ -236,22 +236,9 @@ require(['../require/config'],function(){
 					
 				require(['exif'],function(){
 					EXIF.getData(files[0], function() {  
-			            //alert(EXIF.pretty(this));  
 			            EXIF.getAllTags(this);   
-			            //alert(EXIF.getTag(this, 'Orientation'));   
 			            Orientation = EXIF.getTag(this, 'Orientation');
-			            //alert(Orientation)
-			            /*
-			            $("#angle").val(Orientation);
-						for( var i = 0; i < fNum; i++ ){
-							if( files[i].type.search(/image/) >= 0){
-								var blob = URL.createObjectURL(files[i]);
-								document.getElementsByClassName('loginPhoto')[0].src = blob;
-							}
-						};
-						*/
-						
-						
+			           
 						var fr = new FileReader();
 						
 						
@@ -1127,7 +1114,6 @@ require(['../require/config'],function(){
 						//common.jumpLinkPlainApp(title , url);
 					})
 					$(".help_content").on("click",".help_chat",function(){
-						alert(common.user_datafn().isRegOpenfire);
 						if (common.user_datafn().isRegOpenfire == 1) {
 							common.jsInteractiveApp({
 								name:'goChat'
@@ -1165,10 +1151,10 @@ require(['../require/config'],function(){
 					    isRegOpenfire:v.isRegOpenfire
 					};
 					common.user_data.setItem( common.JSONStr(user_data) );
-					alert(common.user_datafn().isRegOpenfire);
 					if (common.user_datafn().isRegOpenfire != 1) {
 						common.prompt( "网络异常，请点击重试");
 					}else{
+						pub.apiHandle.updateUserInfo(d);
 						common.jsInteractiveApp({
 							name:'goChat'
 						})
