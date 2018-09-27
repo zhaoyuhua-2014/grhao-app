@@ -568,10 +568,10 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 /*.month_card_recharge_item.weixin_pay{ display:none; }*/
 
 .mcr_left{width:200px;padding-left:60px;line-height:100px;font-size:26px;}
-.month_card_recharge_item:nth-child(3){border-bottom:1px solid #FFFFFF;}
+/*.month_card_recharge_item:nth-child(3){border-bottom:1px solid #FFFFFF;}
 .month_card_recharge_item:nth-child(1) .mcr_left{background:url(../img/icon_pay_wx@2x.png) no-repeat left center;}
 .month_card_recharge_item:nth-child(2) .mcr_left{background: url(../img/icon_pay_ali@2x.png) no-repeat left center;}
-.month_card_recharge_item:nth-child(3) .mcr_left{background:url(../img/icon_pay_card@2x.png) no-repeat left center;}
+.month_card_recharge_item:nth-child(3) .mcr_left{background:url(../img/icon_pay_card@2x.png) no-repeat left center;}*/
 .month_pay_style dl{width:100%;height:100px;padding:20px 0;font-size:26px;}
 .month_pay_style dl dt{width:200px;height:60px;float:left;padding-left:60px;color:rgb(51,51,51);line-height:60px;}
 .month_pay_style dl dd{width:460px;height:60px;float:left;}
@@ -1641,3 +1641,26 @@ to {
 .main_bottom dl.icon_help{background-position:0 -679px;}
 .main_bottom dl.icon_set{background-position:0 -779px;}
 .main_bottom dl.icon_chat{background:url(../img/icon_chat1.png) no-repeat left center;}
+
+
+
+/*
+ Vue改版充值
+ 充值卡充值
+ * */
+.vuePageBox{
+	max-width: 720px;
+	margin: 0 auto;
+}
+
+.month_pay_style .month_card_recharge_item:nth-last-child{border-bottom:1px solid #FFFFFF;}
+/*
+.month_card_recharge_item[pay-way='1']{}
+*/
+#pay-way-box .month_card_recharge_item.month_card_recharge_item[pay-way='2'] .mcr_left{background:url(../img/icon_pay_wx@2x.png) no-repeat left center}
+#pay-way-box .month_card_recharge_item.month_card_recharge_item[pay-way='3'] .mcr_left{background:url(../img/icon_pay_card@2x.png) no-repeat left center}
+#pay-way-box .month_card_recharge_item.month_card_recharge_item[pay-way='4'] .mcr_left{background:url(../img/icon_pay_ali@2x.png) no-repeat left center}
+
+#pay-way-box .month_card_recharge_item.month_card_recharge_item[pay-way='5'] .mcr_left{background: url(../img/icon_rechange_card.png) no-repeat left center;}
+.month_pay_style dl dd input{padding-left: 16px;}
+.month_pay_style .month_card_recharge_item:last-child{border-bottom:1px solid #FFFFFF;}

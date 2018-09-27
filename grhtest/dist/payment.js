@@ -535,7 +535,34 @@ require(['../require/config'],function(){
 	           			console.log("app端传回的参数为"+d)
 	           		}
 	            }
-	        }
+	        },
+	        ExchangeRechargeableCard:{
+	        	init:function(){//pub.userBasicParam
+	        		common.ajaxPost($.extend({},pub.userBasicParam,{
+	                    method : 'card_pay_wallet',
+	                    userId : pub.userId,
+	                    cardNum : pub.rechargeCard,
+	                    cardPwd : pub.exchargeCode
+	                }),function( d ){
+	                    d.statusCode != '100000' && common.prompt( d.statusStr );
+	                    d.statusCode == '100000' && pub.apiHandle.ExchangeRechargeableCard.apiData(d)
+	                });
+	        	},
+	        	apiData:function(d){
+	        		var v = d.data;
+	        		common.createGamePopup({
+	        			flag:2,
+	        			imgUrl:'../img/icon_recharge_suc.png',
+	        			msg:'充值成功',
+	        			
+	        		});
+	        		$("#rechange_card,#rechange_exchangeCode").val('');
+	        		var 
+	                nodeBox = $(".count-left-money em");
+	                v ? nodeBox.html( v.systemMoney ) : nodeBox.html("0");
+	        		
+	        	}
+	        },
 	    };
 	    // 支付方式
 	    pub.payWay = {};
@@ -633,7 +660,21 @@ require(['../require/config'],function(){
 	        },10000)
 	        pub.apiHandle.order_topay_llpay.init();
 	    };
-	
+		//充值卡充值
+		pub.payWay.rechangeCardPay = function(){
+			pub.rechargeCard = $("#rechange_card").val();
+			pub.exchargeCode = $("#rechange_exchangeCode").val();
+			var reg_card = /^[0-9]{12}$/;
+			var reg_exchange = /^[0-9A-Za-z]{4}$/;
+			if( !reg_card.test( pub.rechargeCard ) ) {
+	            common.prompt( "请输入正确的充值卡号" ); return;
+	        }
+	        // 充值
+	       	if( !reg_exchange.test( pub.exchargeCode ) ) {
+	            common.prompt( "请输入正确的兑换码" ); return;
+	        }
+	        pub.apiHandle.ExchangeRechargeableCard.init();
+		}
 	    // 事件处理
 	    pub.eventHandle = {
 	        init : function(){
@@ -662,6 +703,7 @@ require(['../require/config'],function(){
 	                    case 2 : !pub.isApp ? pub.payWay.weixinPay() : pub.payWay.weixinAppPay(); break; // 微信
 	                    case 3 : pub.payWay.bankPay(); break; // 银行卡
 	                    case 4 : pub.payWay.aliPay(); break; // 支付宝
+	                    case 5 : pub.payWay.rechangeCardPay(); break; // 充值卡
 	                };
 	            });
 	            
@@ -723,15 +765,20 @@ require(['../require/config'],function(){
 	            nodeBox.children('[pay-way="2"]').show();
 	            pub.isWinXin && nodeBox.children('[pay-way="4"]').hide();// 微信环境隐藏支付宝
 	            if( pub.isRecharge ){
-	                nodeBox.children('[pay-way="2"]').addClass('bg_select');
+	            	nodeBox.children('[pay-way="5"]').addClass('bg_select');
 	                pub.isApp && nodeBox.find('[pay-way="4"]').removeClass('bg_select').find('.content-box').hide();
-	                pub.PAY_WAY = "2";
+	                pub.PAY_WAY = "5";
+	                /*nodeBox.children('[pay-way="2"]').addClass('bg_select');
+	                pub.isApp && nodeBox.find('[pay-way="4"]').removeClass('bg_select').find('.content-box').hide();
+	                pub.PAY_WAY = "2";*/
 	            }
 	        }else{ // 非微信 非app
 	            nodeBox.children('[pay-way="2"]').hide();
 	            if( pub.isRecharge ) {
-	                nodeBox.children('[pay-way="4"]').addClass('bg_select'); 
-	                pub.PAY_WAY = "4";
+	            	nodeBox.children('[pay-way="5"]').addClass('bg_select'); 
+	                pub.PAY_WAY = "5";
+	                /*nodeBox.children('[pay-way="4"]').addClass('bg_select');
+	                pub.PAY_WAY = "4";*/
 	            }
 	        }
 	

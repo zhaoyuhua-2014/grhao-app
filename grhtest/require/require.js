@@ -590,7 +590,7 @@ var requirejs, require, define;
 		}, req.load = function(e, t, i) {
 			var r, n = e && e.config || {};
 			if (i.indexOf("config.js") != '-1') {
-				i = i + "?v=0720"
+				i = i + "?v=20180919"
 			}
 			if(isBrowser) return(r = req.createNode(n, t, i)).setAttribute("data-requirecontext", e.contextName), r.setAttribute("data-requiremodule", t), !r.attachEvent || r.attachEvent.toString && r.attachEvent.toString().indexOf("[native code") < 0 || isOpera ? (r.addEventListener("load", e.onScriptLoad, !1), r.addEventListener("error", e.onScriptError, !1)) : (useInteractive = !0, r.attachEvent("onreadystatechange", e.onScriptLoad)), r.src = i, n.onNodeCreated && n.onNodeCreated(r, n, t, i), currentlyAddingScript = r, baseElement ? head.insertBefore(r, baseElement) : head.appendChild(r), currentlyAddingScript = null, r;
 			if(isWebWorker) try {

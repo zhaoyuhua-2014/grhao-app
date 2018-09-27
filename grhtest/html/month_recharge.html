@@ -6,7 +6,7 @@
 	<!--<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://61.164.118.194:8090/grh_api/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'"/>
 	--><meta name="viewport" content="width=720,user-scalable=no"/>
     <meta content="telephone=no, address=no" name="format-detection" />
-    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/base.css?v=20180918" />
     <script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body style="background: white;" module-id="recharge" class="animation-fadeIn">
@@ -30,16 +30,35 @@
 				<div class="month_money">
 					账户余额：<span class="month_sign1 count-left-money">￥ <em class="month_sign2"></em></span>
 				</div>
-				<a class="month_record" href="javascript:void(0)" data-url="html/recharge_record.html" data-title="充值记录">
+				<a class="month_record" href="javascript:void(0)" data-url="html/recharge_record.html?v=0919" data-title="充值记录">
 					充值记录
 				</a>
 			</div>
 			<div class="month_pay_style" id="pay-way-box">
+				<div class="month_card_recharge_item zs-pay-way" pay-way="5">
+					<div class="month_card_recharge_item_tit">
+						<div class="mcr_left">充值卡充值</div>
+					</div>
+					<div class="content-box" >
+						<dl class="quick_rechange clearfloat">
+							<dt class="rechange_left">充值卡号：</dt>
+							<dd class="rechange_right">
+								<input type="text" id="rechange_card" value="" placeholder="请输入充值卡号" autocomplete="off"/>
+							</dd>
+						</dl>
+						<dl class="quick_rechange clearfloat">
+							<dt class="rechange_left">兑换码：</dt>
+							<dd class="rechange_right">
+								<input type="text" id="rechange_exchangeCode" value="" placeholder="请输入兑换码" autocomplete="off"/>
+							</dd>
+						</dl>
+					</div>
+				</div>
 				<div class="month_card_recharge_item zs-pay-way" pay-way="2" style="display:none">
 					<div class="month_card_recharge_item_tit">
 						<div class="mcr_left"> 微信充值</div>
 					</div>
-					<dl class="wx_rechange clearfloat content-box">
+					<dl class="wx_rechange clearfloat content-box" style="display: none;">
 						<dt class="rechange_left">充值金额：</dt>
 						<dd class="rechange_right">
 							<input type="number" id="wx_rechange" value="" placeholder="请输入充值金额" autocomplete="off"/>
@@ -52,7 +71,7 @@
 						 	支付宝充值
 					   	</div>
 					</div>
-					<dl class="zfb_rechange clearfloat content-box">
+					<dl class="zfb_rechange clearfloat content-box" style="display: none;">
 						<dt class="rechange_left">充值金额：</dt>
 						<dd class="rechange_right">
 							<input type="number" id="zfb_rechange" value="" placeholder="请输入充值金额" autocomplete="off"/>
@@ -105,7 +124,7 @@
 		zs.init();
 	});
 </script>-->
-<script data-main = "../dist/payment.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+<script data-main = "../dist/payment.js?v=20180918" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 	//alipay支付回调
 	function aliPayResult ( d ){

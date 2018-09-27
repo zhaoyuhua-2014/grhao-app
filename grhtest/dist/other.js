@@ -552,6 +552,7 @@ require(['../require/config'],function () {
 		"2" : { text : '支付宝充值' },
 		"3" : { text : '微信充值' },
 		"4" : { text : '快捷充值' },
+		"5" : { text : '充值卡充值' },
 		"8" : { text : '系统充值' }
 	};
 	
@@ -598,6 +599,7 @@ require(['../require/config'],function () {
 					html += '<div class="fruit_get_content_right">￥' + v.money + '</div>'
 					html += '</div>'
 				});
+				//alert(html)
 				$('.fruit_get_contain').append( html );
 			}
 		}
@@ -619,6 +621,7 @@ require(['../require/config'],function () {
 
 	pub.rechargeRecord.init = function(){
 		pub.lodemore = $('.lodemore');
+	
 		pub.rechargeRecord.apiHandle.init();
 		pub.rechargeRecord.eventHandle.init();
 
@@ -627,13 +630,14 @@ require(['../require/config'],function () {
  	pub.apiHandle = {};
 	pub.eventHandle = {};
  	pub.init = function(){
+ 		
  		pub.moduleId == 'evaluate' && pub.evaluate.init();
  		pub.moduleId == 'payResult' && pub.payRusult.init();
  		pub.moduleId == 'rechargeExplain' && pub.payExplain.init();
  		pub.moduleId == 'rechargeRecord' && pub.rechargeRecord.init();
  		
  		$("body").fadeIn(300)
-
+		
  	};
 
 	pub.init();
