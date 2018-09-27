@@ -588,9 +588,10 @@ require(['../require/config'],function(){
 				    			 $('.order_status').html( (pub.isMachineGoods ? '待取货' : pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 4 ].pickUpMethod[ orderInfo.pickUpMethod - 1 ]) ); break;
 			    		}
 			    	})();
+			    	orderInfo.pickUpMethod == 1 && $('.my_order_list2').hide();
 			    	//添加watm后价格信息显示
 			    	if (firmIdType == '5') {
-			    		$(".my_order_list2").css("display","none");
+			    		//$(".my_order_list2").css("display","none");
 			    		orderInfo.orderStatus == '3' && $('.order_situation').css("display","none");
 			    	}
 			    	//pub.myScroll.refresh();

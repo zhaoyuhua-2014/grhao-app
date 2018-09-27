@@ -19,6 +19,7 @@ require(['../require/config'],function () {
 		
 		if( pub.logined ){
 			pub.userData = common.user_datafn();
+			
 			pub.userId = pub.userData.cuserInfoid;
 			pub.source = "userId" + pub.userId;
 			pub.sign = md5( pub.source + "key" + common.secretKeyfn() ).toUpperCase();
@@ -157,8 +158,8 @@ require(['../require/config'],function () {
 					listNode.eq(0).show().find(".float_right").html( "￥" + orderInfo.goodsMoney).parent() // 商品总价
 					.next().show().find(".float_right").html( "￥" + orderInfo.postCost ); // 运费
 					
-					pub.firmIdType == 5 && listNode.eq(1).css("display","none")
-					
+					//pub.firmIdType == 5 && listNode.eq(1).css("display","none")
+					pub.pickUpMethod == 2 ? listNode.eq(1).css("display","block") : listNode.eq(1).css("display","none"); 
 					//是否是首单
 					if (orderInfo.orderType == "1") {
 						if (orderInfo.firstOrderOff != '' && orderInfo.firstOrderOff > 0) {
@@ -413,9 +414,11 @@ require(['../require/config'],function () {
 						.end().find('.set_job_time').html( "营业时间：" + d.pickUpTime );
 					//watm机器处理
 					pub.firmIdType == 5 && (function(){
-						$(".set_charge_contact_right").find(".take_own").hide();
+						/*$(".set_charge_contact_right").find(".take_own").hide();
 						$(".set_charge_contact_right").find(".take_others").html("自助售货机").show().addClass("actived");
-						pub.pickUpMethod = 1;
+						pub.pickUpMethod = 1;*/
+						$(".set_charge_contact_right").find(".take_others").html("自助售货机").show();
+						
 					})();
 				}
 			},
@@ -564,7 +567,7 @@ require(['../require/config'],function () {
 		// 普通订单提交
 		PLAIN.submit = function(){
 			common.ajaxPost($.extend({
-				method : 'order_submit_two',
+				method : 'order_submit_three',
 				couponId : pub.couponId,
 				juiceDeliverTime : $('#person_area').val(),
 				goodsList : pub.goodsInfoApi
