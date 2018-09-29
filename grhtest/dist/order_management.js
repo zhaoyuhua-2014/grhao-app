@@ -416,16 +416,28 @@ require(['../require/config'],function(){
 			        $('.create_time').html( '下单时间：' + orderInfo.createTime );
 			        $('.order_money').html( '订单金额：￥' + pub.toFixed( Number(orderInfo.realPayMoney) ) );
 			        if (firmIdType == '5') {
-			        	$('.delivery,.take_goods_address_contain,.order_message').addClass("hidden")
+			        	//$('.delivery,.take_goods_address_contain,.order_message').addClass("hidden")
+			        	orderInfo.pickUpMethod == 1 && $(".take_goods_address_contain").addClass("hidden")
 			        	$('.machine_address_wrap').removeClass("hidden");
 			        	if (orderInfo.orderStatus == 1 || orderInfo.orderStatus == 2 || orderInfo.orderStatus == -4) {
 			        		
 			        	}else{
 			        		$('.watm_info_wrap').removeClass("hidden");
 			        		
-			        		$(".watm_info").html("<p>订单号后五位："+orderInfo.orderCode.substring(orderInfo.orderCode.length - 5 ,orderInfo.orderCode.length)+"</p><p>提货码："+ orderInfo.pickUpCode +"</p>");
-			        		if (orderInfo.orderStatus == 3 && common.isApp()) {
-			        			$(".watm_info").html("<p>订单号后五位："+orderInfo.orderCode.substring(orderInfo.orderCode.length - 5 ,orderInfo.orderCode.length)+"</p><p>提货码："+ orderInfo.pickUpCode +"</p><div id='scanQRCode' class='scanQRCode' style='display:block'></div>");
+			        		if (orderInfo.pickUpMethod == 2) {
+		        				$(".watm_info").html("<p>订单号后五位："+orderInfo.orderCode.substring(orderInfo.orderCode.length - 5 ,orderInfo.orderCode.length)+"</p><p>提货码：******</p><div id='scanQRCode' class='scanQRCode' style='display:none'></div>");
+		        			}
+			        		if (orderInfo.orderStatus == 3 ) {
+			        			if (orderInfo.pickUpMethod == 2) {
+			        				$(".watm_info").html("<p>订单号后五位："+orderInfo.orderCode.substring(orderInfo.orderCode.length - 5 ,orderInfo.orderCode.length)+"</p><p>提货码：******</p><div id='scanQRCode' class='scanQRCode' style='display:none'></div>");
+			        			}else{
+			        				if (common.isApp()) {
+			        					$(".watm_info").html("<p>订单号后五位："+orderInfo.orderCode.substring(orderInfo.orderCode.length - 5 ,orderInfo.orderCode.length)+"</p><p>提货码："+ orderInfo.pickUpCode +"</p><div id='scanQRCode' class='scanQRCode' style='display:block'></div>");			        					
+			        				}else{
+			        					$(".watm_info").html("<p>订单号后五位："+orderInfo.orderCode.substring(orderInfo.orderCode.length - 5 ,orderInfo.orderCode.length)+"</p><p>提货码："+ orderInfo.pickUpCode +"</p>");
+			        				}
+			        			}
+			        			
 			        		}
 			        		if (orderInfo.orderStatus == 3 && $(".watm_info_wrap").find('p.msg').length == 0) {
 			        			$(".watm_info_wrap").append("<p class='msg' style='color:#df3a1f;font-size:26px;line-height:40px;text-align:center'>请于今日24点前去售货机取货，过时自动取消订单，支付金额将原路退回。</p>")
@@ -460,8 +472,9 @@ require(['../require/config'],function(){
 			        	$('.machine_address').html(firmInfo.address ).data({"latitude":firmInfo.latitude,'longitude':firmInfo.longitude,'firmName':firmInfo.firmName});
 			        	
 			        }else{
-			        	$('.order_message').html( '留言信息：' + orderInfo.message );
+			        	
 			        }
+			        $('.order_message').html( '留言信息：' + orderInfo.message );
 			        orderInfo.paytime != "" && $(".paytime").show().html( "支付时间" + orderInfo.paytime );
 			        orderInfo.realSendTime != "" && $(".sendGood_time").show().html( "发货时间" + orderInfo.realSendTime );
 			        // 支付方式
@@ -471,8 +484,12 @@ require(['../require/config'],function(){
 			        })();
 			        // 待处理
 			        if( orderInfo.pickUpMethod == '1' ){ 
-	
-			        	$('.deli_take_good').html('门店自提');
+						if (pub.isMachineGoods) {
+							$('.deli_take_good').html('售货机自提');
+						}else{
+							$('.deli_take_good').html('门店自提');
+						}
+			        	
 	
 			        	$('.take_goods_address').hide().next().show();
 	
@@ -588,7 +605,9 @@ require(['../require/config'],function(){
 				    			 $('.order_status').html( (pub.isMachineGoods ? '待取货' : pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 4 ].pickUpMethod[ orderInfo.pickUpMethod - 1 ]) ); break;
 			    		}
 			    	})();
+			    	orderInfo.isMachineGoods && orderInfo.pickUpMethod ==2 && $('.my_order_list2 .order_set_list_left').html("配送费")
 			    	orderInfo.pickUpMethod == 1 && $('.my_order_list2').hide();
+			    	
 			    	//添加watm后价格信息显示
 			    	if (firmIdType == '5') {
 			    		//$(".my_order_list2").css("display","none");

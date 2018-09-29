@@ -31,7 +31,7 @@ require(['../require/config'],function(){
 							name:'goToNextLevel',
 							parameter:{
 								title:'订单结算',
-								url:'html/orderSettlement.html'
+								url:'html/orderSettlement.html?v=0929'
 							}
 						})
 					}else if (d.statusCode == "100613"){

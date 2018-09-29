@@ -162,7 +162,7 @@ require(['../require/config'],function(){
 	                        var pay_gg = node.parent().next();
 	                        if( pub.isMachineGoods ){
 	                            $('.pay_gg').html("请于"+pub.appData.data.order_cancel_time+"分钟内完成支付，超时订单将取消！");
-	                            node.eq(3).hide();
+	                            
 	                            node.eq(1).css("margin-bottom",'10px');
 	                        }else{
 	                            pay_gg.html('请于2小时内完成支付，超时订单将取消！');
@@ -183,7 +183,9 @@ require(['../require/config'],function(){
 	                        node.eq(0).html("预购商品:<span>" + orderInfo.goodsInfo.goodsName + "</span>").next().html("订单号:<span>" + orderInfo.orderCode + "</span>").next().html("预购金额:<span class='font_color'>￥" + orderInfo.frontMoney + "</span>");
 	                    }
 	                    $(".orderList_intro").html("订单已提交！");
-	                   
+	                   	if (pub.isMachineGoods) {
+							node.eq(3).hide();
+						}
 	                }());
 	
 	                // 支付方式

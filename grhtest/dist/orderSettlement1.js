@@ -158,7 +158,8 @@ require(['../require/config'],function () {
 					listNode.eq(0).show().find(".float_right").html( "￥" + orderInfo.goodsMoney).parent() // 商品总价
 					.next().show().find(".float_right").html( "￥" + orderInfo.postCost ); // 运费
 					
-					//pub.firmIdType == 5 && listNode.eq(1).css("display","none")
+					pub.firmIdType == 5 ? listNode.eq(1).find(".float_left").html("配送费") : listNode.eq(1).find(".float_left").html("运费");
+					
 					pub.pickUpMethod == 2 ? listNode.eq(1).css("display","block") : listNode.eq(1).css("display","none"); 
 					//是否是首单
 					if (orderInfo.orderType == "1") {
@@ -417,7 +418,7 @@ require(['../require/config'],function () {
 						/*$(".set_charge_contact_right").find(".take_own").hide();
 						$(".set_charge_contact_right").find(".take_others").html("自助售货机").show().addClass("actived");
 						pub.pickUpMethod = 1;*/
-						$(".set_charge_contact_right").find(".take_others").html("自助售货机").show();
+						$(".set_charge_contact_right").find(".take_others").html("售货机自提").show();
 						
 					})();
 				}
