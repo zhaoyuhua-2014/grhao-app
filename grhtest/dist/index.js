@@ -35,6 +35,13 @@ require(['../require/config'],function () {
 				tokenId : pub.tokenId
 			}
 	 	}
+		//定义那些页面是需要登陆才能进入的
+		pub.linkUrls = [
+			'gameTiger.html',//老虎机页面
+			'red_package_rain.html',//红包雨页面
+			'grhFarm.html',//农场游戏页面
+			'month_service.html',//充值优惠页面
+		]
 	 	// 接口处理命名空间
 	 	pub.apiHandle = {};
 	
@@ -228,7 +235,7 @@ require(['../require/config'],function () {
 				data.adInfoList.length != 0 && common.bannerShow(data.adInfoList, '.index_banner', function( d ){
 					var html = '', i = 0, link = null;
 					for ( i =0,l=d.length; i< l; i++ ){
-						link = d[i].linkUrl ? pub.apiHandle.getActiveUrl(d[i].linkUrl) : null;
+						link = d[i].linkUrl ? pub.apiHandle.getActiveUrl(d[i].linkUrl) : '';
 						html += '<div class="swiper-slide"><a href="javascript:void(0)" data-title="'+d[i].note+'" url="'+link+'"><img src="' + d[i].adLogo + '" /></a></div>'
 					}
 					return html;
@@ -269,7 +276,7 @@ require(['../require/config'],function () {
 				} else{
 					for (var i = 0 , l = o.length ; i < l ; i++) {
 						
-						link = getActiveUrl(o[i].h5Url);
+						link = pub.apiHandle.getActiveUrl(o[i].h5Url);
 						html += '<dl class="swiper-slide" link = "'+link+'" tit= "'+o[i].name+'"><dt><img src="'+o[i].logo+'"/></dt><dd class="ellipsis">'+o[i].name+'</dd></dl>'
 					}
 				}
@@ -278,53 +285,33 @@ require(['../require/config'],function () {
 					direction: 'horizontal',
 					slidesPerView : 4,
 				});
-				
-				
-				//拼接正确的URL
-				function getActiveUrl(d){
-					var locationObj = document.location;
-					if (d) {
-						var urlParameter = d.indexOf('?') > 1 ? d.split('?')[1] : null;
-						var arr = d.split("/"),
-							l = arr.length;
-						var path = function(){
-							if(locationObj.pathname.indexOf(".html") > 1){
-								var arr = locationObj.pathname.split('/'),
-									l = arr.length;
-								arr.splice(l-1,1);
-								return arr.join('/') + '/'
-							}else{
-								return locationObj.pathname;
-							}
-						}
-						//locationObj.protocol+  '//'+ locationObj.hostname + ":"+ locationObj.port + path() +"html/"+arr[l-1];
-						return "html/"+arr[l-1];
-					}else{
-						return null;
-					}
-				}
 			}
-		}
+		};
+		//获取正确的URL地址
 		pub.apiHandle.getActiveUrl = function(d){
 			var locationObj = document.location;
 			if (d) {
-				var urlParameter = d.indexOf('?') > 1 ? d.split('?')[1] : null;
-				var arr = d.split("/"),
-					l = arr.length;
-				var path = function(){
-					if(locationObj.pathname.indexOf(".html") > 1){
-						var arr = locationObj.pathname.split('/'),
-							l = arr.length;
-						arr.splice(l-1,1);
-						return arr.join('/') + '/'
-					}else{
-						return locationObj.pathname;
+				if (common.isLogin()) {
+					var urlParameter = d.indexOf('?') > 1 ? d.split('?')[1] : null;
+					var arr = d.split("/"),
+						l = arr.length;
+					
+					return "html/"+arr[l-1];
+				}else{
+					var arr = d.split("/"),
+						l = arr.length;
+					
+					for (var i in pub.linkUrls) {
+						if (arr[l-1].indexOf(pub.linkUrls[i]) > -1) {
+							return "html/login.html";
+						}
 					}
+					
+					return "html/"+arr[l-1];
 				}
-				//locationObj.protocol+  '//'+ locationObj.hostname + ":"+ locationObj.port + path() +"html/"+arr[l-1];
-				return "html/"+arr[l-1];
+				
 			}else{
-				return null;
+				return '';
 			}
 		}
 	 	// app 参数

@@ -1,13 +1,13 @@
 /*
 * commom scirpt for Zhangshuo Guoranhao
 */ 
-define(['jquery','mdData','shar1'],function($){
+define(['jquery','mdData','shar1'],function($,md){
 	// 命名空间 common = Zhangshuo
 	var common = {};
-
+	common.encrypt = md;
 	$.extend(common,{
 		//EVE 作为正式环境和测试环境的开关，为true时为正式环境，为false时为测试环境
-		EVE:true,
+		EVE:false,
 		//API : "http://api.grhao.com/server/api.do", // 接口地址
 		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数
@@ -44,8 +44,10 @@ define(['jquery','mdData','shar1'],function($){
 	(function(){
 		if (common.EVE) {
 			common.API = "http://api.grhao.com/server/api.do";
+			common.APIFARM = "http://api.grhao.com/server/farm.do"; // 正式
 		}else{//http://61.164.118.194:8090/grh_api/server/api.do/192.168.1.3:80/192.168.1.8:8080
-			common.API = "http://61.164.113.168:8090/grh_api/server/api.do"
+			common.API = "http://61.164.113.168:8090/grh_api/server/api.do";
+			common.APIFARM = "http://61.164.113.168:8090/grh_api/server/farm.do";
 		}
 	})(common)
 
@@ -466,7 +468,6 @@ define(['jquery','mdData','shar1'],function($){
 				});
 			});
 		},
-
 		// 加密
 		pwdEncrypt : function(  val ){
 			if( !val && val == 0  ) return;
@@ -1102,6 +1103,11 @@ define(['jquery','mdData','shar1'],function($){
 						case 'share':
 							common.isApple() ? window.webkit.messageHandlers.share.postMessage('') : android.share();
 							break;	
+						//分享----->参数 无
+						case 'gameShare':
+							var jsonObj = parameter;
+							common.isApple() ? window.webkit.messageHandlers.gameShare.postMessage(jsonObj) : android.gameShare(JSON.stringify(jsonObj));
+							break;
 						//清除缓存----->参数 无
 						case 'clearCache':
 							common.isApple() ? window.webkit.messageHandlers.clearCache.postMessage('') : android.clearCache();
@@ -1261,6 +1267,17 @@ define(['jquery','mdData','shar1'],function($){
 	            $el.html((opt.icon != 'none' ? ('<i class="icon' + (opt.icon != 'info' ? (' icon_' + opt.icon) : '') + '"></i>') : '') + '<p>' + msg + '</p><p class="btns"><a href="javascript:;" class="btn btn_1">' + opt.okText + '</a><a href="javascript:;" class="btn btn_2">' + opt.cancelText + '</a></p>');
 	            btnConfirm = 'a.btn_1';
 	            btnCancel = 'a.btn_2';
+	            break;
+	        case 10:
+	            $el.html('<span class="close"></span><div class="icon_box"><img src="'+imgUrl+'"/></div><div class="msg signList">'+msg+'</div>');
+	            btnClose = 'span.close';
+	            break;
+	            //<h3 class="title signTitle">恭喜您获得</h3>
+	        case 11:
+	            $el.html('<span class="close"></span><h3 class="title signh3">恭喜获得</h3><div class="msg signList">'+msg+'</div><p class="btns signBtn">' + opt.okText + '</p>');
+	            $el.addClass("sign_alert")
+	            btnClose = 'span.close';
+	            btnConfirm = 'p.btns';
 	            break;
 	        }
 	        

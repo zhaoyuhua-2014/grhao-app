@@ -25,8 +25,23 @@ define(function(){
 	            'pull':'../outside/pull',
 	            'map1':'http://webapi.amap.com/maps?v=1.3&key=68f1f7850d75a2c422f417cc77331395',
 	            'score':'../dist/score',
-	            'addMap':'../dist/addMapPicker.js?v=20180606'
-	        }
+	            'addMap':'../dist/addMapPicker.js?v=20180606',
+	            
+	            'farmCanves':"../dist/farmCanves",
+	            'vue':"../outside/vue.min",
+	            'pixi':"../outside/pixi"
+	        },
+	        shim: {
+			    farmCanves: {
+			    	deps: ['pixi'],
+			      	init: function() {
+			        	return {
+				          	mainView: mainView,
+				          	maskView: maskView
+				        }
+			      	}
+			    }
+			}
 	    }
 	);
 	

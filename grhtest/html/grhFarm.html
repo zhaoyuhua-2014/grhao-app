@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>果然好农场</title>
+		<!--<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://api.grhao.com/server/api.do http://61.164.113.168:8090/grh_api/server/farm.do http://192.168.0.184:/grh_api/server/farm.do ; style-src 'self' 'unsafe-inline' 'unsafe-eval'  " > 
+		--><meta name="apple-touch-fullscreen" content="no"/>
+		<meta name="viewport" content="width=750,user-scalable=no" />
+		<meta content="telephone=no, address=no" name="format-detection" />
+		<link rel="stylesheet" href="../css/rest.css" />
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/farm.css?v=20181029"/>
+	</head>
+	<body name = 'farm'>
+		<div class="main" id="appVue">
+			<!--
+				加载动画层
+			-->
+			<div class="canves_loging" v-show="PageStatus == 1">
+				加载中...
+			</div>
+			<!--
+				动画背景层
+			-->
+			<div class="canves_bg" v-show="PageStatus == 2">
+				<!-- 头部区域-->
+				<header v-cloak class="common_header title_c" >
+					<a v-if="false" href="javascript:void(0)" @click.stop="goBack"></a>
+					<p>果然好农场</p>
+					<!--<dl v-if="PageType == 1" class="share">
+						<dt><img src="../img/farmImg/share2x.png"/></dt>
+						<dd>分享</dd>
+					</dl>-->
+					<dl class="rule" @click.stop="goToRule" >
+						<dt><img src="../img/farmImg/rule2x.png"/></dt>
+						<dd>规则</dd>
+					</dl>
+				</header>
+				
+				<!-- 用户信息展示 -->
+				<div v-cloak class="information">
+					<img class="icon" v-bind:src="userInfo.faceImg"/>
+					<div class="content">
+						<div class="top clearfloat">
+							<p class="user_name float_left" v-text="userInfo.petName"></p>
+							<p v-if="PageType == 1" class="sign float_right"  @click.stop="getSignList" ><span v-text="'签到'"></span></p>
+						</div>
+						<div class="bottom">
+							<span class='level'></span>
+							<div class="blue_bg">
+								<div class="data">
+									<span class="left" v-text="farmLevel.levelNum"></span>
+									<span class="middle" v-html="expHtml"></span>
+									<span class="right" v-text="farmLevel.levelNum + 1"></span>
+								</div>
+								<div class="exp" v-bind:style="{width:__width}"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 动态,好友及兑换记录信息展示 -->
+				<div v-cloak v-if="PageType == 1" class="side_nav" >
+					<div class="dynamic" :class="{'common_rash':dynamicInfo.isNoRead}" @click.stop="getDynamic" v-bind:data="dynamicInfo" >
+						<img src="../img/farmImg/dt.png" alt=""/>
+					</div>
+					<div class="friends" @click.stop="getFrieds" >
+						<img src="../img/farmImg/hy.png"/>
+					</div>
+					<div class="exchangeRecord" @click.stop="goExchangeRecord" >
+						<img src="../img/farmImg/icon_dhjl.png"/>
+					</div>
+				</div>
+				<!-- 回商城 -->
+				<div v-cloak v-if="PageType == 1" class="side_nav side_nav_right" >
+					<div class="goShop" @click.stop="goIndex" >
+						<img src="../img/farmImg/icon_goShop.png"/>
+					</div>
+				</div>
+				<!-- 底部  土地 仓库  --浇水 -->
+				<div v-cloak class="bottom_nav">
+					<div v-if="PageType == 2" class="gohome" >
+						<img src="../img/farmImg/icon_goHome.png" @click.stop="goHome" />
+					</div>
+					<div class="land common_num" v-bind:data-content="farmLandCount" @click.stop="getLand" >
+						<img src="../img/farmImg/td.png"/>
+					</div>
+					<div v-if="PageType == 1" class="storehouse_w" @click.stop="getStorehouse" >
+						<img src="../img/farmImg/ck.png"/>
+					</div>
+					<div v-if="PageType == 1" class="store" @click.stop="goShop">
+						<img src="../img/farmImg/store.png" />
+					</div>
+					<div class="watering " v-bind:class="{'noWatering':waterTimes == 0}" v-bind:data-content="'x'+waterTimes" >
+						<img src="../img/farmImg/js.png" @click.stop="getWatering" />
+					</div>
+					
+				</div>
+				<div id ="mask" class="common_mask" v-show="isMask" @click.stop="closeMask" v-bind:data-obj="isMaskData" @touchmove.prevent ></div>
+				<!-- 签到弹出框 -->
+				<div v-cloak id="frame" class="frame" v-show="signCalendar.SignInCfgDate.length != 0">
+					<span class="close" data-obj='siginIn' @click.stop="closeMask" ></span>
+					<div class="month ">
+						<dl v-for="(item,index) in signCalendar.SignInCfgDate" v-bind:class="item.sign == 2 ? 'actived' : item.sign == 1 ? 'sign_ture' : ''" @click="getSignIn(item,1,1)">
+							<span v-if="item.sign == 2" class="sign_mask"></span>
+							<dt class="day " v-text="index+1"></dt>
+							<dd><img v-bind:src="item.sign != 1 ? '../img/farmImg/gift1.png' : '../img/farmImg/gift0.png'" /></dd>
+						</dl>
+					</div>
+					<div class="month_sign">
+						<p>本月累计签到</p>
+						<div class="clearfloat " v-for="(item,index) in signCalendar.SignInCfgCount" v-bind:class="{'received':item.state == 1}" @click="getSignIn(item,2,index+2)">
+							<span class="float_left " v-text="item.signInCount+'天'"></span>
+							<img class="float_left" v-bind:src="item.state == 1 ? '../img/farmImg/gift0.png' : index == 0 ? '../img/farmImg/gift2.png' : index == 1 ? '../img/farmImg/gift3.png' : index == 2 ? '../img/farmImg/gift4.png' : index == 3 ? '../img/farmImg/gift2.png' : index == 4 ? '../img/farmImg/gift3.png' : '' "/>
+						</div>
+					</div>
+				</div>
+				<!-- 动态弹窗 -->
+				<div v-cloak id="trends" class="trends common_wrap dynamicInfo-box dynamic-wrapper-hide" >
+					<div class="common_title">动态<span class="common_close" data-obj='dynamicInfo' @click.stop="closeMask" ></span></div>
+					<div class="trends_wrap">
+						<ul class="trends_content">
+							<li v-for="item in dynamicInfo.dynamicList">
+								<p v-text="item.createTime"></p>
+								<p v-text="item.note"></p>
+							</li>
+						</ul>
+						<p class="load_more" v-show="ajaxState != 'wait'" v-text="dynamicInfo.isLast ? '没有更多数据了' : '点击加载更多'" @click.stop="clickGetMoreDynamic" ></p>
+						<div v-show="ajaxState == 'wait'" class="page_status">
+							加载中...
+						</div>
+					</div>
+				</div>
+				<!-- 土地弹窗 -->
+				<div v-cloak id="land" class="landInfo common_wrap landInfo-box landInfo-wrapper-hide" >
+					<div class="common_title">土地<span class="common_close" data-obj='landInfo' @click.stop="closeMask" ></span></div>
+					<ul class="land_content clearfloat">
+						<li class="float_left" v-show="landInfo.landList" v-for="item in landInfo.landList" @click.stop="goToLand(item)" >
+							<!---->
+							<dl :class="{active:farmLand.id == item.id}">
+								<img :src="item.logo" />
+								<dt v-if="!item.id"></dt>
+								<dd v-if="!item.id"><p>暂未开通</p><p v-text="item.desc"></p></dd>
+								<!--<dd v-if="item.id && item.desc"><p class="name" v-text="item.desc"></p></dd>-->
+							</dl>
+							<p  class="color_a" :class="{color_b:farmLand.id == item.id,color_c:!item.id}" v-text="item.id == farmLand.id? '当前土地' : item.no+'号土地'"></p>
+						</li>
+						<div v-show="ajaxState == 'wait'" class="page_status">
+							加载中...
+						</div>
+					</ul>
+				</div>
+				<!-- 仓库 -->
+				<div v-cloak id="storehouse" class="storehouse common_wrap storehouseInfo-box storehouse-wrapper-hide" >
+					<!--<span class="text_left_btn" @click.stop="goExchangeRecord" >兑换记录</span> -->
+					<div class="common_title">仓库<span class="common_close" data-obj='storehouseInfo' @click.stop="closeMask" ></span></div>
+					<ul class="menu">
+						<li v-for="(item,index) in storehouseInfo.list" v-text="item.name" :data-type = "index" :class="{'active':storehouseInfo.type == index}" @click.stop="!item.active && getStorehouse(item,index)" ></li>
+					</ul>
+					<div class="wrap">
+						<div class="show clearfloat " v-show="storehouseInfo.type == 0" v-bind:style="{width:getWidth}">
+							<div class="dl_wrap float_left viewport-flip "   v-for="(item,index) in storehouseInfo.list[0].dataArr">
+								<dl class="goods_msg clearfloat flip out">
+									<dt class="float_right" @click="turn_back"><img  src="../img/farmImg/turn.png" alt="" /></dt>
+									<dd class="float_left" v-html="item.desc.replace(/\r\n/g, '<br/>')"></dd>
+								</dl>
+								<dl v-bind:data-id="item.id" class="flip flip_flase">
+									<dt class="num_msg"><span class="num" v-text="'x'+item.num"></span><span><img @click="turn_back"  src="../img/farmImg/msg.png" alt="" /></span></dt>
+									<dd class="ccsl name" v-text="item.name"></dd>
+									<dd><img v-bind:src="item.logo"/></dd>
+									<dd><span class="button" v-bind:data-index="index" @click.stop = "clickGiveFriends">赠送</span><span class="button" @click.stop="clickStorehoseUse" v-bind:data-id="item.id" v-bind:data-index="index" v-text="button_exchange(index)"></span></dd>
+								</dl>
+							</div>
+						</div>
+						<div class="show clearfloat " v-show="storehouseInfo.type == 1" v-bind:style="{width:getWidth}">
+							<div class="dl_wrap float_left viewport-flip "  v-for="(item,index) in storehouseInfo.list[1].dataArr">
+								<dl  class=" goods_msg clearfloat flip out">
+									<dt class="float_right" @click="turn_back"><img  src="../img/farmImg/turn.png" alt="" /></dt>
+									<dd class="float_left" v-html="item.desc.replace(/\r\n/g, '<br/>')"></dd>
+								</dl>
+								<dl v-bind:data-id="item.id" class="flip flip_flase">
+									<dt class="num_msg"><span class="num" v-text="'x'+item.num"></span><span @click="turn_back" ><img src="../img/farmImg/msg.png" alt="" /></span></dt>
+									<dd class="ccsl name" v-text="item.name"></dd>
+									<dd><img v-bind:src="item.logo"/></dd>
+									<dd><span class="button" v-bind:data-index="index" @click.stop = "clickGiveFriends">赠送</span><span class="button" @click.stop="clickStorehoseUse" v-bind:data-id="item.id" v-bind:data-index="index" v-text="button_exchange(index)"></span></dd>
+								</dl>
+							</div>
+						</div>
+						<div class="show clearfloat " v-show="storehouseInfo.type == 2" v-bind:style="{width:getWidth}">
+							<div class="dl_wrap float_left viewport-flip "   v-for="(item,index) in storehouseInfo.list[2].dataArr">
+								<dl  class="goods_msg clearfloat flip out">
+									<dt class="float_right" @click="turn_back"><img  src="../img/farmImg/turn.png" alt="" /></dt>
+									<dd class="float_left" v-html="item.desc.replace(/\r\n/g, '<br/>')"></dd>
+								</dl>
+								<dl v-bind:data-id="item.id" class="flip flip_flase">
+									<dt class="num_msg"><span class="num" v-text="'x'+item.num"></span><span @click="turn_back" ><img src="../img/farmImg/msg.png" alt="" /></span></dt>
+									<dd class="ccsl name" v-text="item.name"></dd>
+									<dd><img v-bind:src="item.logo"/></dd>
+									<dd><span class="button" v-bind:data-index="index" @click.stop = "clickGiveFriends">赠送</span><span class="button" @click.stop="clickStorehoseUse" v-bind:data-id="item.id" v-bind:data-index="index" v-text="button_exchange(index)"></span></dd>
+								</dl>
+							</div>
+						</div>
+						<div v-show="ajaxState == 'wait'" class="page_status">
+							加载中...
+						</div>
+						<div v-show="ajaxState == 'success' && storehouseInfo.data.length == 0" class="page_status" v-html="'暂无'+storehouseInfo.list[storehouseInfo.type].name">
+							
+						</div>
+					</div>
+				</div>
+				<!-- 好友邀请好友 -->
+				<div v-cloak id="friend" class="friend common_wrap friedsInfo-box friend-wrapper-hide" >
+					<div class="common_title">好友<span class="common_close" data-obj='friedsInfo' @click.stop="closeMask"></span></div>
+					<div class='friend_top'>
+						<div class="right clearfloat"  v-bind:style="{width:getFriedsWidth}">
+							<dl class="float_left" v-for="(item,index) in friedsInfo" v-bind:data-id="item.id" :class="{'crown':index==0,'pick':item.canSteal}" @click.stop="goToFarm(item)" >
+								<dt><img v-bind:src="item.faceImg" class="border_blue"/></dt>
+								<dd class='name ellipsis' v-html="item.id == userInfo.farmId ? '我' : item.petName"></dd>
+								<dd class='no' v-text="'No.'+(index+1)"></dd>
+							</dl>
+							<div v-show="ajaxState == 'wait'" class="page_status">
+								加载中...
+							</div>
+						</div>
+						
+					</div>
+				<!--v-if="isWx"-->	<div class="friend_bottom"  @click.stop="invitationFriend" v-bind:data-obj="friedsInfo" >邀请好友</div>
+				<div class="gift">
+					<p class="gift_title">邀请有礼</p>
+					<div class="gift_word"><span>每邀请一个即有好礼，累计邀请好礼更丰厚</span></div>
+					<p class="gift_state" v-text="'累积邀请('+invite_cfg.total+'人)'"></p>
+					<div class="gift_progress" >
+						<div class='gift_in_progress' v-bind:style="{width:((670/invite_cfg.maxCount)*invite_cfg.total)+'px'}">
+							<span class="circle" v-for="(item,index) in invite_cfg.detail" v-bind:data-content="item.count+'人'" v-bind:style="{left:((670/invite_cfg.maxCount)*item.count -12)+'px'}" @click="getGift(item,index+1)" >
+								<img class="gift1" v-bind:src="item.isGetted == 1 ? '../img/farmImg/gift0.png' : '../img/farmImg/gift'+(index+2)+'.png'" />
+							</span>
+						</div>
+					</div>
+					
+				</div>
+				</div>
+				<!--商店-->
+				<div v-cloak id="store" class="store store-wrap common_wrap store-wrapper-hide">
+					<div class="common_title"><span class="my_coin" v-text="'我的果币：'+(userAccountInfo.score ? userAccountInfo.score : 0)"></span> 商店<span class="common_close" data-obj='storeInfo' @click.stop="closeMask"></span></div>
+					<div class="wrap">
+						<div class="show clearfloat" v-bind:style="{width:getWidth}">
+							<dl class="float_left" v-for="(item,index) in store" >
+								<dt><img v-bind:src="item.logo"/></dt>
+								<dd class="name" v-text="item.goodsByName"></dd>
+								<dd class="coin_num" v-text="item.buyRole+'果币'"></dd>
+								<dd><span class="button" @click="buyGood(item)">购买</span></dd>
+							</dl>
+						</div>
+						<div v-show="ajaxState == 'wait'" class="page_status">
+							加载中...
+						</div>
+						<div v-show="ajaxState == 'success' && store.length == 0" class="page_status" v-html="'暂无商品'">
+							
+						</div>
+					</div>
+				</div>
+				<!--
+					引导动画层
+				-->
+				<div v-cloak class="guideAnimation" v-if="isNewFarmer == true" >
+					<div class="guide_skip"><span class="guide_skip_btn" @click="skipGuide(false)">跳过</span></div>
+					<div class="guide guide1" v-show="guideNUmber == 1">
+						<div class="guide_content clearfloat">
+							<div class="guide_center float_right" v-text="'签到'"></div>
+							<div class="guide_line float_right">
+								<img src="../img/farmImg/guide_line1.png"/>
+							</div>
+						</div>
+						<div class="guide_text">每日签到获得礼包，累积签到相应天数更有超级礼包等你</div>
+						<div class="guide_next"><span class="guide_next_btn" @click="nextGuide(2)">下一步</span></div>
+					</div>
+					<div class="guide guide2" v-show="guideNUmber == 2">
+						<div class="guide_content clearfloat">
+							<div class="guide_center float_right"><img src="../img/farmImg/hy.png"/></div>
+							<div class="guide_line float_right"><img src="../img/farmImg/guide_line2.png"/></div>
+						</div>
+						<div class="guide_text">邀请好友，和好友一起来种水果邀请相应的人数可得礼包</div>
+						<div class="guide_next"><span class="guide_next_btn" @click="nextGuide(3)">下一步</span></div>
+					</div>
+					<div class="guide guide3" v-show="guideNUmber == 3">
+						<div class="guide_text">仓库里种子可以在土地上种植，道具可对生长中的植物使用，果实可以兑换实物和果币</div>
+						<div class="guide_next"><span class="guide_next_btn" @click="nextGuide(4)">下一步</span></div>
+						<div class="guide_content clearfloat">
+							<div class="guide_line"><img src="../img/farmImg/guide_line3.png"/></div>
+							<div class="guide_center"><img src="../img/farmImg/ck.png"/></div>
+						</div>
+					</div>
+					<div class="guide guide4" v-show="guideNUmber == 4">
+						<div class="guide_text"><p>在商店可用果币购</p><p>买水果种子、化肥</p></div>
+						<div class="guide_next"><span class="guide_next_btn" @click="nextGuide(5)">下一步</span></div>
+						<div class="guide_content clearfloat">
+							<div class="guide_line"><img src="../img/farmImg/guide_line3.png"/></div>
+							<div class="guide_center"><img src="../img/farmImg/store.png"/></div>
+						</div>
+					</div>
+					<div class="guide guide5" v-show="guideNUmber == 5">
+						<div class="guide_text"><p>浇水可以加快植物生长</p></div>
+						<div class="guide_next"><span class="guide_next_btn" @click="skipGuide(false)">开始经营我的农场</span></div>
+						<div class="guide_content clearfloat">
+							<div class="guide_line"><img src="../img/farmImg/guide_line4.png"/></div>
+							<div class="guide_center"><img src="../img/farmImg/js.png"/></div>
+						</div>
+					</div>
+				</div>
+				
+				<div id="msg"><span></span><p></p></div>
+			</div>
+			<!--
+				使用div做的主要操作视图区域
+				ps:必须移动到背景层去做--不然canves_bg 上的事件没有办法触发
+			-->
+			<!--<div class="main_view" v-show="PageStatus == 2">
+				
+			</div>-->
+			
+			<!--
+				场景转换使用-----覆盖在所有的层级上方
+			-->
+			<div class="canver_change_scene" v-show="PageStatus == 3"></div>
+			
+			<div id="image-preload" style="display: none;">
+				<img src="../img/farmImg/cloud1.png" class="cloud1"/>
+				<img src="../img/farmImg/cloud2.png" class="cloud2"/>
+				<img src="../img/farmImg/cloud3.png" class="cloud3"/>
+				<img src="../img/farmImg/icon_kettle1.png" class="kettle1"/>
+				<img src="../img/farmImg/icon_kettle2.png" class="kettle2"/>
+				<img src="../img/farmImg/icon_kettle3.png" class="kettle3"/>
+				<img src="../img/farmImg/icon_kettle4.png" class="kettle4"/>
+				<img src="../img/farmImg/icon_kettle5.png" class="kettle5"/>
+				<img src="../img/farmImg/icon_kettle6.png" class="kettle6"/>
+				<img src="../img/farmImg/icon_kettle7.png" class="kettle7"/>
+				<img src="../img/farmImg/icon_kettle8.png" class="kettle8"/>
+				<img src="../img/farmImg/icon_kettle9.png" class="kettle9"/>
+				<img src="../img/farmImg/icon_kettle10.png" class="kettle10"/>
+				<img src="../img/farmImg/icon_kettle11.png" class="kettle11"/>
+				<img src="../img/farmImg/bg2x.png"/>
+			</div>
+		</div>
+	</body>
+	<!--<script src="../seajs/2.1.1/sea.js"></script>
+	<script src="../seajs-config.js?v=20181023"></script>
+	<script>
+		seajs.use(['fram'],function( zs ){
+			zs.init();
+		});
+	</script>
+	-->
+	<script data-main = "../dist/fram.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+</html>

@@ -346,4 +346,5 @@ define(function(){
             return (msw << 16) | (lsw & 0xFFFF);
         }
     }
+    return {"md5":md5};
 })
