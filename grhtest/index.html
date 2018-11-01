@@ -123,6 +123,18 @@
 			localStorage.setItem("huanfu",JSON.parse(d).type)
 			pub.apiHandle.change_app_theme.init();
 		}*/
-		
+		//获取app版本信息
+		function setAppVersion(n){
+			if (typeof n == 'string') {
+				if (!!n) {
+					localStorage.setItem("version",n);
+					console.log(localStorage.getItem('version'));
+				}else{
+					console.log("n is empty string")	
+				}			
+			}else{
+				console.log(n+"not is string")
+			}
+		}
 	</script>
 </html>

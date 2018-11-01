@@ -303,11 +303,20 @@ require(['../require/config'],function () {
 			   	invitationFriend:function(){ //邀请好友弹窗
 		      		setTimeout(function(){
 		      			if (common.isApp()) {
-		      				common.jsInteractiveApp({
-								name:'gameShare',
-								parameter:dateModule.shareData
-							})
-		      			} else{
+		      				try{
+		      					var jsonObj = dateModule.sharData;
+								common.isApple() ? window.webkit.messageHandlers.gameShare.postMessage(jsonObj) : android.gameShare(JSON.stringify(jsonObj));
+		      				}catch(e){
+		      					common.createPopup({
+				                    flag: 7,
+				                    msg: '当前版本不支持邀请好友功能，请升级至最新版本！',
+				                    okText: '知道了',
+				                    onConfirm: function() {
+				                    	
+				                    }
+				                });
+		      				}
+		      			}else{
 		      				common.prompt1({
 				                flag:1,
 				                msg:"点击右上角，发送给指定微信好友<br/>好友点击链接后即可成为好友",
@@ -607,6 +616,7 @@ require(['../require/config'],function () {
                     		callBackName:'pub.apiHandle.farm_main.init()'
 	                    });
            			},800)
+					
 				}
 			}
 			
@@ -675,7 +685,7 @@ require(['../require/config'],function () {
 		 			}());
 		 			common.isApp() && (function(){
 		 				dateModule.sharData = $.extend({},dateModule.sharData,{
-		 					'linkUrl':'http://weixin.grhao.com/html/grhFarm.html?farmerId='+ v.farm.farmerId
+		 					'linkUrl':'http://weixin.grhao.com/html/grhFarm.html?farmerId='+ v[0].id
 		 				});
 		 			})()
 				}

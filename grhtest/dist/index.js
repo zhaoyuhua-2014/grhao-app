@@ -416,7 +416,7 @@ require(['../require/config'],function () {
 						common.jsInteractiveApp({
 							name:'goToNextLevel',
 							parameter:{
-								title:title,
+								title:url.indexOf("html/login.html") > -1 ? '登陆' : title,
 								url:url
 							}
 						})
@@ -431,7 +431,7 @@ require(['../require/config'],function () {
 						common.jsInteractiveApp({
 							name:'goToNextLevel',
 							parameter:{
-								title:title,
+								title:link.indexOf("html/login.html") > -1 ? '登陆' : title,
 								url:link
 							}
 						})

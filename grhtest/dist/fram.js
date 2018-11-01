@@ -477,10 +477,8 @@ require(['../require/config'],function () {
 					}else if (view_name == 'landInfo'){
 						pub.creatDataModule.landInfo(false);
 					}else if (view_name == 'storehouseInfo'){
-						console.log('关闭遮罩')
 						pub.creatDataModule.storehouseInfo(false);
 					}else if(view_name =='storeInfo'){
-						console.log('关闭遮罩')
 						pub.creatDataModule.storeInfo(false); //商店遮罩关闭
 					}
 					pub.Vue.pageNo = 1;
@@ -516,7 +514,6 @@ require(['../require/config'],function () {
 						
 						}
 					}
-					console.log(type)
 		      	},
 		      	//动态
 				getDynamic: function (event) {  
@@ -551,20 +548,36 @@ require(['../require/config'],function () {
 		            pub.apiHandle.farm_friend_list.init();
 		           	
 		           	pub.apiHandle.invite_cfg.init();
-					/*$("#friend").show();
-					$("#friend").animate({
-						height: "526px"
-					});*/
 		      	},
 		      	invitationFriend:function(){
 		      		
 		      		pub.creatDataModule.friedsInfo(false);
 		      		setTimeout(function(){
 		      			if (common.isApp()) {
-		      				common.jsInteractiveApp({
-								name:'gameShare',
-								parameter:dateModule.sharData
-							})
+		      				try{
+		      					var jsonObj = dateModule.sharData;
+								common.isApple() ? window.webkit.messageHandlers.gameShare.postMessage(jsonObj) : android.gameShare(JSON.stringify(jsonObj));
+		      				}catch(e){
+		      					common.createPopup({
+				                    flag: 7,
+				                    msg: '当前版本不支持邀请好友功能，请升级至最新版本！',
+				                    okText: '知道了',
+				                    onConfirm: function() {
+				                    	
+				                    }
+				                });
+		      					/*common.createPopup({
+				                    flag: 8,
+				                    msg: '当前版本不支持邀请好友功能，请升级至最新版本！',
+				                    okText: '检查最新版本',
+				                    cancelText: '取消',
+				                    onConfirm: function() {
+				                    	common.jsInteractiveApp({
+											name:'versionUpdate'
+										})
+				                    }
+				                });*/
+		      				}
 		      			}else{
 		      				common.prompt1({
 				                flag:1,
@@ -996,7 +1009,7 @@ require(['../require/config'],function () {
 			//好友列表
 			friedsInfo:function(obj){
 				if (obj) {
-					console.log(obj)
+
 					var v = obj.objects;
 					/*
 					if (v.length > 1) {
@@ -1558,7 +1571,6 @@ require(['../require/config'],function () {
 				},
 				apiData:function(d){
 					var v = d.data;
-					console.log(v)
 					var note = v.operationRcd.note,
 						noteStr = '';
 					if (note) {
@@ -1572,6 +1584,8 @@ require(['../require/config'],function () {
 						okText:'知道了'
 	                });
 	                pub.Vue.invite_cfg.detail = v.detail;
+	                pub.creatDataModule.farmExp(v.farm);
+					pub.creatDataModule.farmLandCount(v.farm.farmLandCount);
 				}
 			},
 			farm_friend_add:{ //添加好友
@@ -1635,7 +1649,6 @@ require(['../require/config'],function () {
 				},
 				apiData:function(d,index){
 					var v = d.data;
-					console.log(v)
 					pub.creatDataModule.signIn(v,2,index);
 					
 	               	/*common.createPopup({
@@ -1659,8 +1672,8 @@ require(['../require/config'],function () {
 				apiData: function(d,index) {
 					var v = d.data;
 					pub.creatDataModule.signIn(v,1,index);
-	//				pub.creatDataModule.farmExp(v.farm);
-					//pub.creatDataModule.farmLandCount(v.farm.farmLandCount);
+					pub.creatDataModule.farmExp(v.farm);
+					pub.creatDataModule.farmLandCount(v.farm.farmLandCount);
 					
 				}
 			},

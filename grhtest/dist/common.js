@@ -7,7 +7,7 @@ define(['jquery','mdData','shar1'],function($,md){
 	common.encrypt = md;
 	$.extend(common,{
 		//EVE 作为正式环境和测试环境的开关，为true时为正式环境，为false时为测试环境
-		EVE:false,
+		EVE:true,
 		//API : "http://api.grhao.com/server/api.do", // 接口地址
 		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数
@@ -231,7 +231,28 @@ define(['jquery','mdData','shar1'],function($,md){
 			}
 		});
 	};
-	
+	common.getAppVersion = function(){
+		var VersionMethod = '';
+		if (common.isApp()) {
+			if (common.isAndroid()) {
+				VersionMethod = 'version_check'
+			}else{
+				VersionMethod = 'version_check_ios'
+			}			
+		}else{
+			console.log("当前不是APP环境")
+		}
+		common.ajaxPost({
+			method : VersionMethod
+		},function( d ){
+			if (d.statusCode == '100000') {
+				localStorage.setItem("appNowVersion",JSON.stringify(d))
+			}
+		});
+	};
+	common.compareVersions = function(){
+		
+	};
 	common.getNetwork = function(fn1,fn2){
 		var imgEl = $("#netWork");
 		var reg = /index\.html/g;
@@ -919,44 +940,6 @@ define(['jquery','mdData','shar1'],function($,md){
 				console.log("this is not grhao App!")
 			}
 		},
-		SetJSMethodApp:function( k , v ){
-			if (common.isPhone()) {
-				if (common.isApple()) {
-					try{
-						window.webkit.messageHandlers.SetJSMethod.postMessage(k,v);
-					}catch(e){
-						console.log("调用ios方法SetJSMethod出错")
-					}
-				} else if(common.isAndroid()){
-					try{
-						android.SetJSMethod(k,v)
-					}catch(e){
-						console.log("调用Android方法SetJSMethod出错")
-					}
-				}					
-			}else{
-				console.log("this is not grhao App!")
-			}
-		},
-		ClearJSMethodApp:function( k ){
-			if (common.isPhone()) {
-				if (common.isApple()) {
-					try{
-						window.webkit.messageHandlers.ClearJSMethod.postMessage(k);
-					}catch(e){
-						console.log("调用ios方法ClearJSMethod出错")
-					}
-				} else if(common.isAndroid()){
-					try{
-						android.ClearJSMethod(JSON.stringify(k))
-					}catch(e){
-						console.log("调用Android方法ClearJSMethod出错")
-					}
-				}					
-			}else{
-				console.log("this is not grhao App!")
-			}
-		},
 		getChangeSkin:function(){
 			if (common.isPhone()) {
 				common.creatScript();
@@ -1103,12 +1086,17 @@ define(['jquery','mdData','shar1'],function($,md){
 						case 'share':
 							common.isApple() ? window.webkit.messageHandlers.share.postMessage('') : android.share();
 							break;	
-						//分享----->参数 无
+						//分享----->参数 ----由于版本更新问题  单独写在farm文件中
 						case 'gameShare':
 							var jsonObj = parameter;
 							common.isApple() ? window.webkit.messageHandlers.gameShare.postMessage(jsonObj) : android.gameShare(JSON.stringify(jsonObj));
 							break;
-						//清除缓存----->参数 无
+						//版本更新----->参数 ----由于版本更新问题  单独写在farm文件中
+						case 'versionUpdate':
+							var jsonObj = parameter;
+							common.isApple() ? window.webkit.messageHandlers.versionUpdate.postMessage('') : android.versionUpdate();
+							break;	
+						//清除缓存----->参数 无 
 						case 'clearCache':
 							common.isApple() ? window.webkit.messageHandlers.clearCache.postMessage('') : android.clearCache();
 							break;
@@ -1253,15 +1241,16 @@ define(['jquery','mdData','shar1'],function($,md){
 	            break;
 	        case 7:
 	            $el.addClass('mod_alert_info');
-	            $el.html('<span class="close"></span><h3 class="title">手机号码登录</h3><div class="verify_inputs"><div class="verify_input"><input class="input" type="tel" mark="phonenum" placeholder="请输入手机号" maxlength="11"></div><div class="verify_input"><input class="input" mark="imgcode" type="text" placeholder="请输入图形码"><span class="wrap" mark="genimgcode"><img mark="img"/></span></div><div class="verify_input"><input class="input" mark="msgcode" type="text" placeholder="请输入验证码"><div class="verify_input_btn" mark="sendcode">发送验证码</div><div class="verify_input_btn type_disabled" style="display:none;"><span mark="sendcodesed"></span>后重发</div></div></div><p class="warn_text" style="display:none;" mark="errtips"></p><p class="btns"><a href="javascript:" class="btn btn_1">登录</a></p>');
+	            $el.html('<span class="close"></span><h3 class="title"> </h3><p class="alignLeft">'+ opt.msg +'</p><p class="btns signBtn">' + opt.okText + '</p>');
 	            btnClose = 'span.close';
 	            btnConfirm = 'p.btns';
 	            break;
 	        case 8:
 	            $el.addClass('mod_alert_info');
-	            $el.html('<span class="close"></span><h3 class="title">历史收货人校验</h3><p class="alignLeft">您已有京东账号，为了保障账号安全，需要对您历史已完成订单的收货人信息进行校验（任意一个即可）</p><div class="verify_input type_no_padding"><input class="input" mark="shname" type="text" placeholder="历史完成订单的收货人姓名"></div><p class="warn_text" style="display:none;" mark="errtips"></p><p class="btns"><a href="javascript:" class="btn btn_1">完成校验去结算</a></p>');
+	            $el.html('<span class="close"></span><h3 class="title"> </h3><p class="alignLeft">'+ opt.msg +'</p><p class="btns"><a href="javascript:;" class="btn btn_2">' + opt.cancelText + '</a><a href="javascript:;" class="btn btn_1">' + opt.okText + '</a></p>');
 	            btnClose = 'span.close';
-	            btnConfirm = 'p.btns';
+	            btnConfirm = 'a.btn_1';
+	            btnCancel = 'a.btn_2';
 	            break;
 	        case 9:
 	            $el.html((opt.icon != 'none' ? ('<i class="icon' + (opt.icon != 'info' ? (' icon_' + opt.icon) : '') + '"></i>') : '') + '<p>' + msg + '</p><p class="btns"><a href="javascript:;" class="btn btn_1">' + opt.okText + '</a><a href="javascript:;" class="btn btn_2">' + opt.cancelText + '</a></p>');
