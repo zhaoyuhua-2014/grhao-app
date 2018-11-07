@@ -456,7 +456,9 @@ require(['../require/config'],function(){
 			        						html +=  (parseInt(v.buyNumber) - parseInt(v.takeAwayNum))+'件'+v.goodsName+"<br/>"
 			        					}
 			        				});
-			        				if (orderInfo.watmStatus == '-1') {
+			        				if (orderInfo.watmStatus == '-1' && orderInfo.orderStatus == 8) {
+			        					$(".watm_info").html(html +"取货中！")
+			        				}else{
 			        					$(".watm_info").html(html +"取货未成功，请联系客服处理！")
 				        				i = '<img class="watmStatusTag" src="../img/question.png" />'
 			        				}
