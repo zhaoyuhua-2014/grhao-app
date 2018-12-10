@@ -203,6 +203,9 @@ require(['../require/config'],function () {
 	        /*$(".comment_goods").on("click",'.comment_good_image_boxs img',function(){
 	        	$(this).is('.img_preview') ? $(this).removeClass("img_preview") : $(this).addClass("img_preview");
 	        })*/
+	       	$(".comment_goods").on("click",".comment_good_picter",function(){
+	       		console.log("++++++++++++++++++++++++++++++++点击了Input++++++++++++++++++++++++++++++++")
+	       	});
 	        $(".comment_goods").on("change",".comment_good_picter",function(){
 	        	pub.evaluate.addNode = null;
 	        	if ($(this).parent().parent().find('.comment_good_image').length == 3 ) {
