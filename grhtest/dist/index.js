@@ -12,6 +12,15 @@ require(['../require/config'],function () {
 		
 		pub.logined = common.isLogin(); // 已经登录
 		
+		pub.pageDone = $.Deferred()//页面数据加载完成数据对象
+		
+		pub.isLocation = localStorage.getItem("isLocation");
+		
+		pub.count = 0;//调用app定位次数
+		
+		pub.timer = null;//定时器id管理
+		
+		
 		pub.isrefresh = false;//判断banner轮播是否是刷新操作；
 		
 		pub.paramListInit = function(){
@@ -50,8 +59,10 @@ require(['../require/config'],function () {
 	 		
 	 		if (pub.logined) {
 	 			common.DTD.done(function(){
+	 				pub.firmId = common.user_datafn().firmId;
 	 				me.firm_default.init(); // 默认门店
-		 			if (common.user_datafn().firmId == '0') {//注册的情况下将APP本地门店ID赋值给当前用户
+	 				//注册的情况下将APP本地门店ID赋值给当前用户
+		 			/*if (common.user_datafn().firmId == '0') {
 		 				pub.apiHandle.choice_firm.init();
 		 			}else {
 		 				//登录的情况下
@@ -66,11 +77,11 @@ require(['../require/config'],function () {
 								}
 							})
 		 				}
-			 		}
+			 		}*/
 	 			})
 	 		}else{
 	 			me.firm_default.init(); // 默认门店
-	 			if(!common.firmId.getItem()){
+	 			/*if(!common.firmId.getItem()){
 					common.jsInteractiveApp({
 						name:'alertMask',
 						parameter:{
@@ -80,9 +91,13 @@ require(['../require/config'],function () {
 							truefn:'pub.apiHandle.trueFn1()'
 						}
 					})
+	 			}*/
+	 		};
+	 		$.when(pub.pageDone).done(function(){
+	 			if (!pub.isLocation) {
+	 				pub.locationInfo.init();	 				
 	 			}
-	 		}
-	 		
+	 		})
 	 	};
 	 	// 默认门店
 	 	pub.apiHandle.firm_default = {
@@ -92,8 +107,23 @@ require(['../require/config'],function () {
 	 				method : 'firm_default',
 	 				firmId : pub.firmId
 		 		},function(d){
-		 			d.statusCode == "100000" && pub.apiHandle.firm_default.apiData( d );
-		 			d.statusCode == common.SESSION_EXPIRE_CODE && common.clearData();
+//		 			d.statusCode == "100000" && pub.apiHandle.firm_default.apiData( d );
+//		 			d.statusCode == common.SESSION_EXPIRE_CODE && common.clearData();
+		 			if (d.statusCode == "100000") {
+		 				pub.apiHandle.firm_default.apiData( d );
+		 			} else if (d.statusCode == "100901"){
+		 				common.jsInteractiveApp({
+							name:'alertMask',
+							parameter:{
+								type:2,
+								title:'请选择门店',
+								canclefn:'',
+								truefn:'pub.apiHandle.trueFn1()'
+							}
+						})
+		 			} else if (d.statusCode == common.SESSION_EXPIRE_CODE){
+		 				common.clearData();
+		 			}
 		 		});
 	 		},
 	
@@ -216,6 +246,7 @@ require(['../require/config'],function () {
 				}
 				$(".index_inner").height( ( Math.ceil(data.length / 3 )) * 320 ).html( html ).find('img[src]').addClass('fadeIn');
 				common.cancelDialogApp();
+				pub.pageDone.resolve();
 				
 	 		},
 	 		apiData : function( d ){
@@ -359,6 +390,13 @@ require(['../require/config'],function () {
 				}
 			})
 		}
+		pub.apiHandle.trueFn2 = function(){
+			pub.firmId = pub.locationFirmInfo.firmId;
+			common.firmId.setItem(pub.locationFirmInfo.firmId);
+			common.good.removeItem();
+			common.setShopCarNumApp(0);
+			pub.apiHandle.firm_default.apiData(pub.locationFirmInfo)
+		}
 		//取消方法
 		pub.apiHandle.cancleFn = function(){
 			pub.apiHandle.choice_firm.init()
@@ -449,7 +487,68 @@ require(['../require/config'],function () {
 				});
 			}
 	 	};
-	
+		
+		
+		//定位处理
+		pub.locationInfo = {
+			init:function(){
+				var locationDate = localStorage.getItem("location")
+				pub.locationDate = locationDate ? JSON.parse(locationDate) : null;
+				if (pub.locationDate.longitude) {
+					pub.longition = pub.locationDate.longitude;
+					pub.latitude = pub.locationDate.latitude;
+					pub.locationInfo.api();
+				}else{
+					if(pub.count < 2){
+						common.replaceLocationApp();
+						clearTimeout(pub.timer);
+						pub.timer = setTimeout(function(){
+							pub.locationInfo.init();
+							pub.count++
+						},3000)
+					}
+				}
+			},
+			api:function(){
+				common.ajaxPost({
+	    			method:'position_verify',
+	    			longitude:pub.longitude,
+	    			latitude:pub.latitude,
+	    			firmId:pub.firmId ,
+	    		},function(d){
+	    			if(d.statusCode == '100000'){
+	    				pub.locationInfo.apiData(d);
+	    			}else{
+						common.prompt( 'position_verify++' + JSON.stringify(d));
+	    			}
+	    			sessionStorage.setItem('isLocation', true)
+	    		})
+			},
+			apiData:function(d){
+				var firmInfo =  d.data.firmInfo;
+				if (!d.data.bool) {
+					pub.locationFirmInfo = firmInfo;
+		 			var note = '定位到附近存在'
+		 			if (firmInfo.type == 5) {
+		 				note += firmInfo.firmName +"自动售货机"
+		 			} else {
+		 				note += firmInfo.firmName +"门店"
+		 			}
+		 			note += ' 。是否切换？'
+		 			
+		 			common.jsInteractiveApp({
+						name:'alertMask',
+						parameter:{
+							type:1,
+							title:note,
+							canclefn:'',
+							truefn:'pub.apiHandle.trueFn2()'
+						}
+					})
+				}
+		 		
+			}
+		}
 	 	// 模块初始化
 	 	pub.init = function(){
 	 		if (!common.huanfu.getKey()) {

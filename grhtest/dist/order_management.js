@@ -777,7 +777,7 @@ require(['../require/config'],function(){
 		pub.scan.apiHandle = {
 			init:function(){
 				//alert("scan-apiHandle 初始化")
-				//pub.scan.apiHandle.scan_pick_up.apiData('1');
+				pub.scan.apiHandle.scan_login_pick_up.apiData('1');
 			},
 			scan_login_pick_up : {
 				init:function(){
@@ -822,7 +822,13 @@ require(['../require/config'],function(){
 									common.jumpLinkPlainApp( '登录','login.html' );
 								},2000);
 							}()); break;
-							default : common.prompt( d.statusStr );
+							default : (function(){
+								common.prompt( d.statusStr ,2000);
+								pub.WATMTIPSELE.html(d.statusStr)
+								setTimeout(function(){
+									$(".watmPickUpGoods .confirm_btn").removeClass("active");
+								},500)
+							})()
 						}
 					})
 				},
@@ -832,6 +838,8 @@ require(['../require/config'],function(){
 	           			url:'html/orderDetails.html',
 	           			callBackName:"pub.orderDetail.apiHandle.init()"
 	           		})*/
+	           		common.prompt( '确认提货成功' ,2000);
+					pub.WATMTIPSELE.html('确认提货成功')
 	           		common.jsInteractiveApp({
 						name:'confirmBack',
 						parameter:{
@@ -851,7 +859,10 @@ require(['../require/config'],function(){
 					var className = $(this)[0].className;
 					
 					if (className == 'confirm_btn') {
+						pub.WATMTIPSELE.html("确认取货中...");
+						$(this).addClass("active");
 						pub.scan.apiHandle.scan_pick_up.init();
+						
 					} else if (className == 'cancle_btn'){
 						//common.cancelBackApp();
 						common.jsInteractiveApp({
@@ -881,6 +892,7 @@ require(['../require/config'],function(){
 		}
 		//扫码入口
 		pub.scan.init = function(){
+			pub.WATMTIPSELE = $(".watmPickUpGoods .txt");
 			pub.scan.apiHandle.init();
 			pub.scan.eventHandle.init();
 		}
@@ -919,7 +931,9 @@ require(['../require/config'],function(){
 		$(document).ready(function(){
 		 	pub.init();
 		 	window.pub = pub;
-		 	setTimeout(document.getElementById('wrapper').style.left = '0', 500);
+		 	if (pub.moduleId != 'scan' ) {
+		 		setTimeout(document.getElementById('wrapper').style.left = '0', 500);		 		
+		 	}
 	 		var 
 			wh = document.documentElement.clientHeight;
 			
@@ -938,16 +952,18 @@ require(['../require/config'],function(){
 			}
 			
 		    var $listWrapper = $('.main');
-
-	        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
-	            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
-	             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
-	
-	            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
-	            onPullDown: function () {
-	                pullDownAction();
-	            },
-	        });
+			if (pub.moduleId != 'scan' ) {
+		 		pub.pullInstance =  pullInstance = new Pull($listWrapper, {
+		            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
+		             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
+		
+		            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
+		            onPullDown: function () {
+		                pullDownAction();
+		            },
+		        });		
+		 	}
+	        
 			
 		})
 	})

@@ -1620,7 +1620,7 @@ to {
 .watmPickUpGoods .confirm_btn{color: #FFF;background: #94c11e;}
 .watmPickUpGoods .cancle_btn{color: #94c11e;background: #FFF;border: 1px solid #94C11E;}
 
-
+.watmPickUpGoods .confirm_btn.active{background: #999999;}
 
 /*地址相关------------------2018-07-17 --------------------------*/
 .person_message{height: auto;}
