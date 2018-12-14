@@ -50,7 +50,8 @@ require(['../require/config'],function () {
 			'red_package_rain.html',//红包雨页面
 			'grhFarm.html',//农场游戏页面
 			'month_service.html',//充值优惠页面
-		]
+		];
+		pub.locationVersion = localStorage.getItem("version");
 	 	// 接口处理命名空间
 	 	pub.apiHandle = {};
 	
@@ -98,6 +99,14 @@ require(['../require/config'],function () {
 	 		};
 	 		pub.pageDone.done(function(){
 	 			var isApiSwitch = false;
+	 			try{
+	 				var version = getLocationVersion();
+	 			}catch(e){
+	 				//TODO handle the exception
+	 				console.warn("get app version error!")
+	 			}
+	 			
+	 			 
 	 			function getAppLocation(){
 	 				var locationDate = localStorage.getItem("location");
 	 				pub.locationDate = locationDate ? JSON.parse(locationDate) : null;
@@ -112,7 +121,20 @@ require(['../require/config'],function () {
 						}
 					}else{
 						if(pub.count < 2){
-							common.replaceLocationApp();
+							//根据获取的APP版本来确定是否调用从新定位功能；确保之前的APP版本不会出现重复显示定位弹框。
+							if ( version ) {
+								if (common.isAndroid()) {
+									if (version > 116) {
+										common.replaceLocationApp();
+									}
+								}else if(common.isApple()){
+									if (version > 134) {
+										common.replaceLocationApp();
+									}
+								}
+							}else{
+								common.replaceLocationApp();
+							}
 							clearTimeout(pub.timer);
 							pub.timer = setTimeout(function(){
 								getAppLocation()
@@ -123,10 +145,34 @@ require(['../require/config'],function () {
 						}
 					}
 	 			}
+	 			
 	 			getAppLocation();
+	 			
+	 			//对于版本号的获取处理
+	 			function getLocationVersion (){
+	 				var locationVerison = localStorage.getItem("version");
+	 				if (locationVerison) {
+	 					var version = locationVerison.split(".").join('');
+						return  (version ? parseInt(version) : 0);
+	 				} else{
+	 					return 0;
+	 				}
+	 			}
 	 			
 	 		})
 	 	};
+//	 	pub.apiHandle.version = {
+//	 		init:function(){
+//	 			common.defVersion.done(function(){
+//	 				//获取线上版本及本地版本
+//	 				var onlineVersion = localStorage.getItem("appNowVersion"),
+//	 					locationVersion = localStorage.getItem("version");
+//	 				
+//	 			}).fail(function(){
+//	 				
+//	 			})
+//	 		}
+//	 	};
 	 	// 默认门店
 	 	pub.apiHandle.firm_default = {
 	 		// 默认门店初始化函数

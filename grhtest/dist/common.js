@@ -40,7 +40,8 @@ define(['jquery','mdData','shar1'],function($,md){
 	});
 	//换肤延时对象
 	common.defHuanfu = $.Deferred();
-	
+	//版本更新延时对象
+	common.defVersion = $.Deferred();
 	(function(){
 		if (common.EVE) {
 			common.API = "http://api.grhao.com/server/api.do";
@@ -248,7 +249,10 @@ define(['jquery','mdData','shar1'],function($,md){
 			method : VersionMethod
 		},function( d ){
 			if (d.statusCode == '100000') {
-				localStorage.setItem("appNowVersion",JSON.stringify(d))
+				localStorage.setItem("appNowVersion",JSON.stringify(d));
+				common.defVersion.resolve()
+			}else{
+				common.defVersion.reject();
 			}
 		});
 	};
