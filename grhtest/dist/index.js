@@ -78,6 +78,8 @@ require(['../require/config'],function () {
 							})
 		 				}
 			 		}*/
+	 			}).fail(function(){
+	 				me.firm_default.init();
 	 			})
 	 		}else{
 	 			me.firm_default.init(); // 默认门店
@@ -92,11 +94,37 @@ require(['../require/config'],function () {
 						}
 					})
 	 			}*/
+	 			
 	 		};
-	 		$.when(pub.pageDone).done(function(){
-	 			if (!pub.isLocation) {
-	 				pub.locationInfo.init();	 				
+	 		pub.pageDone.done(function(){
+	 			var isApiSwitch = false;
+	 			function getAppLocation(){
+	 				var locationDate = localStorage.getItem("location");
+	 				pub.locationDate = locationDate ? JSON.parse(locationDate) : null;
+					if (pub.locationDate && pub.locationDate.longitude) {
+						pub.longitude = pub.locationDate.longitude;
+						pub.latitude = pub.locationDate.latitude;
+						if (!isApiSwitch) {
+							pub.locationInfo.init();
+							isApiSwitch = true;
+						}else{
+							console.log("已经调用过一次了")
+						}
+					}else{
+						if(pub.count < 2){
+							common.replaceLocationApp();
+							clearTimeout(pub.timer);
+							pub.timer = setTimeout(function(){
+								getAppLocation()
+								pub.count++
+							},3000)
+						}else{
+							console.log("定位失败")
+						}
+					}
 	 			}
+	 			getAppLocation();
+	 			
 	 		})
 	 	};
 	 	// 默认门店
@@ -158,6 +186,7 @@ require(['../require/config'],function () {
 				}else{
 					Node.removeClass("notClick");
 				}
+				
 	 		}
 	 	},
 	 	pub.apiHandle.choice_firm = {
@@ -169,8 +198,10 @@ require(['../require/config'],function () {
 					if( d.statusCode == "100000" ){
 						var user_data = common.user_datafn();
 						user_data.firmId = pub.firmId;
-						common.tellRefreshAPP()
+						
 						common.user_data.setItem( common.JSONStr( user_data ) );
+						//common.tellRefreshAPP()
+						pub.apiHandle.firm_default.init();
 						/*if (common.good.getItem()) {
 							console.log("切换门店清除购物车");
 							common.good.removeItem();
@@ -209,6 +240,7 @@ require(['../require/config'],function () {
 		 		});
 	 		},
 	 		apiDataDeal : function( data ){
+	 			
 				var 
 				html = '',
 				goodsInfo = '';
@@ -245,8 +277,15 @@ require(['../require/config'],function () {
 					html += '</dl>'
 				}
 				$(".index_inner").height( ( Math.ceil(data.length / 3 )) * 320 ).html( html ).find('img[src]').addClass('fadeIn');
-				common.cancelDialogApp();
-				pub.pageDone.resolve();
+				
+				try{
+					common.cancelDialogApp();
+					
+				}catch(e){
+					console.log(e)
+					//TODO handle the exception
+				}
+				
 				
 	 		},
 	 		apiData : function( d ){
@@ -282,6 +321,7 @@ require(['../require/config'],function () {
 			 		pub.pullInstance.pullDownSuccess();
 			 		common.lazyload(); // 懒加载
 			 	}
+			 	pub.pageDone.resolve();
 	 		}
 	 	};
 		
@@ -391,11 +431,24 @@ require(['../require/config'],function () {
 			})
 		}
 		pub.apiHandle.trueFn2 = function(){
-			pub.firmId = pub.locationFirmInfo.firmId;
-			common.firmId.setItem(pub.locationFirmInfo.firmId);
-			common.good.removeItem();
-			common.setShopCarNumApp(0);
-			pub.apiHandle.firm_default.apiData(pub.locationFirmInfo)
+			try{
+				pub.firmId = pub.locationFirmInfo.id;
+				common.firmId.setItem(pub.locationFirmInfo.id);
+				common.good.removeItem();
+				common.setShopCarNumApp(0);
+				if (pub.logined) {
+					pub.apiHandle.choice_firm.init();					
+				}else{
+					pub.apiHandle.firm_default.init();
+				}
+				//pub.apiHandle.firm_default.apiData(pub.locationFirmInfo)
+				
+			}catch(e){
+				//TODO handle the exception
+				//common.prompt(e,10000)
+				console.log(e)
+			}
+			
 		}
 		//取消方法
 		pub.apiHandle.cancleFn = function(){
@@ -430,6 +483,13 @@ require(['../require/config'],function () {
 				});
 				
 				$(".index_rigth").on("click",function(){
+					/*common.jsInteractiveApp({
+						name:'getGlobalVariable',
+						parameter:{
+							key:'appKey',
+							callBackName:'pub.appInteractive.getFn'
+						}
+					})*/
 					var url = 'html/search.html';
 					common.jsInteractiveApp({
 						name:'goToSearch',
@@ -439,6 +499,28 @@ require(['../require/config'],function () {
 					});
 				})
 				$(".index_tit").on('click',function(){
+					/*var appVal = prompt("请输入value",'globalVal')
+					
+					if (appVal != null && appVal != '') {
+						common.jsInteractiveApp({
+							name:'setGlobalVariable',
+							parameter:{
+								key:'appKey',
+								value:appVal,
+								callBackName:'pub.appInteractive.setFn'
+							}
+						})
+					} else{
+						
+					}*/
+					/*var appKey = prompt("请输入需要存储到APP端的Key值","globalKey");
+					if (appKey != null && appKey != '') {
+						
+					}else{
+						appKey = prompt("请输入需要存储到APP端的Key值","globalKey");
+					}*/
+					
+//					alert(localStorage.getItem("location"))
 					common.jsInteractiveApp({
 						name:'goToNextLevel',
 						parameter:{
@@ -446,6 +528,7 @@ require(['../require/config'],function () {
 							url:'html/store1.html'
 						}
 					})
+					/*1*/
 				});
 				$(".index_banner .swiper-wrapper").on("click",'a',function(e){
 					var url = $(this).attr("url"),
@@ -487,41 +570,49 @@ require(['../require/config'],function () {
 				});
 			}
 	 	};
-		
+		//定位全局存储处理
+		pub.appInteractive = {
+			setFn:function(d){
+				console.log("sucess");
+			},
+			getFn:function(d){
+				console.log("getFn");
+				if (!d) {
+					pub.locationInfo.api()
+				}else{
+					
+				}
+			}
+			
+		}
 		
 		//定位处理
 		pub.locationInfo = {
 			init:function(){
-				var locationDate = localStorage.getItem("location")
-				pub.locationDate = locationDate ? JSON.parse(locationDate) : null;
-				if (pub.locationDate.longitude) {
-					pub.longition = pub.locationDate.longitude;
-					pub.latitude = pub.locationDate.latitude;
-					pub.locationInfo.api();
-				}else{
-					if(pub.count < 2){
-						common.replaceLocationApp();
-						clearTimeout(pub.timer);
-						pub.timer = setTimeout(function(){
-							pub.locationInfo.init();
-							pub.count++
-						},3000)
-					}
-				}
-			},
-			api:function(){
-				common.ajaxPost({
+				pub.locationInfo.data = {
 	    			method:'position_verify',
 	    			longitude:pub.longitude,
 	    			latitude:pub.latitude,
-	    			firmId:pub.firmId ,
-	    		},function(d){
+	    			firmId:pub.firmId,
+	    		}
+				common.jsInteractiveApp({
+					name:'getGlobalVariable',
+					parameter:{
+						key:'appKey',
+						callBackName:'pub.appInteractive.getFn'
+					}
+				})
+				//pub.locationInfo.api(data)
+			},
+			api:function(){
+				common.ajaxPost(pub.locationInfo.data,function(d){
 	    			if(d.statusCode == '100000'){
 	    				pub.locationInfo.apiData(d);
 	    			}else{
-						common.prompt( 'position_verify++' + JSON.stringify(d));
+						//common.prompt( 'position_verify++' + JSON.stringify(d));
+						//common.prompt(pub.longition+","+pub.latitude+"="+pub.firmId)
+						common.prompt(d.statusStr);
 	    			}
-	    			sessionStorage.setItem('isLocation', true)
 	    		})
 			},
 			apiData:function(d){
@@ -546,11 +637,19 @@ require(['../require/config'],function () {
 						}
 					})
 				}
-		 		
+				common.jsInteractiveApp({
+					name:'setGlobalVariable',
+					parameter:{
+						key:'appKey',
+						value:'appVal',
+						callBackName:'pub.appInteractive.setFn'
+					}
+				})
 			}
 		}
 	 	// 模块初始化
 	 	pub.init = function(){
+	 		
 	 		if (!common.huanfu.getKey()) {
 				common.getChangeSkin();
 				common.defHuanfu.done(function(){
@@ -579,7 +678,12 @@ require(['../require/config'],function () {
 	 	};
 	 	
 	 	$(document).ready(function(){
-		 	pub.init();
+	 		try{
+	 			pub.init();
+	 		}catch(e){
+	 			//TODO handle the exception
+	 			console.log(e)
+	 		}
 		 	window.pub = pub;
 		 	setTimeout(document.getElementById('wrapper').style.left = '0', 500);
 	 		var wh = document.documentElement.clientHeight;
@@ -591,10 +695,14 @@ require(['../require/config'],function () {
 				"pullingUpLable":"松开加载更多...",
 				"loadingLable":"加载中..."
 			}
+			var timer = null;
 			function pullDownAction () {
-				setTimeout(function () {
+				clearTimeout(timer);
+				timer =  setTimeout(function () {
 					pub.isrefresh = true;
+					console.log("走一次")
 					pub.apiHandle.init(); // 模块初始化接口数据处理
+					clearTimeout(timer);
 				}, 1000);	
 			}
 			var $listWrapper = $('.main');

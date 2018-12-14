@@ -72,8 +72,9 @@ require(['../require/config'],function () {
 					//d.statusCode == "100000" && common.goBackApp(1,true,"html/order_management.html");
 					
 					if (d.statusCode == "100000") {
+						//针对Android吴康辉重写拍照后重新定义的返回方法-20181213
 						common.jsInteractiveApp({
-							name:'goBack',
+							name:'EvaluateGoBack',
 							parameter:{
 								'num':1,
 								'type':1,
@@ -203,9 +204,6 @@ require(['../require/config'],function () {
 	        /*$(".comment_goods").on("click",'.comment_good_image_boxs img',function(){
 	        	$(this).is('.img_preview') ? $(this).removeClass("img_preview") : $(this).addClass("img_preview");
 	        })*/
-	       	$(".comment_goods").on("click",".comment_good_picter",function(){
-	       		console.log("++++++++++++++++++++++++++++++++点击了Input++++++++++++++++++++++++++++++++")
-	       	});
 	        $(".comment_goods").on("change",".comment_good_picter",function(){
 	        	pub.evaluate.addNode = null;
 	        	if ($(this).parent().parent().find('.comment_good_image').length == 3 ) {

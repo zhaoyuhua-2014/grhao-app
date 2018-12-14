@@ -294,6 +294,9 @@ require(['../require/config'],function () {
 						}
 						html += '</div>'
 					};
+					if (pub.store.pageNo == 1) {
+						pub.store.Node.html('');
+					}
 					pub.store.Node.append( html );
 					$('[data1="' + pub.firmId + '"]').addClass('active');
 					if( pub.store.isLast){
@@ -473,6 +476,7 @@ require(['../require/config'],function () {
 				$(".location_content").find("span").html(JSON.parse(pub.store.locationInfo).POIName).end().find("em").html("当前位置");
 				pub.store.longitude = JSON.parse(pub.store.locationInfo).longitude;
 				pub.store.latitude = JSON.parse(pub.store.locationInfo).latitude;
+				localStorage.removeItem("location");
 			}else{
 				$(".location_content").find("span").html("定位失败").end().find("em").html("点击重新定位").on("click",function(){
 					common.replaceLocationApp();
@@ -640,9 +644,9 @@ require(['../require/config'],function () {
 	
 		// 门店模块初始化
 		pub.store.init = function(){
-	
+			common.replaceLocationApp();
 			pub.store.bodyNode = $('body');
-	
+			
 			pub.store.symbol = common.getUrlParam('store');
 	
 			if( !pub.logined ){

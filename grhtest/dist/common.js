@@ -7,7 +7,7 @@ define(['jquery','mdData','shar1'],function($,md){
 	common.encrypt = md;
 	$.extend(common,{
 		//EVE 作为正式环境和测试环境的开关，为true时为正式环境，为false时为测试环境
-		EVE:false,
+		EVE:true,
 		//API : "http://api.grhao.com/server/api.do", // 接口地址
 		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数
@@ -180,6 +180,7 @@ define(['jquery','mdData','shar1'],function($,md){
 				common.secretKey.removeItem();
 				common.user_data.removeItem();
 				common.session.clear();
+				common.DTD.reject();
 			}else{
 				var 
 				infor = d.data.cuserInfo,
@@ -210,8 +211,9 @@ define(['jquery','mdData','shar1'],function($,md){
 						str:common.JSONStr( d )
 					}
 				});
+				common.DTD.resolve();
 			}
-			common.DTD.resolve();
+			
 
 		},function(d){
 			common.prompt(d.statusStr);
@@ -357,14 +359,18 @@ define(['jquery','mdData','shar1'],function($,md){
 			var html = callback( data );
 			$( box + " .swiper-wrapper" ).html( html );
 			if(!isrefresh){
-				window.mySwiper = mySwiper = new Swiper (box, {
-				    direction: 'horizontal',
-				    loop: true,
-				    autoplay:5000,
-				    autoplayDisableOnInteraction : false,
-				    
-				    pagination: pagination, // 如果需要分页器
-				});
+				if (window.mySwiper) {
+					window.mySwiper.init();
+				}else{
+					window.mySwiper = mySwiper = new Swiper (box, {
+					    direction: 'horizontal',
+					    loop: true,
+					    autoplay:5000,
+					    autoplayDisableOnInteraction : false,
+					    paginationClickable:true,
+					    pagination: pagination, // 如果需要分页器
+					});
+				}
 			}else{
 				window.mySwiper.init();
 			}
@@ -1044,7 +1050,8 @@ define(['jquery','mdData','shar1'],function($,md){
 							break;
 						//确认返回----->参数 title返回页面的标题  url 返回页面的url  callbackname  返回页面后的回调函数
 						case 'confirmBack':
-							var jsonObj = {title:parameter.title,url:'/'+parameter.url,callbackname:parameter.callbackname}
+							var jsonObj = {title:parameter.title,url:'/'+parameter.url,callBack:parameter.callBackName}
+							common.prompt(JSON.stringify(jsonObj),50000)
 							common.isApple() ? window.webkit.messageHandlers.confirmBack.postMessage(jsonObj) : android.confirmBack(JSON.stringify(jsonObj));
 							break;
 						//原生返回按钮自定义回调----->参数  title返回页面的标题  url 返回页面的url  callbackname  返回页面后的回调函数
@@ -1117,9 +1124,11 @@ define(['jquery','mdData','shar1'],function($,md){
 						case 'exit1':
 							common.isApple() ? window.webkit.messageHandlers.exit1.postMessage('') : android.exit1();
 							break;
+						/*20181214测试出微信登录跳转到客服页面-------微信登录后边没有添加break*/
 						//微信登录
 						case 'wxLoginApp':
 							common.isApple() ? window.webkit.messageHandlers.wechatLogin.postMessage('') : android.wxLoginApp();
+							break;
 						//进入客服 ----调用之后通知APP----->参数 无
 						case 'goChat':
 							common.isApple() ? window.webkit.messageHandlers.goChat.postMessage('') : android.goChat();
@@ -1128,6 +1137,28 @@ define(['jquery','mdData','shar1'],function($,md){
 						case 'updateUserInfo':
 							var jsonObj = parameter.str;
 							common.isApple() ? window.webkit.messageHandlers.updateUserInfo.postMessage(jsonObj) : android.updateUserInfo(jsonObj);
+							break;
+						//设置APP全局环境变量用以自动定位的判断
+						//参数为key value callBack
+						case 'setGlobalVariable':
+							var jsonObj = {
+								'key':parameter.key,
+								'value':parameter.value,
+								'callBack':parameter.callBackName
+							};
+							common.isApple() ? window.webkit.messageHandlers.setGlobalVariable.postMessage(jsonObj) : android.setGlobalVariable(JSON.stringify(jsonObj));
+							break;
+						case 'getGlobalVariable':
+							var jsonObj = {
+								'key':parameter.key,
+								'callBack':parameter.callBackName
+							};
+							common.isApple() ? window.webkit.messageHandlers.getGlobalVariable.postMessage(jsonObj) : android.getGlobalVariable(JSON.stringify(jsonObj));
+							break;
+						//针对Android吴康辉重写拍照后重新定义的返回方法-20181213
+						case 'EvaluateGoBack':
+							var jsonObj = {'hierarchy':parameter.num,'reload':parameter.type,'url':'/'+parameter.url};
+							common.isApple() ? window.webkit.messageHandlers.goBack.postMessage(jsonObj) : android.EvaluateGoBack(JSON.stringify(jsonObj));
 							break;
 						default:
 							break;
@@ -1140,6 +1171,7 @@ define(['jquery','mdData','shar1'],function($,md){
 				console.warn(info)
 			}finally{
 				console.log(info)
+				console.log(opt)
 			}
 			
 		},

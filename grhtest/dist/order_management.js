@@ -392,9 +392,13 @@ require(['../require/config'],function(){
 						method : 'order_details',
 						orderCode : pub.orderDetail.orderCode
 					}),function( d ){
-	
 						if( d.statusCode == "100000" ){
-							pub.orderDetail.apiHandle.order_details.apiData( d );
+							try{
+								pub.orderDetail.apiHandle.order_details.apiData( d );
+							}catch(e){
+								//TODO handle the exception
+								console.log(e)
+							}
 						}else if( d.statusCode == common.SESSION_EXPIRE_CODE ){
 							common.clearData();
 							common.prompt( '省份验证过期，请重新登录' );
@@ -407,6 +411,7 @@ require(['../require/config'],function(){
 					})
 				},
 				apiData : function( d ){
+					
 					var orderInfo = d.data.orderInfo;
 					var firmInfo = d.data.firmInfo,
 						firmIdType = firmInfo.type;
@@ -594,19 +599,20 @@ require(['../require/config'],function(){
 			    		
 			    	})();*/
 			    	// 用户操作处理
-			    	(function(){
+			    	(function(window){
 			    		var 
 			    		text = pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 4 ].text, 
 			    		className = pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 4 ].className;
+			    		
 			    		$('.order_status').html( text );
 			    		$('.order_situation').addClass( className ).find( '.oprate-btn' ).text( pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 4 ].btnText);
 			    		switch( +orderInfo.orderStatus + 3 ){
 			    			case 6 : 
 				    			(orderInfo.realPayMoney == 0 || orderInfo.realPayMoney == '') ?  $(".order_situation").css("display","none") : ''; break;
 			    			case 7 : 
-				    			 $('.order_status').html( (pub.isMachineGoods ? '待取货' : pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 4 ].pickUpMethod[ orderInfo.pickUpMethod - 1 ]) ); break;
+			    				$('.order_status').html( (pub.isMachineGoods ? '待取货' : pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 4 ].pickUpMethod[ orderInfo.pickUpMethod - 1 ]) ); break;
 			    		}
-			    	})();
+			    	})(window);
 			    	orderInfo.isMachineGoods && orderInfo.pickUpMethod ==2 && $('.my_order_list2 .order_set_list_left').html("配送费")
 			    	orderInfo.pickUpMethod == 1 && $('.my_order_list2').hide();
 			    	
@@ -833,21 +839,37 @@ require(['../require/config'],function(){
 					})
 				},
 				apiData:function(d){
-	           		/*common.confirmBackApp({
+					/*1*/
+/*					common.prompt( '确认提货成功' ,2000);
+					pub.WATMTIPSELE.html('确认提货成功')
+					$(".watmPickUpGoods p.confirm_btn").removeClass("active")
+	           		common.confirmBackApp({
 	           			title:"订单详情",
 	           			url:'html/orderDetails.html',
 	           			callBackName:"pub.orderDetail.apiHandle.init()"
 	           		})*/
 	           		common.prompt( '确认提货成功' ,2000);
 					pub.WATMTIPSELE.html('确认提货成功')
+					$(".watmPickUpGoods p.confirm_btn").removeClass("active")
+	           		/*setTimeout(function(){
+	           			common.jsInteractiveApp({
+							name:'confirmBack',
+							parameter:{
+								title:"订单详情",
+			           			url:'html/orderDetails.html',
+			           			callBackName:"pub.orderDetail.apiHandle.init()"
+							}
+						})
+	           		},1000)*/
 	           		common.jsInteractiveApp({
-						name:'confirmBack',
+						name:'goBack',
 						parameter:{
-							title:"订单详情",
-		           			url:'html/orderDetails.html',
-		           			callBackName:"pub.orderDetail.apiHandle.init()"
+							num:1,
+							type:1,
+							url:'html/orderDetails.html'
 						}
 					})
+					
 				}
 			},
 			

@@ -2,7 +2,7 @@ define(function(){
 	require.config(
 	    {
 	    	urlArgs: function(id, url) {
-		        var args = 'v=20180919';
+		        var args = 'v=20181214';
 		        if (url.indexOf('view.html') != -1) {
 		            args = 'v=2'
 		        }
