@@ -3,13 +3,11 @@
 <head>
 	<meta charset="UTF-8">
 	<title>购物车</title>
-	<!--<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://61.164.118.194:8090/grh_api/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'"/>
-	--><meta name="viewport" content="width=720,user-scalable=no"/>
+	<meta name="viewport" content="width=720,user-scalable=no"/>
 	<meta content="telephone=no, address=no" name="format-detection" />	
 	<link rel="stylesheet" href="../css/base.css?v=123" />
 	<script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
 	<style type="text/css">
-		
 		#wrapper{bottom: 100px;background: #FFF;}
 	</style>
 </head>
@@ -18,8 +16,6 @@
 	<div class="main">
 		<div id="app" >
 			<div id="wrapper">
-				
-			
 				<ul class="ul-box" id="ul-box" v-cloak>
 					<div v-show="!goodsObj || goodsObj.length == 0" id="empty-cart" @click="jumplink()"><img src="../img/epmty_cart.png" alt=""></div>
 					<div v-show="goodsObj && goodsObj.length !=0 " id="good">

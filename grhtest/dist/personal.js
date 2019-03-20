@@ -33,16 +33,12 @@ require(['../require/config'],function(){
 		pub.apiHandle = {}
 		pub.apiHandle = {
 			init : function(){
-				
-				/*alert(common.isLogin());
-				alert(localStorage.getItem("tokenId"))*/
 				// 登录状态 信息处理
 				if( pub.logined ){
 					$(".loginPhoto").attr( "src",common.user_datafn().faceImg !="" ? common.user_datafn().faceImg + '?rom='+ Math.floor(Math.random()*1000000 ) : "../img/icon_touxiang.png" );
 					$('.my_islogin,.main_top_right,.exit').css({'display':'block'});
 					$('.my_name').html( common.user_datafn().petName );
 					pub.apiHandle.userScoCouMon.init(); // 包月卡余额 + 果币 + 优惠券数量
-					
 					var h = common.API +"?method=face_img_upload"
 					$("#form2").attr("action",h)
 				}else{
@@ -104,7 +100,6 @@ require(['../require/config'],function(){
 							common.session.clear();
 							common.huanfu.setItem(huanfu);
 						common.jsInteractiveApp({name:'exit1'})
-						
 						location.replace( location.href );
 					},function( d ){
 						common.tellRefreshAPP();
@@ -123,19 +118,13 @@ require(['../require/config'],function(){
 					url:common.API,
 					dataType:"JSON",
 					data:data,
-			        //processData : false, // 不处理发送的数据，因为data值是Formdata对象，不需要对数据做处理
-			        //contentType : false, // 不设置Content-type请求头
 					success:function(d){
 						if( d.statusCode == "100000" ){
 							var user_data = common.user_datafn();
 							user_data.faceImg = d.data.faceImg;
-							
 							common.user_data.setItem( common.JSONStr( user_data ) );
-							
 							$(el).attr('src',d.data.faceImg+"?rom="+Math.floor(Math.random()*1000000 ))
-							
 							pub.apiHandle.updateUserInfo(d);
-							
 						}else{
 							common.prompt( d.statusCode );
 						}
@@ -162,7 +151,6 @@ require(['../require/config'],function(){
 				});
 			}
 		};
-		
 		
 		// 父模块事件处理 
 		pub.eventHandle = {};
@@ -446,14 +434,11 @@ require(['../require/config'],function(){
             }, false);
 		};
 	
-		
-	
 	/********************* 用户信息修改模块 *****************/
 	
 		// 命名空间
 	
 		pub.userInfoRepaired = {};
-	
 		pub.userInfoRepaired.phone = null;  // 用户手机号
 		pub.userInfoRepaired.newPhoneNum = null; // 用户新号码
 		pub.userInfoRepaired.petName = null; // 用户昵称
@@ -461,10 +446,8 @@ require(['../require/config'],function(){
 		pub.userInfoRepaired.idCard = null; // 用户身份证号码
 		pub.userInfoRepaired.sex = null;  // 性别
 		pub.userInfoRepaired.verify_code = null; // 用户输入的验证码
-	
 		pub.userInfoRepaired.SEX = {'男':1,'女':2};
 		pub.userInfoRepaired.sex_num = null; // 接口数值
-	
 	
 		// 用户信息修改 事件处理
 		pub.userInfoRepaired.eventHandle = {
@@ -481,15 +464,12 @@ require(['../require/config'],function(){
 					bool && window.history.pushState('','','./message_change.html');
 					bool && (bool = false);
 				});
-	
-	
 				// 性别选择效果
 				$('.message_sex').on('click',function(e){
 					var cur = e.target.nodeName.toLowerCase() == 'li';
 					cur && $('#message_sex').val( $(e.target).text() ); 
 					$('.message_sex_choose').slideToggle(300);
 				});
-	
 				// 点击发送验证码
 				$('#phone_verify_code1').on('click',function(){
 					pub.userInfoRepaired.time = 59;
@@ -499,35 +479,25 @@ require(['../require/config'],function(){
 					pub.userInfoRepaired.apiHandle.send_sms.init();
 					pub.userInfoRepaired.countDown(); // 验证码倒计时
 				});
-	
-	
-	
-	
 				// 提交手机修改信息
 				$('.phone_submit').on('click',function(){
-					 
 					pub.userInfoRepaired.verify_code = $('#phone_verify_code2').val();
 					pub.userInfoRepaired.newPhoneNum = $('#phone_phoneNumber').val();
-					
 					if( pub.userInfoRepaired.newPhoneNum == "" ){
 						common.prompt('请输入手机号'); return;
 					}
-	
 					if( !common.PHONE_NUMBER_REG.test( pub.userInfoRepaired.newPhoneNum ) ){
 						common.prompt('手机号输入有误'); return;
 					}
 					pub.userInfoRepaired.apiHandle.update_mobile.init(); // 手机号更新
 				});
-	
 				// 点击保存
 				$('.main_reverse').on('click',function(){
 				    pub.userInfoRepaired.petName = $('#message_nick').val();
 				    pub.userInfoRepaired.realName = $('#message_name').val();
 				    pub.userInfoRepaired.idCard = $('#message_IDcard').val();
-				     
 				    var sex = $('#message_sex').val();
 				    pub.userInfoRepaired.sex_num = pub.userInfoRepaired.SEX[sex];
-	
 				    if( pub.userInfoRepaired.petName == '' ){
 				    	common.prompt('请输入昵称'); return;
 				    }
@@ -545,11 +515,8 @@ require(['../require/config'],function(){
 				window.onpopstate = function(){
 					pub.userInfoRepaired.switchInput('修改信息','.zs_phone_box','.zs_address_box');
 				};
-	
-	
 			}
 		};
-	
 		// 用户信息修改 接口数据处理
 		pub.userInfoRepaired.apiHandle = {
 			init : function(){
@@ -557,7 +524,6 @@ require(['../require/config'],function(){
 				me.show.init();
 			},
 		};
-	
 		// 用户基本信息展示接口
 		pub.userInfoRepaired.apiHandle.show = {
 			init : function(){
@@ -604,7 +570,6 @@ require(['../require/config'],function(){
 					mobile : pub.userInfoRepaired.newPhoneNum
 				}),function( d ){
 					if ( d.statusCode == "100000" ) {
-	
 						var user_data = common.user_datafn();
 							user_data.mobile = pub.userInfoRepaired.newPhoneNum;
 						common.user_data.setItem(common.JSONStr( user_data ));
@@ -631,7 +596,6 @@ require(['../require/config'],function(){
 					sex : pub.userInfoRepaired.sex_num
 				}),function( d ){
 					if ( d.statusCode=="100000" ) {
-						
 						var user_data = common.user_datafn();
 						user_data.petName = pub.userInfoRepaired.petName;
 						user_data.realName = pub.userInfoRepaired.realName;
@@ -639,10 +603,7 @@ require(['../require/config'],function(){
 						user_data.sex = pub.userInfoRepaired.sex_num;
 						common.user_data.setItem( common.JSONStr( user_data ) );
 						common.prompt('修改成功');
-						
-						
 						pub.apiHandle.updateUserInfo(d);
-						
 						common.setMyTimeout(function(){
 							common.jsInteractiveApp({
 								name:'goBack',
@@ -652,13 +613,11 @@ require(['../require/config'],function(){
 									'url':'html/my.html'
 								}
 							})
-							//common.goBackApp(1,true,'html/my.html');
 						},600);
 					}
 				});
 			}
 		};
-	
 	
 		// 个人用户信息 模块初始化 二级模块
 		pub.userInfoRepaired.init = function(){
@@ -691,8 +650,6 @@ require(['../require/config'],function(){
 			});
 		};
 	
-	
-	
 		/************************* 优惠券管理模块 ***************************/
 	
 		// 优惠券 命名空间
@@ -703,7 +660,6 @@ require(['../require/config'],function(){
 		pub.PAGE_INDEX = common.PAGE_INDEX; // 第几页
 		pub.COUPON_TYPES = ['来源:好友推荐赠送','来源:微博晒单成功赠送','来源:微信晒单成功赠送','来源:订单促销活动赠送','来源:随意赠送'];
 		pub.CUOPON_RECEIVE_STATUS = ['立即领取','已领取'];
-	
 		pub.coupon.sortCouponId = null;
 	
 		// 优惠券 接口命名空间
@@ -727,12 +683,9 @@ require(['../require/config'],function(){
 					html = '',
 					data = d.data,
 					isLast = data.lastPage;
-					
 					$('.lodemore').html( isLast ? '没有更多数据了' : '点击加载更多数据' ).show();
 				    if( data.list == 0 ){ $('.lodemore').html('没有更多数据了').show(); }
-	
 					if (data.totalCount == 0 ) { $('.lodemore').html('暂无优惠卷').show(); return}
-					
 					for(var i in data.list){
 						var lst = data.list[i];
 						html += '<div class="cuopon_management_content clearfloat cuopon_status1' + lst.status + '">'
@@ -768,7 +721,6 @@ require(['../require/config'],function(){
 	    				code : code 
 					},function( d ){
 						callback( d );
-						// pub.coupon.apiHandle.grh_desc.apiData( d );
 					})
 				},
 				apiData : function( d ){
@@ -800,16 +752,13 @@ require(['../require/config'],function(){
 	   	    		}
 				},
 				apiDataDeal : function( d ){
-	
 			    	var html = '', i = 0;
-			    	
 			    	if (!d.data.length) {
 			    		console.log(d.data.length)
 			    		$(".zs-coupon-box .cuopon_contain").html("<p>暂无在线优惠卷可以领取。</p>");
 			    		$(".cuopon_contain p").css({"text-align":"center",'line-height':'300px',"font-size":'30px'})
 			    		return
 			    	}
-			    	
 			    	for( i in d.data ){
 			    		var list = d.data[i];
 			    		html += '<div class="cuopon_content clearfloat">'
@@ -822,9 +771,7 @@ require(['../require/config'],function(){
 			    		html += '</div>'
 			    		html += '<div class="cuopon_content_right" dataId="' + list.id + '">'
 			    		html += '<div class="cuopon_money">' + list.sortMoney + '元</div>'
-	
 			    		html += '<div class="cuopon_receive cuopon_receive' + list.flag + '">' + pub.CUOPON_RECEIVE_STATUS[ list.flag ] + '</div>' 
-	
 			    		html += '</div>'
 			    		html += '</div>'
 			    	};
@@ -877,13 +824,11 @@ require(['../require/config'],function(){
 	    			bool && window.history.pushState('','','./cuopon_management.html');
 	    			bool && ( bool = false );
 	    		});
-	
 	    		$('.header_left').click(function(){
 					var isShow = $('.zs-coupon-box').is(':visible');
 					!isShow && common.jumpLinkPlain('my.html');
 					isShow && pub.userInfoRepaired.switchInput.call(pub.coupon,'优惠券管理','.zs-coupon-box','.zs-couponManager-box');
 				});
-	
 				window.onpopstate = function(){
 					pub.userInfoRepaired.switchInput.call(pub.coupon,'优惠券管理','.zs-coupon-box','.zs-couponManager-box');
 					$('.pop').hide();
@@ -908,7 +853,6 @@ require(['../require/config'],function(){
 								url:"html/login.html"
 							}
 						})
-			    		//common.jumpLinkPlainApp( '登录',"login.html" );
 			    	}
 			    });
 	
@@ -929,9 +873,7 @@ require(['../require/config'],function(){
 			pub.coupon.apiHandle.init();
 			pub.coupon.eventHandle.init();
 		}
-	
-	
-	
+		
 	/****************************  果币模块  ************************/
 	
 		// 命名空间
@@ -957,7 +899,6 @@ require(['../require/config'],function(){
 					});
 				}
 			}
-	
 		};
 	
 		// 果币 事件命名空间
@@ -973,7 +914,6 @@ require(['../require/config'],function(){
 							url:url
 						}
 					})
-					//common.jumpLinkPlainApp(title , url);
 				})
 			},
 		};
@@ -986,15 +926,11 @@ require(['../require/config'],function(){
 	/****************************  修改密码模块  ************************/
 	
 		// 命名空间
-	
 		pub.passwordFix = {};
-	
 		pub.passwordFix.oldPwd = null; // 原密码
 		pub.passwordFix.newPwd = null; // 新密码
 		pub.passwordFix.confirmPwd = null; // 确认密码
-	
 		pub.passwordFix.bool = false;
-	
 		// 修改密码 接口处理
 		pub.passwordFix.apiHandle = {
 			init : function(){
@@ -1019,7 +955,6 @@ require(['../require/config'],function(){
 										'url':'html/my.html'
 									}
 								})
-					    		//common.goBackApp(1,true,'html/my.html');
 					    	},500);
 					    } else if ( d.statusCode == '100503' ){						    
 						   common.prompt( '原密码错误' );
@@ -1039,15 +974,10 @@ require(['../require/config'],function(){
 		pub.passwordFix.eventHandle = {
 			init : function(){
 				common.jumpLinkSpecial('.header_left','my.html'); // 返回上一页
-	
 				$('.pwd_change_reverse').on('click',function(){
-					
 				 	pub.passwordFix.oldPwd = $('.old_pwd input').val(), // 用户输入的旧密码
-				    
 				    pub.passwordFix.newPwd = $('.new_pwd input').val(), // 用户输入的新密码
-				    
 				    pub.passwordFix.confirmPwd = $('.confirm_pwd input').val(); // 再次确认新密码
-	
 					if( pub.passwordFix.oldPwd == '' ){
 						common.prompt('请输入原始密码'); return;
 					}
@@ -1069,12 +999,9 @@ require(['../require/config'],function(){
 					if( pub.passwordFix.bool ){
 						return;
 					}
-	
 					pub.passwordFix.bool = true;
 					pub.passwordFix.apiHandle.update_pwd.init();
-	
 				});
-				
 			},
 		};
 	
@@ -1084,16 +1011,12 @@ require(['../require/config'],function(){
 			pub.passwordFix.eventHandle.init();
 		};
 	
-	
 		/********************** 帮助模块 ***********************/
 	
 		// 命名空间
-	
 		pub.help = {};
-	
 		pub.help.code = null; // 保存 code 
 		pub.help.urlParam = null; // url 参数
-	
 		pub.help.item = { // 请求的页面和对应的 code 值
 			'contact':['LXFS-DESC','联系方式'],
 			'pre_deal':['YGGX-DESC','预购协议'],
@@ -1102,7 +1025,6 @@ require(['../require/config'],function(){
 			'inspection':['YHQS-DESC','验货与签收'],
 			'about_us':['GUWM-DESC','关于我们']	
 		}
-	
 		// 帮助模块 接口数据处理 初始化
 		pub.help.apiHandle = {
 			apiData : function( d ){
@@ -1125,9 +1047,7 @@ require(['../require/config'],function(){
 		// 帮助模块 事件处理 初始化
 		pub.help.eventHandle = {
 			init : function(){
-				
 				pub.help.urlParam = common.getUrlParam('help'); // 接收url参数
-				
 				if( !!pub.help.urlParam ){
 					pub.help.code = pub.help.item[ pub.help.urlParam ][0];
 					$('.header_title,title').html( pub.help.item[ pub.help.urlParam ][1] );
@@ -1143,7 +1063,6 @@ require(['../require/config'],function(){
 								url:url
 							}
 						})
-						//common.jumpLinkPlainApp(title , url);
 					})
 					$(".help_content").on("click",".help_chat",function(){
 						if (common.user_datafn().isRegOpenfire == 1) {
@@ -1162,7 +1081,6 @@ require(['../require/config'],function(){
 		pub.help.init = function(){
 			pub.help.eventHandle.init();
 		};
-	
 		
 		pub.iminfo_regist=function(){
 			common.ajaxPost({
@@ -1196,18 +1114,16 @@ require(['../require/config'],function(){
 	            };
 	        });
 		};
-	
+		
 		/********************** 设置模块 ***********************/
 	
 		// 命名空间
-	
 		pub.settings = {};
 	
 		// 设置模块事件处理 命名空间
 		pub.settings.eventHandle = {
 			init : function(){
 				var bool = true;
-		       	
 		       	$('.about_us').click(function(){
 		       		var url = $(this).attr("data-url"),
 					title = $(this).attr("data-title");
@@ -1218,12 +1134,10 @@ require(['../require/config'],function(){
 							url:url
 						}
 					})
-					//common.jumpLinkPlainApp(title , url);
 		       	});
 				
 			},
 		};
-	
 		// 设置模块接口 数据处理 命名空间
 		pub.settings.apiHandle = {
 			init : function(){
@@ -1261,14 +1175,10 @@ require(['../require/config'],function(){
 					})
 				});
 			}
-	
-	
 			pub.settings.eventHandle.init();
 			pub.settings.apiHandle.init();
 		};	
 		
-
-	
 		/************************* 新改版优惠券模块2018-06-22 ***************************/
 	
 		// 优惠券 命名空间
@@ -1280,9 +1190,7 @@ require(['../require/config'],function(){
 		pub.PAGE_INDEX = common.PAGE_INDEX; // 第几页
 		pub.COUPON_TYPES = ['来源:好友推荐赠送','来源:微博晒单成功赠送','来源:微信晒单成功赠送','来源:订单促销活动赠送','来源:随意赠送'];
 		pub.CUOPON_RECEIVE_STATUS = ['立即领取','已领取'];
-	
 		COUPON_LIST.sortCouponId = null;
-	
 		// 优惠券 接口命名空间
 		COUPON_LIST.apiHandle = {
 			init : function(){
@@ -1305,14 +1213,9 @@ require(['../require/config'],function(){
 					data = d.data,
 					isLast = data.isLast,
 					couponList = data.objects;
-	
 					$('.lodemore').html( isLast ? '没有更多数据了' : '点击加载更多数据' ).show()
-				    //  isLast && $('.lodemore').html('没有更多数据了').show();
-				    // !isLast && $('.lodemore').html('点击加载更多数据').show();
 				    if( couponList.length == 0 ){ $('.lodemore').html('没有更多数据了').show();  }
-	
 					if (d.data.pageNo == 1 && couponList.length == 0 ) { $('.lodemore').html('暂无优惠卷').show(); return}
-					
 					for(var i in couponList){
 						var lst = couponList[i];
 						html += '<div class="coupon_list_item">'
@@ -1325,10 +1228,6 @@ require(['../require/config'],function(){
 						html += '	<div class="coupon_list_item_bg"><img src="../img/coupon_bg.png"></div>'
 						html += '	<div class="coupon_list_item_bottom">'
 						html += '		<p>'+lst.applyTo+'</p>'
-						
-						/*
-						html += '		<p class="color_F73A3A">不可用原因：不在当前门店</p>'
-						*/
 						html += '	</div>'
 						html += '</div>'
 					};
@@ -1337,14 +1236,12 @@ require(['../require/config'],function(){
 			},
 			// 优惠券使用说明请求
 			grh_desc : {
-	
 				init : function( code, callback){
 					common.ajaxPost({
 						method : 'grh_desc',
 	    				code : code 
 					},function( d ){
 						callback( d );
-						// COUPON.apiHandle.grh_desc.apiData( d );
 					})
 				},
 				apiData : function( d ){
@@ -1372,9 +1269,7 @@ require(['../require/config'],function(){
 					d.statusCode == "100000" ? COUPON_LIST.apiHandle.get_sort_coupon.apiDataDeal( d ) : common.prompt( d.statusStr );
 				},
 				apiDataDeal : function( d ){
-	
 			    	var html = '', i = 0;
-			    	
 			    	if (!d.data.length) {
 			    		console.log(d.data.length)
 			    		$(".zs-coupon-box .cuopon_contain").html("<p>暂无在线优惠卷可以领取。</p>");
@@ -1393,9 +1288,7 @@ require(['../require/config'],function(){
 			    		html += '</div>'
 			    		html += '<div class="cuopon_content_right" dataId="' + list.id + '">'
 			    		html += '<div class="cuopon_money">' + list.sortMoney + '元</div>'
-	
 			    		html += '<div class="cuopon_receive cuopon_receive' + list.flag + '">' + pub.CUOPON_RECEIVE_STATUS[ list.flag ] + '</div>' 
-	
 			    		html += '</div>'
 			    		html += '</div>'
 			    	};
@@ -1432,13 +1325,10 @@ require(['../require/config'],function(){
 		// 优惠券 事件命名空间
 		COUPON_LIST.eventHandle = {
 			init : function(){
-	
 				// 点击跳转到首页
 			    $('.cuopon_management_contain').on('click','.coupon_btn',function(){
 			    	common.goHomeApp();
-			    	//common.jumpLinkPlain( "../index.html" );
 			    });
-		    	
 		    	// 点击加载更多
 		    	$('.lodemore').on('click',function(){				
 					if ( $(this).html() != '没有更多数据了' ) {
@@ -1459,24 +1349,17 @@ require(['../require/config'],function(){
 	    			pub.userInfoRepaired.switchInput.call(COUPON_LIST,'优惠券','.zs-couponManager-box','.zs-coupon-box','在线获取优惠券');
 	    			bool && (function(){
 	    				COUPON_LIST.apiHandle.get_sort_coupon.init();
-	    				//window.history.pushState('','','./couponList.html');
 	    				bool = false;
 	    			}());
 	    		});
-	
 	    		$('.header_left').click(function(){
 	    			console.log($('.zs-coupon-box').is(':visible'))
 					$('.zs-coupon-box').is(':visible') ? pub.userInfoRepaired.switchInput.call(COUPON_LIST,'优惠券管理','.zs-coupon-box','.zs-couponManager-box') : window.history.back();
 				});
-				
 				$(".header_right").on("click",function(){
 					var url = $(this).attr('data-url');
 					common.jumpLinkPlain( url );
 				})
-				/*window.onpopstate = function(){
-					USER_INFO_REPAIRED.switchInput.call(COUPON_LIST,'优惠券管理','.zs-coupon-box','.zs-couponManager-box');
-					$('.pop').hide();
-				}*/
 			}
 		};
 	
@@ -1513,15 +1396,9 @@ require(['../require/config'],function(){
 					data = d.data,
 					isLast = data.isLast;
 					couponList = data.objects;
-					
 					$('.lodemore').html( isLast ? '没有更多数据了' : '点击加载更多数据' ).show()
-				    //  isLast && $('.lodemore').html('没有更多数据了').show();
-				    // !isLast && $('.lodemore').html('点击加载更多数据').show();
-				    
 				    if( couponList.length == 0 ){ $('.lodemore').html('没有更多数据了').show();  }
-	
 					if ( data.pageNo == 1 && couponList.length == 0 ) { $('.lodemore').html('暂无失效优惠卷').show(); return}
-					
 					for(var i in couponList){
 						var lst = couponList[i];
 						html += '<div class="coupon_list_item">'
@@ -1541,15 +1418,10 @@ require(['../require/config'],function(){
 						html += '	<div class="coupon_list_item_bg"><img src="../img/coupon_bg.png"></div>'
 						html += '	<div class="coupon_list_item_bottom">'
 						html += '		<p>'+lst.applyTo+'</p>'
-						/*
-						html += '		<p class="color_F73A3A">不可用原因：不在当前门店</p>'
-						*/
 						html += '	</div>'
 						html += '</div>'
-						          		
 					};
 					$('.cuopon_management_contain').append( html );
-					
 				}
 			}
 		};
@@ -1575,9 +1447,7 @@ require(['../require/config'],function(){
 		}
 		/*--------------------将score模块中的果币模块放入personal模块中（ios返回页面不能获取js执行环境）-------------------------*/
 		/****************************  果币模块  ************************/
-	
 		// 命名空间
-	
 		pub.fruitCoins = {};
 		var FRUIT_COINS = pub.fruitCoins;
 			FRUIT_COINS.gameType = common.gameType.getItem();
@@ -1614,7 +1484,6 @@ require(['../require/config'],function(){
 					});
 				},
 				apiData:function(){
-					
 				}
 			},
 			game_chance_exchange : {
@@ -1652,14 +1521,11 @@ require(['../require/config'],function(){
 					});
 				},
 				apiData:function(){
-					
 				}
 			}
-	
 		};
 		
 		pub.fruitCoins.jumpBack = function(d){
-			
 			
 		}
 		// 果币 事件命名空间
@@ -1678,19 +1544,10 @@ require(['../require/config'],function(){
 					var url = $(this).attr("data-url");
 					common.jumpLinkPlain(url);
 				});
-				/*$(".score_top_box").on("click",".details",function(){
-					var url = $(this).attr("data-url");
-					common.jumpLinkPlainApp("果币明细",url);
-				});
-				$(".score_top_box").on("click",".abort_score",function(){
-					var url = $(this).attr("data-url");
-					common.jumpLinkPlainApp("关于果币",url);
-				});*/
 				$(".score_top_box").on("click",".details,.abort_score",function(){
 					var url = $(this).attr("data-url");
 					var isDetail = $(this).hasClass(".details"),
 						isAboutScore = $(this).hasClass(".abort_score");
-					
 					common.jsInteractiveApp({
 						name:'goToNextLevel',
 						parameter:{
@@ -1732,10 +1589,8 @@ require(['../require/config'],function(){
 		pub.apiHandle.refresh = function(){
 			if (pub.logined) {
 				pub.apiHandle.userScoCouMon.init();
-				//pub.myScroll.refresh();
 				pub.pullInstance.pullDownSuccess();
 			}else{
-				//pub.myScroll.refresh();
 				pub.pullInstance.pullDownSuccess();
 			}
 			
@@ -1768,7 +1623,6 @@ require(['../require/config'],function(){
 		}
 		// 个人中心初始化函数
 		pub.init = function(){
-	
 			if (!common.huanfu.getKey()) {
 				common.getChangeSkin();
 				common.defHuanfu.done(function(){
@@ -1812,9 +1666,6 @@ require(['../require/config'],function(){
 		 			load();
 		 		}
 		 	}, 500);
-	 		var 
-			wh = document.documentElement.clientHeight;
-			
 			pub.info = {
 				"pullDownLable":"下拉刷新...",
 				"pullingDownLable":"松开刷新...",
@@ -1822,8 +1673,6 @@ require(['../require/config'],function(){
 				"pullingUpLable":"松开加载更多...",
 				"loadingLable":"加载中..."
 			}
-			
-		
 			function pullDownAction () {
 				setTimeout(function () {
 					pub.apiHandle.refresh();
@@ -1833,17 +1682,10 @@ require(['../require/config'],function(){
 				var $listWrapper = $('.main');
 
 		        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
-		            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
 		             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
-		
 		            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
 		            onPullDown: function () {
 		            	common.getNetwork(pullDownAction,pub.pullInstance.pullDownFailed.bind(pub.pullInstance))
-		               /* if (window.navigator.onLine) {
-		            		pullDownAction();	            		
-		            	}else{
-		            		pub.pullInstance.pullDownFailed()
-		            	}*/
 		            },
 		        });
 		        $("#wrapper").css('left','0')

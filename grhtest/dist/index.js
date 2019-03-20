@@ -62,39 +62,12 @@ require(['../require/config'],function () {
 	 			common.DTD.done(function(){
 	 				pub.firmId = common.user_datafn().firmId;
 	 				me.firm_default.init(); // 默认门店
-	 				//注册的情况下将APP本地门店ID赋值给当前用户
-		 			/*if (common.user_datafn().firmId == '0') {
-		 				pub.apiHandle.choice_firm.init();
-		 			}else {
-		 				//登录的情况下
-		 				if (common.firmId.getItem() != common.user_datafn().firmId) {
-							common.jsInteractiveApp({
-								name:'alertMask',
-								parameter:{
-									type:1,
-									title:'是否切换为已绑定门店?',
-									canclefn:'pub.apiHandle.cancleFn()',
-									truefn:'pub.apiHandle.trueFn()'
-								}
-							})
-		 				}
-			 		}*/
+	 				
 	 			}).fail(function(){
 	 				me.firm_default.init();
 	 			})
 	 		}else{
 	 			me.firm_default.init(); // 默认门店
-	 			/*if(!common.firmId.getItem()){
-					common.jsInteractiveApp({
-						name:'alertMask',
-						parameter:{
-							type:1,
-							title:'请选择门店',
-							canclefn:'',
-							truefn:'pub.apiHandle.trueFn1()'
-						}
-					})
-	 			}*/
 	 			
 	 		};
 	 		pub.pageDone.done(function(){
@@ -161,18 +134,6 @@ require(['../require/config'],function () {
 	 			
 	 		})
 	 	};
-//	 	pub.apiHandle.version = {
-//	 		init:function(){
-//	 			common.defVersion.done(function(){
-//	 				//获取线上版本及本地版本
-//	 				var onlineVersion = localStorage.getItem("appNowVersion"),
-//	 					locationVersion = localStorage.getItem("version");
-//	 				
-//	 			}).fail(function(){
-//	 				
-//	 			})
-//	 		}
-//	 	};
 	 	// 默认门店
 	 	pub.apiHandle.firm_default = {
 	 		// 默认门店初始化函数
@@ -181,8 +142,6 @@ require(['../require/config'],function () {
 	 				method : 'firm_default',
 	 				firmId : pub.firmId
 		 		},function(d){
-//		 			d.statusCode == "100000" && pub.apiHandle.firm_default.apiData( d );
-//		 			d.statusCode == common.SESSION_EXPIRE_CODE && common.clearData();
 		 			if (d.statusCode == "100000") {
 		 				pub.apiHandle.firm_default.apiData( d );
 		 			} else if (d.statusCode == "100901"){
@@ -216,13 +175,6 @@ require(['../require/config'],function () {
 				common.websiteNode.setItem(d.websiteNode);
 				pub.websiteNode = d.websiteNode;
 				
-				/*if(pub.logined){
-					var user_data = common.user_datafn();
-					user_data.firmId = pub.firmId;
-					common.user_data.setItem( common.JSONStr( user_data ) );
-				}*/
-				
-				
 				pub.apiHandle.main_page_goods.init();
 				pub.apiHandle.custom_activity_firm_list.init()
 				common.firmIdType.setItem(d.type);
@@ -246,13 +198,7 @@ require(['../require/config'],function () {
 						user_data.firmId = pub.firmId;
 						
 						common.user_data.setItem( common.JSONStr( user_data ) );
-						//common.tellRefreshAPP()
 						pub.apiHandle.firm_default.init();
-						/*if (common.good.getItem()) {
-							console.log("切换门店清除购物车");
-							common.good.removeItem();
-							common.setShopCarNumApp(0)
-						}*/
 					}else if(d.statusCode == '100901'){
 						common.jsInteractiveApp({
 							name:'alertMask',
@@ -329,7 +275,6 @@ require(['../require/config'],function () {
 					
 				}catch(e){
 					console.log(e)
-					//TODO handle the exception
 				}
 				
 				
@@ -358,11 +303,6 @@ require(['../require/config'],function () {
 				},'.swiper-pagination',pub.isrefresh);
 				data.mainPageGoodsDetails.length == 0 && $(".index_inner").html("");
 				data.mainPageGoodsDetails.length != 0 && me.apiDataDeal( data.mainPageGoodsDetails );
-			 	//pub.myScroll.refresh();
-			 	/*if (pub.isrefresh) {
-			 		pub.iscroll.resetload();
-                    common.lazyload(); // 懒加载
-			 	}*/
 			 	if(pub.isrefresh){
 			 		pub.pullInstance.pullDownSuccess();
 			 		common.lazyload(); // 懒加载
@@ -377,12 +317,9 @@ require(['../require/config'],function () {
 				common.ajaxPost({
 	 				method : 'custom_activity_firm_list',
 	 				firmId:pub.firmId,
-	 				//websiteNode:pub.websiteNode
 		 		},function( d ){
 		 			d.statusCode == "100000" && pub.apiHandle.custom_activity_firm_list.apiData( d );
-		 			//d.statusCode != "100000" && common.cancelDialogApp();
 		 			d.statusCode != "100000" &&  common.prompt(d.statusStr);
-		 			//d.statusCode == common.SESSION_EXPIRE_CODE && common.clearData();
 		 			
 		 		});
 			},
@@ -487,11 +424,8 @@ require(['../require/config'],function () {
 				}else{
 					pub.apiHandle.firm_default.init();
 				}
-				//pub.apiHandle.firm_default.apiData(pub.locationFirmInfo)
 				
 			}catch(e){
-				//TODO handle the exception
-				//common.prompt(e,10000)
 				console.log(e)
 			}
 			
@@ -529,13 +463,6 @@ require(['../require/config'],function () {
 				});
 				
 				$(".index_rigth").on("click",function(){
-					/*common.jsInteractiveApp({
-						name:'getGlobalVariable',
-						parameter:{
-							key:'appKey',
-							callBackName:'pub.appInteractive.getFn'
-						}
-					})*/
 					var url = 'html/search.html';
 					common.jsInteractiveApp({
 						name:'goToSearch',
@@ -545,28 +472,6 @@ require(['../require/config'],function () {
 					});
 				})
 				$(".index_tit").on('click',function(){
-					/*var appVal = prompt("请输入value",'globalVal')
-					
-					if (appVal != null && appVal != '') {
-						common.jsInteractiveApp({
-							name:'setGlobalVariable',
-							parameter:{
-								key:'appKey',
-								value:appVal,
-								callBackName:'pub.appInteractive.setFn'
-							}
-						})
-					} else{
-						
-					}*/
-					/*var appKey = prompt("请输入需要存储到APP端的Key值","globalKey");
-					if (appKey != null && appKey != '') {
-						
-					}else{
-						appKey = prompt("请输入需要存储到APP端的Key值","globalKey");
-					}*/
-					
-//					alert(localStorage.getItem("location"))
 					common.jsInteractiveApp({
 						name:'goToNextLevel',
 						parameter:{
@@ -648,15 +553,12 @@ require(['../require/config'],function () {
 						callBackName:'pub.appInteractive.getFn'
 					}
 				})
-				//pub.locationInfo.api(data)
 			},
 			api:function(){
 				common.ajaxPost(pub.locationInfo.data,function(d){
 	    			if(d.statusCode == '100000'){
 	    				pub.locationInfo.apiData(d);
 	    			}else{
-						//common.prompt( 'position_verify++' + JSON.stringify(d));
-						//common.prompt(pub.longition+","+pub.latitude+"="+pub.firmId)
 						common.prompt(d.statusStr);
 	    			}
 	    		})
@@ -754,18 +656,11 @@ require(['../require/config'],function () {
 			var $listWrapper = $('.main');
 
 	        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
-	            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
 	            distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
 	
 	            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
 	            onPullDown: function () {
-	            	//common.getNetwork.bind(this.Pull)(pullDownAction,pub.pullInstance.pullDownFailed)
 	            	common.getNetwork(pullDownAction,pub.pullInstance.pullDownFailed.bind(pub.pullInstance))
-	            	/*if (window.navigator.onLine) {
-	            		pullDownAction();	            		
-	            	}else{
-	            		pub.pullInstance.pullDownFailed()
-	            	}*/
 	            },
 	        });
 			

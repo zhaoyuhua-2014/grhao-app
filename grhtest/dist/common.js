@@ -7,7 +7,7 @@ define(['jquery','mdData','shar1'],function($,md){
 	common.encrypt = md;
 	$.extend(common,{
 		//EVE 作为正式环境和测试环境的开关，为true时为正式环境，为false时为测试环境
-		EVE:true,
+		EVE:false,
 		//API : "http://api.grhao.com/server/api.do", // 接口地址
 		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数

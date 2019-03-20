@@ -6,34 +6,22 @@ require(['../require/config'],function(){
 		// 命名空间
 	
 		var pub = {};
-		
 		pub.openId = common.openId.getItem();
-		
 		pub.weixinCode = common.getUrlParam('code'); // 获取url参数
-	
 		pub.openId = common.openId.getKey();
 		pub.jumpMake = common.getUrlParam("type");
-	
 		// 属性
 		$.extend(pub,{
-			
 			phoneNum : null, // 手机号
-			
 			password : null, // 密码
-					
 			verify_code : null, // 用户输入验证码值
-	
 			login_type : null, // 存储登录方式
-	
 			send_sms_type : null, // 存储登录或注册 验证码类型
-	
 		});
 	
 		// 获取验证码类型
 		pub.send_sms_type = $('[data-sms-type]').attr('data-sms-type');
-	
 		pub.key = null;// 图片验证码编号
-	
 		// 倒计时
 		pub.time = 59;
 		pub.countDown = function(){
@@ -54,7 +42,6 @@ require(['../require/config'],function(){
 		// 发送验证码
 		pub.send_sms = {
 			init : function(){
-	
 				common.ajaxPost({
 					method : 'send_sms',
 					mobile: pub.phoneNum,
@@ -68,12 +55,9 @@ require(['../require/config'],function(){
 					}else{
 						common.prompt( d.statusStr );
 					} 
-				},function(d){
-	
 				});
 			}
 		};
-	
 		// 动态登录 + 账户登录
 		pub.login = {};
 		// 给AAP传数据
@@ -92,7 +76,6 @@ require(['../require/config'],function(){
 				name:'tellRefresh'
 			})
 		}
-	
 		pub.get_weixin_code  = function(){
 	        common.ajaxPost({
 	            method: 'get_weixin_code',
@@ -136,7 +119,6 @@ require(['../require/config'],function(){
 				    isRegOpenfire : infor.isRegOpenfire
 				};
 				// 给app端传用户信息 分享使用
-				
 				common.user_data.setItem( common.JSONStr(user_data) );
 				common.tokenId.setItem( d.data.tokenId );
 				common.secretKey.setItem( d.data.secretKey );
@@ -165,15 +147,6 @@ require(['../require/config'],function(){
 						if( 0 < pub.jumpMake && pub.jumpMake < 14 ){
 							bool && common.goodid.removeItem();
 							common.jumpMake.removeItem();
-							
-							
-							/*pub.jumpMake  == 3 && common.goBackApp(1,true,'html/seckill.html' ); // 秒杀详情 -> 秒杀换购 列表
-							pub.jumpMake  == 4 && common.goBackApp( 1,true,'html/pre.html' ); // 预购详情 -> 预购列表
-							pub.jumpMake  == 12 && common.goBackApp( 1,true,'html/seckill.html' ); // 换购详情 -> 秒杀换购 列表
-							pub.jumpMake  == 9 && common.goBackApp( 1,true,'html/moregoods.html' ); // 商品详情 -> 商品详情列表
-							*/
-							//common.goBackApp(  1,true,pathNames[ pub.jumpMake-1 ] );
-							
 							var backUrl = '';
 							if (pub.jumpMake  == 3 ) {
 								backUrl = 'html/seckill.html';
@@ -186,7 +159,6 @@ require(['../require/config'],function(){
 							} else {
 								backUrl = pathNames[ pub.jumpMake-1 ]
 							}
-							//common.goBackApp(  1,true,pathNames[ pub.jumpMake-1 ] );
 							common.jsInteractiveApp({
 								name:'goBack',
 								parameter:{
@@ -196,14 +168,12 @@ require(['../require/config'],function(){
 								}
 							})
 						}else{
-							//common.goHomeApp();
 							common.jsInteractiveApp({
 								name:'goHome'
 							})
 						}
 					}else{
 						bool && common.goodid.removeItem();
-						//common.goHomeApp();
 						common.jsInteractiveApp({
 							name:'goHome'
 						})
@@ -228,25 +198,7 @@ require(['../require/config'],function(){
 				});
 			}
 		};
-		/*
-		typedef NS_ENUM(NSInteger, UMSocialPlatformErrorType) {
-		    UMSocialPlatformErrorType_Unknow            = 2000,            // 未知错误
-		    UMSocialPlatformErrorType_NotSupport        = 2001,            // 不支持（url scheme 没配置，或者没有配置-ObjC， 或则SDK版本不支持或则客户端版本不支持）
-		    UMSocialPlatformErrorType_AuthorizeFailed   = 2002,            // 授权失败
-		    UMSocialPlatformErrorType_ShareFailed       = 2003,            // 分享失败
-		    UMSocialPlatformErrorType_RequestForUserProfileFailed = 2004,  // 请求用户信息失败
-		    UMSocialPlatformErrorType_ShareDataNil      = 2005,             // 分享内容为空
-		    UMSocialPlatformErrorType_ShareDataTypeIllegal = 2006,          // 分享内容不支持
-		    UMSocialPlatformErrorType_CheckUrlSchemaFail = 2007,            // schemaurl fail
-		    UMSocialPlatformErrorType_NotInstall        = 2008,             // 应用未安装
-		    UMSocialPlatformErrorType_Cancel            = 2009,             // 取消操作
-		    UMSocialPlatformErrorType_NotNetWork        = 2010,             // 网络异常
-		    UMSocialPlatformErrorType_SourceError       = 2011,             // 第三方错误
 		
-		    UMSocialPlatformErrorType_ProtocolNotOverride = 2013,   // 对应的    UMSocialPlatformProvider的方法没有实现
-		    UMSocialPlatformErrorType_NotUsingHttps      = 2014,   // 没有用https的请求,@see UMSocialGlobal isUsingHttpsWhenShareContent
-		
-		}; * */
 		//微信自动登录成功回调函数
 		pub.login.apiHandle.trueFn = function(d){
 			
@@ -439,7 +391,6 @@ require(['../require/config'],function(){
 	
 		// 注册事件处理
 		pub.register.eventHandle = {
-	
 			init : function(){
 				$('.regsiter_btn').on('click',function(){
 					var $this = $(this);
@@ -476,10 +427,8 @@ require(['../require/config'],function(){
 	
 				pub.verification.init(); // 获取图片验证码
 			},
-			
 		};
 		
-	
 		// 注册接口
 		pub.register.regist = {
 	
@@ -492,7 +441,6 @@ require(['../require/config'],function(){
 				    confirmPwd:common.pwdEncrypt( pub.repeatPassword )
 				};
 				common.ajaxPost( data, function( d ){
-	
 					if ( d.statusCode == '100000' ) {
 					    pub.register.regist.apiData( d );					   
 				    } else if ( d.statusCode == '100510' ){
@@ -509,7 +457,6 @@ require(['../require/config'],function(){
 				});	
 			},
 			apiData : function(d){
-	
 				var data = d.data.cuserInfo,
 				user_data = {
 				    cuserInfoid : data.id,
@@ -527,9 +474,7 @@ require(['../require/config'],function(){
 				common.secretKey.setItem( d.data.secretKey );
 				$('.regsiter_pack').css({'display':'none'});
 				$('.success').css({'display':'block'});
-	
 				common.isApp() && pub.sendToApp( common.JSONStr( d ) ); // 传数据给 APP 端
-	
 				var t = 3,time = setInterval(function(){					
 					if( t == 0 ){
 						clearInterval(time);
@@ -545,19 +490,15 @@ require(['../require/config'],function(){
 					}
 					t--;
 				},1000);
-				
 			}
 		};
 	
 		pub.eventHandle = {
-	
 			init : function(){
 				// 获取验证码
 				$('.zs_get_verify_code').on('click',function(){
-	
 					pub.phoneNum = $(".show .zs_phoneNumber").val();
 					pub.imgCode = $('#img_code').val();
-	
 					if( pub.phoneNum == '' ){
 						common.prompt('请输入手机号'); return;
 					}
@@ -572,7 +513,6 @@ require(['../require/config'],function(){
 					pub.countDown();// 倒计时开始
 					pub.send_sms.init(); // 请求验证码
 				});
-				
 				$('.imgCode_box .img_code').click(function(){
 					pub.verification.init(); // 获取图片验证码
 				});

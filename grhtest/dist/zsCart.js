@@ -78,7 +78,6 @@ require(['../require/config'],function(){
 			},
 			scrollCount:function(index){
 				
-				
 			}
 		};
 		
@@ -217,23 +216,11 @@ require(['../require/config'],function(){
 					totalMoney: 0,
 					allChecked: false,
 				},
-		        beforeCreate : function(){
-		        	
-		        },
 		        created : function(){
-		        	console.log("created			//创建完成")
 		        	this.isChooseAll()
 		        	this.calTotalMoney();
-		        	
-		        	
-		        },
-		        beforeMount : function(){
-		        	console.log("beforeMount		//挂载之前")
-		        	/*console.log(this)
-		        	console.log(this.goodsObj.length)*/
 		        },
 		        updated : function(){
-		        	console.log("updated			//数据被更新后")
 		        	var nood = $("#ul-box .line-wrapper");
 		        	nood.each(function(i,item){
 		        		$(item).find('.line-normal-wrapper').css("margin-left","0px");
@@ -395,7 +382,6 @@ require(['../require/config'],function(){
 						this.updataLocal();
 						this.calTotalMoney();
 					},
-			
 					// 计算商品总金额
 					calTotalMoney: function() {
 						var oThis = this;
@@ -407,8 +393,6 @@ require(['../require/config'],function(){
 							}
 						}
 					},
-			
-			
 					// 删除操作
 					delGoods: function() {
 						var $this = this;
@@ -417,13 +401,6 @@ require(['../require/config'],function(){
 							common.prompt('购物车为空')
 						}else{
 							if ($this.isChoose()) {
-								/*var data = {
-									type:1,
-									title:'确定删除？',
-									canclefn:'cancleFn',
-									truefn:'trueFn'
-								}
-								common.alertMaskApp(JSON.stringify(data));*/
 								common.jsInteractiveApp({
 									name:'alertMask',
 									parameter:{
@@ -491,7 +468,6 @@ require(['../require/config'],function(){
 								}
 							})
 						}
-						
 					},
 					//点击跳转到更多商品页面
 					jumplink : function(){
@@ -502,8 +478,6 @@ require(['../require/config'],function(){
 					}
 				}
 			})
-		
-			
 		};
 		
 		$(document).ready(function(){
@@ -524,17 +498,11 @@ require(['../require/config'],function(){
 			var $listWrapper = $('.ul-box');
 
 	        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
-	            // scrollArea: window, // 滚动区域的dom对象或选择器。默认 window
 	             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
 	
 	            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
 	            onPullDown: function () {
 	            	common.getNetwork(pullDownAction,pub.pullInstance.pullDownFailed.bind(pub.pullInstance))
-	                /*if (window.navigator.onLine) {
-	            		pullDownAction();	            		
-	            	}else{
-	            		pub.pullInstance.pullDownFailed()
-	            	}*/
 	            },
 	        });
 	        

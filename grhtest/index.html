@@ -25,59 +25,22 @@
 		</div>
 		<div class="empty"></div>
 		<div class="main_wrap" id="wrapper">
-			<!-- <div id="iscroll"> -->
-				<!--<div id="pullDown" class="empty">
-					<span class="pullDownIcon"></span><span class="pullDownLabel">Pull down to refresh...</span>
-					<div class="loader">
-						<span></span><span></span><span></span><span></span>
+			<div class="main index">
+				<div class="banner_wrap">
+					<div class="index_banner">
+						<div class="swiper-wrapper"></div>
+						<div class="swiper-pagination"></div>
 					</div>
-					<div class="pullDownLabel">下拉刷新...</div>
-				</div>-->
-				<div class="main index">
-					<div class="banner_wrap">
-						<div class="index_banner">
-							<div class="swiper-wrapper"></div>
-							<div class="swiper-pagination"></div>
+				</div>
+				<div class="index_center_wrap">
+					<div class="index_center_banner">
+						<div class="swiper-wrapper">
 						</div>
 					</div>
-					<div class="index_center_wrap">
-						<!--<dl class="top_left" data="1">
-							<dt class="all_bg2"></dt>
-							<dd>礼盒套餐</dd>
-							<dd>满足味蕾</dd>
-						</dl>
-						<dl class="top_right" data="2">
-							<dt class="all_bg3"></dt>
-							<dd>钜惠活动</dd>
-							<dd>吃点新鲜</dd>
-						</dl>
-						<dl class="bottom_left" data="3">
-							<dt class="all_bg4"></dt>
-							<dd>疯狂秒杀</dd>
-							<dd>整点秒杀</dd>
-						</dl>
-						<dl class="bottom_right" data="4">
-							<dt class="all_bg5"></dt>
-							<dd>一元预购</dd>
-							<dd>意想不到</dd>
-						</dl>
-						<div class="index_center_center">
-						</div>
-						<div class="mask hidden"></div>-->
-						<div class="index_center_banner">
-							<div class="swiper-wrapper">
-								<!--
-								<dl class="swiper-slide">
-									<dt><img src="img/1226-01.png"/></dt>
-									<dd>钜惠活动2</dd>
-								</dl>-->
-							</div>
-						</div>
-					</div>
-					<div class="index_inner_wrap">
-						<div class="index_inner lazyload"></div>
-					</div>
-				<!-- </div> -->
+				</div>
+				<div class="index_inner_wrap">
+					<div class="index_inner lazyload"></div>
+				</div>
 			</div>
 		</div>
 		<div class="order_refund">		
@@ -116,13 +79,6 @@
 		function trueFn1(){
 			pub.apiHandle.trueFn1();
 		}
-		
-		//换肤
-		/*function changeSkin(d){
-			alert(d)
-			localStorage.setItem("huanfu",JSON.parse(d).type)
-			pub.apiHandle.change_app_theme.init();
-		}*/
 		//获取app版本信息
 		function setAppVersion(n){
 			if (typeof n == 'string') {

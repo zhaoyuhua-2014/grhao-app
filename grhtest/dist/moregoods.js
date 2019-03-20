@@ -67,7 +67,6 @@ require(['../require/config'],function(){
 							pub.goods.apiHandle.goods_first_type.apiData( d );
 						}else{
 							common.prompt( d.statusStr );
-							//common.cancelDialogApp();
 							common.jsInteractiveApp({
 								name:'cancelDialog'
 							});
@@ -114,7 +113,6 @@ require(['../require/config'],function(){
 						if(d.statusCode == "100000") {
 							pub.goods.apiHandle.goods_second_type.apiData( d );
 						} else{
-							//common.cancelDialogApp();
 							common.jsInteractiveApp({
 								name:'cancelDialog'
 							});
@@ -168,7 +166,6 @@ require(['../require/config'],function(){
 								pub.loading.show().html("没有更多数据了！");
 							}
 						} else{
-							//common.cancelDialogApp();
 							common.jsInteractiveApp({
 								name:'cancelDialog'
 							});
@@ -229,7 +226,6 @@ require(['../require/config'],function(){
 					}else{
 						pub.loading.show().html("点击加载更多！");
 					};
-					//common.cancelDialogApp();
 					common.jsInteractiveApp({
 						name:'cancelDialog'
 					});
@@ -296,7 +292,6 @@ require(['../require/config'],function(){
 	
 				//点击加载更多
 				pub.loading.on('touchend',function(e){
-					/*e.stopPropagation()*/
 					if (!pub.goods.isEnd) {
 						common.showDialogApp();
 						pub.goods.typeCode = common.two_data.getItem();
@@ -585,20 +580,17 @@ require(['../require/config'],function(){
 					
 					goodNum = cart.callbackgoodsnumber( dataId );
 					
-					//if ( goodNum < dataPackagenum ) { // 库存
 						if( +dataMax != 0 ){ // 限购
 							if( goodNum < dataMax ){
 								var num1 = cart.addgoods( dataId, dataName, dataPrice, dataLogo, dataSpecInfo, dataMax, dataPackagenum, dataOldPrice , 1 ,purchasequantity );
 								$this.siblings().eq(1).html( num1 );
 								common.tip();
-								//common.setShopCarNumApp(cart.getgoodsNum())
 								common.jsInteractiveApp({
 									name:'setShopCarNum',
 									parameter:{
 										num:cart.getgoodsNum()
 									}
 								});
-								//$('.footer_item[data-content]','#foot').attr('data-content',cart.getgoodsNum());
 							}else{
 								common.prompt( "该商品限购" + dataMax + "件" )
 							}
@@ -606,19 +598,14 @@ require(['../require/config'],function(){
 							var num1 = cart.addgoods( dataId, dataName, dataPrice, dataLogo, dataSpecInfo, dataMax, dataPackagenum, dataOldPrice , 1 ,purchasequantity);
 							$this.siblings().eq(1).html( num1 );
 							common.tip();
-							//common.setShopCarNumApp(cart.getgoodsNum())
 							common.jsInteractiveApp({
 								name:'setShopCarNum',
 								parameter:{
 									num:cart.getgoodsNum()
 								}
 							});
-							//$('.footer_item[data-content]','#foot').attr('data-content',cart.getgoodsNum());
 						}
 						cart.style_change();
-					/*} else{
-						common.prompt( "库存不足" );
-					}*/
 				});
 				//减少
 				$(".zs-static-box").on('click','.minus_num',function(e){
@@ -633,7 +620,6 @@ require(['../require/config'],function(){
 	                } else{
 	                    $this.next().html( num1 );
 	            	}
-	                //common.setShopCarNumApp(cart.getgoodsNum())
 	                common.jsInteractiveApp({
 						name:'setShopCarNum',
 						parameter:{
@@ -776,8 +762,6 @@ require(['../require/config'],function(){
 					if(pub.moduleId == "goods"){
 						pub.PAGE_INDEX = common.PAGE_INDEX;
 						pub.goods.apiHandle.init();
-						/*pub.myscroll.refresh();*/
-						//pub.pullInstance.pullDownSuccess();
 					}
 				}, 1000);	
 			}
@@ -797,14 +781,8 @@ require(['../require/config'],function(){
 		             scrollArea: $('.more_bottom_right_wrap'), // 滚动区域的dom对象或选择器。默认 window
 		             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
 		
-		            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
 		            onPullDown: function () {
 		            	common.getNetwork(pullDownAction1,pub.pullInstance1.pullDownFailed.bind(pub.pullInstance1))
-		                /*if (window.navigator.onLine) {
-		            		pullDownAction1();	            		
-		            	}else{
-		            		pub.pullInstance1.pullDownFailed()
-		            	}*/
 		            },
 		        });
 		        
