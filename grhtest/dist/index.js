@@ -3,7 +3,7 @@
 */ 
 
 require(['../require/config'],function () {
-	require(['common','mobileUi','swiperJS','pull'],function(common){
+	require(['common','test','mobileUi','swiperJS','pull',],function(common){
 		
 		
 		var pub = {};
@@ -50,6 +50,7 @@ require(['../require/config'],function () {
 			'red_package_rain.html',//红包雨页面
 			'grhFarm.html',//农场游戏页面
 			'month_service.html',//充值优惠页面
+			'rechange_activity.html'//充值活动
 		];
 		pub.locationVersion = localStorage.getItem("version");
 	 	// 接口处理命名空间
@@ -70,6 +71,7 @@ require(['../require/config'],function () {
 	 			me.firm_default.init(); // 默认门店
 	 			
 	 		};
+	 		/* 处理首页定位问题 */
 	 		pub.pageDone.done(function(){
 	 			var isApiSwitch = false;
 	 			try{
@@ -216,11 +218,14 @@ require(['../require/config'],function () {
 			}
 		},
 	 	// 首页商品列表
+	 	/* 0320 
+	 	 method main_page_goods ==> activity_goods_list
+	 	 * */
 	 	pub.apiHandle.main_page_goods = {
 	 		init : function(){
 	 			var me = this;
 	 			common.ajaxPost({
-	 				method : 'main_page_goods',
+	 				method : 'activity_goods_list',
 	 				firmId:pub.firmId,
 	 				websiteNode:pub.websiteNode
 		 		},function( d ){
@@ -231,53 +236,212 @@ require(['../require/config'],function () {
 		 			
 		 		});
 	 		},
+//	 		apiDataDeal : function( data ){
+//				var 
+//				html = '',
+//				goodsInfo = '';
+//				for(var i = 0,l = data.length; i < l ; i++) {
+//					goodsInfo = data[i].goodsInfo;
+//					var arr = [];
+//					goodsInfo.isHot == 1 && arr.push('isHot');
+//					goodsInfo.isNew == 1 && arr.push('isNew');
+//					goodsInfo.isRecommend == 1 && arr.push('isRecommend');
+//					goodsInfo.isSale == 1  && arr.push('isSale');
+//	
+//					html += '<dl data="' + goodsInfo.id + '">'
+//					html += '	<dt>'
+//	
+//					if( i < 6 ){
+//						html += '		<img src="' + goodsInfo.goodsLogo + '"/>'
+//						html += '<div class="box">'
+//						for(var k = 0; k < arr.length; k++){ html += '		<span class="goodSatce ' + arr[k] + '"></span>' }
+//						html += '</div>'
+//					}else{
+//						html += '		<img data-src="' + goodsInfo.goodsLogo + '"/>'
+//						html += '<div class="box">'
+//						for( var k = 0; k < arr.length; k++ ){ html += '		<span class="goodSatce ' + arr[k] + '"></span>' }
+//						html += '</div>'
+//					}
+//					html += '	</dt>'
+//					html += '	<dd>'
+//					html += '		<p>' + goodsInfo.goodsName + '</p>'
+//					html += '		<p class="clearfloat">'
+//					html += '			<span class="float_left">'+ goodsInfo.specInfo + '</span>'
+//					html += '			<span class="float_right">￥'+ goodsInfo.nowPrice + '</span>'
+//					html += '		</p>'
+//					html += '	</dd>'
+//					html += '</dl>'
+//				}
+//				$(".index_inner").height( ( Math.ceil(data.length / 3 )) * 320 ).html( html ).find('img[src]').addClass('fadeIn');
+//				
+//				try{
+//					common.cancelDialogApp();
+//					
+//				}catch(e){
+//					console.log(e)
+//				}
+//	 		},
 	 		apiDataDeal : function( data ){
-	 			
+	 			console.log(data)
 				var 
 				html = '',
 				goodsInfo = '';
-				for(var i = 0,l = data.length; i < l ; i++) {
+				html += '<div class="index_common lazyload index_inner3">'
+				html += '	<div class="goods_area hidden"></div>'
+				for(var i in data) {
+					
 					goodsInfo = data[i].goodsInfo;
 					var arr = [];
-					goodsInfo.isHot == 1 && arr.push('isHot');
-					goodsInfo.isNew == 1 && arr.push('isNew');
-					goodsInfo.isRecommend == 1 && arr.push('isRecommend');
-					goodsInfo.isSale == 1  && arr.push('isSale');
-	
-					html += '<dl data="' + goodsInfo.id + '">'
+					if(!goodsInfo.tagConfigs || goodsInfo.tagConfigs.length == 0){
+						goodsInfo.isHot == 1 && arr.push('isHot');
+						goodsInfo.isNew == 1 && arr.push('isNew');
+						goodsInfo.isRecommend == 1 && arr.push('isRecommend');
+						goodsInfo.isSale == 1  && arr.push('isSale');
+					}
+					html += '<dl data="' + goodsInfo.id + '" goods-box="goods-box" class="'+ (goodsInfo.packageNum <=0 ? "sellOut" : "") +'">'
 					html += '	<dt>'
-	
-					if( i < 6 ){
-						html += '		<img src="' + goodsInfo.goodsLogo + '"/>'
+					html += '		<img ' + ( i < 6 ? 'src' : 'data-src'  ) + '=' + goodsInfo.goodsLogo  + ' class="fadeIn"/>'
+					if(!goodsInfo.tagConfigs || goodsInfo.tagConfigs.length == 0){
 						html += '<div class="box">'
-						for(var k = 0; k < arr.length; k++){ html += '		<span class="goodSatce ' + arr[k] + '"></span>' }
+						for(var k = 0; k < arr.length; k++){ html += '<span class="goodSatce ' + arr[k] + '"></span>' }
 						html += '</div>'
 					}else{
-						html += '		<img data-src="' + goodsInfo.goodsLogo + '"/>'
-						html += '<div class="box">'
-						for( var k = 0; k < arr.length; k++ ){ html += '		<span class="goodSatce ' + arr[k] + '"></span>' }
+						html += '<div class="tag_box_top" >'
+						for(var t = 0 ; t < goodsInfo.tagConfigs.length; t++){
+							var tagStyle = 'background:url('+goodsInfo.tagConfigs[t].background+') no-repeat 100%/100%;color:'+goodsInfo.tagConfigs[t].nameColour +';'
+							if(goodsInfo.tagConfigs[t].site == 1){
+								tagStyle += 'float: left;'; 
+								html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
+							}else if(goodsInfo.tagConfigs[t].site == 2){
+								tagStyle += 'float: right;'; 
+								html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
+							}
+						}
+						html += '</div>'
+						html += '<div class="tag_box_bottom" >'
+						for(var t = 0 ; t < goodsInfo.tagConfigs.length; t++){
+							var tagStyle = 'background:url('+goodsInfo.tagConfigs[t].background+') no-repeat 100%/100%;color:'+goodsInfo.tagConfigs[t].nameColour +';'
+							if(goodsInfo.tagConfigs[t].site == 3){
+								tagStyle += 'float: left;'; 
+								html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
+							}else if(goodsInfo.tagConfigs[t].site == 4){
+								tagStyle += 'float: right;'; 
+								html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
+							}
+							
+						}
 						html += '</div>'
 					}
 					html += '	</dt>'
 					html += '	<dd>'
-					html += '		<p>' + goodsInfo.goodsName + '</p>'
+					html += '		<p class="goodName">' + goodsInfo.goodsName + '</p>'
 					html += '		<p class="clearfloat">'
-					html += '			<span class="float_left">'+ goodsInfo.specInfo + '</span>'
-					html += '			<span class="float_right">￥'+ goodsInfo.nowPrice + '</span>'
+					html += '			<span class="index_price">'+ goodsInfo.nowPrice + '</span>'
+					html += '			<del class="index_old_price">￥'+ goodsInfo.nomalPrice + '</del>'
 					html += '		</p>'
 					html += '	</dd>'
 					html += '</dl>'
 				}
-				$(".index_inner").height( ( Math.ceil(data.length / 3 )) * 320 ).html( html ).find('img[src]').addClass('fadeIn');
-				
+				html += '</div>'
+				$(".home_goods_show").html( html );
 				try{
 					common.cancelDialogApp();
 					
 				}catch(e){
 					console.log(e)
 				}
-				
-				
+	 		},
+	 		apiActiveDataDeal : function( data ){
+				var 
+				html = '',
+				goodsInfo = '',
+				activityInfo = "";
+				for(var i in data) {
+					activityInfo = data[i].activityDetails;
+					html += '<div class="index_common lazyload index_inner'+data[i].goodsNum +'">'
+					if (!!data[i].actvityLogo) {
+						link = pub.apiHandle.getActiveUrl(data[i].linkUrl);
+						html += '<div class="goods_area" link="'+ link + '" tit="活动"><img src="'+data[i].actvityLogo+'" alt="" /></div>'	
+					}else{
+						html += '<div class="goods_area hidden"></div>'	
+					}
+					for(var j in activityInfo)	{
+						var arr = [];
+						goodsInfo = activityInfo[j].goodsInfo
+						if(!goodsInfo.tagConfigs || goodsInfo.tagConfigs.length == 0){
+							goodsInfo.isHot == 1 && arr.push('isHot');
+							goodsInfo.isNew == 1 && arr.push('isNew');
+							goodsInfo.isRecommend == 1 && arr.push('isRecommend');
+							goodsInfo.isSale == 1  && arr.push('isSale');
+						}
+						html += '<dl data="' + goodsInfo.id + '" goods-box="goods-box" class="'+ (goodsInfo.packageNum <=0 ? "sellOut" : "") +'">'
+						html += '	<dt>'
+						html += '		<img ' + ( i < 6 ? 'src' : 'data-src'  ) + '=' + goodsInfo.goodsLogo  + ' class="fadeIn"/>'
+						if(!goodsInfo.tagConfigs || goodsInfo.tagConfigs.length == 0){
+							html += '<div class="box">'
+							for(var k = 0; k < arr.length; k++){ html += '<span class="goodSatce ' + arr[k] + '"></span>' }
+							html += '</div>'
+						}else{
+							html += '<div class="tag_box_top" >'
+							for(var t = 0 ; t < goodsInfo.tagConfigs.length; t++){
+								var tagStyle = 'background:url('+goodsInfo.tagConfigs[t].background+') no-repeat 100%/100%;color:'+goodsInfo.tagConfigs[t].nameColour +';'
+								if(goodsInfo.tagConfigs[t].site == 1){
+									tagStyle += 'float: left;'; 
+									html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
+								}else if(goodsInfo.tagConfigs[t].site == 2){
+									tagStyle += 'float: right;'; 
+									html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
+								}
+							}
+							html += '</div>'
+							html += '<div class="tag_box_bottom" >'
+							for(var t = 0 ; t < goodsInfo.tagConfigs.length; t++){
+								var tagStyle = 'background:url('+goodsInfo.tagConfigs[t].background+') no-repeat 100%/100%;color:'+goodsInfo.tagConfigs[t].nameColour +';'
+								if(goodsInfo.tagConfigs[t].site == 3){
+									tagStyle += 'float: left;'; 
+									html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
+								}else if(goodsInfo.tagConfigs[t].site == 4){
+									tagStyle += 'float: right;'; 
+									html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
+								}
+								
+							}
+							html += '</div>'
+						}
+						html += '	</dt>'
+						if(data[i].goodsNum == 1){
+							html += '	<dd>'
+							html += '		<p class="good_name">'+goodsInfo.goodsName +'</p>'
+							html += '		<p class="good_des">'+goodsInfo.goodsDescribe+'</p>'
+							html += '		<div class="bottom_area">'
+							html += '			<div class="price_area">'
+							html += '				<p class="good_price">￥'+goodsInfo.nowPrice+'</p>'
+							html += '				<del class="good_old_price">￥'+goodsInfo.nomalPrice+'</del>'
+							html += '			</div>'
+							html += '			<button class="buy_btn">立即购买</button>'
+							html += '		</div>'
+							html += '	</dd>'
+						}else{
+							html += '	<dd>'
+							html += '		<p class="goodName">' + goodsInfo.goodsName + '</p>'
+							html += '		<p class="clearfloat">'
+							html += '			<span class="index_price">￥'+goodsInfo.nowPrice + '</span>'
+							html += '			<del class="index_old_price">￥'+ goodsInfo.nomalPrice + '</del>'
+							html += '		</p>'
+							html += '	</dd>'
+						}
+						html += '</dl>'
+					}
+					html += '</div>'		
+					
+				}
+				$(".home_goods_show").html( html );
+				try{
+					common.cancelDialogApp();
+					
+				}catch(e){
+					console.log(e)
+				}
 	 		},
 	 		apiData : function( d ){
 	 			var json = {};
@@ -301,8 +465,16 @@ require(['../require/config'],function () {
 					}
 					return html;
 				},'.swiper-pagination',pub.isrefresh);
-				data.mainPageGoodsDetails.length == 0 && $(".index_inner").html("");
-				data.mainPageGoodsDetails.length != 0 && me.apiDataDeal( data.mainPageGoodsDetails );
+				
+//				data.mainPageGoodsDetails.length == 0 && $(".index_inner").html("");
+//				data.mainPageGoodsDetails.length != 0 && me.apiDataDeal( data.mainPageGoodsDetails );
+				$(".home_goods_show").empty();
+				if (data.appMainActivities && data.appMainActivities.length ) {
+					me.apiActiveDataDeal(data.appMainActivities );
+				}
+				if (data.mainPageGoodsDetails && data.mainPageGoodsDetails.length ) {
+					me.apiDataDeal(data.mainPageGoodsDetails );
+				}
 			 	if(pub.isrefresh){
 			 		pub.pullInstance.pullDownSuccess();
 			 		common.lazyload(); // 懒加载
@@ -312,10 +484,14 @@ require(['../require/config'],function () {
 	 	};
 		
 		//首页活动list
+		/*
+		 20190320
+		 method custom_activity_firm_list==>custom_activity_firm_list_two
+		 * */
 		pub.apiHandle.custom_activity_firm_list = {
 			init:function(){
 				common.ajaxPost({
-	 				method : 'custom_activity_firm_list',
+	 				method : 'custom_activity_firm_list_two',
 	 				firmId:pub.firmId,
 		 		},function( d ){
 		 			d.statusCode == "100000" && pub.apiHandle.custom_activity_firm_list.apiData( d );
@@ -324,21 +500,57 @@ require(['../require/config'],function () {
 		 		});
 			},
 			apiData:function(d){
-				var o = d.data,html = '',link = null;
-				if ( o == null || o.length == 0) {
-					$(".index_center_wrap").addClass("hidden");
-				} else{
-					for (var i = 0 , l = o.length ; i < l ; i++) {
-						
-						link = pub.apiHandle.getActiveUrl(o[i].h5Url);
-						html += '<dl class="swiper-slide" link = "'+link+'" tit= "'+o[i].name+'"><dt><img src="'+o[i].logo+'"/></dt><dd class="ellipsis">'+o[i].name+'</dd></dl>'
+				if( d.statusCode == "100000"){
+ 					if (d.data.cas && d.data.cas.length) {
+ 						var activeOne = d.data.cas,link='',html=''; 
+ 						for (var i in activeOne ) {
+ 							link = pub.apiHandle.getActiveUrl(activeOne[i].h5Url);
+ 							html += '<li class="swiper-slide" link="'+link+'" tit="'+activeOne[i].name+'">'
+							html += '	<div class="shop-active-content-box" >'
+							html += '		<p class="pic"><img src="'+activeOne[i].logo+'"></p>'
+							html += '		<p class="txt">'+activeOne[i].name+'</p>'
+							html += '	</div>'
+							html += '</li>'
+ 						}
+   						$('#shop-active-data-box').html( html );
+		 				var swiper = new Swiper('.shop-active-container', {
+					     	slidesPerView: 4,
+					      	spaceBetween: 30,
+						});
+ 					}else{
+ 						$(".shop-active-container").hide();
+ 					}
+	 				
+					/*
+					 活动2
+					*/
+					var activeTwoDom = $(".index_active_wrap");
+					var activeTwo = d.data.castwo;
+					if (activeTwo && activeTwo.length) {
+						var html = ''.link='';
+						activeTwo.forEach(function(item){
+							/*
+							 type
+							 5--表示左边区域
+							 4--表示右下角的区域
+							 6--表示左上角区域
+							*/
+							link = pub.apiHandle.getActiveUrl( item.h5Url );
+							html = '<img src="'+item.logo+'">'
+							if (item.type == 4) {
+								activeTwoDom.find(".active_bottom").html(html).attr({'link':link,'tit':item.name})
+							} else if ( item.type == 5) {
+								activeTwoDom.find(".active_left").html(html).attr({'link':link,'tit':item.name})
+							} else if ( item.type == 6) {
+								activeTwoDom.find(".active_top").html(html).attr({'link':link,'tit':item.name})
+							}
+							html = '';
+						})
+						activeTwoDom.show();
 					}
-				}
-				$(".index_center_banner .swiper-wrapper").html(html)
-				var swiper = new Swiper(".index_center_banner",{
-					direction: 'horizontal',
-					slidesPerView : 4,
-				});
+ 				}else{
+ 					$('.shop-active-container').css('padding','6px');
+ 				}
 			}
 		};
 		//获取正确的URL地址
@@ -451,7 +663,7 @@ require(['../require/config'],function () {
 			
 			init : function(){
 				//点击跳转详情页面
-				$('.index_inner').on('click', "dl", function() {
+				$('.home_goods_show').on('click', "dl", function() {
 					common.jsInteractiveApp({
 						name:'goToNextLevel',
 						parameter:{
@@ -461,7 +673,18 @@ require(['../require/config'],function () {
 					})
 					
 				});
-				
+				$(".home_goods_show").on("click",".goods_area",function(){
+					var nood = $(this),
+						link = nood.attr("link"),
+						title = nood.attr("tit");
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:title,
+							url:link
+						}
+					})
+				})
 				$(".index_rigth").on("click",function(){
 					var url = 'html/search.html';
 					common.jsInteractiveApp({
@@ -494,8 +717,9 @@ require(['../require/config'],function () {
 						})
 					}
 				});
+				
 				//活动事件
-				$(".index_center_banner").on("click","dl",function(){
+				$(".shop-active-box").on("click","li.swiper-slide",function(){
 					var nood = $(this),
 						link = nood.attr("link"),
 						title = nood.attr("tit");
@@ -508,7 +732,22 @@ require(['../require/config'],function () {
 							}
 						})
 					}
-				})
+				});
+				/*  - 首页秒杀充值整件活动  - */
+				$(".index_active_wrap").on("click",".activeJump",function(){
+					var nood = $(this),
+						link = nood.attr("link"),
+						title = nood.attr("tit");
+					if (link != '') {
+						common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:link.indexOf("html/login.html") > -1 ? '登陆' : title,
+								url:link
+							}
+						})
+					}
+				});
 				//确定按钮 -- //取消按钮
 				$(".order_refund").on("click",".makeSure,.refund_cancle",function(){
 					$(".order_refund").hide();
