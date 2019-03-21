@@ -449,7 +449,7 @@ require(['../require/config'],function () {
 	 			me = this,
 				data = d.data;
 	
-	 			if( !common.timestamp.getKey() && data.adInfoList.length != 0 && data.mainPageGoodsDetails.length != 0 ){
+	 			if( !common.timestamp.getKey() && data.adInfoList.length != 0 ){
 	 				json.timestamp = Date.now() + 3 * 60 * 1000;
 	 				json.con = d;
 	 				common.timestamp.setItem( common.JSONStr( json ) );

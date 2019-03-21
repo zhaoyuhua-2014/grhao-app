@@ -35,18 +35,16 @@ require(['../require/config'],function(){
 			init : function(){
 				// 登录状态 信息处理
 				if( pub.logined ){
-					$(".loginPhoto").attr( "src",common.user_datafn().faceImg !="" ? common.user_datafn().faceImg + '?rom='+ Math.floor(Math.random()*1000000 ) : "../img/icon_touxiang.png" );
-					$('.my_islogin,.main_top_right,.exit').css({'display':'block'});
-					$('.my_name').html( common.user_datafn().petName );
+					var phone = common.user_datafn().mobile.replace( /(\d{3})\d{4}(\d{4})/,"$1****$2")
+					$(".user_image").attr( "src",common.user_datafn().faceImg !="" ? common.user_datafn().faceImg + '?rom='+ Math.floor(Math.random()*1000000 ) : "../img/icon_touxiang.png" );
+	
+					$('.off_line_state').css({'display':'none'});
+					$('.user_name').html( common.user_datafn().petName );
+					$('.user_phone').html(phone)
 					pub.apiHandle.userScoCouMon.init(); // 包月卡余额 + 果币 + 优惠券数量
-					var h = common.API +"?method=face_img_upload"
-					$("#form2").attr("action",h)
 				}else{
-					$('.main_top_right,.exit').css({'display':'none'});	 
-			        $('.my_nologin').css({'display':'block'});
-			        common.cancelDialogApp()
+			        $('.off_line_state').css({'display':'block'});
 				}
-				$("#form2").attr("action",common.API + "?method=face_img_upload")
 			},
 			// 包月卡余额 + 果币 + 优惠券数量
 			userScoCouMon : {
@@ -226,7 +224,18 @@ require(['../require/config'],function(){
 				}
 			})
 			
-			
+			$(".off_line_state").on("click",'a',function(){
+				var nodeEle = $(this);
+					tit = nodeEle.attr("tit"),
+					linkUrl = nodeEle.attr("data-url")
+				common.jsInteractiveApp({
+					name:'goToNextLevel',
+					parameter:{
+						title:tit,
+						url:linkUrl+'?type='+5
+					}
+				})
+			})
 			$("#imgIframe").on("load",function(){
 				var value = document.getElementById("imgIframe").contentWindow.document.body.innerHTML;
 				/*window.top.postMessage('123456', '*');*/

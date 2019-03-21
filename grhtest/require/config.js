@@ -28,6 +28,7 @@ define(function(){
 	            'addMap':'../dist/addMapPicker.js?v=20180606',
 	            'module':'../outside/module',
 	            'test':'../outside/test',
+	            'shopCar':'../dist/shopCar',
 	            
 	            'farmCanves':"../dist/farmCanves",
 	            'vue':"../outside/vue.min",

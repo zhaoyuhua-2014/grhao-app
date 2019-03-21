@@ -3,7 +3,7 @@
 	换购 | 换购详情 + 秒杀 | 秒杀详情 + 预购 | 预购详情
 */
 require(['../require/config'],function () {
-	require(['common','goshopCar','mobileUi','swiperJS'],function(common,cart){
+	require(['common','goshopCar','test','mobileUi','swiperJS'],function(common,cart){
 		// 命名空间
 
 		pub = {};
@@ -45,11 +45,12 @@ require(['../require/config'],function () {
 	
 	
 	
-	/******************************************* 商品秒杀 + 换购 ************************************/
+	/******************************************* 秒杀活动  ************************************/
 	
 		// 命名空间
 	
 		pub.seckill = {};
+		var SECKILL = pub.seckill;
 	
 		pub.seckill.SYSTEM_TIME = null; // 系统时间
 	
@@ -76,161 +77,113 @@ require(['../require/config'],function () {
 			}
 		};
 		// 倒计时
-		pub.seckill.countDown = function(){
-			var time,_this,cle;
-			var list = $(".zs-list");
-			var timeDeal = function(){
-				var clientTime = new Date().getTime();
-				var time_difference = clientTime - pub.seckill.SYSTEM_TIME;
-				var time;
-				list.length == $('.isEnd').length && clearTimeout( timer );
-	
-				list.not('.isEnd').each(function(){
-					_this = $(this);
-					time = _this.attr("time");
-					if( (time - time_difference)<0){
-						$(this).addClass('isEnd');
-						_this.html("秒杀活动已经开始").css("color","red");
-						var str = _this.attr('id');
-						$("."+str).html("立即秒杀").addClass("float_right1");
-					}else{
-						_this.html("秒杀开始：" + pub.seckill.dateFormat((time - time_difference))).css("color","red");
-					}
-				})
+		pub.countDown = function(serverTime,startTime,endTime){	
+			var activityServerTime = null,
+				 activityStartTime = null,
+				 activityEndTime = null,
+				 activitySeverDiffSystemTimer = 0,
+				 activityTimerID = null;
+			
+				
+			var nowTimers = new Date().getTime();
+			
+			activityServerTime = SECKILL.parseDate( serverTime);//"2019-02-18 13:00:52" 
+			activityStartTime = SECKILL.parseDate( startTime );
+			activityEndTime = SECKILL.parseDate( endTime );
+			activitySeverDiffSystemTimer = activityServerTime - nowTimers;
+			
+			if (activityTimerID) {
+				clearInterval( activityTimerID );
+				activityTimerID = setInterval(pageWatchTimer,1000)
+			}else{
+				activityTimerID = setInterval(pageWatchTimer,1000)
 			}
-			timeDeal();
-			var timer = setInterval( timeDeal, 1000 );
+			pageWatchTimer()
+			//获取活动状态和时间戳
+			function getStateAndTimer(){
+				var data = {
+					state:"",
+					times:0,
+				};
+				var simulationServerTim = new Date().getTime() + activitySeverDiffSystemTimer;
+				
+				//活动期间 ‘activeStart’
+				if ( (simulationServerTim - activityStartTime) >= 0 && (simulationServerTim - activityEndTime) < 0 ) {
+					data.state = 'activeStart';
+					data.times = ( activityEndTime - simulationServerTim );
+				} else {
+					//活动没有开始 "activeNoStart"
+					if( (simulationServerTim - activityStartTime) < 0){
+						data.state = 'activeNoStart';
+						data.times = ( activityStartTime - simulationServerTim );
+					}
+					//活动已经结束 "activeEnd"
+					if ( (simulationServerTim - activityEndTime) >= 0 ) {
+						data.state = 'activeEnd';
+						data.times = ( simulationServerTim - activityEndTime );
+					}
+				};
+				return data;
+			}
+			//页面监听及变化
+			function pageWatchTimer(){
+				var data = getStateAndTimer();
+				var arr = SECKILL.dateFormat(data.times);
+				
+				if(pub.moduleId == "seckill" || pub.moduleId == "seckill_detail" ){
+					var seckillTimerDom,seckillDom;
+					if(pub.GOODS_ID){
+						seckillTimerDom = $('.goodsDetails_countDown');
+						seckillDom = $(".goodsDetails_balance");
+					}else{
+						seckillTimerDom = $(".count_down");
+						seckillDom = $(".seckill_whole_goods.seckill_goods");
+					}
+						
+					if ( data.state == 'activeNoStart' ) {
+						if (pub.GOODS_ID) {
+							seckillTimerDom.html('<p>开始倒计时：<span>'+arr[0]+'</span>天<span>'+arr[1]+'</span>小时<span>'+arr[2]+'</span>分<span>'+arr[3]+'</span>秒</p>');
+							seckillDom.is(".activeNoStart") ? '' : seckillDom.removeClass("activeStart activeEnd").addClass("activeNoStart").html("<p class='text'>活动还没开始</p>")
+						}else{
+							seckillTimerDom.html('<p>开始倒计时：<span>'+arr[0]+'</span>天<span>'+arr[1]+'</span>小时<span>'+arr[2]+'</span>分<span>'+arr[3]+'</span>秒</p>')
+							seckillDom.is(".activeNoStart") ? '' : seckillDom.removeClass("activeStart activeEnd").addClass("activeNoStart")
+						}
+						
+					}else if ( data.state == 'activeStart' ){
+						if (pub.GOODS_ID) {
+							seckillTimerDom.html('<p>结束倒计时：<span>'+arr[0]+'</span>天<span>'+arr[1]+'</span>小时<span>'+arr[2]+'</span>分<span>'+arr[3]+'</span>秒</p>');
+							seckillDom.is(".activeStart") ? '' : seckillDom.removeClass("activeNoStart activeEnd").addClass("activeStart").html("<p>去结算</p> <span></span>")
+						}else{
+							seckillTimerDom.html('<p>结束倒计时：<span>'+arr[0]+'</span>天<span>'+arr[1]+'</span>小时<span>'+arr[2]+'</span>分<span>'+arr[3]+'</span>秒</p>')
+							seckillDom.is(".activeStart") ? '' : seckillDom.removeClass("activeNoStart activeEnd").addClass("activeStart")
+						}
+						
+					}else if ( data.state == 'activeEnd' ){
+						if (pub.GOODS_ID) {
+							seckillTimerDom.html('<p>秒杀活动已结束</p>');
+							seckillDom.is(".activeEnd") ? '' : seckillDom.removeClass("activeNoStart activeStart").addClass("activeEnd").html("<p class='text'>秒杀活动已结束</p>")
+						} else{
+							seckillTimerDom.html('<p>秒杀活动已结束</p>')
+							seckillDom.is(".activeEnd") ? '' : seckillDom.removeClass("activeNoStart activeStart").addClass("activeEnd")
+						}
+						clearInterval( activityTimerID );
+					}
+				}else{
+					
+				}
+			}
 		};
+
 	
 		pub.seckill.apiHandle = {
 			init : function(){
-				pub.seckill.apiHandle.grh_desc.init( pub.RULE_CODE[0] ); // 换购说明
-			},
-			user_barter_chance : {
-	
-				init : function(){
-					common.ajaxPost($.extend({},pub.userBasicParam,{
-						method : 'user_barter_chance',
-						firmId:pub.firmId
-					}),function( d ){
-						if ( d.statusCode == "100000" ) {
-		    				if ( d.data ) {
-					    		pub.seckill.BARTER_TIMES = d.data.count;
-					    	}else{
-					    		pub.seckill.BARTER_TIMES = "0";
-					    	}
-					    	$('.seckill_notice span').html( pub.seckill.BARTER_TIMES );
-		    			}
-					});
-				}
-			},
-			// 换购列表
-			barter_list :{
-				init : function(){
-					common.ajaxPost({
-						method : 'barter_list',
-						firmId:pub.firmId,
-						websiteNode:pub.websiteNode
-					},function( d ){
-						d.statusCode == "100000" && pub.seckill.apiHandle.barter_list.apiData( d );
-					})
-				},
-				apiData : function( d ){
-					var adInfoList = d.data.adInfoList;
-					common.bannerShow( adInfoList, ".seckill_box2 .index_banner", function( d ){
-	 					var html = '', i = 0;
-	 					for ( i in d ){
-							var link = d[i].linkUrl;
-							link == "" ? link = 'javascript:void(0)' : link = d[i].linkUrl;
-							html += '<div class="swiper-slide lazy" ><a href="' + link + '"><img src="' + d[i].adLogo + '" /></a></div>'
-						}
-						return html;
-					},'.seckill_box1 .swiper-p2');
-	
-			        var 
-			        html = '',
-			        bool1 = true,
-			        bool2 = true,
-			        pagination = d.data.pagination,
-			        old = !$.isArray( d.data.oldBarterGoodsList ) ? [] : d.data.oldBarterGoodsList; // 确保返回值为空
-	
-			        pagination = !$.isArray( pagination ) ? []  : pagination;
-			       
-			        var mergeData = pagination.concat( old );
-	
-			        if( old.length == 0 && pagination.length == 0 ){
-			        	$('.seckill_box2 .seckill_main_box_wrap').html('暂无活动商品！').css({'fontSize':'30px','text-align':'center'});
-			        	return;
-			        }
-			        
-			        $.each( mergeData,function( i, v ){
-			        	if( v.status == 1 ){
-			        		if( bool1 ){
-				        		html += '<div class="seckill_main_box_today_tit">本期换购</div>';
-				        		bool1 = false;
-			        		}
-			        	}else{
-			        		if( bool2 ){
-				        		html += '<div class="seckill_main_box_tomorrow_tit">往期回顾</div>';
-				        		bool2 = false;
-			        		}
-			        	}
-			        		html += '<div class="seckill_main_box_center">'
-			        	if( v.status == 1 ){
-				       	    html += '<dl class="clearfloat" data-id="' + v.id + '" goods-id="' + v.goodsId + '" data-spec-info="' + v.specInfo + '" data-name="' + v.goodsName + '" data-price="' + v.nowPrice + '" data-logo="' + v.goodsLogo + '" data-max-num="' + v.buyNumber + '" data-package-num="' + v.packageNum + '">'
-				     	}else{
-				     		html += '<dl class="clearfloat" data-id="' + v.id + '" >'
-				     	}    
-				     	    html += '<dt><img src="' + v.goodsLogo + '"></dt>'
-				       	    html += '<dd>'
-				       	    html += '<div class="sekill_good_name">'
-				       	    html += '<span class="float_left">' + v.goodsName + '</span>'
-				       	if( v.status == 1 ){
-				       	    html += '<span class="float_right stock">剩余' + ( v.initNum - v.saleNum ) + '件</span>'
-				       	}
-				       	    html += '</div>'
-				       	    html += '<div class="sekill_good_specifications">' + v.specInfo + '</div>'
-				       	    html += '<div class="sekill_good_specifications1">' + v.goodsDescribe + '</div>'
-				       	    html += '<div class="sekill_good_bottom clearfloat">'
-				       	    html += '<div class="float_left">'
-				       	    html += '<span class="new_price font_color">￥' + v.nowPrice + '</span>'
-				       	    html += '<span class="old_price">￥' + v.nomalPrice + '</span>'           	    
-				       	    html += '</div>'
-				       	if( v.status == 1 ){
-				       	    if ( v.packageNum >= 0 ) {
-				       	    	html += '<div class="float_right float_right1 float_right2 zs-barter">立即换购</div>'
-				       	    }else{
-				       	    	html += '<div class="float_right">没有了</div>'
-				       	    }
-				       	}
-				       	    html += '</div>'   
-				       	    html += '</dd>'
-				       	    html += '</dl>'           	   
-				       	    html += '</div>'
-			        });
-			        $('.seckill_box2 .seckill_main_box_wrap').html( html );
-				}
-			},
-			grh_desc : {
-				init : function( RULE_CODE ){
-					common.ajaxPost({
-						method : 'grh_desc',
-						code : RULE_CODE,
-						firmId:pub.firmId,
-					},function( d ){
-						if( d.statusCode = "100000" ){
-							var str = d.data.desc;
-							$('.alert_title').html( d.data.title );
-							$('.alert_content').html( str.replace(/\r\n/g, "<br>") );  
-		    			}
-					});
-				}
+				pub.seckill.apiHandle.kill_goods_list.init();
 			},
 			// 秒杀列表
 			kill_goods_list : {
 				init : function(){
 					common.ajaxPost({
-						method : 'kill_goods_list',
+						method : 'seckill_goods',
 						firmId:pub.firmId,
 						websiteNode:pub.websiteNode
 					}, function( d ){
@@ -242,280 +195,73 @@ require(['../require/config'],function () {
 					})
 				},
 				apiData : function( d ){
+					var seckillList =  d.data.sill;
+					var index;
 					// 轮播处理 待优化
-					common.bannerShow( d.data.adInfoList, '.seckill_box1 .index_banner', function( d ){ 
+					common.bannerShow( d.data.ad, '.seckill_whole_banner .index_banner', function( d ){ 
 						var html = '', i = 0;
 	 					for ( i in d ){
-							var link = d[i].linkUrl;
-							link == "" ? link = 'javascript:void(0)' : link = d[i].linkUrl;
-							html += '<div class="swiper-slide lazy"><a href="' + link + '"><img src="' + d[i].adLogo + '" /></a></div>'
+							html += '<div class="swiper-slide lazy"><img src="' + d[i].adLogo + '" /></div>'
 						}
 						return html;
-					}, '.seckill_box1 .swiper-p1');
+					});
+					if(seckillList.length && seckillList[0].id){
+						var seckillActive = seckillList[0],
+							seckillList = seckillActive.seckillGoods;
+						//当前本地时间
 					
-					$.isArray(killGoodsDetailList) && ( pub.seckill.SYSTEM_TIME = pub.seckill.parseDate(  d.data.newDate ? d.data.newDate : d.data.killGoodsDetailList[0].newDate ) );
-					var 
-					killGoodsDetailList = d.data.killGoodsDetailList,
-					pastKillGoodsDetailList = !$.isArray( d.data.pastKillGoodsDetailList ) ? [] : d.data.pastKillGoodsDetailList,
-					html = '',
-					bool1 = true,
-					bool2 = true;
-	
-					killGoodsDetailList = !$.isArray(killGoodsDetailList) ? [] : killGoodsDetailList;
-					var mergeData = killGoodsDetailList.concat( pastKillGoodsDetailList );
-					if( mergeData.length == 0 ){ // 接口数据返回为空
-						$('.seckill_box1 .seckill_main_box_wrap').html('暂无活动商品！').css({'fontSize':'30px','text-align':'center'});
-			        	return;
+						pub.countDown(seckillActive.nowDate,seckillActive.startTime,seckillActive.endTime);
+						var html = "";
+						if( seckillList.length == 0 ) return;
+						$.each( seckillList, function( i, v ){
+							if( +v.goodsInfo.packageNum > 0){
+								html += '<dl data-id="'+ v.id +'">'
+							}else{
+								html += '<dl data-id="'+ v.id +'" class="sellOut">'
+							}
+							html +=		'<dt><img src="'+v.goodsInfo.goodsLogo+'" alt="" /></dt>'
+							html +=		'<dd>'
+							html +=			'<div class="goods_left">'
+							html +=				 '<p class="goods_name">'+v.goodsInfo.goodsName+'</p>'
+							html +=				 '<p class="goods_spec">'+v.goodsInfo.goodsDescribe+'</p>'
+							html +=				 '<p class="goods_price">秒杀价￥'+ v.seckillPrice + '</p>'
+							html +=				 '<del class="goods_oldprice">原价￥'+v.goodsInfo.nomalPrice+'</del>'
+							html +=			 '</div>'
+							html +=			 '<div class="goods_right">'
+							if(v.goodsInfo.packageNum != 0){
+								html +=					'<button class="seckill_whole_btn" style="background-color:#f24c4c">立即抢购</button>'
+							}else{
+								html +=					'<button class="seckill_whole_btn">抢光了</button>'
+							}
+							html +=					'</div>'
+							html +=			'</dd>'
+							html +=	'</dl>'
+						});
+						$('.seckill_goods').html( html );
+						
+					}else{
+						$('.seckill_goods').html( "<div class='no_active'>暂无的活动</div>" );
 					}
-	
-					$.each( mergeData, function( i, v ){
-						console.log(v)
-							if( v.status == 1 ){
-								if( bool1 ){
-					        		html += '<div class="seckill_main_box_today_tit">本周秒杀</div>';
-					        		bool1 = false;
-								}
-				        	}else{
-				        		if( bool2 ){
-					        		html += '<div class="seckill_main_box_tomorrow_tit">往期回顾</div>';
-					        		bool2 = false;
-				        		}
-				        	}
-					        	html += '<div class="seckill_main_box_today_wrap">'
-					        if( v.status == 1 ){
-					        	html += 	'<ul class="seckill_main_box_tit">'
-					        	html +=			'<li id = "cl' + i + '" time = "' + ( pub.seckill.parseDate( v.startTime ) - pub.seckill.SYSTEM_TIME ) + '" data-startTime="' + v.startTime + '" class="zs-list">秒杀开始</li>'
-					        	html += 	'</ul>'
-					        }else{
-					        	html +='<div class="seckill_main_box_tit">' + v.startTime.substring(0,16)+'</div>'	
-					        }
-					        	html += 	'<div class="seckill_main_box_center">'
-				        	if( v.status == 1 ){
-				        		html += 		'<dl class="clearfloat" data-id="' + v.goods + '" goods-id="' + v.id + '" data-spec-info="' + v.specInfo + '" data-name="' + v.goodsName + '" data-price="' + v.nowPrice + '" data-logo="' + v.goodsLogo + '" data-odePrice="' + v.nomalPrice + '">'
-				        	}else{	
-				        		html += 		'<dl class="clearfloat" data-id="' + v.goods + '" >'
-				        	}
-			        		    html += 			'<dt><img src="' +v.goodsLogo + '"></dt>'
-			        	  	    html += 			'<dd>'
-			        	  	    html += 				'<div class="sekill_good_name">' +v.goodsName + '</div>'
-			        	  	    html += 				'<div class="sekill_good_specifications">' + v.specInfo + '</div>'
-			        	  	    html += 				'<div class="sekill_good_specifications1">' + v.goodsDescribe + '</div>'
-			        	  	    html +=					'<div class="sekill_good_bottom clearfloat">'
-			        	  	    html +=						'<div class="float_left">'
-			        	  	    html += 						'<span class="new_price font_color">￥' + v.nowPrice + '</span>'
-			        	  	    html += 						'<span class="old_price">￥' + v.nomalPrice + '</span>'           	    
-			        	  	    html +=						'</div>'
-					        if( v.status == 1 ){  	    
-					        	if ( pub.seckill.parseDate( v.startTime ) > pub.seckill.parseDate( d.data.newDate ) ) {
-					        	  	    html += 				'<div class="float_right cl' + i + '">即将开始</div>'
-					        	} else{
-					        	  	if ( v.secBuyNum <= 0) {
-					        	  	    html += 				'<div class="float_right">秒杀光了</div>'
-					        	  	}else{
-					        	  	    html += 				'<div class="float_right float_right1 enableKill">立即秒杀</div>'
-					        	  	}
-					        	}
-					        }
-			        	  	    html += 				'</div>'   
-			        	  	    html += 			'</dd>'
-			        	  	    html += 		'</dl>'           	   
-			        	  	    html += 	'</div>'
-				        		html += '</div>'
-					});
-					$('.seckill_box1 .seckill_main_box_wrap').html( html );
-			        $('.seckill_main_box_today_tit')[0] && pub.seckill.countDown();
-				}
-			},
-			// 秒杀
-			click_kill : {
-				init : function(){
-					common.ajaxPost($.extend( {},pub.userBasicParam, {
-	
-						method : 'click_kill',
-		    			goodsId : pub.GOODS_ID,
-		    			
-					}),function( d ){
-						if( d.statusCode == "100000" ){
-							var goodsInfo = pub.seckill.GOODS_INFO;
-							cart.addgoods( goodsInfo.id, goodsInfo.name, goodsInfo.price, goodsInfo.logo, goodsInfo.specifications, goodsInfo.maxCount, goodsInfo.packageNum, goodsInfo.oldPrice );
-							common.setShopCarNumApp(cart.getgoodsNum())
-							cart.style_change();
-							common.prompt( "秒杀成功！" );
-						}else{
-							common.prompt( d.statusStr )
-						}
-					});
-				}
-			},
-	
-			// 提交购物车清单
-			shop_cart_submit : {
-				init : function(){
-					common.ajaxPost($.extend({}, pub.userBasicParam, {
-						method : 'shop_cart_submit',
-						goodsList : pub.goodsList
-					}),function( d ){
-						if ( d.statusCode == "100000" ) {
-							common.orderType.setItem( '1' );
-							common.jumpLinkPlainApp( '订单结算',"orderSettlement.html" );
-						}else{
-							common.prompt( d.statusStr );
-						}
-					})
 				}
 			}
-	
 		};
 		pub.seckill.eventHandle = {
 	
 			init : function(){
-	
-				var tabNum = common.seckill.getItem(); // 获取存储的tab
-	
-				// tab 切换
-				$('.seckill_tab_box').on('click','li.tab_list',function(){
-					var 
-					$this = $(this),
-					isCur = $this.is('.actived'),
-					index = $this.index();
-					if( !isCur ){
-						$this.addClass('actived').siblings().removeClass('actived');
-	
-						common.seckill.setItem( index + 1 + '');
-						$('.seckill_box > div').eq( index ).fadeIn( 300 ).siblings().hide();
-						if( index == 1 ){
-							$(".footer_wrap").fadeIn( 300 );
-							pub.seckill.apiHandle.kill_goods_list.init(); // 秒杀列表
-						}else if( index ==0 ){
-							pub.seckill.apiHandle.barter_list.init(); // 换购列表
-							$(".footer_wrap").hide();
-						}
-					}
-				});
-	
-				
-				$('.seckill_tab_box .tab_list').eq( tabNum - 1 ).trigger('click'); 
-	
-	    		common.alertShow( '.seckill_notice .float_right' ); // 弹窗
-				common.alertHide();
-				common.jumpLinkSpecial( ".header_left", "../index.html" ); // 回首页
-	
 				//点击商品跳转到商品详情
-				$(document).on('click','dl',function(e){
-					common.stopEventBubble(e);
-					var index = $('.seckill_tab_box li.actived').index();
-					var pathNameTitle = ['换购商品详情','秒杀商品详情'][index];
-					var pathName = ['html/seckillDetaila.html?goodsId=','html/seckillDetail.html?goodsId='][index];
-					common.jumpLinkPlainApp( pathNameTitle , pathName + $(this).attr("data-id") );
-				});
-	
-				
-				// 可以秒杀
-				$('.seckill_box1 .seckill_main').on('click','.enableKill',function(e){
-					common.stopEventBubble(e);
-					if ( pub.logined ) {
-						var $this = $(this),
-						node = $this.parents('[data-id]')
-						goodsId = node.attr('data-id');
-						pub.seckill.GOODS_INFO = {
-						    id : goodsId,
-						    name : node.attr('data-name'),
-						    price : node.attr('data-price'),
-						    logo : node.attr('data-logo'),
-						    specifications : node.attr('data-spec-info'),
-						    maxCount:'seckill',
-						    packageNum:'seckill',
-						    oldPrice:node.attr("data-odeprice")
-					    };
-					    pub.GOODS_ID = goodsId;
-					   	
-					    pub.seckill.apiHandle.click_kill.init();
-					}else{
-						common.jumpLinkPlainApp( '登录',"html/login.html?type=2" );
-					}	
-					
-				});
-				// 提交购物车清单
-				pub.seckill.eventHandle.submitGoodsList();
-	
-				// 点击换购
-				pub.seckill.eventHandle.clickBarter(); 
-			},
-			submitGoodsList : function(){
-				// 提交购物车
-				$('.footer_car_rigth').on('click',function(){
-	
-					pub.goodsList = cart.goodlist1();  // 购物车清单
-	
-					if ( pub.logined ) {
-						common.orderType.setItem( "1" );
-						common.sortCouponId.removeItem(); // 优惠券临时移除
-						pub.seckill.apiHandle.shop_cart_submit.init();
-					}else{
-						common.jumpLinkPlainApp( "登录",'html/login.html?type=9' );
-					};
-				});
-			},
-			clickBarter : function(){
-	
-				//点击换购
-				$('.zs-box').on('click','.zs-barter',function(e){
-					common.stopEventBubble(e);
-					if ( pub.logined ) {
-						if( pub.seckill.BARTER_TIMES > 0 ){ // 换购次数
-	
-							var seckill_good = [];
-	
-							if( pub.moduleId == 'seckill' ){ // 换购列表
-								var $this = $(this),
-								node = $this.parents('[data-id]');
-	
-								seckill_good = [{
-								    id : node.attr( 'data-id' ),
-								    name : node.attr( 'data-name' ),
-								    price : node.attr( 'data-price' ),
-								    specifications : node.attr( 'data-spec-info' ),
-								    logo : node.attr( 'data-logo' ),
-								    count : "1"
-							    }];
-	
-							}else{
-								seckill_good.push( pub.seckill.GOODS_INFO );
-							}
-	
-						    common.orderType.setItem( '2' );
-						    common.seckillGood.setItem( common.JSONStr( seckill_good ) );
-						    common.setMyTimeout(function(){
-						    	common.jumpLinkPlainApp( "订单结算",'html/orderSettlement.html' );
-						    },500);
-	
-						}else{
-							common.prompt( "购物满99元才有机会哟!" );
+				$(".seckill_whole_goods").on('click','dl',function(e){
+					//common.jumpLinkPlain( "seckillDetail.html?goodsId=" + $(this).attr("data-id"));
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'秒杀详情',
+							url:'html/seckillDetail.html?goodsId='+ $(this).attr("data-id")
 						}
-					}else{
-						if ( pub.moduleId != 'seckill' ){
-							common.goodid.setItem( pub.GOODS_ID );
-							common.jumpLinkPlainApp( "登录","html/login.html?type=12" );
-						}else{
-							common.jumpLinkPlainApp( "登录","html/login.html?type=2" );
-						}
-						
-					}
+					})
 				});
 			}
 		};
 		pub.seckill.init = function(){
-	
-			pub.seckill.apiHandle.barter_list.init(); // 换购列表
-	
-			pub.logined && pub.seckill.apiHandle.user_barter_chance.init();  // 换购机会  
-			!pub.logined && $('.seckill_notice span').html( "0" );
-	
-			// 购物车初始化
-			cart.eventHandle.init();
-			cart.style_change();
-	
-			
 			pub.seckill.apiHandle.init();
 			pub.seckill.eventHandle.init();
 		};
@@ -536,7 +282,143 @@ require(['../require/config'],function () {
 		// 接口处理命名空间
 		pub.detail.seckill.apiHandle = {
 			init : function(){
-	
+				pub.detail.seckill.apiHandle.goods_show.init()
+			},
+			goods_show:{
+				init:function(){
+					common.ajaxPost({
+						method:'kill_goods_details',
+						killGoodsId:pub.GOODS_ID
+					},function( d ){
+						d.statusCode == "100000" && pub.detail.seckill.apiHandle.goods_show.apiData( d );
+					},function( d ){
+						common.prompt( d.statusStr );
+					},function( d ){
+			 			//pub.detail.seckill.apiHandle.goods_comment_list.init();
+					});
+				},
+				apiData:function(d){
+					pub.detail.seckill.apiHandle.goods_comment_list.init();
+					var seckillData = d.data.seckillGoods  ;
+					var d = seckillData.goodsInfo;
+					//秒杀存储的数据
+					pub.detail.seckill.seckillData = {
+						goodsLogo : d.goodsLogo,
+						goodsName : d.goodsName,
+						nowPrice  : seckillData.seckillPrice,
+						type  : seckillData.type,
+						id  : seckillData.id,
+						seckillId  : seckillData.secKillItemId,
+						goodsId : seckillData.goodsId
+					}
+					
+					common.bannerShow( d, '.goodsDetails_img_box', function( data ){
+						var 
+						i,
+						html = '',
+						imgArr = data.goodsPics.trim().split(/\s*@\s*/);
+						imgArr[ imgArr.length - 1 ] == '' && imgArr.pop();
+						
+						for ( i in imgArr ) {
+							html += '<div class="swiper-slide "><img src="' + imgArr[ i ] + '" width="100%" /></div>'
+						}
+						return html;
+					});
+					
+					$('.gd_goodName').css({
+						'margin-top':'18px',
+						'margin-bottom':'24px',
+					});
+					$('.gd_goodName .gd_name').text( d.goodsName )
+					if(seckillData.limit != 0){
+						$('.gd_goodName .limited').text('每人限购'+seckillData.limit+'件')
+					}else{
+						$('.gd_goodName .limited').text('每人限购1件')
+					}
+					$('.gd_specification').find(".float_left").html( "规格：" + d.specInfo );
+					$(".gd_goodsDescribe").hide()
+					$('.gd_price').html('<span>秒杀价￥' + seckillData.seckillPrice + '</span>&nbsp;&nbsp;<del>原价￥' + d.nomalPrice + '</del>')
+					
+					var seckillActive = seckillData;
+					//当前本地时间
+	//			
+					pub.countDown(seckillActive.nowDate,seckillActive.startTime,seckillActive.endTime);
+					var deltaTime = parseInt(seckillData.downOnTiem);
+					if( d.packageNum == 0){
+						$('.goodsDetails_balance').html( '<p class="text">您的手速太慢了</p>' ).addClass('active_end')
+					}
+					d.goodsContext && $('.goodsDetails_box2_').find('li').eq(0).html( d.goodsContext);
+					
+					if (seckillData.limit == '0'){$('.new_style .add_num').addClass('add_actived')}  
+					
+					//添加存储数据到元素
+					$('.good_box1_box1').attr({
+						'data-id' : d.id ,
+						'data-max' : seckillData.limit,
+						'data-packagenum' : d.packageNum,
+						'data-type':seckillData.type,
+					});
+				},
+			},
+			goods_comment_list : {
+				init : function(){
+					common.ajaxPost({
+						method : 'goods_comment_list',
+						goodsId : pub.GOODS_ID,
+						pageNo : pub.PAGE_INDEX,
+						pageSize : pub.PAGE_SIZE
+					},function( d ){
+						if( d.statusCode == '100000' ){
+							pub.detail.isLast = d.data.isLast;
+							pub.detail.isLast && pub.detail.loadMore.html('没有更多数据');
+							if( d.data.objects.length == 0 ){ pub.detail.loadMore.html('暂无评论').off('click'); return; }
+							pub.detail.loadMore.before($('#goods-comment-data').tmpl( d.data ));
+						}else{
+							pub.detail.loadMore.html('暂无评论').off('click');
+						}
+						$('.comment-star[starNum]').each(function(){
+							var 
+							i,html='',
+							$this = $(this),
+							starNum = parseInt( +$this.attr('starNum') / 2 );
+							for( i = 0; i < 5; i++ ){
+								html += '<span class="' + ( i < starNum ? 'selected' : '' )+ '"></span>';
+							} 
+							$this.html( html );	
+						});
+					},function(){
+						pub.detail.loadMore.hide();
+					});
+				}
+			},
+			click_kill:function(num){
+				common.ajaxPost({
+					method : 'click_kill',
+					userId : pub.userId,
+					killGoodsId : pub.GOODS_ID,
+					killId: pub.detail.seckill.seckillData.seckillId,
+					buyNumber:num
+				},function(d){
+					if( d.statusCode == '100000' ){
+						common.prompt('抢购成功' )
+						var obj = $.extend({},pub.detail.seckill.seckillData, {
+							num:num,
+						});
+						sessionStorage.setItem('seckillData',JSON.stringify(obj));
+						setTimeout(function(){
+							//common.jumpLinkPlain($('.goodsDetails_balance').attr("url-data"));
+							common.jsInteractiveApp({
+								name:'goToNextLevel',
+								parameter:{
+									title:'提交订单',
+									url:'html/seckillSettlement.html'
+								}
+							})
+						},700)
+					}else{
+						common.prompt(d.statusStr )
+					}
+				})
 			}
 			
 		};
@@ -545,90 +427,64 @@ require(['../require/config'],function () {
 		pub.detail.seckill.eventHandle = {
 			init : function(){
 				
-				pub.seckill.eventHandle.submitGoodsList(); // 购物车 清单提交
-	
-				// 点击秒杀
-				$('.goodsDetails_box1').on('click',".float_right1",function(e){
-	
+				// 增加
+				$(".zs-static-box").on('click','.add_num',function(e){
 					common.stopEventBubble(e);
-	
-					if ( pub.logined ) {
-						pub.seckill.apiHandle.click_kill.init(); // 点击秒杀 调用接口
+					var 
+					goodNum,
+					$this = $(this), // 定义当前节点
+					node = $this.parents('[data-id]'),
+					packagenum = node.attr("data-packagenum"),
+					dataMax = node.attr("data-max");
+					dataMax == 0 ? dataMax = 1 : dataMax;
+					goodNum = $this.siblings().eq(1).text()
+					if (parseInt(goodNum) < parseInt(packagenum)) {
+						if(parseInt(goodNum)  < parseInt(dataMax) ){
+							goodNum ++
+							goodNum == dataMax && $this.addClass('add_actived')
+							$this.siblings().eq(0).addClass('minus_actived')
+							$this.siblings().eq(1).html( goodNum );
+						}else{
+							$this.addClass('add_actived')
+							common.prompt( "该商品限购" + dataMax + "件" )
+						}
 					}else{
-						common.goodid.setItem( pub.GOODS_ID );
-						common.jumpLinkPlainApp( "登录","html/login.html?type=3" );
+						common.prompt( "库存不足" )
 					}
 				});
-			}
-		}
-	
-	
-	
-		pub.detail.seckill.init = function(){
-			pub.detail.seckill.apiHandle.init();
-			pub.detail.seckill.eventHandle.init();
-		};
-	
-	
-	
-	
-		
-	
-		/******************************************* 换购  商品详情 ************************************/
-	
-		// 换购 详情命名空间
-	
-		pub.detail.barter = {};
-	
-		// 接口数据处理
-		pub.detail.barter.apiHandle = {
-			init : function(){
-	
-			},
-	
-		};
-	
-		// 事件处理
-		pub.detail.barter.eventHandle = {
-			init : function(){
-				pub.seckill.eventHandle.clickBarter(); // 点击换购
-			},
-	
-		};	
-	
-		pub.detail.barter.init = function(){
-			pub.logined && pub.seckill.apiHandle.user_barter_chance.init();  // 换购机会  
-			!pub.logined && $('.seckill_notice span').html( "0" );
-			pub.detail.barter.eventHandle.init();
-			pub.detail.barter.apiHandle.init();
-		};
-	
-	
-		pub.detail.eventHandle = {
-			init : function(){
-				pub.detail.eventHandle.tempInit(); // 临时处理 
-			},
-			tempInit : function(){
-				pub.goodsDetailId = common.getUrlParam('goodsId');
-				console.log(pub.goodsDetailId)
-				var 
-				wh = document.documentElement.clientHeight;
+				 //减少
+		 		$(".zs-static-box").on('click','.minus_num',function(e){
+					common.stopEventBubble(e);
+					var num1 , 
+					$this = $(this);
+					var dataId = $this.parents('[data-id]').attr("data-id");
+					num1 = $this.next().text()
+					if( num1 > 1){
+						num1 -- 
+						$this.siblings().eq(1).hasClass('add_actived') && $this.siblings().eq(1).removeClass('add_actived')
+						if(num1 == 1){
+							$this.removeClass("minus_actived")
+							$this.siblings().eq(1).removeClass('add_actived')
+						}
+						$this.next().html(num1)
+					}
+	            });
+				
+				$('.switch-tab .switch-list').click(function(){
+					var $this = $(this),
+					i = $this.index(),
+					isCur = $this.is('actived');
+					if( isCur ) return;
+					$this.addClass('actived').siblings().removeClass('actived');
+					$('.switch-content').find('li').eq( i ).show().siblings().hide();
+				});
 				//返回顶部
-				window.onscroll=function(e){
+				window.onscroll=function(){
 					var scroll = document.body.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
-					var scroll1 = $('.goodsDetails_box2_top').offset().top
-					var h = $(".goodsDetails_img_box").height() + $(".goodsDetails_box1").height() +40;
 					if( scroll >= 600){				
 						$('.toTop').css({'display':'block'});			
 					}else{
 						$('.toTop').css({'display':'none'});
-					}
-					if (scroll >= h) {
-						$(".goodsDetails_box2_top").addClass("goodsDetails_box2_top_fixed");
-						$(".goodsDetails_box2_top_empty").show()
-					}else{
-						$(".goodsDetails_box2_top").removeClass("goodsDetails_box2_top_fixed")
-						$(".goodsDetails_box2_top_empty").hide()
 					}
 				};
 				$('.toTop').on('click',function(){
@@ -636,619 +492,144 @@ require(['../require/config'],function () {
 						scrollTop : 0
 					},500); 
 				});
-				$(".goodsDetails_box2_top li").on("click",function(){
-					var index = $(this).index();
-					$(this).addClass("active").siblings().removeClass("active");
-					$(".goodsDetails_box2_bottom .goodsDetails_box2_bottom_item").eq(index).show().siblings().hide();
-				});
-				$(".goodsDetails_box2_comment").on("click",".comment_goods_picter_box img",function(){
-					//$(this).is(".img_preview") ? $(this).removeClass("img_preview") : $(this).addClass("img_preview");
-					var nood = $(this).parent().parent();
-					pub.apiHandle.pre_img(nood,$(this));
-				})
-				//点击加载更多
-				pub.loading.on('click',function(e){
-					/*e.stopPropagation()*/
-					if (!pub.goods.isEnd) {
-						pub.PAGE_INDEX ++;
-						pub.good_comment.init();
-					}else{
-						pub.loading.show().html("没有更多数据了！");
-					}
-				});
-			}
-	
-	
-	
-		};
-	
-		// 秒杀 和 换购 共同接口 详情
-		pub.detail.apiHandle = {
-			init : function(){
-				pub.detail.apiHandle.goods_show.init();
-			},
-			goods_show : {
-				init : function(){
-					common.ajaxPost({
-						method : pub.detail.method,
-						goodsId : pub.GOODS_ID
-					},function( d ){
-						if ( d.statusCode == "100000" ) {
-							pub.detail.apiHandle.goods_show.apiData( d );
-						}
-					})
-				},
-				apiData : function( d ){
-					
-					var goodsInfo = d.data.goodsInfo,
-						killGoodsDetail = d.data.killGoodsDetail;
-					if (pub.moduleId == "seckillGoodsDetail") {
-						goodsInfo = d.data.killGoodsDetail ? d.data.killGoodsDetail : d.data.pastkillGoodsDetail;
-					}
-						// 轮播 秒杀 + 换购
-						common.bannerShow( goodsInfo, '.goodsDetails_img_box', function( data ){
-	
-							var i,  html = '', imgArr = data.goodsPics.trim().split(/\s*@\s*/);
-	
-							imgArr[ imgArr.length - 1 ] == '' && imgArr.pop();
-							
-							for ( i in imgArr ) {
-								html += '<div class="swiper-slide lazy"><img src="' + imgArr[ i ] + '" width="100%" /></div>'
-							}
-							return html;
-						});
-					  
-						pub.seckill.GOODS_INFO =  {
-							id : goodsInfo.id,
-							name : goodsInfo.goodsName,
-							price : goodsInfo.nowPrice,
-							specifications : goodsInfo.specInfo,
-							logo : goodsInfo.goodsLogo,
-							maxCount:'seckill',
-						    packageNum:'seckill',
-						    oldPrice:goodsInfo.nomalPrice
-						};
-	
-					if( pub.moduleId == 'seckillGoodsDetail' ){
-						
-						if ( killGoodsDetail ) {
-							pub.seckill.SYSTEM_TIME = pub.seckill.parseDate( d.data.newDate );
-							$(".zs-list").attr("time", pub.seckill.parseDate( killGoodsDetail.startTime ) - pub.seckill.SYSTEM_TIME );
-							if ( killGoodsDetail.startTime.replace(/\-/g, "\/") > d.data.newDate.replace(/\-/g, "\/")) {
-								$('.gd_number button').addClass("float_right").html("即将开始");
-							} else{
-								$('.gd_number button').addClass("float_right1").html("立即秒杀");
-							};
-							pub.seckill.countDown();
-						}else{
-							$(".zs-list").attr("time",0).html("活动已結束").css("color","red");;
-						}
-						//展示商品信息
-						$('.gd_goodName').html( goodsInfo.goodsName );
-						// $('.gd_specification').html( goodsInfo.specInfo );		
-						// $('.gd_price').html('<span>￥' + goodsInfo.nowPrice + '</span>&nbsp;&nbsp;<del>￥' + goodsInfo.nomalPrice + '</del>');
-						cart.style_change();
-					}else{
-	
-						// $('.gd_specification').html( goodsInfo.specInfo );		
-						// $('.gd_price').html('<span>￥' + goodsInfo.nowPrice + '</span>&nbsp;&nbsp;<del>￥' +  goodsInfo.nomalPrice + '</del>');
-						if ( goodsInfo.status == "1" ) {
-							$('.gd_goodName').find(".float_left").html( goodsInfo.goodsName );
-							$('.gd_goodName').find(".float_right.stock").html("剩余" + ( goodsInfo.initNum -  goodsInfo.saleNum) + "件")
-							if ( goodsInfo.packageNum <= 0) {
-								$('.gd_number button').addClass("float_right").html("换购光了");
-							} else{
-								$('.gd_number button').addClass("float_right1 zs-barter").html("立即换购");
-							}
-						} else{
-							$('.gd_goodName').html( goodsInfo.goodsName );
-							$('.gd_number button').hide();
-						};
-					}
-	
-					goodsInfo.goodsContext && $('.goodsDetails_box2_').show().html( goodsInfo.goodsContext );
-					$('.gd_specification').html( goodsInfo.specInfo );		
-					$('.gd_price').html('<span>￥' + goodsInfo.nowPrice + '</span>&nbsp;&nbsp;<del>￥' +  goodsInfo.nomalPrice + '</del>');	
-	
-				}
-			}
-		};
-	
-	
-		pub.detail.init = function(){
-	
-			pub.moduleId == 'barterGoodsDetail' && pub.detail.barter.init(); // 换购详情初始化 
-	
-			if( pub.moduleId == 'seckillGoodsDetail' ){
-			 	pub.detail.seckill.init(); // 秒杀详情初始化
-			 	cart.eventHandle.init();// 购物车初始化
-				cart.style_change();
-			}
-	
-			pub.detail.apiHandle.init();
-			pub.detail.eventHandle.init();
-			pub.good_comment.init();
-		}
-	
-	
-	
-	
-	/******************************************** 预购模块 *************************************/
 		
-		// 命名空间
-	
-		pub.preBuy = {};
-	
-		// 预购列表 
-		pub.preBuy.ACTIVITY_STATUS = { 
-			'willbegin' : [1,'活动未开始','#65a032'],
-			'book' : [2,'活动进行中','#65a032'],
-			'bookend' : [2,'活动进行中','#65a032'],
-			'notretainage' : [2,'活动进行中','#65a032'],
-			'end' : [3,'活动已结束','#b2b2b2']
-		};
-	
-		pub.preBuy.apiHandle = {
-			init : function(){
-				pub.preBuy.apiHandle.pre_goods_list.init();
-			},
-	
-			// 预购商品列表
-			pre_goods_list : {
-				init : function(){
-					common.ajaxPost({
-						method : 'pre_goods_list',
-						firmId:pub.firmId,
-						websiteNode:pub.websiteNode
-					},function( d ){
-						if( d.statusCode == '100000' ){
-							//common.shareData = d.data.customShare;
-							pub.preBuy.apiHandle.pre_goods_list.apiData( d );
+				
+				$('.goodsDetails_balance').on('click',function(){
+					var num = $('.new_style .show_num').text();
+					if(pub.logined){
+						if($(this).hasClass('activeStart')){
+							pub.detail.seckill.apiHandle.click_kill(num);
 						}
-					})
-				},
-				apiData : function( d ){
-					// 轮播
-					var data = d.data;
-	 				data.adInfoList != "" && data.adInfoList.length != "0" && common.bannerShow( data.adInfoList, '.index_banner', function( d ){
-	 					var html = '', i = 0;
-	 					for ( i in d ){
-							var link = d[i].linkUrl;
-							link == "" ? link = 'javascript:void(0)' : link = d[i].linkUrl;
-							html += '<div class="swiper-slide lazy"><a href="' + link + '"><img src="' + d[i].adLogo + '" /></a></div>'
-						}
-						return html;
-	 				});
-	
-	 				var i = 0;
-	 				var preGoodsList = !$.isArray( d.data.preGoodsList ) ? [] : d.data.preGoodsList;
-	
-	 				if( preGoodsList == 0 ){ return; }
-	 				
-	 				preGoodsList.forEach(function(v ,i){
-	 					var html = '';
-	 					html += '<dl class="clearfloat" data="' + v.id + '">'
-	 					html += '	<dt><img src="' + v.goodsInfo.goodsLogo + '"/></dt>'
-	 					html += '	<dd>'
-	 					html += '		<div class="pre_good_name">' + v.goodsInfo.goodsName+'</div>'
-	 					html += '		<div class="pre_good_specifications">' + v.goodsInfo.specInfo + '</div>'
-	 					html += '		<div class="pre_good_specifications1">' + v.goodsInfo.goodsDescribe + '</div>'
-	 					html += '		<div class="pre_good_price clearfloat">'
-	 					html += '			<p class="clearfloat"><span>定金：</span><span class="font_color">￥' + v.frontMoney + '</span></p>'
-	 					html += '			<p class="clearfloat"><span>尾款：</span><span class="font_color">￥' + v.retainage + '</span></p>'
-	 					html += '		</div>'
-	 					html += '	</dd>'
-	 					html += '</dl>'
-	
-	 					var 
-	 					preStatus = pub.preBuy.ACTIVITY_STATUS[ preGoodsList[i].preStatus ];
-	 					boxNode = $('.pre_goods_box' + preStatus[0] );
-	 					boxNode.show().find('.pre_active_tit').html( preStatus[1] ).css("background-color",preStatus[2]);
-		 				boxNode.find('.active_goods_box').append( html );
-	
-	 				});
-				}
+					}else{
+						common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:'登录',
+								url:'html/login.html'
+							}
+						})
+					}
+				})
+				
 			}
-	
-		};
-	
-		pub.preBuy.eventHandle = {
-	
-			init : function(){
-				common.jumpLinkSpecial(".header_left","../index.html"); //点击返回首页
-				$(".pre_goods_box").on('click',"dl",function(){
-					common.jumpLinkPlainApp( "预购商品详情","html/preDetails.html?goodsId=" + $(this).attr("data") );
-				});
-			},
-		};
-		pub.preBuy.init = function(){
-	
-			pub.preBuy.apiHandle.init();
-			pub.preBuy.eventHandle.init();
-			
 		}
 	
-	/******************************************** 预购详情模块 *************************************/	
-	
-		// 命名空间
-	
-		pub.preBuyDetail = {};
-	
-		pub.preBuyDetail.PRE_GOODS_COUNT = 1; // 预购商品数量
-	
-		// 预购详情  状态
-		pub.preBuyDetail.PRE_STATUS = {
-			'willbegin' : ['活动未开始','#b2b2b2'],
-			'book' : ['支付定金','#fe7831'],
-			'bookend' : ['等待付尾款','#b2b2b2'],
-			'notretainage' : ['支付尾款','#fe7831'],
-			'end' : ['活动结束','#b2b2b2']
+		pub.detail.seckill.init = function(){
+			pub.detail.loadMore = $('#goods-comment-data-box').find('.clickmore');
+			pub.detail.seckill.apiHandle.init();
+			pub.detail.seckill.eventHandle.init();
 		};
-	
-		// 预购详情接口数据处理
-		pub.preBuyDetail.apiHandle = {
-			init : function(){
-				pub.seckill.apiHandle.grh_desc.init.call( pub.preBuyDetail.apiHandle.grh_desc, pub.RULE_CODE[1] ); // 规则
-				pub.preBuyDetail.apiHandle.pre_good_show.init(); // 详情信息列表展示
+	/* ====================================  整件列表      ==================================*/
+		pub.whole = {};
+		var WHOLE = pub.whole;
+		
+		WHOLE.apiHandle = {
+			init:function(){
+				WHOLE.apiHandle.whole_list.init();
 			},
-			pre_good_show : {
-				init : function(){
+			whole_list:{
+				init:function(){
 					common.ajaxPost({
-						method : 'pre_good_show',
-						preGoodsId : pub.GOODS_ID, // 商品id
-						firmId:pub.firmId
-					},function( d ){
-						if ( d.statusCode == "100000" ) {
-	
-							var 
-							preGoods = d.data.preGoods,
-							goodsInfo = preGoods.goodsInfo;
-	
-							common.bannerShow( goodsInfo, '.goodsDetails_img_box', function( data ){
-								var i, html = '',
-								imgArr = data.goodsPics.trim().split(/\s*@\s*/);
-	
-								imgArr[ imgArr.length - 1 ] == '' && imgArr.pop();
-								
-								for ( i in imgArr ) {
-									html += '<div class="swiper-slide lazy"><img src="' + imgArr[ i ] + '" width="100%" /></div>'
-								}
-								return html;
-							});
-	
-							//本地商品数量
-							$(".gd_number .minus_num").show().next('.show_num').show().html("1").attr("dataId",goodsInfo.id);
-							//添加存储数据到元素
-							$('.good_box1_box11').attr({
-								'data' : goodsInfo.id,
-								'dataname' : goodsInfo.goodsName,
-								'dataprice' : goodsInfo.nowPrice,
-								'datalogo' : goodsInfo.goodsLogo,
-								'dataspecInfo' : goodsInfo.specInfo,
-								'datamax' : goodsInfo.perBuyNum,
-								'datapackagenum' : goodsInfo.packageNum
-							});	
-	
-							function substr( str ){ // 临时函数
-								return ( str + '' ).substring(5,16);
-							}
-	
-							//展示商品信息
-							$('.gd_goodName').html( goodsInfo.goodsName );
-							$('.gd_specification').html( goodsInfo.specInfo );
-							$('.pre_gd_price').html('定金：<span class="font_color">￥' + preGoods.frontMoney + '</span>&nbsp;&nbsp;&nbsp;&nbsp;尾款：<span class="font_color">￥' + preGoods.retainage + '</span>');		
-							$(".pre_goods_details dl").eq(0).find("dd").html( substr( preGoods.frontMoneyStart ) + "-" + substr( preGoods.frontMoneyEnd ) );
-							$(".pre_goods_details dl").eq(1).find("dd").html( substr( preGoods.retainageStart ) + "-" + substr( preGoods.retainageEnd ) );
-							if ( goodsInfo.goodsContext ) {
-								$('.goodsDetails_box2_').show().html(goodsInfo.goodsContext);
-							};
-	
-	
-							var tempData = pub.preBuyDetail.PRE_STATUS[ preGoods.preStatus ]; 
-	
-							!tempData && ( preGoods.preStatus = 'end' ); // 查找不到 给默认值end
-							
-							$('.pre_pay_btn').html(tempData[0]).css("background",tempData[1]).addClass( preGoods.preStatus );
-	
-						}
-					})
-				},
-				apiData : function(){
-	
-				}
-			},
-			save_pre_order_rcd : { // 生成支付订单
-				init : function(){
-					common.ajaxPost($.extend({},pub.userBasicParam,{
-						method : 'save_pre_order_rcd',
-						preGoodsId : pub.GOODS_ID,
-						buyNum : '' + pub.preBuyDetail.PRE_GOODS_COUNT,
-					}),function( d ){
-	
-						if ( d.statusCode == "100000" ) {
-	
-							common.orderCode.setItem( d.data.orderCode );
-	
-							common.jumpLinkPlainApp("订单支付", 'html/order_pay.html?search=pre' ); //跳转到支付页面
-							
-						}else if( d.statusCode == "100716" ){
-	
-							common.prompt("已有预购订单");	
-							
-						}
-					},function( d ){
-						common.prompt( d.statusStr );
-					});
-				}
-			},
-			pre_shop_cart_submit : {
-				init : function(){
-					common.ajaxPost($.extend({},pub.userBasicParam,{
-						method : 'pre_shop_cart_submit',
-						pickUpMethod : common.PICK_UP_METHOD,
-						preGoodsId : pub.GOODS_ID
-					}),function( d ){
-						if ( d.statusCode == "100000" ) {
-							pub.preBuyDetail.apiHandle.pre_shop_cart_submit.apiData( d );
-							// pre_order(data);
-						} else if( d.statusCode == "100713" ){
-							common.prompt( "未参与预购活动" );
-						}else {
+						method : 'whole_goods',
+						firmId:pub.firmId,
+						websiteNode:pub.websiteNode,
+						pageNo : pub.PAGE_INDEX ,
+		 				pageSize : pub.PAGE_SIZE,
+					}, function( d ){
+						if(d.statusCode == "100000"){
+							WHOLE.apiHandle.whole_list.api(d)
+						}else{
 							common.prompt( d.statusStr );
 						}
 					})
 				},
-				apiData : function( d ){
-	
-					if ( d.data.order.isSavePreOrder == "0" ) {
-						common.orderCode.setItem( d.data.order.preOrderCode );
-						common.jumpLinkPlainApp( "订单提交","html/orderSettlement.html" );
-					} else if( d.data.order.isSavePreOrder == "1" ){
-						common.orderCode.setItem( d.data.order.preOrderCode );
-						common.jumpLinkPlainApp( "订单支付","html/order_pay.html" );
-					}
-					common.orderType.setItem( "3" );
-				}
-			}
-	
-		};
-	
-		// 预购详情事件处理
-		pub.preBuyDetail.eventHandle = {
-			init : function(){
-				pub.detail.eventHandle.tempInit.call( pub.preBuyDetail.eventHandle ); // 继承秒杀换购方法
-				// 返回上一页
-				common.jumpLinkSpecial(".header_left","pre.html");
-	
-				common.alertShow( '.pre_rule' ); // 规则弹窗
-				common.alertHide();
-	
-				$('.pre_pay_btn').on('click',function(){
-	
-					var $this = $(this),
-					bool = $this.is('.willbegin') || $this.is('.bookend') || $this.is('.end');
-	
-					if( bool ){
-						$this.off('click');
-						return;
-					}
-					if( pub.logined ){
-						$this.is('.book') && pub.preBuyDetail.apiHandle.save_pre_order_rcd.init(); // 生成支付订单
-						$this.is('.notretainage') && pub.preBuyDetail.apiHandle.pre_shop_cart_submit.init();  // 支付尾款
-					}else{
-						common.goodid.setItem( pub.GOODS_ID );
-						common.jumpLinkPlainApp("登录",'html/login.html?type=4');
-					}
-				});
-	
-	
-				//增加商品
-				$(".add_num").on('click',function(){
-					var 
-					$this = $(this),
-					node = $this.parents('[datamax]'),
-					datamax = node.attr("datamax"), //限购
-					datapackagenum = node.attr("datapackagenum"); //库存
+				api:function(d){
+					common.bannerShow( d.data.ad, '.seckill_whole_banner .index_banner', function( d ){ 
+						var html = '', i = 0;
+	 					for ( i in d ){
+							html += '<div class="swiper-slide lazy"><img src="' + d[i].adLogo + '" /></div>'
+						}
+						return html;
+					}, '.seckill_whole_banner .swiper-p2');
 					
-					if ( pub.preBuyDetail.PRE_GOODS_COUNT < datapackagenum ) { // 库存
-	
-						if( +datamax != 0 ){ // 限购
-	
-							if( pub.preBuyDetail.PRE_GOODS_COUNT < datamax ){
-	
-								$this.prev('.show_num').html( pub.preBuyDetail.PRE_GOODS_COUNT ++ );
-								$('.footer_item[data-content]','#foot').attr('data-content',cart.getgoodsNum());
-	
+					
+					var html = "", 
+					goodsData = d.data.page.objects
+					if (goodsData.length) {
+						$.each( goodsData, function( i, v ){
+							html += '<dl data-id="'+v.id+'">'
+							if ( +v.packageNum > 0 ) {
+								html += '	<dt><img src="'+v.goodsLogo+'" alt="" /></dt>'
 							}else{
-								common.prompt( "该商品限购" + datamax + "件" );
+								html += '	<dt class="sold_out"><img src="'+v.goodsLogo+'" alt="" /></dt>'
 							}
-						}else{
-	
-							$this.prev('.show_num').html( pub.preBuyDetail.PRE_GOODS_COUNT ++ );
-							$('.footer_item[data-content]','#foot').attr('data-content',cart.getgoodsNum());
-	
-						}
-					} else{
-						common.prompt( "库存不足" );
-					}
-				});
-	
-				//减少商品
-				$('.minus_num').on('click',function(){
-					pub.preBuyDetail.PRE_GOODS_COUNT > 1 &&  $(this).next('.show_num').html( pub.preBuyDetail.PRE_GOODS_COUNT -- );
-				});
-	
-			}
-		};
-		//商品详情评论公用
-		pub.good_comment = {
-			init:function(){
-				common.ajaxPost({
-					method : 'goods_comment_list',
-					goodsId : pub.GOODS_ID,
-					pageNo : pub.PAGE_INDEX,
-					pageSize : pub.PAGE_SIZE
-				},function( d ){
-					if (d.statusCode == '100000') {
-						pub.isEnd = d.data.isLast
-						if (d.data.objects != "" && d.data.objects.length !="0" ) {
-							pub.good_comment.apiData( d );
-						} else if(d.data.objects.length == '0' ){
-							if (pub.PAGE_INDEX == 1) {
-								pub.loading.show().html("暂无评论信息！").css("text-align","left");
+							
+							html += '	<dd>'
+							html += '		<div class="goods_left">'
+							html += '			<p class="goods_name">'+v.goodsName+'</p>'
+							html += '			<p class="goods_spec">'+v.goodsDescribe+'</p>'
+							html += '			<p class="goods_price">整件价￥'+v.originalNowPrice+'</p>'
+							html += '			<del class="goods_oldprice">单件购买￥'+v.nomalPrice+'</del>'
+							html += '		</div>'
+							html += '		<div class="goods_right">'
+							if ( +v.packageNum > 0 ) {
+								html += '			<button class="seckill_whole_btn">立即购买</button>'
 							}else{
-								pub.loading.show().html("没有更多数据了！");
+								html += '			<button class="seckill_whole_btn no_active">立即购买</button>'
 							}
-						}
+							
+							
+							html += '		</div>'
+							html += '	</dd>'
+							html += '</dl>'
+						})
 					}else{
-						common.prompt(d.statusStr)
+						html += "<div class='no_active'>暂无的活动</div>"
 					}
-				})
-			},
-			apiData:function(d){
-				d = d.data;
-				pub.isEnd = d.isLast;
-				if (pub.PAGE_INDEX == 1) {
-					$(".goodsDetails_box2_comment_box").html('');
+					$(".whole_goods").html(html)
 				}
-				var html = '',i;
-				for ( i in d.objects ) {
-					html +='<div class="comment_item">'
-					html +='	<dl class="comment_item_top clearfloat">'
-					html +='		<dt class="float_left"><img src="'+d.objects[i].userFaceImg+'"/></dt>'
-					html +='		<dd	class="float_left">'
-					html +='			<p class="comment_time">'+d.objects[i].createTime.split(" ")[0]+'</p>'
-					html +='			<p class="comment_name">'+d.objects[i].userName+'</p>'
-					html +='		</dd>'
-					html +='		<dd class="goods_star float_right">'
-					for (var n=2;n<=10;n+=2) {
-						if (n<=d.objects[i].service) {
-							html +='			<span class="star active" data="'+n+'"></span>'		
-						} else{
-							html +='			<span class="star" data="'+n+'"></span>'		
-						}
-					}
-					html +='		</dd>'
-					html +='		<input type="hidden" name="stars" id="stars" value="'+d.objects[i].service+'" />'
-					html +='	</dl>'
-					html +='	<div class="comment_item_bottom">'
-					html +='		<p class="comment_content">'+d.objects[i].comment+'</p>'
-					html +='		<div class="comment_goods_picter_box clearfloat">'
-					for (var m in d.objects[i].pics.split("@")) {
-						if (d.objects[i].pics.split("@")[m]) {
-							html +='			<div class="comment_goods_picter_item"><img src="'+d.objects[i].pics.split("@")[m]+'"/></div>'
-						}
-					}
-					html +='		</div>'
-					html +='	</div>'
-					html +='</div>'
-				}
-				$(".goodsDetails_box2_comment_box").append(html);
-				if( pub.isEnd ){
-					pub.loading.show().html("没有更多数据了！");
-				}else{
-					pub.loading.show().html("点击加载更多！");
-				};
-			}
-		}
-		pub.preBuyDetail.init = function(){
-	
-			pub.preBuyDetail.apiHandle.init();
-			pub.preBuyDetail.eventHandle.init();
-			pub.good_comment.init();
-		}
-	
-		// 父模块
-		pub.apiHandle = {
-			init : function(){
-	
 			},
-			pre_img:function(el,me){
-				var imgUrl = me.attr("src"),imgIndex=0;
-				var nood = el.find("img"),l=nood.length,arrImg=[];
-				var div = $("<div class='img_preview'  style='display:none'><div id='swiper_content' class='swiper_content' style='transition-duration: 0.5s; transform: translateX(0px);'></div></div>");
-				$("body").append(div);
-				var html = '';
-				Array.prototype.forEach.call(nood, function(ele, index) {
-					if (imgUrl == $(ele).attr("src")) {
-						imgIndex = index;
-					}
-				    html += '<div class="slide"><img src= "'+$(ele).attr("src")+'" /></div>'
-				})
-				var noodpar = $(".img_preview"),w = noodpar.width();
-				
-				noodpar.find(".swiper_content").append(html).width(nood.length * w);
-				//noodpar.css({"display":"block","background":"#000000"}).find(".slide").width(w);
-				$("body").css("overflow-y","hidden")
-				var moveX,endX,cout = 0,moveDir;
-				var movebox = document.querySelector(".img_preview .swiper_content");
-				movebox.style.transform = "translateX(" + (-imgIndex * w) + "px)";
-				cout = imgIndex;
-				noodpar.css({"background":"#000000"}).find(".slide").width(w);
-				setTimeout(function(){
-					noodpar.show();
-				},100)
-				movebox.addEventListener("touchstart", boxTouchStart, false);
-	            movebox.addEventListener("touchmove", boxTouchMove, false);
-	            movebox.addEventListener("touchend", boxTouchEnd, false);
-	            movebox.addEventListener("click", boxClick, false);
-	            function boxClick(e){
-	            	movebox.parentNode.remove();
-	            	$("body").css("overflow-y","auto");
-	            }
-				function boxTouchStart(e){
-	                var touch = e.touches[0];
-	                startX = touch.pageX;
-	                endX = parseInt(movebox.style.transform.replace("translateX(",""));
-	           }
-	            function boxTouchMove(e){
-	                var touch = e.touches[0];
-	                moveX = touch.pageX - startX; 
-					if(cout == 0 && moveX > 0){
-						return false;
-					}
-					if(cout == l-1 && moveX < 0){	
-						return false;
-					}
-					movebox.style.transform = "translateX(" + (endX + moveX) + "px)";
-	            }
-	            function boxTouchEnd(e){
-	                moveDir = moveX < 0 ? true : false;
-					if(moveDir){
-						if(cout<l-1){
-	                        movebox.style.transform = "translateX(" + (endX-w) + "px)";
-	                        cout++;
-	                   }
-	               	}else{
-	                    if(cout == 0){
-	                        return false;
-	                    }else{
-							movebox.style.transform = "translateX(" + (endX+w) + "px)";
-							cout--;
+			
+		}
+		WHOLE.eventHandle ={
+			init:function(){
+				//common.jumpLinkSpecial( ".header_left", "../index.html" ); // 回首页
+				$(".whole_goods").on('click','dl',function(e){
+					common.stopEventBubble(e);
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'商品详情',
+							url:"html/goodsDetails.html?goodsId=" + $(this).attr("data-id")
 						}
-	                }
-	            }
-			}
-		};
-	
-		pub.eventHandle = {
-			init : function(){
-	
+					})
+					//common.jumpLinkPlain( "goodsDetails.html?goodsId=" + $(this).attr("data-id"));
+				});
 			}
 		}
+		WHOLE.init = function(){
+			WHOLE.apiHandle.init()
+			WHOLE.eventHandle.init()
+		}
+		
 		pub.init = function(){
 	 		$('.footer_item[data-content]','#foot').attr('data-content',cart.getgoodsNum());
-			pub.moduleId == 'seckill' && pub.seckill.init(); // 秒杀换购列表
+			//pub.moduleId == 'seckill' && pub.seckill.init(); // 秒杀换购列表
 			// 秒杀 换购 详情
-			if (pub.moduleId == "seckillGoodsDetail") {
-				pub.detail.method = "kill_goods_details";
-				pub.detail.init(); 
-			} else if(pub.moduleId == "barterGoodsDetail"){
-				pub.detail.method = "goods_show";
-				pub.detail.init();
-			}
-			pub.moduleId == 'preBuy' && pub.preBuy.init(); // 预购列表
-			pub.moduleId == 'preBuyDetail' && pub.preBuyDetail.init(); // 预购详情
+//			if (pub.moduleId == "seckillGoodsDetail") {
+//				pub.detail.method = "kill_goods_details";
+//				pub.detail.init(); 
+//			} else if(pub.moduleId == "barterGoodsDetail"){
+//				pub.detail.method = "goods_show";
+//				pub.detail.init();
+//			}
+//			pub.moduleId == 'preBuy' && pub.preBuy.init(); // 预购列表
+//			pub.moduleId == 'preBuyDetail' && pub.preBuyDetail.init(); // 预购详情
+			switch( pub.moduleId ){
+ 				case 'seckill' : pub.seckill.init(); break; 
+	 			case 'whole' : WHOLE.init(); break; 
+	 			case 'seckill_detail':pub.detail.seckill.init();break;
+	 		}
 			$("body").fadeIn(300)
 		}
 		

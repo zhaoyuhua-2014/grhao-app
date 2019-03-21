@@ -1,9 +1,11 @@
 
 require(['../require/config'],function(){
-	require(['goshopCar','common','mobileUi','swiperJS','pull'],function(cart,common){
+	require(['shopCar','common','mobileUi','swiperJS','pull'],function(cart,common){
 		
 		/************************************商品管理模块***********************/
-
+		var a = require( 'shopCar' );
+		var cart = new a();
+		
 		// 命名空间
 
 		pub = {};
@@ -13,6 +15,8 @@ require(['../require/config'],function(){
 		pub.PAGE_INDEX = common.PAGE_INDEX; // 索引
 	
 		pub.PAGE_SIZE = common.PAGE_SIZE; // 页面显示数据个数
+		
+		pub.goodTypeDefault = $.Deferred();//主要用与确定商品为普通商品还是整件商品
 	
 		pub.loading = $('.click_load');
 	
@@ -181,7 +185,7 @@ require(['../require/config'],function(){
 					var html = '',i;
 					for (var i = 0, l = d.objects.length; i < l; i++) {
 						var obj = d.objects[i]
-						var gdnum = cart.callbackgoodsnumber( obj.id );
+						var gdnum = cart.getgoodsNum( obj.id );
 						
 						html += '<dl class="goods_item clearfloat lazyload" data="' + obj.id + '" id="_more_">'
 						// if( -1 < i && i < 7){
@@ -318,7 +322,8 @@ require(['../require/config'],function(){
 		};
 	
 		pub.goods.init = function(){
-	
+			pub.goodTypeDefault.resolve("pu_tong")
+			
 			!pub.goods.type && $("title,.header_title").html( pub.goods.TITLE[ 2 ] );
 			pub.goods.type == pub.goods.GOODS_TYPE[0] && $("title,.header_title").html( pub.goods.TITLE[ 0 ] );
 			pub.goods.type == pub.goods.GOODS_TYPE[1] && $("title,.header_title").html( pub.goods.TITLE[ 1 ] );
@@ -365,6 +370,13 @@ require(['../require/config'],function(){
 				},
 				apiData : function( d ){
 					d = d.data.goodsInfo;
+					/*新增判断商品类型的延时判断*/
+					if(d.activityType == '7'){
+						pub.goodType = "ZHENG_JIAN";
+						pub.goodTypeDefault.resolve("zheng_jian")
+					}else{
+						pub.goodTypeDefault.resolve("pu_tong")
+					}
 					common.bannerShow( d, '.goodsDetails_img_box', function( data ){
 						var 
 						i,
@@ -377,7 +389,7 @@ require(['../require/config'],function(){
 						}
 						return html;
 					});
-					var goodsNum = cart.callbackgoodsnumber( d.id ); // 获取本地商品数量
+					var goodsNum = cart.getgoodsNum( d.id ); // 获取本地商品数量
 					if ( d.status != "1" ) {
 						$(".gd_number").html( "商品已下架" );
 					}else{
@@ -578,7 +590,7 @@ require(['../require/config'],function(){
 					dataOldPrice = node.attr("data-oldprice"), 
 					purchasequantity = node.attr("data-purchasequantity"),
 					
-					goodNum = cart.callbackgoodsnumber( dataId );
+					goodNum = cart.getgoodsNum( dataId );
 					
 						if( +dataMax != 0 ){ // 限购
 							if( goodNum < dataMax ){
@@ -637,6 +649,152 @@ require(['../require/config'],function(){
 	               	};
 	               	cart.style_change();
 	           	});
+	           	
+	           	$(".footer-left,.my_bg").on("click",function(){
+	           		var bgIsShow = $(".my_bg").is(":visible");
+	           		!bgIsShow ? (function(){
+	           			if (cart.getgoodsNum()) {
+		           			$(".my_bg").fadeIn();
+		           			cart.car_goods();
+		           			$(".footer_car").removeClass("footer_car_hide").addClass("footer_car_show")
+	           			}
+	           		})() : (function(){
+	           			$(".my_bg").fadeOut();
+	           			$(".footer_car").removeClass("footer_car_show").addClass("footer_car_hide")
+	           		})();
+	           	})
+	           	
+				//添加点击增加事件
+				$(".car_main").on('click','.add_num',function(){
+					var d = $(this).parent().parent();
+					var id=d.attr('data'),packagenum=d.attr('packagenum'),maxCount=d.attr('maxCount');
+					
+					if (parseInt($(this).siblings().eq(1).text()) < parseInt(packagenum)) {	
+						if(maxCount >0){
+							if(parseInt($(this).siblings().eq(1).text())<maxCount){
+								var num=cart.addCartGood(id)
+								$('.show_num[zs-goodsid='+id+']').html(num)
+								cart.style_change();
+							}else{
+								common.prompt("该商品限购"+maxCount+"件")
+							}
+						}else{
+							var num=cart.addCartGood(id)
+							$('.show_num[zs-goodsid='+id+']').html(num)
+							cart.style_change();
+						}
+					} else{
+						common.prompt("库存不足")
+					}
+				})
+				//添加减少事件
+				$(".car_main").on('click','.minus_num',function(){
+					var d = $(this).parent().parent();
+					var id=d.attr('data');
+					//num当前商品数目 numb商品总数
+					var num = cart.cutgoods( id ),
+						numb = cart.getgoodsNum();
+					$(".show_num[zs-goodsid="+id+"]").html(num)
+	                if ( num < 1 ) {
+	                	$(this).parent().parent().remove();
+	                	if (numb == 0) {
+	                		$(".my_bg").fadeOut();
+	                		$(".footer_car").removeClass("footer_car_show").addClass("footer_car_hide")
+	                	}
+	                } else{
+	                    
+	            	}
+	                cart.style_change()
+				})
+	
+				$(".footer_car .car_clear").on('click',function(){
+					$(".show_num[zs-goodsid]").html(0);
+					$(".my_bg").fadeOut();
+	       			$(".footer_car").removeClass("footer_car_show").addClass("footer_car_hide");
+	       			cart.removeShopCar();
+	       			cart.style_change()
+				});
+				$('.footer-rigth').on('click',function(){
+					pub.goodsList = cart.getGoodsDate('id','sum');
+					pub.goodsListStr = JSON.stringify({
+						'goodsList':pub.goodsList
+					})
+					if($(this).is(".isClick")){
+						if (pub.logined) {
+							pub.shop_cart_submit.init()						
+						}else{
+							//common.jumpLinkPlain( "" );
+							common.jsInteractiveApp({
+								name:'goToNextLevel',
+								parameter:{
+									title:'登录',
+									url:'html/login.html'
+								}
+							})
+						}
+						//common.jumpLinkPlain( "orderSettlement.html" );
+					}
+				})
+			}
+		};
+		/*
+		 提交购物车
+		 * */
+		pub.shop_cart_submit = {
+			init : function(){
+				common.ajaxPost($.extend({}, pub.userBasicParam, {
+					method : 'shop_cart_submit_two',
+					goodsList : pub.goodsListStr
+				}),function( d ){
+					if ( d.statusCode == "100000" ) {
+						common.orderType.setItem( '1' );
+						if (pub.goodType == 'ZHENG_JIAN') {
+							common.goodsType.setItem( "ZHENG_JIAN" );
+						}else{
+							common.goodsType.setItem( "PU_TONG" );
+						}
+						common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:'提交订单',
+								url:'html/orderSettlement.html'
+							}
+						})
+						//common.jumpLinkPlain( "orderSettlement.html" );
+					}else if (d.statusCode == "100613"){
+						common.prompt( d.statusStr );
+						pub.shop_cart_submit.apiData(d)
+					}else{
+						common.prompt( d.statusStr );
+					}
+				},function( d ){
+					common.prompt( d.statusStr );
+				},function(){
+					$('.settle','#total').html('结算');
+				})
+			}, 
+			apiData:function(d){
+				var objs = d.data,
+					objKeys = Object.keys(objs);
+				var goodsList = cart.getGoodsDate();
+				/*循环比较更新信息*/
+				for (var i in objKeys) {
+					for (var j in goodsList) {
+						if (objKeys[i] == goodsList[j].goodsId) {
+							goodsList[j].msg = objs[objKeys[i]];
+						}
+					}
+				};
+				//存储更新信息
+				cart.updataList(goodsList);
+				//更新信息到DOM
+				var bgIsShow = $(".my_bg").is(":visible");
+	           		
+				if (!bgIsShow ) {
+					$(".footer .footer-left").click();
+				}else{
+					cart.car_goods();			
+				}
 			}
 		};
 		// 接口
@@ -729,6 +887,16 @@ require(['../require/config'],function(){
 			}else{
 				pub.apiHandle.change_app_theme.init();
 			}
+			$.when(pub.goodTypeDefault).done(function(t){
+				if (t == 'zheng_jian') {
+					cart.init('wholeGood')
+				}else if (t == 'pu_tong'){
+					cart.init("good")
+				}else{
+					cart.init("good")
+				}
+				cart.style_change();
+			})
 			pub.moduleId == "goods" && pub.goods.init();
 			pub.moduleId == "goodsDetail" && pub.goodsDetail.init();
 			pub.eventHandle.init();
