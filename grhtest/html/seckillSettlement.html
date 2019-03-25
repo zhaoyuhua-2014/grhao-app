@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>果然好</title>
+		
+		<meta name="viewport" content="width=720,user-scalable=no"/>
+	    <meta content="telephone=no, address=no" name="format-detection" />
+	    <link rel="stylesheet" href="../css/base.css?v=1214" />
+	    <script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
+		<!--<meta http-equiv="Content-Security-Policy" content=" script-src 'self' 'unsafe-inline' 'unsafe-eval' http://api.grhao.com/server/api.do http://61.164.113.168:8090/grh_api/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'  " >
+		<meta name="viewport" content="width=720,user-scalable=0"/>
+		<meta content="telephone=no, address=no" name="format-detection" />
+		<link rel="stylesheet" type="text/css" href="../css/base.min.css?v=20190319"/>-->
+	</head>
+<body module-id="seckillSettlement" class="animation-fadeIn">
+	<!--<div class="header_wrap">
+		<div class="header_contain">
+			<div class="header_left"><span class="triangle-btn green"></span></div>
+			<h1 class="header_title header_title_color">订单结算</h1>
+	    </div>
+	</div>
+	<div class="empty"></div>-->
+	<div class="seckillSettlement">
+		<div class="goods_way">
+			取货方式  <span class="way_self">自提</span><span class="way_delivers">送货上门</span>
+		</div>
+		<div class="user_address_info">
+			<div class="way_self_show set_charge_address">
+				<p><span>自提点</span><span class="order_place"></span></p>
+				<p><span>地址</span><span class="order_address"></span></p>
+				<p><span>营业时间</span><span class="order_explain"></span></p>
+			</div>
+			<div class="way_delivers_show set_charge_address">
+				<div class="set_address_top clearfloat group1">
+				    <div class="take_goods_name"></div>
+				    <div class="take_goods_phone"></div>
+			    </div>
+			    <div class="set_address_bottom group1"></div>
+			</div>
+			<dl class="set_delivery_box clearfloat">
+		    	<dt class="fl">配送说明</dt>
+		    	<dd class="fl"></dd>
+		    </dl>
+		</div>
+		<div class="order_remarks">
+			<span>备注</span><input type="text" name="" id="" placeholder="选填，您想对商家说些什么" />
+		</div>
+		<div class="user_phone_number">
+			<span>联系方式</span><input type="text" name="" id="" placeholder="必填" />
+		</div>
+		<div class="order_info">
+			<div class="order_goods">
+				<!--<dl>
+					<dt><img src="../img/new_img/end.jpg" alt="" /></dt>
+					<dd>牛油果</dd>
+					<dd>
+						<span>x1</span>
+						<span>￥22</span>
+					</dd>
+				</dl>-->
+			</div>
+			<ul>
+				<li class="goods_total"><p>商品总价</p><span></span></li>
+				<li class="delivery_cost"><p>配送费</p><span></span></li>
+				<li class="all_total"><p>合计</p><span></span></li>
+			</ul>
+		</div>
+	</div>
+	<div class="empty"></div>
+	<div class="footer_order">
+		<p>总计:<span class="order_total"></span></p>
+		<button class="order_get">提交订单</button>
+	</div>
+</body>
+<!--<script src="../seajs/2.1.1/sea.js"></script>
+<script src="../seajs-config.js?v=20190319"></script>
+<script>
+	seajs.use(['seckillSettlement'],function( zs ){
+		zs.init();
+	});
+</script>-->
+<script data-main = "../dist/seckillSettlement.js?v=0929" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+
+<html>

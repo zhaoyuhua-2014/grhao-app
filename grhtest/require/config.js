@@ -29,10 +29,13 @@ define(function(){
 	            'module':'../outside/module',
 	            'test':'../outside/test',
 	            'shopCar':'../dist/shopCar',
+	            'groupOrder':'../dist/groupOrder',
+	            'seckillSettlement':'../dist/seckillSettlement',
 	            
 	            'farmCanves':"../dist/farmCanves",
-	            'vue':"../outside/vue.min",
+	            'vue':"../outside/vue",
 	            'pixi':"../outside/pixi"
+	            
 	        },
 	        shim: {
 			    farmCanves: {

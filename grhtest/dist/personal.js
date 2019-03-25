@@ -86,7 +86,7 @@ require(['../require/config'],function(){
 						common.tellRefreshAPP();
 						/*清除本地购物车数据*/
 						common.good.removeItem();
-						common.setShopCarNumApp();
+						//common.setShopCarNumApp();
 						common.setShopCarNum_ShoppingCartApp('0')
 						/*移除用户相关信息*/
 						common.tokenId.removeItem();
@@ -102,7 +102,7 @@ require(['../require/config'],function(){
 					},function( d ){
 						common.tellRefreshAPP();
 						common.good.removeItem();
-						common.setShopCarNumApp();
+						//common.setShopCarNumApp();
 						common.setShopCarNum_ShoppingCartApp('0')
 						common.tokenId.removeItem();
 						common.secretKey.removeItem();
@@ -159,7 +159,7 @@ require(['../require/config'],function(){
 			// 订单管理 + 我的预购 + 优惠券 + 收货地址 + 果币商城 + 在线充值 + 修改密码 + 帮助中心 + 设置
 			$('.zs_personal,.main_top_right').click(function(){
 				var url = $(this).attr('data-url');
-				var tit = $(this).attr("data-title");
+				var tit = $(this).attr("tit");
 				var right = $(this).attr("data-right");
 				
 				if( pub.logined ){
@@ -1032,7 +1032,8 @@ require(['../require/config'],function(){
 			'relevent':['THH-DESC','退换货规则'],
 			'couponUse_rule':['YHQ-DESC','优惠券使用规则'],
 			'inspection':['YHQS-DESC','验货与签收'],
-			'about_us':['GUWM-DESC','关于我们']	
+			'about_us':['GUWM-DESC','关于我们'],
+			'group':['group_play','拼团玩法']
 		}
 		// 帮助模块 接口数据处理 初始化
 		pub.help.apiHandle = {

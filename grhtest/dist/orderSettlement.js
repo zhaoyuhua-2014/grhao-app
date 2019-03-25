@@ -558,27 +558,23 @@ require(['../require/config'],function () {
 					common.first_data.removeItem();
 					common.two_data.removeItem();
 					common.addType.removeItem();
-					common.setShopCarNumApp(0);
+					//common.setShopCarNumApp(0);
 					if (d.data.orderStatus == '3') {
 						common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
 					}else{
 						common.jumpLinkPlainApp( "订单支付","html/order_pay.html" );
 					}
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 				}else if ( d.statusCode == "100711" ) {
 					common.prompt("地址不在配送范围");
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 				}else if ( d.statusCode == "100718" ){
 					common.prompt("请选择配货时间");
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 				}else if ( d.statusCode == "100514" ){
 					$(".order_refund_confirm").html( "月卡余额不足！请充值" );
 					$(".order_refund").show();
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 				}else{
 					common.prompt( d.statusStr );
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 				}
+				pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 			},function( d ){
 				common.prompt( d.statusStr );
 				pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");

@@ -115,7 +115,7 @@ define(['jquery','mdData','shar1'],function($,md){
 		'couponInfoList',//app存储优惠卷列表信息，
 		'couponInfo',//app存储优惠卷信息，
 		'addObj',//新增地图选择地址使用
-		
+		'goodsType',//商品类型区分普通商品和整件商品。
 	].forEach(function( item ){
 		common[item] = new Memory( item, 'local' );
 	});
@@ -1415,8 +1415,124 @@ define(['jquery','mdData','shar1'],function($,md){
 	            window.holdAction = false;
 	        }, 400);
 	    },
+	    CountDown : function(){
+	    	
+	    }
+	    
 	});
-
+	common.CountDown.prototype = {
+		init:function(params){
+			var _this = this;
+			this.startTime = this.parseDate( params.startTime );//活动开始时间
+			this.endTime = this.parseDate( params.endTime );//活动结束
+			this.serverTime = this.parseDate( params.serverTime );//服务器时间
+			this.nowTimers = new Date().getTime();//当前本地时间
+			this.severDiffSystemTimer = this.serverTime - this.nowTimers;//服务器和本地的时间差
+			this.targetDom = params.targetDom;//显示活动倒计时的目标元素选择器
+			this.num = params.num;
+			this.groupStatus = params.groupStatus;
+			
+			
+			if (this.timerID) {
+				clearInterval( this.timerID );
+			}
+			this.pageWatchTimer()
+			this.timerID = setInterval( function(){
+				_this.pageWatchTimer()
+			} ,1000)
+			
+		},
+		
+		pageWatchTimer:function(){
+			var data = this.getStateAndTimer();
+			var	arr = this.dateFormat(data.times);
+			if (this.groupStatus == 2) {
+				this.targetDom.html('<p>拼购成功</p>');
+				clearInterval( this.timerID );
+			}else{
+				if ( data.state == 'activeNoStart' ) {
+					this.targetDom.html('<p>开始倒计时：<span>'+arr[0]+'</span>天<span>'+arr[1]+'</span>:<span>'+arr[2]+'</span>:<span>'+arr[3]+'</span>:</p>');
+				}else if ( data.state == 'activeStart' ){
+					this.targetDom.html('<p>还差<b>'+this.num+'</b>人拼购成功，倒计时<span>'+arr[0]+'</span>天<span>'+arr[1]+'</span>:<span>'+arr[2]+'</span>:<span>'+arr[3]+'</span></p>');
+				}else if ( data.state == 'activeEnd' ){
+					this.targetDom.html('<p>活动已结束</p>');
+					clearInterval( this.timerID );
+				}					
+			}
+		},
+		getStateAndTimer : function(){
+			var data = {
+				state:"",
+				times:0,
+			};
+			var simulationServerTim = new Date().getTime() + this.severDiffSystemTimer;
+			//活动期间 ‘activeStart’
+			if ( (simulationServerTim - this.startTime) >= 0 && (simulationServerTim - this.endTime) < 0 ) {
+				data.state = 'activeStart';
+				data.times = ( this.endTime - simulationServerTim );
+			} else {
+				//活动没有开始 "activeNoStart"
+				if( (simulationServerTim - this.startTime) < 0){
+					data.state = 'activeNoStart';
+					data.times = ( this.startTime - simulationServerTim );
+				}
+				//活动已经结束 "activeEnd"
+				if ( (simulationServerTim - this.endTime) >= 0 ) {
+					data.state = 'activeEnd';
+					data.times = ( simulationServerTim - this.endTime );
+				}
+			};
+			return data;
+		},
+		// 必须是严格的日期模式 将时间转换为时间戳
+		parseDate : function( time ){
+			try{
+				//加上replace兼容ios new Date('2017-08-11 12:00:00') 不能解析中文-符号。解析结果为valid Date。
+				return new Date(time.trim().replace(/-/g, "/")).getTime();
+			}catch(e){
+				new Error("Time is not in the right format!")
+			}
+		},
+		//在进行时分秒转时候，个位前面加零
+		preZero : function( data ){
+			if( !isNaN(data) ){
+				if(+data < 10 ) 
+					return '0'+ data;
+				return data;
+			}
+		},
+		// 日期格式化
+		dateFormat : function(time){
+			var time = Math.floor( time / 1000),
+				_this = this;
+			if (time > 0) {
+				var days = Math.floor( time / (3600 * 24) );
+				var hous = Math.floor( (time - days * (3600 * 24)) / 3600 );
+				var min = Math.floor( (time - days * (3600 * 24) - (hous * 3600) ) / 60  );
+				var sec = ( time  % 60 );
+				return	[days,_this.preZero(hous),_this.preZero(min),_this.preZero(sec)];
+			}else{
+				return [0,00,00,00];
+			}
+		}
+	};
+	/*
+	 将时间戳改编为  年月日十分秒的字符串
+	 传入的参数为13位的时间戳
+	 输入位 Y-M-D h:m:s
+	 * */
+	common.timestampToTime = function(timestamp) {
+        var date = new Date(timestamp );
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        var D = date.getDate() + ' ';
+        var h = date.getHours() + ':';
+        var m = date.getMinutes() + ':';
+        var s = date.getSeconds();
+        
+        return Y+M+D+h+m+s;
+    }
+	
 	$(document).on('click','#prompt-node',function(){
 		var nodeTemp = $(this).remove();
 		nodeTemp = null;

@@ -1849,11 +1849,11 @@ to {
 .zs_group_aboutus .group_content{padding-bottom: 20px; width: 100%;font-size: 26px;line-height: 40px;}
 
 /*团购订单管理*/
-.groupListNav{position: fixed;left: 0;right: 0;top: 96px;z-index: 10;}
+.groupListNav{position: fixed;left: 0;right: 0;top: 0px;z-index: 10;}
 .groupListNav li{width: 25%;}
 .groupListNav li.active{color: #93c01d;position: relative;}
 .groupListNav li.active:after{content: " ";width: 52px;height: 6px;background-color: #93c01d;border-radius:3px ;text-align: center;display: block;margin: 0 auto;bottom: 10px;left: 50%;margin-left: -26px;position: absolute;}
-.groupOrderList{padding: 22px 24px 0 24px;margin-top: 96px;}
+.groupOrderList{padding: 22px 24px 0 24px;padding-top: 96px;}
 .groupListItem{background: #FFFFFF;margin-bottom: 24px;position: relative;}
 .groupListItem .status{position: absolute;top: 20px;right: 20px;width: 108px;height: 80px;}
 .groupListItem.failStatus .status{background-image: url(../img/group/groupFail.png) ;}
@@ -1958,6 +1958,100 @@ to {
 .services .change_passwords dt{background:url(../img/new_img/xiugaimima.png) no-repeat center center;}
 .services .set dt{background:url(../img/new_img/shezhi.png) no-repeat center center;}
 .services .set{margin-top: 40px;}
+
+/*秒杀订单 样式*/
+.seckillSettlement{margin:24px auto 0;width: 672px; font-size:28px;}
+.seckillSettlement .goods_way{height: 112px;color: #999999 ;line-height: 112px;border-radius:16px;background-color: #fff;padding-left:40px ;}
+.seckillSettlement .goods_way span{display:inline-block ;padding:0 20px;margin-left: 40px;line-height: 56px;vertical-align: middle;color: #FFFFFF;border-radius: 28px;background-color: #999999;text-align: center;}
+.seckillSettlement .goods_way .active{background-color: #a8d926;}
+.seckillSettlement .user_address_info{margin: 24px 0 ;padding:40px;background-color: #fff;border-radius: 28px;}
+.seckillSettlement .user_address_info p:nth-child(2){margin:24px 0;}
+.seckillSettlement .user_address_info p span:nth-child(2){display: inline-block;margin-left: 40px;color: #000000; width: 440px; }
+.seckillSettlement .user_address_info p span:nth-child(1),
+.seckillSettlement .order_remarks span,
+.seckillSettlement .user_phone_number span{display: inline-block;width: 112px;color:#999999;position: relative;}
+.seckillSettlement .user_phone_number span:before{content: "*";position: absolute;top: 4px;left: -20px;color: #F32927;font-size: 32px;font-weight: 800;}
+.seckillSettlement .user_address_info p:nth-child(3) span:nth-child(2){color:#f32929 ;}
+.seckillSettlement .order_remarks,
+.seckillSettlement .user_phone_number{padding-left: 40px;height:96px;line-height: 96px;background-color: #fff;border-radius: 28px;margin-bottom: 24px;}
+.seckillSettlement .order_remarks input,
+.seckillSettlement .user_phone_number input{margin-left:40px ;width:70%;}
+.seckillSettlement .order_info{padding: 40px;background-color: #fff;border-radius: 28px;margin-bottom: 20px;}
+.seckillSettlement .order_goods{margin-bottom: 40px;border-bottom: 1px solid #EEEEEE;}
+.seckillSettlement .order_info dl{display:flex;justify-content: space-between;line-height: 96px;}
+.seckillSettlement .order_info dl img{width: 96px;height:96px;border-radius: 18px;}
+.seckillSettlement .order_info dl dd:nth-child(2){flex-grow: 1;text-align: left;margin-left:40px ;}
+.seckillSettlement .order_info dd span{display: inline-block;}
+.seckillSettlement .order_info dd span:nth-child(1){padding-right: 60px;color:#999999;}
+.seckillSettlement .order_info dd span:nth-child(2){font-weight: 700;}
+
+.seckillSettlement .way_self_show{padding: 0;}
+.seckillSettlement .way_delivers_show{width: 100%;padding:0; padding-right:40px; background: url(../img/arrow_right.png) no-repeat 560px center;}
+.seckillSettlement .set_address_top{height: 58px; line-height: 58px; font-size: 26px; color: rgb(51,51,51);}
+.seckillSettlement .take_goods_name, .take_goods_phone{float: left; height: 58px;}
+.seckillSettlement .take_goods_phone{padding-left: 30px;}
+.seckillSettlement .set_address_bottom{line-height: 50px; font-size: 26px; color: rgb(136,136,136);}
+.seckillSettlement .user_address_info .set_delivery_box{display: block; margin-top:24px; padding:0; height: auto; line-height: 42px; min-height: 64px; font-size: 28px; color:#999999;}
+.seckillSettlement .set_delivery_box dt{width:112px; height: auto; line-height: 42px;}
+.seckillSettlement .set_delivery_box dd{width:420px;margin-left: 40px; overflow: hidden; height: auto; line-height: 42px; color: #F32927;}
+.seckillSettlement .order_info li{display: flex;height: 96px;line-height:96px;border-bottom: 1px solid #EEEEEE;justify-content: space-between;}
+.seckillSettlement .order_info li p{color: #999999;}
+
+.footer_order{display: flex;max-width: 720px; width: 100%; margin: 0 auto; height: 98px; background: #FFFFFF; position: fixed; left: 0; bottom: 0; z-index: 999; right: 0; font-size:24px; line-height: 98px;}
+.footer_order p{flex-grow:1 ;padding-left:24px ;}
+.footer_order p span{margin-left:24px;font-size: 36px;font-weight: 700;}
+.footer_order button{width: 240px;color: #FFFFFF;font-size: 32px;background-color: #93c01d;}
+/*充值样式*/
+[v-cloak]{display: none;}
+.main_wrap.recharge-wrap{background: none;}
+.recharge_main{padding: 24px;}
+.recharge_user_money{width: 100%;padding: 40px;border-radius: 16px;background: #FFFFFF;color: #333333;}
+.recharge_user_money .desc{height: 60px;font-size: 32px;}
+.recharge_user_money .money{font-size: 26px;}
+.recharge_user_money .money .money_num{font-size: 48px;color: #f62929;padding-left: 12px;}
+.recharge_center{}
+.recharge_nav{height: 136px;padding: 40px;}
+.recharge_nav .recharge_nav_item:last-child{margin-right: 0;}
+.recharge_nav_item{font-size: 32px;color: #999999;margin-right: 64px;}
+.recharge_nav_item.active{color: #93c01d;}
+.recharge_box .recharge_box_item{display: none;}
+.recharge_box .recharge_box_item.active{display: block;}
+.recharge_money_list li{float: left;margin-right: 24px;margin-bottom: 24px;width: 208px;background: #FFFFFF;padding: 40px;padding-right: 20px;border-radius: 16px;}
+.recharge_money_list li.active{background: #93C01D;}
+.recharge_money_list li.active p{color: #FFFFFF;}
+.recharge_money_item .principal{font-size: 28px;color: #000000;padding-bottom: 20px;}
+.recharge_money_item .giveMoney{font-size: 22px;color: #333333;}
+.recharge_money_list .recharge_money_item:nth-of-type(3n){margin-right: 0px;}
+.recharge_pay_select{background: #FFFFFF;padding: 0 24px;border-radius: 16px;color: #333333;}
+.recharge_pay_title{padding: 40px 0px;border-bottom: 1px solid #CCCCCC;font-size: 30px;}
+.recharge_pay_box{padding: 40px 0;}
+.recharge_pay_box .pay_item{height: 46px;width: 100%;margin-bottom: 32px;}
+.recharge_pay_box .pay_item:last-child{margin-bottom: 0;}
+.recharge_pay_box .pay_item dd{height: 46px;line-height: 46px;font-size: 28px;padding-left: 20px;}
+.recharge_pay_box .pay_item svg{fill: #CCCCCC;}
+.recharge_pay_box .pay_item.active svg{fill: #93C01D;}
+.recharge_card_box{padding: 0 40px;background: #FFFFFF;border-radius:20px ;}
+.recharge_card_box li{height: 96px;line-height: 96px;font-size: 28px;background: #FFFFFF;border-bottom: 1px solid #D8D8D8;position: relative;}
+.recharge_card_box li label{color: #999999;width: 142px;display: inline-block;}
+.recharge_card_box li input{color: #333;width: 440px;height: 94px;}
+.recharge_card_box li span.icon_del{position: absolute;right: -10px;top: 24px;width: 48px;height: 48px;background: rgba(0,0,0,.5);border-radius: 50%;text-align: center;line-height: 48px;color: #FFFFFF;font-size: 28px;}
+.recharge_card_box li:last-child{border-bottom: none;}
+.rechange_btn_wrap{position: fixed;left: 0;bottom: 0;right: 0;padding: 24px;}
+.rechange_btn{width: 100%;height: 86px;color: #FFFFFF;text-align: center;line-height: 86px;font-size: 32px;background: #999;border-radius: 10px;display: none;}
+.rechange_btn.active{background: #93C01D;}
+.rechange_btn.isShow{display: block;}
+#vueApp .order_refund{display: block;}
+
+
+.goodsDetails_box2 .switch-tab{width:100%;line-height: 80px;height:80px;overflow:hidden;border-top:1px solid #d2d2d2;background:#f0f0f0;}
+.goodsDetails_box2 .switch-tab li{border-bottom:1px solid #d2d2d2;height:79px;}
+.goodsDetails_box2 .switch-list{float:left;padding:0 20px;}
+.goodsDetails_box2 .switch-list.actived{border-bottom:1px solid #ffffff;background: #ffffff;}
+.goodsDetails_box2 .switch-tab .dot{width:16px;height:16px;border-radius:50%;background:rgb(147,192,29);display:inline-block;margin-right: 20px;}
+.goodsDetails_box2 .switch-tab b{font-size: 30px;}
+.goods-comment{padding:0 26px;display:none;}
+.goods-comment-info{margin-top:40px;border-bottom:1px solid #eeeeee;padding-bottom:30px;}
+.goods-comment .clickmore{font-size: 30px;height:80px;line-height: 80px;text-align:center;padding-top:10px;}
 
 .fl{float: left;}
 .fr{float: right;}

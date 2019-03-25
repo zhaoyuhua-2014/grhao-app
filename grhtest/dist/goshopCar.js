@@ -339,7 +339,7 @@ define(['common'],function(common){
 							var num = goshopCar.addgoods( goodId );
 							$this.prev().val( num );
 							goshopCar.style_change();
-							common.setShopCarNumApp(goshopCar.getgoodsNum())
+							//common.setShopCarNumApp(goshopCar.getgoodsNum())
 						}else{
 							common.prompt( "该商品限购" + maxCount + "件" );
 						}

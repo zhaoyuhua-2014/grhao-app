@@ -2,10 +2,11 @@
 * orderSettlement scirpt for Zhangshuo Guoranhao
 */ 
 require(['../require/config'],function () {
-	require(['common','goshopCar','LArea','mobileUi'],function(common,cart,area){
+	require(['common','shopCar','LArea','mobileUi'],function(common,cart,area){
 	
 		var common = require( 'common' );
-		var cart = require( 'goshopCar' );
+		var a = require( 'shopCar' );
+		var cart = new a();
 		var area = require('LArea');
 		// 命名空间
 	
@@ -245,8 +246,21 @@ require(['../require/config'],function () {
 		};
 		// 普通商品初始化
 		PLAIN.init = function(){
-			pub.goodsInfoApi = cart.goodlist1(); // 接口字段
-			pub.goodsList = cart.goodlist2(); // 购物车商品列表
+			/*
+			 在进行普通商品初始化时候判断商品是否为整件商品
+			*/
+			if (common.goodsType.getItem() == 'ZHENG_JIAN') {
+				cart.init("wholeGood");
+				$('.set_charge_con .set_delivery_box').show();
+			}else{
+				cart.init();
+			}
+			pub.goodsInfoApi = JSON.stringify({
+				'goodsList':cart.getGoodsDate('id','sum')
+			});
+			//pub.goodsInfoApi = cart.goodlist1(); // 接口字段
+			pub.goodsList = cart.getGoodsDate(); // 购物车商品列表
+			
 			PLAIN.apiHandle.init(); // 接口初始化
 			PLAIN.goodList(); 
 		};
@@ -577,20 +591,21 @@ require(['../require/config'],function () {
 				if ( d.statusCode == "100000" ) {
 					common.orderCode.setItem( d.data.orderCode );
 					common.orderBack.setItem( '1' );
-	
+					/*
 					var goodsCart = common.JSONparse( common.good.getItem() );
 					for(var i = 0; i < goodsCart.length; i++ ){
 						if( goodsCart[i].status == 1 ){
 							goodsCart.splice(i,1);
 							i--;
 						}
-					}
-					common.good.setItem( common.JSONStr( goodsCart ) ); // 存储数据
+					}*/
+					cart.removeShopCar();
+					//common.good.setItem( common.JSONStr( goodsCart ) ); // 存储数据
 					common.addressData.getKey() && common.addressData.removeItem();
 					common.first_data.removeItem();
 					common.two_data.removeItem();
 					common.addType.removeItem();
-					common.setShopCarNumApp(0);
+					//common.setShopCarNumApp(0);
 					/*if (d.data.orderStatus == '3') {
 						common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
 					}else{
@@ -606,21 +621,18 @@ require(['../require/config'],function () {
 										url:'html/order_pay.html'
 									}
 					})
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
+					
 				}else if ( d.statusCode == "100711" ) {
 					common.prompt("地址不在配送范围");
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 				}else if ( d.statusCode == "100718" ){
 					common.prompt("请选择配货时间");
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 				}else if ( d.statusCode == "100514" ){
 					$(".order_refund_confirm").html( "月卡余额不足！请充值" );
 					$(".order_refund").show();
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 				}else{
 					common.prompt( d.statusStr );
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 				}
+				pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
 			},function( d ){
 				common.prompt( d.statusStr );
 				pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
@@ -883,35 +895,7 @@ require(['../require/config'],function () {
 				pub.apiHandle.change_app_theme.init();
 			}
 			if (pub.moduleId == 'orderSettlement') {
-				/*pub.apiHandle.storeInfo.init(); // 门店信息
-				pub.orderType = common.orderType.getItem() || 1; // 接收订单类型  主要指商品类型1.普通，2 换购，3.预购
-				pub.tabIndex = common.addType.getKey() ? common.addType.getItem() : 0;// 配送方式 tab 索引
-				pub.orderFrom = 'H5'; // 生成订单来源方式
-				pub.submitBtn = $('.order_submit_right'); // 提交按钮节点
-		
-				// 自动选择 取货方式
-				if( common.addType.getKey() ){
-					pub.tabIndex == 0  && ( pub.addrId = '' );
-					pub.pickUpMethod = pub.tabIndex == 0 ? '1' : '2';
-					$('.set_charge_contact_right','.set_charge_contact').find('li').eq( +pub.tabIndex ).addClass('actived');
-					$('.set_charge_con').find('.set_charge_address').eq( +pub.tabIndex ).show().siblings().hide();
-				}
-		
-				// 用户配送地址
-				if( common.addType.getKey() && common.addressData.getKey() ){
-					pub.AddrInfoRender( common.JSONparse( common.addressData.getItem() ) ); // 地址数据渲染
-				}else{
-					pub.apiHandle.address_default_show.init(); // 地址获取
-				}
-		
-				pub.addrDtd.done(function(){
-					switch( Number( pub.orderType ) ){
-						case 1 : PLAIN.init(); break; // 普通商品
-						case 2 : BARTER.init(); break; // 换购
-						case 3 : PRE.init(); break; // 预购
-					}
-				});
-				pub.eventHandle.init();*/
+				
 				pub.orderType = common.orderType.getItem() || 1; // 接收订单类型  主要指商品类型1.普通，2.秒杀，3.预购
 				pub.goodsInfoApi = cart.goodlist1(); // 接收接口所需字段
 				pub.tabIndex = common.addType.getKey() ? common.addType.getItem() : 0;// 配送方式 tab 索引

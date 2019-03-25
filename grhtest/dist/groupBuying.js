@@ -214,7 +214,14 @@ require(['../require/config'],function () {
 				//点击商品跳转到商品详情
 				$(".group_buying").on('click','dl',function(e){
 					
-					common.jumpLinkPlain( "groupBuyingDetails.html?goodsId=" + $(this).attr("data-id"));
+					//common.jumpLinkPlain( "groupBuyingDetails.html?goodsId=" + $(this).attr("data-id"));
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'商品详情',
+							url:'html/groupBuyingDetails.html?goodsId=' + $(this).attr("data-id")
+						}
+					})
 				});
 			}
 		}
@@ -241,7 +248,6 @@ require(['../require/config'],function () {
 		GROUP_DETAILS.apiHandle = {
 			init:function(){
 				GROUP_DETAILS.apiHandle.group_details.init();
-				
 			},
 			group_details:{
 				init:function(){
@@ -253,10 +259,11 @@ require(['../require/config'],function () {
 					},function( d ){
 						common.prompt( d.statusStr );
 					},function( d ){
-			 			GROUP_DETAILS.apiHandle.goods_comment_list.init();
+			 			//GROUP_DETAILS.apiHandle.goods_comment_list.init();
 					})
 				},
 				apiData:function(d){
+					GROUP_DETAILS.apiHandle.goods_comment_list.init();
 					var groupData = d.data.goodsInfo;
 					var group = d.data.groups
 					var imgHtml = "";
@@ -334,7 +341,14 @@ require(['../require/config'],function () {
 						goodsList : pub.goodsListStr
 					}),function( d ){
 						if ( d.statusCode == "100000" ) {
-							common.jumpLinkPlain('groupSettlement.html')
+							//common.jumpLinkPlain('groupSettlement.html')
+							common.jsInteractiveApp({
+								name:'goToNextLevel',
+								parameter:{
+									title:'提交订单',
+									url:'html/groupSettlement.html'
+								}
+							})
 						}else{
 							common.prompt( d.statusStr );
 						}
@@ -367,23 +381,17 @@ require(['../require/config'],function () {
 		}
 		GROUP_DETAILS.eventHandle = {
 			init:function(){
-				var bool = true;
-		       	$('.header_left').click(function(){
-		       		$('.zs-group-box').is(':hidden') ? GROUP_DETAILS.switchInput.call(GROUP_DETAILS,'商品详情','.zs_group_aboutus','.zs-group-box') : common.jumpLinkPlain('groupBuying.html');
-		       	
-		       	});
-		       	$('.group_rule_click').click(function(){
-	    			GROUP_DETAILS.switchInput.call(GROUP_DETAILS,'拼团玩法','.zs-group-box','.zs_group_aboutus');
-	    			bool && (function(){
-	    				if(!GROUP_DETAILS.ruleData){
-	    					GROUP_DETAILS.apiHandle.group_play.init()
-	    				}else{
-	    					GROUP_DETAILS.apiHandle.group_play.apiData()
-	    				}
-	    				var str = './groupBuyingDetails.html?goodsId='+pub.GOODS_ID
-	    				window.history.pushState('','',str);
-	    				bool = false;
-	    			}());
+			
+		       	$('.group_rule_click').click(function(){		
+					var url = $(this).attr("data-url"),
+					title = $(this).attr("data-title");
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:title,
+							url:url
+						}
+					})
 	    		});
 		       	
 				$('.switch-tab .switch-list').click(function(){
@@ -421,7 +429,13 @@ require(['../require/config'],function () {
 							sessionStorage.setItem('groupData',pub.goodsListStr)
 						}
 					}else{
-						common.jumpLinkPlain('login.html')
+						common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:'登录',
+								url:'html/login.html'
+							}
+						})
 					}
 				})
 			}
@@ -497,8 +511,15 @@ require(['../require/config'],function () {
 								common.orderCode.setItem( d.data.orderCode );
 								common.orderBack.setItem( '1' );
 								//sessionStorage.removeItem("seckillData");
-								common.historyReplace( 'order_management.html' );
-								common.jumpLinkPlain( "order_pay.html" );
+//								common.historyReplace( 'order_management.html' );
+//								common.jumpLinkPlain( "order_pay.html" );
+								common.jsInteractiveApp({
+									name:'goToNextLevel',
+									parameter:{
+										title:'订单支付',
+										url:'html/order_pay.html'
+									}
+								})
 							}()); break;
 							case 100711 : common.prompt("地址不在配送范围"); break;
 							case 100718 : common.prompt("请选择配货时间"); break;
@@ -529,10 +550,7 @@ require(['../require/config'],function () {
 		}
 		GROUP_SETTLEMENT.eventHandle={
 			init:function(){
-				common.jumpLinkSpecial(".header_left",function(){
-					window.history.back();
-					sessionStorage.removeItem('groupData')
-				});
+				
 				$('.footer_order .order_get').on('click',function(){
 					var $this = $(this);
 					pub.remarks = $(".order_remarks input").val(); // 备注

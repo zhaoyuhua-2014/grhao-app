@@ -3,7 +3,7 @@
 */
 
 require(['../require/config'],function(){
-	require(['common'],function(common){
+	require(['common','vue'],function(common,Vue){
 		
 	    // 命名空间
 	
@@ -22,12 +22,14 @@ require(['../require/config'],function(){
 	    pub.isBase = pub.seachParam == 'base' ; // 基本支付
 	    pub.isPre = pub.seachParam == 'pre' ; // 预购支付
 	    pub.isRecharge = pub.seachParam == 'recharge' ; // 充值
+	    //common.isApp() = true
+	    pub.isApp =  common.isApp(); // 接收 app 环境
 	
-		if (pub.isRecharge && common.isApp()) {
+		if (pub.isRecharge && pub.isApp ) {
 			pub.seachParam = 'rechargeApp'
 		}
 	
-	    pub.isApp = true; // 接收 app 环境
+	    
 	    if( pub.logined ){
 	        pub.tokenId = common.tokenIdfn(); 
 	        pub.userData = common.user_datafn(); // 用户信息
@@ -117,42 +119,15 @@ require(['../require/config'],function(){
 	                
 	                // 订单信息
 	                (function(){
-	                    /*if( pub.isBase ){
-	                        if( pub.orderType == "1" ) {
-	                        	if (pub.firmIdType == '5') {
-	                        		node.eq(0).html("订单号:<span>" + orderInfo.orderCode + "</span>")
-		                            .next().html("订单金额:<span>￥" + orderInfo.realPayMoney + "</span>");
-		                            node.eq(2).css("display","none");
-		                            node.eq(3).css("display","none");
-	                        	}else{
-	                        		node.eq(0).html("订单号:<span>" + orderInfo.orderCode + "</span>")
-		                            .next().html("订单金额:<span>￥" + orderInfo.realPayMoney + "</span>")
-		                            .next().html("支付成功后可以获得<b>" + orderInfo.barterCount + "</b>次换购机会");
-	                        	}
-	                        }else if( pub.orderType == "4" ){
-	                            node.eq(0).html("预购商品:<span>" + orderInfo.orderDetailsList[0].goodsName + "</span>")
-	                            .next().html("订单号:<span>" + orderInfo.orderCode + "</span>")
-	                            .next().html("预购尾款金额:<span>￥" + orderInfo.realPayMoney + "</span>");
-	                        }else if( pub.orderType == "6" ){
-	                            node.eq(0).html("换购商品:<span>" + orderInfo.orderDetailsList[0].goodsName + "</span>")
-	                            .next().html("订单号:<span>" + orderInfo.orderCode + "</span>")
-	                            .next().html("订单金额:<span>￥" + orderInfo.realPayMoney + "</span>");
-	                        }
-	                        pub.firmIdType != '5' && node.eq(3).html( '22:30前付款，预计明日送达' );
-	                        pub.money = orderInfo.realPayMoney;
-	                    }else{
-	                        node.eq(0).html("预购商品:<span>" + orderInfo.goodsInfo.goodsName + "</span>").next().html("订单号:<span>" + orderInfo.orderCode + "</span>").next().html("预购金额:<span class='font_color'>￥" + orderInfo.frontMoney + "</span>");
-	                    	pub.money = orderInfo.frontMoney;
-	                    }
-	                    $(".orderList_intro").html("订单已提交！");
-	                    pub.firmIdType == '5' && $('.pay_gg').html("请于"+pub.appData.data.order_cancel_time+"分钟内完成支付，超时订单将取消！")
-	                    */
+	                    
 	                    if( pub.isBase ){
 							pub.money = orderInfo.realPayMoney;
 	                        var json = {
 	                            1 : ["订单号:<span>" + orderInfo.orderCode + "</span>","订单金额:<span>￥" + orderInfo.realPayMoney + "</span>",pub.allText],
 	                            4 : ["预购商品:<span>" + orderInfo.orderDetailsList[0].goodsName + "</span>","订单号:<span>" + orderInfo.orderCode + "</span>","预购尾款金额:<span>￥" + orderInfo.realPayMoney + "</span>"],
-	                            6 : ["换购商品:<span>" + orderInfo.orderDetailsList[0].goodsName + "</span>","订单号:<span>" + orderInfo.orderCode + "</span>","订单金额:<span>￥" + orderInfo.realPayMoney + "</span>"]
+	                            6 : ["换购商品:<span>" + orderInfo.orderDetailsList[0].goodsName + "</span>","订单号:<span>" + orderInfo.orderCode + "</span>","订单金额:<span>￥" + orderInfo.realPayMoney + "</span>"],
+	                        	7 : ["订单号:<span>" + orderInfo.orderCode + "</span>","订单金额:<span>￥" + orderInfo.realPayMoney + "</span>",pub.allText],
+                            	2 : ["订单号:<span>" + orderInfo.orderCode + "</span>","订单金额:<span>￥" + orderInfo.realPayMoney + "</span>",pub.allText],
 	                        }[ Number( pub.orderType) ];
 	
 	                        node.eq(0).html( json[0] ).next().html( json[1] ).next().html( json[2] );
@@ -219,7 +194,6 @@ require(['../require/config'],function(){
 	                },pub.userBasicParam,pub.vipCardPayApi),function( d ){
 	                    if ( d.statusCode == "100000" ) {
 	                    	if (pub.seachParam == "pre") {
-	                    		//common.jumpLinkPlainApp( "我的预购","html/PreOrder_management.html" );
 	                    		common.jsInteractiveApp({
 									name:'goToNextLevel',
 									parameter:{
@@ -227,20 +201,28 @@ require(['../require/config'],function(){
 										url:'html/PreOrder_management.html'
 									}
 								})
-	                    	}else{	
-	                        	//common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
-	                        	common.jsInteractiveApp({
-									name:'goToNextLevel',
-									parameter:{
-										title:'订单管理',
-										url:'html/order_management.html'
-									}
-								})
+	                    	}else{
+	                        	if ( pub.orderType == 2) {
+	                        		common.jsInteractiveApp({
+										name:'goToNextLevel',
+										parameter:{
+											title:'拼单详情',
+											url:'html/groupBuying_orderDetails.html'
+										}
+									})
+	                        	}else{
+	                        		common.jsInteractiveApp({
+										name:'goToNextLevel',
+										parameter:{
+											title:'订单管理',
+											url:'html/order_management.html'
+										}
+									})
+	                        	}
 	                    	}
 	                    }else if( d.statusCode == "100802" ){
 	                        common.prompt( "验证码输入有误!" );
 	                    } else{
-	                        //common.jumpLinkPlainApp( "支付结果","html/pay_result.html" );
 	                    	common.jsInteractiveApp({
 								name:'goToNextLevel',
 								parameter:{
@@ -348,7 +330,7 @@ require(['../require/config'],function(){
 			           		} else if (pub.wxAppPayWay == 3) {
 			           			//window.location.reload();
 			           			
-			           			if (common.isApp()) {
+			           			if ( pub.isApp ) {
 			           				if (common.isAndroid()) {
 			           					pub.apiHandle.user_month_card.init();
 			           					setTimeout(function(){
@@ -455,7 +437,6 @@ require(['../require/config'],function(){
 	        wx_pay_app : {
 	
 	            init : function(){
-	
 	                pub.wx_pay_appApi = {
 	                    'base' : {
 	                        method : "goto_pay_weixin_app",
@@ -750,6 +731,629 @@ require(['../require/config'],function(){
 				}
 			}
 		}
+		
+		pub.rechange ={
+			init:function(){
+				pub.rechange.eventHandle.init();
+				pub.rechange.api.init();
+				pub.rechange.Vue = new Vue({
+					el: '#vueApp',
+					data: {
+						rechargeMode:{
+							type:0,
+							list:['在线充值','充值卡充值']
+						},
+						money:'0.00',
+						rechargeList:[],
+						rechargeListIndex:0,
+						rechangeCard:'',
+						rechangeExchangeCode:'',
+						payType:0,//支付方式
+						isWX:pub.isWinXin,
+						inputfocus:false,
+						isMask:false,
+						isApp : pub.isApp
+					},
+			        beforeCreate : function(){
+			        	this.isPhone = common.isPhone();
+			        },
+			        created : function(){
+			        	console.log("created			//创建完成");
+			        	if(pub.isApp ){
+			        		this.payType = 0
+			        	}else{
+			        		this.payType = 1;
+			        	}
+			        },
+			        beforeMount : function(){
+			        	console.log("beforeMount		//挂载之前")
+			        },
+			        updated : function(){
+			        	console.log("updated			//数据被更新后")
+			        },
+			        computed: {
+					    btnIsActive:function(){
+					    	if (this.rechargeMode.type == 0) {
+					    		return true;
+					    	}else{
+					    		var reg_card = /^[0-9]{12}$/;
+								var reg_exchange = /^[0-9A-Za-z]{4}$/;
+								if( reg_card.test( this.rechangeCard ) && reg_exchange.test( this.rechangeExchangeCode ) ){
+						            return true;
+						        }else{
+						        	return false;
+						        }
+					    	}
+					    },
+					    btnIsShow:function(){
+					    	if (this.isPhone) {
+					    		console.log(this.inputfocus)
+					    		if (this.inputfocus) {
+					    			return false;
+					    		}else{
+					    			return true;
+					    		}
+					    	}else{
+					    		return true;
+					    	}
+					    },
+					    btnText:function(){
+					    	if (this.rechargeMode.type == 0) {
+					    		if (this.rechargeList.length) {
+						    		return '需支付' + this.rechargeList[this.rechargeListIndex].limit + '元';
+						    	}else{
+						    		return false;
+						    	}
+					    		
+					    	}else{
+					    		return '立即支付';
+					    	}
+					    }
+					},
+					watch:{
+						rechangeExchangeCode:function(newVal,oldVal){
+							var reg_exchange = /^[0-9A-Za-z]{1,4}$/;
+							if(newVal){
+								if (newVal.length > 4) {
+									this.rechangeExchangeCode = oldVal;
+								}else{
+									if(!reg_exchange.test( newVal )){
+										this.rechangeExchangeCode = oldVal;
+									}
+								}
+							}
+						},
+						rechangeCard:function(newVal,oldVal){
+							var reg_card = /^[0-9]{1,12}$/;
+							
+							if(newVal){
+								if (newVal.length > 12) {
+									this.rechangeCard = oldVal;
+								}else{
+									if(!reg_card.test( newVal )){
+										this.rechangeCard = oldVal;
+									}
+								}
+							}
+						}
+					},
+					methods: {
+						getIsRechargeModeType:function(index){
+							return index == this.rechargeMode.type;
+						},
+						getRechargeListIndex:function(index){
+							return index == this.rechargeListIndex;
+						},
+						rechargeModeClick:function(index){
+							this.rechargeMode.type = index;
+						},
+						rechargeListClick:function(index){
+							this.rechargeListIndex = index;
+						},
+						delRechangeCard:function(){
+							this.rechangeCard = ''
+						},
+						delRechangeExchangeCode:function(){
+							this.rechangeExchangeCode = ''
+						},
+						changePayType:function(index){
+							this.payType = index;
+						},
+						recharge:function(){
+							if (this.btnIsActive) {
+								//pub.isRecharge
+								//在线充值
+								if (this.rechargeMode.type == 0) {
+									pub.payMoney = this.rechargeList[this.rechargeListIndex].limit;
+									pub.rechargeId = this.rechargeList[this.rechargeListIndex].id;
+									if (this.payType == 0) {
+										this.isMask = true;
+										if (pub.isApp) {
+											pub.rechange.wx_pay_app.init();
+											return;
+										}
+										//PW.weixinPay(); break; // 微信
+										// 微信支付
+									   pub.pathName = {
+								            'base' : '/html/order_pay.html?search=base',
+								            'pre' : '/html/order_pay.html?search=pre',
+								            'recharge' : '/html/month_recharge.html?search=recharge'
+								        }[ pub.seachParam ];
+								        
+								        if( !common.openId.getKey() ){
+								            if( pub.weixinCode ){
+								                pub.apiHandle.get_weixin_code.init(); // code存在请求获取opendId
+								            }else{
+								                common.jumpLinkPlain('https://open.weixin.qq.com/connect/oauth2/authorize?appid='+pub.appid+'&redirect_uri=' + pub.domain + pub.pathName + '&response_type=code&scope=snsapi_userinfo&state=grhao&connect_redirect=1#wechat_redirect');
+								            }
+								            pub.dtd.done(function(){
+								                pub.openId = common.openId.getItem();
+								                pub.rechange.goto_pay_weixin.init();
+								            });
+								        }else{
+								            pub.rechange.goto_pay_weixin.init();
+								        }
+									}else if (this.payType == 1) {
+										this.isMask = true;
+										pub.rechange.order_topay_alipay.init();
+									}
+								} else{
+									//充值卡充值
+									this.isMask = true;
+									pub.rechargeCard = this.rechangeCard;
+									pub.exchargeCode = this.rechangeExchangeCode;
+									pub.rechange.card_pay_wallet.init();
+								}
+							}
+						},
+						inputBlur:function(){
+							console.log("inputBlur")
+							this.inputfocus = false;
+						},
+						inputFocus:function(){
+							console.log("inputFocus")
+							this.inputfocus = true;
+						},
+						jumpPage:function(e){
+							window.location.href="recharge_record.html"
+						},
+						goBack:function(){
+							window.history.back();
+						}
+					},
+					
+				})
+			},
+			api:{
+				init:function(){
+					pub.rechange.api.user_month_card.init();
+					pub.rechange.api.recharge_config.init();
+				},
+				user_month_card : {
+		            init : function(){
+		                common.ajaxPost($.extend({},pub.userBasicParam,{
+		                    method : 'user_month_card',
+		                    userId : pub.userId,
+		                    tokenId : pub.tokenId,
+		                }),function( d ){
+		                    if ( d.statusCode == "100000" ) {
+		                        pub.rechange.Vue.money = d.data.systemMoney;
+		                    }else if(  d.statusCode == "100400" ){
+		                        common.prompt( '登录已失效，请重新登陆' );
+		                        common.setMyTimeout(function(){
+		                            common.jumpLinkPlain( 'login.html' );
+		                        },1000);
+		                    }
+		                });
+		            }
+		        },
+		        recharge_config : {
+		        	init:function(){
+		        		common.ajaxPost($.extend({},pub.userBasicParam,{
+		                    method : 'recharge_config',
+		                    tokenId : pub.tokenId,
+		                }),function( d ){
+		                    if ( d.statusCode == "100000" ) {
+		                    	pub.rechange.Vue.rechargeList = d.data;
+		                    }else if(  d.statusCode == "100400" ){
+		                        common.prompt( '登录已失效，请重新登陆' );
+		                        common.setMyTimeout(function(){
+		                            common.jumpLinkPlain( 'login.html' );
+		                        },1000);
+		                    }
+		                });
+		        	}
+		        }
+			},
+			card_pay_wallet:{
+				init:function(){//pub.userBasicParam
+	        		common.ajaxPost($.extend({},pub.userBasicParam,{
+	                    method : 'card_pay_wallet',
+	                    userId : pub.userId,
+	                    cardNum : pub.rechargeCard,
+	                    cardPwd : pub.exchargeCode
+	                }),function( d ){
+	                	if (d.statusCode != '100000') {
+	                		pub.rechange.Vue.isMask = false;
+	                		common.prompt( d.statusStr )
+	                	}	
+	                    d.statusCode == '100000' && pub.rechange.card_pay_wallet.apiData(d)
+	                });
+	        	},
+	        	apiData:function(d){
+	        		pub.rechange.Vue.isMask = false;
+	        		var v = d.data;
+	        		common.createGamePopup({
+	        			flag:2,
+	        			imgUrl:'../img/icon_recharge_suc.png',
+	        			msg:'充值成功',
+	        			
+	        		});
+	        		var mon = (v ? v.systemMoney : 0 );
+	        		pub.rechange.Vue.money = mon.toFixed(2);
+	        		pub.rechange.Vue.rechangeCard = '';
+	        		pub.rechange.Vue.rechangeExchangeCode = '';
+	                
+	        	}
+			},
+			order_topay_alipay : {
+	            init : function(){
+	            	pub.aliPayApi = {
+	                    'base' : {
+	                        method : 'order_topay_alipay',
+	                        orderCode : pub.orderCode
+	                    },
+	                    'pre' : {
+	                        method : 'pre_order_ali_pay',
+	                        orderCode : pub.orderCode
+	                    },
+	                    'recharge' : {
+	                        method : 'month_card_ali_pay',
+	                        payMoney : pub.payMoney,
+	                        userId : pub.userId,
+	                    },
+	                    'rechargeApp' : {
+	                    	method : 'month_card_ali_pay2',
+	                        payMoney : pub.payMoney,
+	                        userId : pub.userId,
+	                    }
+	                }[ pub.seachParam ];
+					
+					// app 传参
+	                pub.wxAppPayWay = pub.isRecharge ? '3' : pub.isBase ? '1' : pub.isPre ? '2' : undefined; // 3充值，1普通商品支付，2预购商品
+	                pub.isApp && ( pub.aliPayApi.isApp = '1' );
+	                common.ajaxPost($.extend( {},pub.userBasicParam, pub.aliPayApi ),function( d ){
+	                    if ( d.statusCode == '100000' ) {
+	                        if (pub.isApp) {
+	                        	var data = {
+	                        		orderCode:pub.orderCode || d.data.note,
+	                        		productName:'果然好商品',
+	                        		money:pub.money || d.data.payMoney,
+	                        	};
+	                        	pub.rechange.order_topay_alipay.apiData(data)
+	                        } else{
+	                        	var html = "";
+	                    		html = d.data;
+		                    	$("body").append(html)
+		                        $("form[name = 'punchout_form' ]").submit();
+	                        }
+	                    }else{
+	                        common.prompt( d.statusStr );
+	                    }
+	                    pub.loading.hide();
+	                },function( d ){
+	                    common.prompt( d.statusStr );
+	                    pub.loading.hide();
+	                })
+	            },
+	            apiData:function( d ){
+	            	 try{
+	                	
+	                    common.isAndroid() ? android.GoAliPay( common.JSONStr( d ), pub.wxAppPayWay ) : window.webkit.messageHandlers.AliPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
+	                    //window.webkit.messageHandlers.AliPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
+	                }catch(e){}
+	                pub.loading.hide();
+	            },
+	           	alipay_result : function (d){
+	           		/*
+	           		 方法名 aliPayResult
+					参数值1个：成功9000  失败7000  取消8000
+	           		 * */
+	           		if (d) {
+	           			if (d == 9000) {
+	           				if (pub.wxAppPayWay == 1) {
+			           			//common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
+			           			common.jsInteractiveApp({
+									name:'goToNextLevel',
+									parameter:{
+										title:'订单管理',
+										url:'html/order_management.html'
+									}
+								})
+			           		} else if (pub.wxAppPayWay == 2) {
+			           			//common.jumpLinkPlainApp( "我的预购","html/PreOrder_management.html" );
+			           			common.jsInteractiveApp({
+									name:'goToNextLevel',
+									parameter:{
+										title:'我的预购',
+										url:'html/PreOrder_management.html'
+									}
+								})
+			           		} else if (pub.wxAppPayWay == 3) {
+			           			//window.location.reload();
+			           			
+			           			if ( pub.isApp ) {
+			           				if (common.isAndroid()) {
+			           					pub.apiHandle.user_month_card.init();
+			           					setTimeout(function(){
+					           				common.goBackCustomApp({
+					                    		title:'',
+					                    		url:'html/my.html',
+					                    		callBackName:'pub.apiHandle.userScoCouMon.init()'
+						                    });
+					           			},800)
+			           				}else{
+			           					window.location.reload();
+			           				}
+			           			}
+			           		}
+	           			} else if (d == 7000 ) {
+	           				common.prompt("支付失败，请重新支付");
+	           			} else if (d == 8000) {
+	           				common.prompt("取消支付");
+	           			} else {
+	           				console.log("app端传回的参数为"+d)
+	           			}
+	           		}else{
+	           			console.log("app端传回的参数为"+d)
+	           		}
+	           	}
+	        },
+	        // 微信
+	        goto_pay_weixin : {
+	            init : function(){
+	                var tempSource = "payMoney" + pub.payMoney + "-userId" + pub.userId;
+	                pub.weixinPayApi = {
+	                    'base' : { 
+	                        method : 'goto_pay_weixin', 
+	                        url : common.API,
+	                        orderCode : pub.orderCode ,
+	                        source : pub.source,
+	                        sign : pub.sign
+	                    },
+	                    'pre' : { 
+	                        method : 'pre_order_wx_pay', 
+	                        url : common.API,
+	                        orderCode : pub.orderCode,
+	                        source : pub.source,
+	                        sign : pub.sign
+	                    },
+	                    'recharge' : {  
+	                        method : 'month_card_wx_pay',
+	                        url : common.API, 
+	                        userId : pub.userId, 
+	                        rechargeId : pub.rechargeId,
+	                        payMoney : pub.payMoney,
+	                        source : tempSource,
+	                        sign : common.encrypt.md5( tempSource + "key" + common.secretKeyfn() ).toUpperCase(),
+	                    }
+	                }[ pub.seachParam ];
+	
+	                common.ajaxPost( $.extend(pub.weixinPayApi,{
+	                    tokenId : pub.tokenId,
+	                    openId : pub.openId
+	                }),function( d ){
+	                    pub.rechange.goto_pay_weixin.apiData( d );
+	                },function( d ){
+	                    pub.rechange.Vue.isMask = false;
+	                    alert("支付插件升级中。。。");
+	                })
+	            },
+	            apiData : function( d ){
+	
+	                if( d.statusCode == '100000' ){
+	                    //调用微信支付JSAPI
+	                    var 
+	                    result = d.data,
+	                    prepayId = result.prepayId,
+	                    nonceStr = result.nonceStr,
+	                    timeStamp = result.timeStamp,
+	                    packages = result.package, //"prepay_id="+prepayId,
+	                    paySign = result.paySign,
+	                    appId = result.appId,
+	                    signType = result.signType,
+	                    configSign = result.configSign,
+	                    timestamp = result.timestamp,
+	                    noncestr = result.noncestr;
+	                    wx.config({
+	                        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+	                        appId: appId, // 必填，公众号的唯一标识
+	                        timestamp:timestamp, // 必填，生成签名的时间戳
+	                        nonceStr: noncestr, // 必填，生成签名的随机串
+	                        signature: configSign,// 必填，签名，见附录1
+	                        jsApiList: ["chooseWXPay"] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+	                    });
+	                    wx.ready(function(){
+	                        wx.chooseWXPay({
+	                            timestamp: timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+	                            nonceStr: nonceStr, // 支付签名随机串，不长于 32 位
+	                            package: packages, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+	                            signType: signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+	                            paySign: paySign, // 支付签名
+	                            success: function ( res ) {
+	                                var urlStr = { 'base' : 'order_management.html', 'pre' : 'PreOrder_management', 'recharge' : 'month_recharge.html?search=recharge'}[ pub.seachParam ];
+	                                common.jumpLinkPlain( urlStr );
+	                            }
+	                        });
+	                    });
+	                }else{
+	                    common.prompt( d.statusStr );
+	                }
+	                pub.rechange.Vue.isMask = false;
+	            }
+	        },
+	        // 微信 app 支付
+	        wx_pay_app : {
+	
+	            init : function(){
+	                pub.wx_pay_appApi = {
+	                    'base' : {
+	                        method : "goto_pay_weixin_app",
+	                        orderCode : pub.orderCode
+	                    },
+	                    'pre' : {
+	                        method : "pre_order_wx_pay_app",
+	                        orderCode : pub.orderCode,
+	                    },
+	                    'recharge' : {
+	                        method : "month_card_wx_pay_app",
+	                        payMoney : pub.payMoney,
+	                        userId : pub.userId,
+	                    },
+	                    'rechargeApp' : {
+	                        method : "month_card_wx_pay_app",
+	                        payMoney : pub.payMoney,
+	                        userId : pub.userId,
+	                    }
+	                }[ pub.seachParam ];
+	                // app 传参
+	                pub.wxAppPayWay = pub.isRecharge ? '3' : pub.isBase ? '1' : pub.isPre ? '2' : undefined; // 3充值，1普通商品支付，2预购商品
+	
+	                common.ajaxPost($.extend({},pub.userBasicParam,pub.wx_pay_appApi),function( d ){
+	                    d.statusCode == "100000" && pub.apiHandle.wx_pay_app.apiData( d );
+	                },function( d ){
+	                    alert("支付插件升级中。。。");
+	                });
+	            },
+	            apiData : function( d ){
+	                try{
+	                    common.isAndroid() ? android.WXPay( common.JSONStr( d ), pub.wxAppPayWay ) : window.webkit.messageHandlers.WXPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
+	                }catch(e){}
+	                pub.loading.hide();
+	            },
+	            wxpay_result : function(d){
+	            	/*
+	           		 方法名 aliPayResult
+					参数值1个：成功9000  失败7000  取消8000
+	           		 * */
+	           		if (d) {
+	           			if (d == 9000) {
+	           				if (pub.wxAppPayWay == 1) {
+			           			//common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
+			           			common.jsInteractiveApp({
+									name:'goToNextLevel',
+									parameter:{
+										title:'订单管理',
+										url:'html/order_management.html'
+									}
+								})
+			           		} else if (pub.wxAppPayWay == 2) {
+			           			//common.jumpLinkPlainApp( "我的预购","html/PreOrder_management.html" );
+			           			common.jsInteractiveApp({
+									name:'goToNextLevel',
+									parameter:{
+										title:'我的预购',
+										url:'html/PreOrder_management.html'
+									}
+								})
+			           		} else if (pub.wxAppPayWay == 3) {
+			           			//window.location.reload();
+			           			pub.apiHandle.user_month_card.init();
+			           			setTimeout(function(){
+			           				common.goBackCustomApp({
+			                    		title:'',
+			                    		url:'html/my.html',
+			                    		callBackName:'pub.apiHandle.userScoCouMon.init()'
+				                    });
+			           			},800)
+			           			
+			           		}
+	           			} else if (d == 7000 ) {
+	           				common.prompt("支付失败，请重新支付");
+	           			} else {
+	           				console.log("app端传回的参数为"+d)
+	           			}
+	           		}else{
+	           			console.log("app端传回的参数为"+d)
+	           		}
+	            }
+	        },
+		}
+		pub.rechange.eventHandle={
+			init:function(){
+				var rechargeType = $(".recharge_nav li"),
+					rechargeBox = $(".recharge_box .recharge_box_item")
+				/*$(".recharge_nav li").on("click",function(){
+					var isActive = $(this).is(".active"),
+						index = $(this).index();
+					if (!isActive) {
+						$(this).addClass("active").siblings().removeClass("active");
+						rechargeBox.eq(index).addClass("active").siblings().removeClass("active");
+					}
+					
+				})*/
+			}
+		}
+	
+	
+		/*
+		 充值方式数据结构
+		 * */
+		pub.rechargeMethods = {
+			type:'5',//当前选择的支付方式
+			list:[
+				{
+					name:"充值卡充值",
+					type:'5',
+					isShow:true,
+					childreds:[
+						{
+							name:'卡号',
+							msg:"请输入卡号"
+						},{
+							name:'兑换码',
+							msg:'请输入兑换码'
+						}
+					]
+				},
+				{
+					name:"微信充值",
+					type:'1',
+					isShow:false,
+					childreds:[
+						{
+							name:'充值金额',
+							msg:"请输入充值金额"
+						}
+					]
+				},{
+					name:"支付宝充值",
+					type:'2',
+					isShow:false,
+					childreds:[
+						{
+							name:'充值金额',
+							msg:"请输入充值金额"
+						}
+					]
+				},{
+					name:"银行卡充值",
+					type:'3',
+					isShow:false,
+					childreds:[
+						{
+							name:'充值金额',
+							msg:"请输入充值金额"
+						},{
+							name:'银行卡号',
+							msg:'请输入银行卡号'
+						}
+					]
+				},
+			]
+			
+		}
+		
 	    // 模块初始化
 	    pub.init = function(){
 	    	if (!common.huanfu.getKey()) {
@@ -793,7 +1397,8 @@ require(['../require/config'],function(){
 	        });
 	
 	        // 充值环境 执行余额
-	        pub.isRecharge &&  pub.apiHandle.user_month_card.init();
+	        //pub.isRecharge &&  pub.apiHandle.user_month_card.init();
+	        pub.isRecharge && pub.rechange.init();
 	        
 	        $("body").fadeIn(300)
 	    }

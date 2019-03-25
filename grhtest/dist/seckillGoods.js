@@ -24,6 +24,8 @@ require(['../require/config'],function () {
 		
 		pub.websiteNode = common.websiteNode.getItem() ? common.websiteNode.getItem() : null;//站点
 		
+		common.addType.removeItem()
+		
 		pub.loading = $('.click_load');
 		if( pub.logined ){
 			pub.userId = common.user_datafn().cuserInfoid;
@@ -68,12 +70,23 @@ require(['../require/config'],function () {
 		};
 		// 日期格式化
 		pub.seckill.dateFormat = function( time ){
+			var time = Math.floor( time / 1000);
 			if (time > 0) {
-				var days = Math.floor(time/(24*60*60*1000));
-				var hous = Math.floor(time/(60*60*1000)) - days * 24;
-				var min = Math.floor(time/(60*1000)) - days*24*60 - hous * 60;
-				var sec = Math.floor(time/1000) - days*24*60*60 -hous*60*60 -min*60;
-				return days + "天" + hous + "小时" + min + "分" + sec + "秒";
+				var days = Math.floor( time / (3600 * 24) );
+				var hous = Math.floor( (time - days * (3600 * 24)) / 3600 );
+				var min = Math.floor( (time - days * (3600 * 24) - (hous * 3600) ) / 60  );
+				var sec = ( time  % 60 );
+				return	[days,pub.preZero(hous),pub.preZero(min),pub.preZero(sec)];
+			}else{
+				return [0,00,00,00];
+			}
+		};
+		//在进行时分秒转时候，个位前面加零
+		pub.preZero = function( data ){
+			if( !isNaN(data) ){
+				if(+data < 10 ) 
+					return '0'+ data;
+				return data;
 			}
 		};
 		// 倒计时

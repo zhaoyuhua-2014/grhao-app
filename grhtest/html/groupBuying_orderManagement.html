@@ -3,19 +3,23 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>果然好</title>
-		<meta name="viewport" content="width=720,user-scalable=0"/>
+		<!--<meta name="viewport" content="width=720,user-scalable=0"/>
 	    <meta content="telephone=no, address=no" name="format-detection" />
-	    <!--<link rel="stylesheet" type="text/css" href="../css/base.min.css?v=20190319"/>-->
-	    <link rel="stylesheet" type="text/css" href="../css/base.css?v=20190128"/>
+	    <link rel="stylesheet" type="text/css" href="../css/base.min.css?v=20190319"/>
+	    <link rel="stylesheet" type="text/css" href="../css/base.css?v=20190128"/>-->
+	    <meta name="viewport" content="width=720,user-scalable=no" />
+		<meta content="telephone=no, address=no" name="format-detection" />
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body module-id="groupList" class="animation-fadeIn">
-		<div class="header_wrap">
+		<!--<div class="header_wrap">
 			<div class="header_contain">
 				<div class="header_left"><span class="triangle-btn green"></span></div>
 				<h1 class="header_title header_title_color">我的拼团</h1>
 		    </div>
 		</div>
-		<div class="empty"></div>
+		<div class="empty"></div>-->
 		<div class="main_wrap">
 			<div class="main">			
 				<ul class="order_manage_list groupListNav clearfloat">
@@ -63,11 +67,12 @@
 			</div>
 		</div>
 	</body>
-	<script src="../seajs/2.1.1/sea.js"></script>
+	<!--<script src="../seajs/2.1.1/sea.js"></script>
 	<script src="../seajs-config.js?v=20190319"></script>
 	<script>
 		seajs.use(['groupOrder'],function( zs ){
 			zs.init();
 		});
-	</script>
+	</script>-->
+	<script data-main = "../dist/groupOrder.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
 </html>
