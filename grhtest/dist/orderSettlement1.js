@@ -35,7 +35,7 @@ require(['../require/config'],function () {
 			//common.jumpLinkPlain('../index.html'); // 未登录跳转首页
 			common.goHomeApp();
 		}
-	
+		pub.activityType = 1;
 	
 		// pub.goodsList = null; // 普通商品 购物车商品列表
 	
@@ -93,6 +93,7 @@ require(['../require/config'],function () {
 						goodsList : pub.goodsInfoApi, // 接口 所需字段
 						pickUpMethod : pub.pickUpMethod,
 						couponId : pub.couponId,
+						activityType : pub.activityType  // 添加联系方式
 					},pub.userBasicParam), function( d ){
 						d.statusCode == "100000" && PLAIN.apiHandle.shop_cart_submit.apiData( d );
 					});
@@ -171,10 +172,14 @@ require(['../require/config'],function () {
 					}
 					//优惠券金额
 					(function(){
-						pub.orderType == "3" ? listNode.eq(2).hide() : (function(){
+						if(pub.activityType == 7){
+							listNode.eq(2).hide()
+						}else{
+							pub.orderType == "3" ? listNode.eq(2).hide() : (function(){
 							listNode.eq(2).show().find(".float_left").html(getCouponText(dataList));
 							listNode.eq(2).show().find(".float_right").html( orderInfo.couponMoney > 0 ? "-￥" + orderInfo.couponMoney : "-￥0" );
-						})();
+							})();
+						}
 					}());
 					// 优惠券优惠价格信息
 					(function(){
@@ -546,8 +551,8 @@ require(['../require/config'],function () {
 	
 				// 提交订单
 				$('.order_submit').on('click','.confirm-submit',function(){
-					/*var $this = $(this);
-					$this.removeClass('confirm-submit');
+					var $this = $(this);
+					/*$this.removeClass('confirm-submit');
 					var tabIndex = $('.set_charge_contact_right').find('li.actived').index();
 	
 					$this.html('提交中 ...');
@@ -556,7 +561,16 @@ require(['../require/config'],function () {
 						pub.pickUpMethod =  tabIndex == -1 ? '' : '' + ( tabIndex + 1 );
 						pub.remarks = $(".set_order_remark input").val(); // 备注
 					}*/
-					
+					//添加 联系方式
+					pub.customMobile = $(".set_contact_information input").val();
+					if (common.goodsType.getItem() == 'ZHENG_JIAN') {
+						pub.activityType = 7;
+						if (!common.PHONE_NUMBER_REG.test( pub.customMobile )) {
+							common.prompt('手机号输入错误');
+							$this.addClass('confirm-submit').html('订单提交');
+							return;
+						}
+					}
 					$('.order_submit_right').removeClass('confirm-submit').css("background-color","#999").html("提交中...");
 					var tabIndex = $('.set_charge_contact_right').find('li.actived').index();
 	
@@ -583,8 +597,10 @@ require(['../require/config'],function () {
 		PLAIN.submit = function(){
 			common.ajaxPost($.extend({
 				method : 'order_submit_three',
+				activityType:pub.activityType,
 				couponId : pub.couponId,
 				juiceDeliverTime : $('#person_area').val(),
+				customMobile:pub.customMobile,
 				goodsList : pub.goodsInfoApi
 			},pub.userBasicParam, pub.orderParamInfo ),function( d ){
 				
@@ -916,7 +932,12 @@ require(['../require/config'],function () {
 				}else{
 					pub.apiHandle.address_default_show.init(); // 地址获取
 				}
-		
+				
+				//联系人
+				if (common.goodsType.getItem() == 'ZHENG_JIAN') {
+					pub.activityType = 7;
+					$(".set_contact_information").show();	
+				}
 				pub.addrDtd.done(function(){
 					pub.orderType == "1" && pub.plain.init(); // 普通商品
 					pub.orderType == "2" && pub.seckill.init(); // 秒杀
