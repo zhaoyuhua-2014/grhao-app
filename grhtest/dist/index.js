@@ -739,13 +739,23 @@ require(['../require/config'],function () {
 						link = nood.attr("link"),
 						title = nood.attr("tit");
 					if (link != '') {
-						common.jsInteractiveApp({
-							name:'goToNextLevel',
-							parameter:{
-								title:link.indexOf("html/login.html") > -1 ? '登陆' : title,
-								url:link
-							}
-						})
+						if (link.indexOf("whole") != -1) {
+							common.jsInteractiveApp({
+								name:'goFirstView',
+								parameter:{
+									navIndex:2
+								}
+							})
+						}else{
+							common.jsInteractiveApp({
+								name:'goToNextLevel',
+								parameter:{
+									title:link.indexOf("html/login.html") > -1 ? '登陆' : title,
+									url:link
+								}
+							})
+						}
+						
 					}
 				});
 				//确定按钮 -- //取消按钮

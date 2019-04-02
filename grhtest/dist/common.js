@@ -1164,6 +1164,11 @@ define(['jquery','mdData','shar1'],function($,md){
 							var jsonObj = {'hierarchy':parameter.num,'reload':parameter.type,'url':'/'+parameter.url};
 							common.isApple() ? window.webkit.messageHandlers.goBack.postMessage(jsonObj) : android.EvaluateGoBack(JSON.stringify(jsonObj));
 							break;
+						//返回一级页面----->参数  navIndex number类型
+						case 'goFirstView':
+							var jsonObj = {navIndex:parameter.navIndex || 1};
+							common.isApple() ? window.webkit.messageHandlers.goFirstView.postMessage(jsonObj) : android.goFirstView(JSON.stringify(jsonObj));
+							break;
 						default:
 							break;
 					}
