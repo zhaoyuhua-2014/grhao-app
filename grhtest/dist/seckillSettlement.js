@@ -38,7 +38,7 @@ require(['../require/config'],function(){
 		pub.order_settlement = {}
 		ORDER_SET = pub.order_settlement 
 		
-		ORDER_SET.seckill_data = JSON.parse(sessionStorage.getItem('seckillData'))  // 秒杀详情数据
+		ORDER_SET.seckill_data = JSON.parse(localStorage.getItem('seckillData'))  // 秒杀详情数据
 		
 		pub.seckillId = ORDER_SET.seckill_data.seckillId ? ORDER_SET.seckill_data.seckillId  : "" // 秒杀商品id
 		
@@ -176,7 +176,7 @@ require(['../require/config'],function(){
 						case 100000 : (function(){
 							common.orderCode.setItem( d.data.orderCode );
 							common.orderBack.setItem( '1' );
-							sessionStorage.removeItem("seckillData");
+							localStorage.removeItem("seckillData");
 							common.jsInteractiveApp({
 								name:'goToNextLevel',
 								parameter:  {

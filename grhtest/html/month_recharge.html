@@ -113,4 +113,15 @@
 		zs.init();
 	});
 </script>-->
+<script type="text/javascript">
+	//alipay支付回调
+	function aliPayResult ( d ){
+		pub.rechange.order_topay_alipay.alipay_result(d);
+	}
+	//wxpay支付回调
+	function wxPayResult ( d ){
+		pub.rechange.wx_pay_app.wxpay_result(d);
+	}
+	
+</script>
 </html>

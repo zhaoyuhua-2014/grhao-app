@@ -21,10 +21,17 @@ require(['../require/config'],function(){
 	 
 	    pub.isBase = pub.seachParam == 'base' ; // 基本支付
 	    pub.isPre = pub.seachParam == 'pre' ; // 预购支付
+	    pub.isGroup = pub.seachParam == 'group'//团购支付
 	    pub.isRecharge = pub.seachParam == 'recharge' ; // 充值
+	    
+	    pub.urlParam = {
+	    	'base':1,
+	    	'pre':2,
+	    	'recharge':3,
+	    	'group':4
+	    }
 	    //common.isApp() = true
-	    pub.isApp =  common.isApp(); // 接收 app 环境
-	
+	    pub.isApp =  common.isApp() ; // 接收 app 环境
 		if (pub.isRecharge && pub.isApp ) {
 			pub.seachParam = 'rechargeApp'
 		}
@@ -311,13 +318,30 @@ require(['../require/config'],function(){
 	           			if (d == 9000) {
 	           				if (pub.wxAppPayWay == 1) {
 			           			//common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
-			           			common.jsInteractiveApp({
-									name:'goToNextLevel',
-									parameter:{
-										title:'订单管理',
-										url:'html/order_management.html'
-									}
-								})
+//			           			common.jsInteractiveApp({
+//									name:'goToNextLevel',
+//									parameter:{
+//										title:'订单管理',
+//										url:'html/order_management.html'
+//									}
+//								})
+			           			if ( pub.orderType == 2) {
+	                        		common.jsInteractiveApp({
+										name:'goToNextLevel',
+										parameter:{
+											title:'拼单详情',
+											url:'html/groupBuying_orderDetails.html'
+										}
+									})
+	                        	}else{
+	                        		common.jsInteractiveApp({
+										name:'goToNextLevel',
+										parameter:{
+											title:'订单管理',
+											url:'html/order_management.html'
+										}
+									})
+	                        	}
 			           		} else if (pub.wxAppPayWay == 2) {
 			           			//common.jumpLinkPlainApp( "我的预购","html/PreOrder_management.html" );
 			           			common.jsInteractiveApp({
@@ -481,13 +505,30 @@ require(['../require/config'],function(){
 	           			if (d == 9000) {
 	           				if (pub.wxAppPayWay == 1) {
 			           			//common.jumpLinkPlainApp( "订单管理","html/order_management.html" );
-			           			common.jsInteractiveApp({
-									name:'goToNextLevel',
-									parameter:{
-										title:'订单管理',
-										url:'html/order_management.html'
-									}
-								})
+//			           			common.jsInteractiveApp({
+//									name:'goToNextLevel',
+//									parameter:{
+//										title:'订单管理',
+//										url:'html/order_management.html'
+//									}
+//								})
+								if ( pub.orderType == 2) {
+	                        		common.jsInteractiveApp({
+										name:'goToNextLevel',
+										parameter:{
+											title:'拼单详情',
+											url:'html/groupBuying_orderDetails.html'
+										}
+									})
+	                        	}else{
+	                        		common.jsInteractiveApp({
+										name:'goToNextLevel',
+										parameter:{
+											title:'订单管理',
+											url:'html/order_management.html'
+										}
+									})
+	                        	}
 			           		} else if (pub.wxAppPayWay == 2) {
 			           			//common.jumpLinkPlainApp( "我的预购","html/PreOrder_management.html" );
 			           			common.jsInteractiveApp({
@@ -614,7 +655,6 @@ require(['../require/config'],function(){
 	        	}
 	        	clearTimeout(pub.timer)
 	        },10000)
-	        console.log(pub.seachParam)
 	        pub.apiHandle.order_topay_alipay.init();
 	    };
 	    
@@ -787,7 +827,6 @@ require(['../require/config'],function(){
 					    },
 					    btnIsShow:function(){
 					    	if (this.isPhone) {
-					    		console.log(this.inputfocus)
 					    		if (this.inputfocus) {
 					    			return false;
 					    		}else{
@@ -907,11 +946,9 @@ require(['../require/config'],function(){
 							}
 						},
 						inputBlur:function(){
-							console.log("inputBlur")
 							this.inputfocus = false;
 						},
 						inputFocus:function(){
-							console.log("inputFocus")
 							this.inputfocus = true;
 						},
 						jumpPage:function(e){
@@ -1010,10 +1047,12 @@ require(['../require/config'],function(){
 	                    'recharge' : {
 	                        method : 'month_card_ali_pay',
 	                        payMoney : pub.payMoney,
+	                        rechargeId : pub.rechargeId,
 	                        userId : pub.userId,
 	                    },
 	                    'rechargeApp' : {
 	                    	method : 'month_card_ali_pay2',
+	                    	rechargeId : pub.rechargeId,
 	                        payMoney : pub.payMoney,
 	                        userId : pub.userId,
 	                    }
@@ -1040,10 +1079,12 @@ require(['../require/config'],function(){
 	                    }else{
 	                        common.prompt( d.statusStr );
 	                    }
+	                    pub.rechange.Vue.isMask = false;
 	                    pub.loading.hide();
 	                },function( d ){
 	                    common.prompt( d.statusStr );
 	                    pub.loading.hide();
+	                    pub.rechange.Vue.isMask = false;
 	                })
 	            },
 	            apiData:function( d ){
@@ -1053,6 +1094,7 @@ require(['../require/config'],function(){
 	                    //window.webkit.messageHandlers.AliPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
 	                }catch(e){}
 	                pub.loading.hide();
+	                pub.rechange.Vue.isMask = false;
 	            },
 	           	alipay_result : function (d){
 	           		/*
@@ -1083,18 +1125,19 @@ require(['../require/config'],function(){
 			           			//window.location.reload();
 			           			
 			           			if ( pub.isApp ) {
-			           				if (common.isAndroid()) {
-			           					pub.apiHandle.user_month_card.init();
-			           					setTimeout(function(){
-					           				common.goBackCustomApp({
-					                    		title:'',
-					                    		url:'html/my.html',
-					                    		callBackName:'pub.apiHandle.userScoCouMon.init()'
-						                    });
-					           			},800)
-			           				}else{
-			           					window.location.reload();
-			           				}
+			           				pub.rechange.api.user_month_card.init();
+//			           				if (common.isAndroid()) {
+//			           					pub.rechange.api.user_month_card.init();
+//			           					setTimeout(function(){
+//					           				common.goBackCustomApp({
+//					                    		title:'',
+//					                    		url:'html/my.html',
+//					                    		callBackName:'pub.apiHandle.userScoCouMon.init()'
+//						                    });
+//					           			},800)
+//			           				}else{
+//			           					window.location.reload();
+//			           				}
 			           			}
 			           		}
 	           			} else if (d == 7000 ) {
@@ -1107,6 +1150,7 @@ require(['../require/config'],function(){
 	           		}else{
 	           			console.log("app端传回的参数为"+d)
 	           		}
+	           		pub.rechange.Vue.isMask = false;
 	           	}
 	        },
 	        // 微信
@@ -1208,10 +1252,12 @@ require(['../require/config'],function(){
 	                    'recharge' : {
 	                        method : "month_card_wx_pay_app",
 	                        payMoney : pub.payMoney,
+	                        rechargeId : pub.rechargeId,
 	                        userId : pub.userId,
 	                    },
 	                    'rechargeApp' : {
 	                        method : "month_card_wx_pay_app",
+	                        rechargeId : pub.rechargeId,
 	                        payMoney : pub.payMoney,
 	                        userId : pub.userId,
 	                    }
@@ -1220,9 +1266,10 @@ require(['../require/config'],function(){
 	                pub.wxAppPayWay = pub.isRecharge ? '3' : pub.isBase ? '1' : pub.isPre ? '2' : undefined; // 3充值，1普通商品支付，2预购商品
 	
 	                common.ajaxPost($.extend({},pub.userBasicParam,pub.wx_pay_appApi),function( d ){
-	                    d.statusCode == "100000" && pub.apiHandle.wx_pay_app.apiData( d );
+	                    d.statusCode == "100000" && pub.rechange.wx_pay_app.apiData( d );
 	                },function( d ){
 	                    alert("支付插件升级中。。。");
+	                    pub.rechange.Vue.isMask = false;
 	                });
 	            },
 	            apiData : function( d ){
@@ -1230,6 +1277,7 @@ require(['../require/config'],function(){
 	                    common.isAndroid() ? android.WXPay( common.JSONStr( d ), pub.wxAppPayWay ) : window.webkit.messageHandlers.WXPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
 	                }catch(e){}
 	                pub.loading.hide();
+	                pub.rechange.Vue.isMask = false;
 	            },
 	            wxpay_result : function(d){
 	            	/*
@@ -1258,14 +1306,15 @@ require(['../require/config'],function(){
 								})
 			           		} else if (pub.wxAppPayWay == 3) {
 			           			//window.location.reload();
-			           			pub.apiHandle.user_month_card.init();
-			           			setTimeout(function(){
-			           				common.goBackCustomApp({
-			                    		title:'',
-			                    		url:'html/my.html',
-			                    		callBackName:'pub.apiHandle.userScoCouMon.init()'
-				                    });
-			           			},800)
+			           			pub.rechange.api.user_month_card.init();
+//			           			pub.apiHandle.user_month_card.init();
+//			           			setTimeout(function(){
+//			           				common.goBackCustomApp({
+//			                    		title:'',
+//			                    		url:'html/my.html',
+//			                    		callBackName:'pub.apiHandle.userScoCouMon.init()'
+//				                    });
+//			           			},800)
 			           			
 			           		}
 	           			} else if (d == 7000 ) {
@@ -1276,8 +1325,18 @@ require(['../require/config'],function(){
 	           		}else{
 	           			console.log("app端传回的参数为"+d)
 	           		}
+	           		pub.rechange.Vue.isMask = false;
 	            }
 	        },
+	        goRechangeHistory(){
+	        	common.jsInteractiveApp({
+					name:'goToNextLevel',
+					parameter:{
+						title:'充值记录',
+						url:'html/recharge_record.html'
+					}
+				})
+	        }
 		}
 		pub.rechange.eventHandle={
 			init:function(){

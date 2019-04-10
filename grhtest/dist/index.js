@@ -20,7 +20,6 @@ require(['../require/config'],function () {
 		
 		pub.timer = null;//定时器id管理
 		
-		
 		pub.isrefresh = false;//判断banner轮播是否是刷新操作；
 		
 		pub.paramListInit = function(){
@@ -282,67 +281,67 @@ require(['../require/config'],function () {
 //				}
 //	 		},
 	 		apiDataDeal : function( data ){
-	 			console.log(data)
 				var 
 				html = '',
-				goodsInfo = '';
-				html += '<div class="index_common lazyload index_inner3">'
-				html += '	<div class="goods_area hidden"></div>'
-				for(var i in data) {
-					
-					goodsInfo = data[i].goodsInfo;
-					var arr = [];
-					if(!goodsInfo.tagConfigs || goodsInfo.tagConfigs.length == 0){
-						goodsInfo.isHot == 1 && arr.push('isHot');
-						goodsInfo.isNew == 1 && arr.push('isNew');
-						goodsInfo.isRecommend == 1 && arr.push('isRecommend');
-						goodsInfo.isSale == 1  && arr.push('isSale');
-					}
-					html += '<dl data="' + goodsInfo.id + '" goods-box="goods-box" class="'+ (goodsInfo.packageNum <=0 ? "sellOut" : "") +'">'
-					html += '	<dt>'
-					html += '		<img ' + ( i < 6 ? 'src' : 'data-src'  ) + '=' + goodsInfo.goodsLogo  + ' class="fadeIn"/>'
-					if(!goodsInfo.tagConfigs || goodsInfo.tagConfigs.length == 0){
-						html += '<div class="box">'
-						for(var k = 0; k < arr.length; k++){ html += '<span class="goodSatce ' + arr[k] + '"></span>' }
-						html += '</div>'
-					}else{
-						html += '<div class="tag_box_top" >'
-						for(var t = 0 ; t < goodsInfo.tagConfigs.length; t++){
-							var tagStyle = 'background:url('+goodsInfo.tagConfigs[t].background+') no-repeat 100%/100%;color:'+goodsInfo.tagConfigs[t].nameColour +';'
-							if(goodsInfo.tagConfigs[t].site == 1){
-								tagStyle += 'float: left;'; 
-								html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
-							}else if(goodsInfo.tagConfigs[t].site == 2){
-								tagStyle += 'float: right;'; 
-								html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
-							}
+				goodsInfo = '',
+				activityInfo = data;
+				
+					html += '<div class="index_common lazyload index_inner3">'
+					html += '	<div class="goods_area hidden"></div>'	
+					for(var j in activityInfo)	{
+						var arr = [];
+						goodsInfo = activityInfo[j].goodsInfo
+						if(!goodsInfo.tagConfigs || goodsInfo.tagConfigs.length == 0){
+							goodsInfo.isHot == 1 && arr.push('isHot');
+							goodsInfo.isNew == 1 && arr.push('isNew');
+							goodsInfo.isRecommend == 1 && arr.push('isRecommend');
+							goodsInfo.isSale == 1  && arr.push('isSale');
 						}
-						html += '</div>'
-						html += '<div class="tag_box_bottom" >'
-						for(var t = 0 ; t < goodsInfo.tagConfigs.length; t++){
-							var tagStyle = 'background:url('+goodsInfo.tagConfigs[t].background+') no-repeat 100%/100%;color:'+goodsInfo.tagConfigs[t].nameColour +';'
-							if(goodsInfo.tagConfigs[t].site == 3){
-								tagStyle += 'float: left;'; 
-								html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
-							}else if(goodsInfo.tagConfigs[t].site == 4){
-								tagStyle += 'float: right;'; 
-								html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
+						html += '<dl data="' + goodsInfo.id + '" goods-box="goods-box" class="'+ (goodsInfo.packageNum <=0 ? "sellOut" : "") +'">'
+						html += '	<dt>'
+						html += '		<img ' + ( j < 6 ? 'src' : 'data-src'  ) + '=' + goodsInfo.goodsLogo  + ' class="fadeIn"/>'
+						if(!goodsInfo.tagConfigs || goodsInfo.tagConfigs.length == 0){
+							html += '<div class="box">'
+							for(var k = 0; k < arr.length; k++){ html += '<span class="goodSatce ' + arr[k] + '"></span>' }
+							html += '</div>'
+						}else{
+							html += '<div class="tag_box_top" >'
+							for(var t = 0 ; t < goodsInfo.tagConfigs.length; t++){
+								var tagStyle = 'background:url('+goodsInfo.tagConfigs[t].background+') no-repeat 100%/100%;color:'+goodsInfo.tagConfigs[t].nameColour +';'
+								if(goodsInfo.tagConfigs[t].site == 1){
+									tagStyle += 'float: left;'; 
+									html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
+								}else if(goodsInfo.tagConfigs[t].site == 2){
+									tagStyle += 'float: right;'; 
+									html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
+								}
 							}
-							
+							html += '</div>'
+							html += '<div class="tag_box_bottom" >'
+							for(var t = 0 ; t < goodsInfo.tagConfigs.length; t++){
+								var tagStyle = 'background:url('+goodsInfo.tagConfigs[t].background+') no-repeat 100%/100%;color:'+goodsInfo.tagConfigs[t].nameColour +';'
+								if(goodsInfo.tagConfigs[t].site == 3){
+									tagStyle += 'float: left;'; 
+									html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
+								}else if(goodsInfo.tagConfigs[t].site == 4){
+									tagStyle += 'float: right;'; 
+									html += '<span class="tagStatus " style="'+ tagStyle  +'">'+goodsInfo.tagConfigs[t].name+'</span>'
+								}
+								
+							}
+							html += '</div>'
 						}
-						html += '</div>'
+						html += '	</dt>'
+						html += '	<dd>'
+						html += '		<p class="goodName">' + goodsInfo.goodsName + '</p>'
+						html += '		<p class="clearfloat">'
+						html += '			<span class="index_price">￥'+goodsInfo.nowPrice + '</span>'
+						html += '			<del class="index_old_price">￥'+ goodsInfo.nomalPrice + '</del>'
+						html += '		</p>'
+						html += '	</dd>'
+						html += '</dl>'
 					}
-					html += '	</dt>'
-					html += '	<dd>'
-					html += '		<p class="goodName">' + goodsInfo.goodsName + '</p>'
-					html += '		<p class="clearfloat">'
-					html += '			<span class="index_price">'+ goodsInfo.nowPrice + '</span>'
-					html += '			<del class="index_old_price">￥'+ goodsInfo.nomalPrice + '</del>'
-					html += '		</p>'
-					html += '	</dd>'
-					html += '</dl>'
-				}
-				html += '</div>'
+					html +="</div>"
 				$(".home_goods_show").html( html );
 				try{
 					common.cancelDialogApp();
@@ -361,7 +360,7 @@ require(['../require/config'],function () {
 					html += '<div class="index_common lazyload index_inner'+data[i].goodsNum +'">'
 					if (!!data[i].actvityLogo) {
 						link = pub.apiHandle.getActiveUrl(data[i].linkUrl);
-						html += '<div class="goods_area" link="'+ link + '" tit="活动"><img src="'+data[i].actvityLogo+'" alt="" /></div>'	
+						html += '<div class="goods_area" link="'+ link + '" tit="'+data[i].activityName+'"><img src="'+data[i].actvityLogo+'" alt="" /></div>'	
 					}else{
 						html += '<div class="goods_area hidden"></div>'	
 					}

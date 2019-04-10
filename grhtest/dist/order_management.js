@@ -13,6 +13,9 @@ require(['../require/config'],function(){
 		pub.PAGE_SIZE = common.PAGE_SIZE; // 页面显示数据个数
 	
 		pub.moduleId = $('[module-id]').attr( 'module-id' );  // 模块 id 
+		
+		
+		var down = new common.CountDown();
 	
 		if( pub.logined ){
 			pub.userId = common.user_datafn().cuserInfoid;
@@ -104,7 +107,7 @@ require(['../require/config'],function(){
 		       			$(".order_manage_contain").html("")
 		       		}
 		       		$.each( d.data.objects, function( i, v ){
-		       	    	html += '<div class="order_manage_content" dataCode=' + v.orderCode + ' dataActivityType=' + v.activityType + '>'
+		       	    	html += '<div class="order_manage_content '+ getOrderTypeClass( v.killIsNot , v.activityType) +'" dataCode=' + v.orderCode + ' dataActivityType=' + v.activityType + '>'
 		       	   	    html += '   <div class="order_manage_num clearfloat">'
 		       	   	    html += '      <div class="order_num_left">订单编号：' + v.orderCode + '</div>'
 	
@@ -115,11 +118,6 @@ require(['../require/config'],function(){
 		       	   	    html += '       <dl>'
 		       	   	    html += '           <dt dataActivityType=' + v.activityType + '>'
 		       	   	    html += '                <img class="img_shopLogo" src="' + v.orderLogo + '" alt="" /> '
-	
-	                    v.activityType == '1' && ( html += '' ) 	
-	                   	v.activityType == '3' && ( html += '            <img class="img_miaoLogo" src="../img/icon_miao_s.png" alt="" />' )	
-	                   	v.activityType == '4' && ( html += '           <img class="img_miaoLogo" src="../img/icon_yu_s.png" alt="" />' )
-	
 		       	   	    html += '           </dt>'
 		       	   	    html += '           <dd>'
 		       	   	    html += '                <div class="manage_details_top">' + v.allGoodsName + '</div>'
@@ -154,6 +152,21 @@ require(['../require/config'],function(){
 				 		//pub.iscroll.resetload();
 				 		pub.pullInstance.pullDownSuccess();
 				 	}
+			        
+			        /*
+			       	 获取订单类型的class 类
+			       	*/
+			       	function getOrderTypeClass(isKill , activityType){
+			       		var classStr = '';
+			       		if (isKill == '1') {
+		       	   	    	classStr += 'orderKill'
+		       	   	    }else{
+		       	   	    	if (activityType == '2') {
+		       	   	    		classStr += 'orderGroup'
+		       	   	    	}
+		       	   	    }
+		       	   	    return classStr;
+			       	}
 				}
 			},
 	
@@ -253,7 +266,7 @@ require(['../require/config'],function(){
 							}
 						})
 				    }else if( status == '7' ){ // 评价
-	
+						localStorage.setItem("evaluationType",1)
 				    	common.orderColumn.removeItem();
 						common.jsInteractiveApp({
 							name:'goToNextLevel',
@@ -431,6 +444,8 @@ require(['../require/config'],function(){
 			        		
 			        		if (orderInfo.pickUpMethod == 2) {
 		        				$(".watm_info").html("<p>订单号后五位："+orderInfo.orderCode.substring(orderInfo.orderCode.length - 5 ,orderInfo.orderCode.length)+"</p><p>提货码：******</p><div id='scanQRCode' class='scanQRCode' style='display:none'></div>");
+		        			}else if ( orderInfo.pickUpMethod == 1 ){
+		        				$(".watm_info").html("<p>订单号后五位："+orderInfo.orderCode.substring(orderInfo.orderCode.length - 5 ,orderInfo.orderCode.length)+"</p><p>提货码："+ orderInfo.pickUpCode +"</p>");
 		        			}
 			        		if (orderInfo.orderStatus == 3 ) {
 			        			if (orderInfo.pickUpMethod == 2) {
@@ -444,8 +459,44 @@ require(['../require/config'],function(){
 			        			}
 			        			
 			        		}
+			        		if (orderInfo.orderStatus == -1) {
+			        			$(".watm_info_wrap").addClass("hidden");
+			        		}
 			        		if (orderInfo.orderStatus == 3 && $(".watm_info_wrap").find('p.msg').length == 0) {
 			        			$(".watm_info_wrap").append("<p class='msg' style='color:#df3a1f;font-size:26px;line-height:40px;text-align:center'>请于今日24点前去售货机取货，过时自动取消订单，支付金额将原路退回。</p>")
+			        		}
+			        		if (orderInfo.activityType == '7') {
+//			        			if(orderInfo.pickUpMethod == '1'){
+//			        				pickBox1
+//						        	.find('.phoneNumber').html('订单号后五位： ' + orderInfo.orderCode.substring(orderInfo.orderCode.length - 5 ,orderInfo.orderCode.length) ).end()
+//						        	.find('.codeNumber').html('提取码：  ' + orderInfo.pickUpCode );
+//			        			}
+//			        			$('.pickUpcode-box1 .order_notice').html( "<p class='text'>"+orderInfo.estimatedTimeAdd+"</p>" )
+//			        			pickBox1.show()
+								
+								if ($(".watm_info_wrap").find('p.msg').length == 0) {
+									$(".watm_info_wrap").append("<p class='msg' style='color:#df3a1f;font-size:26px;line-height:40px;text-align:center'>"+orderInfo.estimatedTimeAdd+"</p>" )									
+								}else{
+									$(".watm_info_wrap").find(".msg").html( orderInfo.estimatedTimeAdd );
+									
+								}
+								if (orderInfo.orderStatus != 3 && orderInfo.orderStatus != 4) {
+									$(".watm_info_wrap").addClass("hidden")
+								}
+			        		}else if(orderInfo.activityType == '2'){
+			        			if (orderInfo.groupStatus && orderInfo.groupStatus == '2') {
+			        				/* 配送只存在一种  售货机自提自提 */
+			        				if ($(".watm_info_wrap").find('p.msg').length == 0) {
+										$(".watm_info_wrap").append("<p class='msg' style='color:#df3a1f;font-size:26px;line-height:40px;text-align:center'>"+orderInfo.estimatedTimeAdd+"</p>" )									
+									}else{
+										$(".watm_info_wrap").find(".msg").html( orderInfo.estimatedTimeAdd );
+										
+									}
+			        			}else{
+			        				$(".watm_info_wrap").hide()
+			        			}
+			        		}else{
+//			        			pickBox.show()
 			        		}
 			        		if (orderInfo.orderStatus == 7 || orderInfo.orderStatus == 8) {
 			        			var i = ''
@@ -544,7 +595,52 @@ require(['../require/config'],function(){
 			        });
 	
 					$(".order_goods_contain_details").html(html);
-	
+					if( d.data.groups ){
+			        	var groups = d.data.groups,
+			        		groupMembers = d.data.groupBuyers;
+			        	var activeInfo = {
+							beginTime : groups.beginTime,
+							endTime : groups.endTime,
+							nowDate : groups.nowDate,
+							num : groups.num,
+							len : groupMembers.length,
+							groupMembers:groupMembers,
+							groupStatus : groups.groupStatus
+						};
+						var resultBox = $(".groupResultBox"),
+							userBoxDom = resultBox.find(".groupMember .groupMemberList");
+						resultBox.find(".float_right.groupDes").attr("orderCode",d.data.orderInfo.orderCode)
+						var str = '',j=0,len = activeInfo.num;
+						userBoxDom.width(len*120);
+						for (var j=0;j<len;j++) {
+							var isActive ='';
+							if (activeInfo.groupMembers[j] && activeInfo.groupMembers[j].buyerId == pub.userId) {
+								isActive = "active"
+							}
+							str += '<div class="float_left memberItem '+isActive+'">'
+							if ( activeInfo.groupMembers[j] ) {
+								str += '	<img src="'+ activeInfo.groupMembers[j].logo +'" />'
+							}
+							str += '</div>'
+						}
+						userBoxDom.html(str)
+						
+						
+				
+						down.init({
+							startTime:activeInfo.beginTime,
+							endTime:activeInfo.endTime,
+							serverTime:activeInfo.nowDate,
+							targetDom:$(".groupResultMsg .time_text"),
+							num: +activeInfo.num - activeInfo.len,
+							groupStatus:activeInfo.groupStatus
+						})
+						if (orderInfo.orderStatus == 1 || orderInfo.orderStatus == 2 ) {
+							
+						}else{
+							$(".groupResultBox").show();
+						}
+			        }
 			        //支付金额运算详情
 			        if ( orderInfo.activityType == 2 ) { // 秒杀
 			        	$('.list-group1','.order_set_list').show();
@@ -684,6 +780,7 @@ require(['../require/config'],function(){
 						if( commentBtn ){ 
 							common.orderColumn.removeItem();
 							//common.jumpLinkPlainApp( "评价",'html/order_evaluation.html' );
+							localStorage.setItem("evaluationType",2)
 							common.jsInteractiveApp({
 								name:'goToNextLevel',
 								parameter:{
@@ -756,6 +853,20 @@ require(['../require/config'],function(){
 				$(".watm_info").on("click",".scanQRCode",function(){
 					common.StartToScanPageApp('扫描二维码提货','html/scan.html');
 				})
+				
+				/*新增跳转团购详情*/
+				$(".groupResultBox").on("click",".float_right.groupDes",function(){
+					var $this = $(this);
+//					common.orderCode.setItem( $this.attr('orderCode') ); 
+//					common.jumpLinkPlain( 'groupBuying_orderDetails.html' );
+					common.jsInteractiveApp({
+						name:'goToNextLevel',
+						parameter:{
+							title:'团购详情',
+							url:'html/groupBuying_orderDetails.html'
+						}
+					})
+				});
 			}
 		};
 	

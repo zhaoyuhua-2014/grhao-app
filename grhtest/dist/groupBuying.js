@@ -426,7 +426,7 @@ require(['../require/config'],function () {
 					if(pub.logined){
 						if($(this).hasClass('actived')){
 							GROUP_DETAILS.apiHandle.group_goods_sponsor.init();
-							sessionStorage.setItem('groupData',pub.goodsListStr)
+							localStorage.setItem('groupData',pub.goodsListStr)
 						}
 					}else{
 						common.jsInteractiveApp({
@@ -453,7 +453,7 @@ require(['../require/config'],function () {
 		
 		
 		GROUP_SETTLEMENT.info = null;
-		GROUP_SETTLEMENT.data =  sessionStorage.getItem('groupData')
+		GROUP_SETTLEMENT.data =  localStorage.getItem('groupData')
 		GROUP_SETTLEMENT.pickUpMethod = 1;
 		
 		GROUP_SETTLEMENT.apiHandle={

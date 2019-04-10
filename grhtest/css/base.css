@@ -343,7 +343,7 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .gd_price span {color:rgb(254,120,49);font-size:36px;}
 .gd_price del {color:rgb(136,136,136);font-size:24px;}
 
-.goodsDetails_box2 {width:100%;height:auto;background:#FFFFFF;}
+.goodsDetails_box2 {width:100%;height:auto;background:#FFFFFF;margin-bottom: 100px;}
 /*.goodsDetails_box2 h4 {height:80px;line-height:80px;font-size:30px;color:rgb(147,192,29);text-indent:30px;background: #F0F0F0;border-top: 1px solid #CCCCCC;border-bottom: 1px solid #CCCCCC;}
 */
 .goodsDetails_box2 h4 span{width: 16px;height: 16px;border-radius: 50%;background: rgb(147,192,29);position: relative;top: 32px;left: 25px;}
@@ -1637,6 +1637,7 @@ to {
 .help_item.help_chat{background-image:url(../img/icon_chat.png) ;background-position-x: 170px;padding-left: 230px;}
 .help_content .msg{text-align: center;font-size: 24px;color: #999;}
 
+.zs-setting-box .quit{width: 550px;height: 80px;margin: 50px auto;font-size: 30px;color: #fff;background-color: #93c01d;text-align: center;line-height: 80px;border-radius: 20px;display: block}
 
 /*
  重写我页面图标样式
@@ -1692,7 +1693,7 @@ to {
 
 /*2019-3-05 --首页样式改版*/
 .index_active_wrap{padding-bottom: 0;height:auto;}
-.index_common{width: 100%; font-size: 24px; color: #fff; overflow: hidden;padding-right: 16px; padding-left: 16px;}
+.index_common{width: 100%; font-size: 24px; color: #fff; overflow: hidden;padding-right: 16px; padding-left: 16px;background-color: #FFFFFF;}
 .index_common .goods_area{margin-bottom:24px;width:688px;height:200px;border-radius: 8px;background-image: url(../img/pic_logo_load.png); background-repeat: no-repeat; background-position: center; background-size: 100% 100%; overflow: hidden;}
 .index_common:nth-child(1){margin-top:40px;}
 .index_common .goods_area img{width:100%;height:100%;border-radius: 8px;}
@@ -1795,7 +1796,7 @@ to {
 .footer_car_show{transform:translate(0,0);-ms-transform:translate(0,0);/* IE 9 */-webkit-transform:translate(0,0);/* Safari and Chrome */ -webkit-transition: -webkit-transform .3s; transition: -webkit-transform .3s; transition: transform .3s; transition: transform .3s,-webkit-transform .3s}
 .car_top{padding: 10px 24px;font-size: 26px;}
 .car_main{background: #FFFFFF;}
-.car_main ul{padding: 0 24px;max-height: 520px;}
+.car_main ul{padding: 0 24px;max-height: 520px;overflow-y: scroll;}
 .car_main ul li{width: 100%; height: 86px; line-height: 86px; border-bottom: 1px solid #CCC; position: relative;}
 .car_main .car_left{font-size: 24px;color: #000000;width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
 .car_main li .msg {width: 170px;color: #F31B44;font-size: 24px;padding-left:10px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
@@ -2004,7 +2005,7 @@ to {
 /*充值样式*/
 [v-cloak]{display: none;}
 .main_wrap.recharge-wrap{background: none;}
-.recharge_main{padding: 24px;}
+.recharge_main{padding: 24px;padding-bottom: 140px;}
 .recharge_user_money{width: 100%;padding: 40px;border-radius: 16px;background: #FFFFFF;color: #333333;}
 .recharge_user_money .desc{height: 60px;font-size: 32px;}
 .recharge_user_money .money{font-size: 26px;}
@@ -2058,3 +2059,13 @@ to {
 .clearfix:after{content: "";display:block;clear: both;}
 .ellipsis{overflow: hidden;text-overflow:ellipsis;white-space: nowrap;}
 
+/*订单结算*/
+
+.set_charge_con .set_delivery_box{display: none;padding: 0 20px 10px;margin-top: 0;height: auto;line-height: 42px;min-height: 64px;}
+.set_charge_con .set_delivery_box dt{height: auto;float: left;line-height: 42px;}
+.set_charge_con .set_delivery_box dd{overflow: hidden; height: auto; line-height: 42px; color: #F32927;}
+.set_charge_con .set_delivery_box dd{overflow: hidden; height: auto; line-height: 42px; color: #F32927;}
+.set_contact_information{width: 100%; height: 100px; margin-top: 20px; padding: 0 20px; background: #ffffff; line-height: 100px; font-size: 30px; color: rgb(51,51,51); display: none;}
+.set_contact_information .float_left{position: relative;width: 150px;padding-left: 10px;}
+.set_contact_information .float_left:before{content: "*";position: absolute;top: 4px;left: -10px;color: #F32927;font-size: 32px;font-weight: 800;}
+.set_contact_information input{width: 500px;}

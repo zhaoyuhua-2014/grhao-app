@@ -40,10 +40,12 @@ require(['../require/config'],function(){
 	
 					$('.off_line_state').css({'display':'none'});
 					$('.user_name').html( common.user_datafn().petName );
-					$('.user_phone').html(phone)
+					$('.user_phone').html(phone);
+					$('.user_name_phone').show();
 					pub.apiHandle.userScoCouMon.init(); // 包月卡余额 + 果币 + 优惠券数量
 				}else{
 			        $('.off_line_state').css({'display':'block'});
+			        $('.user_name_phone').hide();
 				}
 			},
 			// 包月卡余额 + 果币 + 优惠券数量
@@ -56,7 +58,7 @@ require(['../require/config'],function(){
 					});
 				},
 				apiData : function( d ){
-					var nodeCard = $("#month_card"),nodeFruit=$("#fruit_money"),nodeCoupon=$('.wo_main_coupon');
+					var nodeCard = $("#user_money"),nodeFruit=$("#user_fruit_money"),nodeCoupon=$('#user_coupon');
 					if ( d.statusCode == "100000" ) {
 						var data = d.data;
 						nodeCard.html("￥"+data.userMonthCard.systemMoney);
@@ -75,41 +77,7 @@ require(['../require/config'],function(){
 					}
 				}
 			},
-			// 退出登录
-			logout : {
-				init : function(){
-					common.ajaxPost({
-						method : 'logout',
-						tokenId : pub.tokenId
-					},function( d ){
-						/*通知APP刷新页面*/
-						common.tellRefreshAPP();
-						/*清除本地购物车数据*/
-						common.good.removeItem();
-						//common.setShopCarNumApp();
-						common.setShopCarNum_ShoppingCartApp('0')
-						/*移除用户相关信息*/
-						common.tokenId.removeItem();
-						common.secretKey.removeItem();
-						common.user_data.removeItem();
-						/*移除门店相关信息*/
-						if ( d.statusCode == '100000' ) {}
-						var huanfu = common.huanfu.getItem();
-							common.session.clear();
-							common.huanfu.setItem(huanfu);
-						common.jsInteractiveApp({name:'exit1'})
-						location.replace( location.href );
-					},function( d ){
-						common.tellRefreshAPP();
-						common.good.removeItem();
-						//common.setShopCarNumApp();
-						common.setShopCarNum_ShoppingCartApp('0')
-						common.tokenId.removeItem();
-						common.secretKey.removeItem();
-						common.user_data.removeItem();
-					});
-				}
-			},
+			
 			img_upload:function(data,el){
 				$.ajax({
 					type:"POST",
@@ -147,6 +115,14 @@ require(['../require/config'],function(){
 						str:common.JSONStr( data )
 					}
 				});
+			},
+			goRechangeHistroy(){
+				common.jsInteractiveApp({
+					name:'saveLoginInfo',
+					parameter:{
+						str:common.JSONStr( data )
+					}
+				});
 			}
 		};
 		
@@ -158,38 +134,49 @@ require(['../require/config'],function(){
 	
 			// 订单管理 + 我的预购 + 优惠券 + 收货地址 + 果币商城 + 在线充值 + 修改密码 + 帮助中心 + 设置
 			$('.zs_personal,.main_top_right').click(function(){
-				var url = $(this).attr('data-url');
-				var tit = $(this).attr("tit");
-				var right = $(this).attr("data-right");
-				
+				var url = $(this).attr('data-url'),
+					tit = $(this).attr("tit"),
+					right = $(this).attr("data-right");
+					isOnlineServer = $(this)[0].className.indexOf('online_service');
 				if( pub.logined ){
 					common.addressData.removeItem();
 					common.addType.removeItem();
 					common.orderCode.removeItem();
 					localStorage.removeItem("addId");
 					if (right) {
-						if (right == 'img') {
-							var l = window.location.href.substring(0, window.location.href.indexOf("/html/"));
-							var imgIcon =  l + '/img/icon_Invalid.png';
+						var l = window.location.href.substring(0, window.location.href.indexOf("/html/"));
+						var imgIcon =  l + '/img/icon_Invalid.png';
+						
+						common.jsInteractiveApp({
+							name:'jumpLinkCustom',
+							parameter:{
+								title:tit,
+								url:url,
+								imgIcon: right == 'img' ? imgIcon : '',//(function(){pub.couponList.apiHandle.jumpLink()})()
+								txt: right == 'txt' ? '充值记录' : '',
+								callBackName:right == 'img' ? 'pub.couponList.apiHandle.jumpLink()' : right == 'txt' ? 'pub.rechange.goRechangeHistory()' : ''
+							}
+						})
+					}else{
+						if (isOnlineServer != -1) {
+							if (common.user_datafn().isRegOpenfire == 1) {
+								common.jsInteractiveApp({
+									name:'goChat'
+								})
+							}else{
+								pub.iminfo_regist();
+							}
+						}else{
 							common.jsInteractiveApp({
-								name:'jumpLinkCustom',
+								name:'goToNextLevel',
 								parameter:{
 									title:tit,
-									url:url,
-									imgIcon: right == 'img' ? imgIcon : '',//(function(){pub.couponList.apiHandle.jumpLink()})()
-									callBackName:right == 'img' ? 'pub.couponList.apiHandle.jumpLink()' : ''
+									url:url
 								}
 							})
 						}
-					}else{
 						//common.jumpLinkPlainApp( tit,url );
-						common.jsInteractiveApp({
-							name:'goToNextLevel',
-							parameter:{
-								title:tit,
-								url:url
-							}
-						})
+						
 					}
 					
 				}else{
@@ -203,26 +190,20 @@ require(['../require/config'],function(){
 					//common.jumpLinkPlainApp('登录','html/login.html?type='+5);
 				}
 			});
-			$(".zs_onlineChat").on("click",function(){
-				if( pub.logined ){
-					if (common.user_datafn().isRegOpenfire == 1) {
-						common.jsInteractiveApp({
-							name:'goChat'
-						})
-					}else{
-						pub.iminfo_regist();
-					}
-				}else{
-					common.jsInteractiveApp({
-						name:'goToNextLevel',
-						parameter:{
-							title:'登录',
-							url:'html/login.html?type='+5
-						}
-					})
-					//common.jumpLinkPlainApp('登录','html/login.html?type='+5);
-				}
-			})
+//			$(".zs_onlineChat").on("click",function(){
+//				if( pub.logined ){
+//					
+//				}else{
+//					common.jsInteractiveApp({
+//						name:'goToNextLevel',
+//						parameter:{
+//							title:'登录',
+//							url:'html/login.html?type='+5
+//						}
+//					})
+//					//common.jumpLinkPlainApp('登录','html/login.html?type='+5);
+//				}
+//			})
 			
 			$(".off_line_state").on("click",'a',function(){
 				var nodeEle = $(this);
@@ -241,10 +222,6 @@ require(['../require/config'],function(){
 				/*window.top.postMessage('123456', '*');*/
 				console.log(1)
 			})
-			// 点击退出
-			$('.exit').on('click',function(){
-		    	pub.apiHandle.logout.init();
-		   	});
 		   	$("#loginPhoto").on("touchstart",function(e){
 		   		e.stopPropagation()
 		   	})
@@ -442,6 +419,7 @@ require(['../require/config'],function(){
             	console.log(e);
             }, false);
 		};
+		pub
 	
 	/********************* 用户信息修改模块 *****************/
 	
@@ -1145,6 +1123,22 @@ require(['../require/config'],function(){
 						}
 					})
 		       	});
+		       	$(".zs-setting-box .quit").on("click",function(){
+		       		
+		       		pub.settings.apiHandle.logout.init();
+		       		
+		       	})
+		       	window.exitCallBack = function(){
+		       		
+		       		common.jsInteractiveApp({
+						name:'goBack',
+						parameter:{
+							'num':1,
+							'type':1,
+							'url':'html/my.html'
+						}
+					})
+		       	}
 				
 			},
 		};
@@ -1170,19 +1164,75 @@ require(['../require/config'],function(){
 				}else{
 					common.prompt( d.strStatus )
 				}
-			}
+			},
+			// 退出登录
+			logout : {
+				init : function(){
+					common.ajaxPost({
+						method : 'logout',
+						tokenId : pub.tokenId
+					},function( d ){
+						/*通知APP刷新页面*/
+						common.tellRefreshAPP();
+						/*清除本地购物车数据*/
+						common.good.removeItem();
+						//common.setShopCarNumApp();
+						common.setShopCarNum_ShoppingCartApp('0')
+						/*移除用户相关信息*/
+						common.tokenId.removeItem();
+						common.secretKey.removeItem();
+						common.user_data.removeItem();
+						/*移除门店相关信息*/
+						if ( d.statusCode == '100000' ) {}
+						var huanfu = common.huanfu.getItem();
+							common.session.clear();
+							common.huanfu.setItem(huanfu);
+						common.jsInteractiveApp({
+							name:'exit1',
+							parameter:{
+								callback:'window.exitCallBack()'
+							}
+						})
+						//location.replace( location.href );
+					},function( d ){
+						common.tellRefreshAPP();
+						common.good.removeItem();
+						//common.setShopCarNumApp();
+						common.setShopCarNum_ShoppingCartApp('0')
+						common.tokenId.removeItem();
+						common.secretKey.removeItem();
+						common.user_data.removeItem();
+					});
+				}
+			},
 		};
 	
 		// 设置模块初始化
 		pub.settings.init = function(){
-	
+			var dStr = common.appData.getItem();
+			common.jsInteractiveApp({
+				name:'getShare',
+				parameter:{
+					str:dStr
+				}
+			})
+			
 			if( common.isApp() ){
 				$('#app-clear-cache,#app-share','.zs-setting-box').show().on('click',function(){
 					var isShare = $(this).is('#app-share');
+					if (isShare) {
+						common.jsInteractiveApp({
+							name: 'share',
+							parameter:{
+								list:['WeChat','WeChatSpace','QQ','QZone']
+							}
+						})
+					}else{
+						common.jsInteractiveApp({
+							name: 'clearCache'
+						})
+					}
 					
-					common.jsInteractiveApp({
-						name: isShare ? 'share':'clearCache'
-					})
 				});
 			}
 			pub.settings.eventHandle.init();
@@ -1556,8 +1606,8 @@ require(['../require/config'],function(){
 				});
 				$(".score_top_box").on("click",".details,.abort_score",function(){
 					var url = $(this).attr("data-url");
-					var isDetail = $(this).hasClass(".details"),
-						isAboutScore = $(this).hasClass(".abort_score");
+					var isDetail = $(this).hasClass("details"),
+						isAboutScore = $(this).hasClass("abort_score");
 					common.jsInteractiveApp({
 						name:'goToNextLevel',
 						parameter:{

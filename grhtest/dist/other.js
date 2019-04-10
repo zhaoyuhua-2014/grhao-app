@@ -72,13 +72,20 @@ require(['../require/config'],function () {
 					//d.statusCode == "100000" && common.goBackApp(1,true,"html/order_management.html");
 					
 					if (d.statusCode == "100000") {
+						if (pub.evaluate.fromType == 1) {
+							var backUrl = 'html/order_management.html'
+						}else if (pub.evaluate.fromType == 2){
+							var backUrl = 'html/orderDetails.html'
+						}else{
+							var backUrl = 'html/order_management.html'
+						}
 						//针对Android吴康辉重写拍照后重新定义的返回方法-20181213
 						common.jsInteractiveApp({
 							name:'EvaluateGoBack',
 							parameter:{
 								'num':1,
 								'type':1,
-								'url':'html/order_management.html'
+								'url':backUrl
 							}
 						})
 					}else{
@@ -403,6 +410,7 @@ require(['../require/config'],function () {
 
 	pub.evaluate.init = function(){
 		window.pub = pub;
+		pub.evaluate.fromType = localStorage.getItem("evaluationType") ? localStorage.getItem("evaluationType") : 0;
 		var EXIF = require(['exif'],function(){})
 		pub.evaluate.apiHandle.init()
 		pub.evaluate.eventHandle.init();

@@ -82,6 +82,7 @@ require(['../require/config'],function () {
 		// 普通 接口数据处理
 		PLAIN.apiHandle = {
 			init : function(){
+				//之前是否有选择优惠券信息
 				pub.couponInfo = common.couponInfo.getItem() ? JSON.parse(common.couponInfo.getItem()) : {};
 				pub.couponId = pub.couponInfo.id;
 				PLAIN.apiHandle.shop_cart_submit.init();
@@ -125,6 +126,9 @@ require(['../require/config'],function () {
 						}
 					}
 					
+					if (common.goodsType.getItem() == 'ZHENG_JIAN') {
+						$(".set_coupon_box_item").hide();
+					}
 					
 				},
 				// 配送时间
@@ -171,7 +175,7 @@ require(['../require/config'],function () {
 					}
 					//优惠券金额
 					(function(){
-						pub.orderType == "3" ? listNode.eq(2).hide() : (function(){
+						(pub.orderType == "3" || common.goodsType.getItem() == 'ZHENG_JIAN')? listNode.eq(2).hide() : (function(){
 							listNode.eq(2).show().find(".float_left").html(getCouponText(dataList));
 							listNode.eq(2).show().find(".float_right").html( orderInfo.couponMoney > 0 ? "-￥" + orderInfo.couponMoney : "-￥0" );
 						})();
@@ -265,147 +269,8 @@ require(['../require/config'],function () {
 			PLAIN.goodList(); 
 		};
 	
-		// 换购 命名空间
-		pub.barter = {};
-		var BARTER = pub.barter;
-		BARTER.buyNumber = "1"; // 换购数量设置
-		BARTER.goodList = function(){ // 换购商品 列表
-			PLAIN.goodList(); 
-		};
-		BARTER.goodsPriceInfo = function(){ // 换购商品 价格信息
-			var 
-			price = common.JSONparse( pub.goodsList[0].price ),
-			listBoxNode = $( ".order_set_list" ),
-			listNode = listBoxNode.find('li');
-	
-			listBoxNode.find('.group').hide(); // 优惠卷金额 + 立减优惠 + 包月卡优惠
-			listNode.eq(0).show().find(".float_right").html( "￥" + price) // 总价
-					.parent().next().show().find(".float_right").html("￥0"); //运费
-			listNode.eq(5).show().find(".float_right").html("￥" + price ); //合计、总计
-			$(".order_submit_money").html( price );
-			listBoxNode.show();
-		};
-		BARTER.init = function(){ // 换购初始化
-			pub.goodsList = common.JSONparse( common.seckillGood.getItem() ); // 换购商品信息;
-			pub.goodsId = pub.goodsList[0].id; // 接 换购商品 id
-			this.goodList(); // 换购商品 列表
-			this.goodsPriceInfo(); // 换购商品 价格信息
-		};
-	
-		// 预购 命名空间
-		pub.pre = {};
-		var PRE = pub.pre;
-		// PRE.source = null; // 预购商品
-		// PRE.sign = null; // 预购商品
-		// 预购接口数据处理
-		PRE.apiHandle = {
-			pre_order_details : {
-				init : function(){
-					common.ajaxPost({
-						method : 'pre_order_details',
-						tokenId : pub.tokenId,
-						orderCode : pub.orderCode,
-						source : PRE.source,
-						sign : PRE.sign
-					},function( d ){
-						d.statusCode == "100000" &&  PRE.apiHandle.pre_order_details.apiData( d );
-					});	
-				},
-				apiData : function( d ){
-					d = d.data; // 商品信息列表
-					pub.goodsId = d.preGoodsId; // 预购商品ID
-					PRE.goodList( d ); // 预购商品信息列表
-					PRE.apiHandle.pre_shop_cart_submit.init(); // 预购结算购物车
-				}
-			},
-			pre_shop_cart_submit : {
-				init : function(){
-					var self = this;
-					common.ajaxPost( $.extend({},{
-						method : 'pre_shop_cart_submit',
-						pickUpMethod : pub.pickUpMethod,
-						preGoodsId : pub.goodsId,
-					},pub.userBasicParam),function( d ){
-						d.statusCode == "100000" && PLAIN.apiHandle.shop_cart_submit.apiData.call( self, d ); // 借用普通商品 
-					});
-				}
-			}
-		};
-		// 预购商品 列表
-		PRE.goodList = function( list ){
-			var html = '';
-			html += '<dl class="gds_box clearfloat">'
-			html += '   <dt>'
-			html += '		<img src="' + list.goodsInfo.goodsLogo + '"/>'
-			html += '		<img class="gds_goods_te" src="../img/icon_yu_s.png"/>'
-			html += '	</dt>'
-		    html += '	<dd>'
-			html += '	    <div class="gds_right_top">' + list.goodsInfo.goodsName + '</div>'
-			html += '	    <div class="gds_right_center clearfloat">'
-			html += '		    <div class="gds_goods_mess float_left">' + list.goodsInfo.specInfo + '</div>'
-			html += '		    <div class="gds_num_price float_right clearfloat">'
-			html += '	            <div class="gds_price float_right">X<span>' + list.buyNum + '</span></div>'
-			html += '	            <div class="gds_num float_right">￥<span>' + common.toFixed( list.retainage ) + '</span></div>'
-			html += '           </div>'
-			html += '	    </div>'
-			html += '		<div class="gds_right_bottom">'
-			html += '			<p class="float_left">'
-			html += '				<span>定金：</span><span class="font_color">￥' + list.preGoods.frontMoney + '</span>'
-			html += '			</p>'
-			html += '			<p class="float_left">'
-			html += '				<span>尾款：</span><span class="font_color">￥' + list.preGoods.retainage + '</span>'
-			html += '			</p>'
-			html += '		</div>'
-			html += '    </dd>'
-		    html += '</dl>'
-		    $(".order_goods_contain_details").append(html);
-		};
-		// 预购初始化
-		PRE.init = function(){
-			pub.orderCode = common.orderCode.getItem();
-			PRE.source = 'preOrderCode' + pub.orderCode;
-			PRE.sign = common.encrypt.md5( PRE.source + "key" + common.secretKeyfn() ).toUpperCase();
-			PRE.apiHandle.pre_order_details.init();
-		};
-	
 		// 公共接口
 		pub.apiHandle = {
-			/*
-			// 门店信息初始化
-			storeInfo : {
-				init : function(){
-					pub.storeInfo = common.getStoreInfo();
-					if( pub.storeInfo.type == 5 ){
-						$('.set_charge_contact_right').find('.take_own').hide().prev().addClass('actived').html('自助售货机');
-						$('.set_job_time,.set_order_remark').hide(); // 隐藏提货方式 // 隐藏营业时间 // 备注隐藏
-						pub.pickUpMethod = 1;
-					}
-					pub.firmId = pub.storeInfo.id; // 获取门店ID
-					node = $(".set_charge_address2");
-					$(".set_charge_con").show();
-					node.find('.take_goods_phone').html( pub.storeInfo.firmName )
-						.end().find('.set_address_bottom').html( "地址：" + pub.storeInfo.address )
-						.end().find('.set_job_time').html( "营业时间：" + pub.storeInfo.pickUpTime );
-				}
-			},
-			// 默认地址
-			address_default_show : {
-				init : function(){
-					common.ajaxPost($.extend({},{
-						method : 'address_default_show'
-					}, pub.userBasicParam ),function( d ){
-						switch( +d.statusCode ){
-							case 100000 : pub.AddrInfoRender( d.data ); break; // 配送地址渲染
-							case 100300 : 
-							case 100505 : $('.set_charge_address1').find('.group1').hide().next().show().html( "请选择收货地址" ); break;
-						};
-					},function( d ){
-						common.prompt( d.statusStr );
-					},function(){
-						pub.addrDtd.resolve();
-					});
-				}
-			}*/
 			// 门店信息
 			storeInfo : {
 				init : function(){
@@ -435,6 +300,17 @@ require(['../require/config'],function () {
 						$(".set_charge_contact_right").find(".take_others").html("售货机自提").show();
 						
 					})();
+					
+					if (common.goodsType.getItem() == 'ZHENG_JIAN') {
+						if (typeof d.wholecargoTime == 'undefined') {
+							pub.apiHandle.storeInfo.init();
+						}else{
+							$(".set_charge_con .set_delivery_box").find("dd").html(d.wholecargoTime )
+						}
+						
+					}else{
+						$(".set_charge_con .set_delivery_box").find("dd").html(d.cargoTime)
+					}
 				}
 			},
 			// 默认地址
@@ -515,7 +391,7 @@ require(['../require/config'],function () {
 					isCur = $this.is('.actived'),
 					index = $this.index();
 					$this.addClass('actived').siblings().removeClass('actived');
-					$('.set_charge_address').eq( index ).show().siblings().hide();
+					$('.set_charge_address').hide().eq( index ).show();
 					var tabIndex = $('.set_charge_contact_right').find('li.actived').index();
 					if( !isCur ){
 						pub.addrId = index == 0 ? '' : $('.set_charge_contact').attr('addr-id');
@@ -557,11 +433,22 @@ require(['../require/config'],function () {
 						pub.remarks = $(".set_order_remark input").val(); // 备注
 					}*/
 					
-					$('.order_submit_right').removeClass('confirm-submit').css("background-color","#999").html("提交中...");
+					//$('.order_submit_right').removeClass('confirm-submit').css("background-color","#999").html("提交中...");
 					var tabIndex = $('.set_charge_contact_right').find('li.actived').index();
 	
 					pub.pickUpMethod =  tabIndex == -1 ? '' : '' + ( tabIndex + 1 );
 					pub.remarks = $(".set_order_remark input").val(); // 备注
+					
+					pub.customMobile = $(".set_contact_information input").val();
+					if (common.goodsType.getItem() == 'ZHENG_JIAN') {
+						pub.activityType = 7;
+						if (!common.PHONE_NUMBER_REG.test( pub.customMobile )) {
+							common.prompt('手机号输入错误');
+							//$('.order_submit_right').addClass('confirm-submit').html('提交订单').css("background-color",'#93c01d');
+							return;
+						}
+					}
+					$('.order_submit_right').removeClass('confirm-submit').css("background-color","#999").html("提交中...");
 					// 普通 + 换购 + 预购 公共参数
 					pub.orderParamInfo = {
 						pickUpMethod : pub.pickUpMethod,
@@ -585,7 +472,9 @@ require(['../require/config'],function () {
 				method : 'order_submit_three',
 				couponId : pub.couponId,
 				juiceDeliverTime : $('#person_area').val(),
-				goodsList : pub.goodsInfoApi
+				goodsList : pub.goodsInfoApi,
+				activityType:pub.activityType,
+				customMobile:pub.customMobile,
 			},pub.userBasicParam, pub.orderParamInfo ),function( d ){
 				
 				if ( d.statusCode == "100000" ) {
@@ -641,81 +530,6 @@ require(['../require/config'],function () {
 			});
 		};
 	
-		// 换购商品 提交
-		BARTER.submit = function(){
-			common.ajaxPost($.extend( {
-				method : 'barter_order_submit',
-				goodsId : pub.goodsId,
-				buyNumber : BARTER.buyNumber,
-			},pub.userBasicParam, pub.orderParamInfo ),function( d ){
-				if( d.statusCode == "100000" ){
-					common.orderCode.setItem( d.data.orderCode );
-					common.orderBack.setItem( "1" );
-					common.seckillGood.removeItem();
-					common.addType.removeItem();
-					common.addressData.getKey() && common.addressData.removeItem();
-					common.historyReplace( 'order_management.html' );
-					//common.jumpLinkPlainApp( "订单支付","html/order_pay.html" );
-					common.jsInteractiveApp({
-						name:'goToNextLevel',
-						parameter:{
-							title:'订单支付',
-							url:'html/order_pay.html'
-						}
-					})
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
-				}else if ( d.statusCode == "100711" ) {
-					common.prompt("地址不在配送范围");
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
-				}else if ( d.statusCode == "100514" ){
-					$(".order_refund_confirm").html( "月卡余额不足！请充值" );
-					$(".order_refund").show();
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
-				}else{
-					common.prompt( d.statusStr );
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
-				}
-			},function( d ){
-				common.prompt( d.statusStr );
-			},function(){
-				pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
-			});
-		};
-	
-		
-		// 预购订单 提交
-		PRE.submit = function(){
-			common.ajaxPost($.extend({
-				method : 'pre_order_submit',
-				preOrderCode : pub.orderCode,
-				couponId : pub.couponId
-			}, pub.userBasicParam, pub.orderParamInfo ),function( d ){
-				if ( d.statusCode == "100000" ) {
-					common.orderCode.setItem( d.data.orderCode );
-					common.addType.removeItem();
-					common.addressData.getKey() && common.addressData.removeItem();
-					//common.jumpLinkPlainApp( "订单支付","html/order_pay.html" );
-					common.jsInteractiveApp({
-						name:'goToNextLevel',
-						parameter:{
-							title:'订单支付',
-							url:'html/order_pay.html'
-						}
-					})
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
-				}else if ( d.statusCode == "100711" ) {
-					common.prompt( "地址不在配送范围" );
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
-				}else{
-					common.prompt( d.statusStr );
-					pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
-				}
-			},function( d ){
-				common.prompt( d.statusStr );
-			},function(){
-				pub.submitBtn.addClass( 'confirm-submit' ).css("background-color",'#93c01d').html("提交订单");
-			});
-		};
 		
 		/*=--------选择优惠卷----------*/
 		pub.selectCoupon = {};
@@ -903,12 +717,16 @@ require(['../require/config'],function () {
 				pub.submitBtn = $('.order_submit_right'); // 提交按钮节点
 				pub.firmId = pub.userData.firmId; // 获取门店ID
 				
+				pub.goodsType = common.goodsType.getItem();//商品类型
+				$(".set_contact_information,.set_delivery_box").hide()
+				
+				
 				// 自动选择 取货方式
 				if( common.addType.getKey() ){
 					pub.tabIndex == 0  && ( pub.addrId = '' );
 					pub.pickUpMethod = pub.tabIndex == 0 ? '1' : '2';
 					$('.set_charge_contact_right','.set_charge_contact').find('li').eq( +pub.tabIndex ).addClass('actived');
-					$('.set_charge_con').find('.set_charge_address').eq( +pub.tabIndex ).show().siblings().hide();
+					$('.set_charge_con').find('.set_charge_address').hide().eq( +pub.tabIndex ).show();
 				}
 				// 用户配送地址
 				if( common.addType.getKey() && common.addressData.getKey() ){
@@ -916,7 +734,12 @@ require(['../require/config'],function () {
 				}else{
 					pub.apiHandle.address_default_show.init(); // 地址获取
 				}
-		
+				
+				if (common.goodsType.getItem() == 'ZHENG_JIAN') {
+					pub.activityType = 7;
+					$(".set_contact_information,.set_charge_con .set_delivery_box").show();
+				}
+						
 				pub.addrDtd.done(function(){
 					pub.orderType == "1" && pub.plain.init(); // 普通商品
 					pub.orderType == "2" && pub.seckill.init(); // 秒杀

@@ -7,7 +7,7 @@ define(['jquery','mdData','shar1'],function($,md){
 	common.encrypt = md;
 	$.extend(common,{
 		//EVE 作为正式环境和测试环境的开关，为true时为正式环境，为false时为测试环境
-		EVE:false,
+		EVE:true,
 		//API : "http://api.grhao.com/server/api.do", // 接口地址
 		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数
@@ -1093,9 +1093,16 @@ define(['jquery','mdData','shar1'],function($,md){
 							var jsonObj = parameter.str;
 							common.isApple() ? window.webkit.messageHandlers.getShare.postMessage(jsonObj) : android.getShare(jsonObj);
 							break;	
-						//分享----->参数 无
+						//分享----->参数 list 
+						//share   方法名
+//						list:[]  参数  类型数组
+//						list里面  WeChat 表示微信
+//					             WeChatSpace  表示微信朋友圈
+//					             QQ  表示QQ
+//					             QZone  表示qq空间
 						case 'share':
-							common.isApple() ? window.webkit.messageHandlers.share.postMessage('') : android.share();
+							var jsonObj = {'list':parameter.list ? parameter.list : ['WeChat','WeChatSpace','QQ','QZone'] };
+							common.isApple() ? window.webkit.messageHandlers.share.postMessage(jsonObj) : android.share(JSON.stringify(jsonObj));
 							break;	
 						//分享----->参数 ----由于版本更新问题  单独写在farm文件中
 						case 'gameShare':
@@ -1126,7 +1133,8 @@ define(['jquery','mdData','shar1'],function($,md){
 							break;
 						//退出APP ----调用之后通知APP将缓存的用户数据清除----->参数 无
 						case 'exit1':
-							common.isApple() ? window.webkit.messageHandlers.exit1.postMessage('') : android.exit1();
+							var jsonObj = {'callback':parameter.callback}
+							common.isApple() ? window.webkit.messageHandlers.exit1.postMessage(jsonObj) : android.exit1(JSON.stringify(jsonObj));
 							break;
 						/*20181214测试出微信登录跳转到客服页面-------微信登录后边没有添加break*/
 						//微信登录
@@ -1436,7 +1444,6 @@ define(['jquery','mdData','shar1'],function($,md){
 			this.targetDom = params.targetDom;//显示活动倒计时的目标元素选择器
 			this.num = params.num;
 			this.groupStatus = params.groupStatus;
-			
 			
 			if (this.timerID) {
 				clearInterval( this.timerID );

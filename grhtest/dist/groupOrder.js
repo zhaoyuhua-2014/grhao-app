@@ -16,6 +16,7 @@ require(['../require/config'],function(){
 		pub.moduleId = $('[module-id]').attr( 'module-id' );  // 模块 id 
 		
 		pub.isWeiXin = common.isWeiXin();
+		pub.isApp = common.isApp()
 		
 		pub.sharDataDefault = $.Deferred(); //分享数据延时对象。
 	
@@ -322,6 +323,7 @@ require(['../require/config'],function(){
 						orderCode : OD.orderCode
 					}),function( d ){
 						switch( +d.statusCode ){
+							
 							case 100000 : OD.apiHandle.order_details.apiData( d ); break;
 							case 100400 : (function(){
 								common.clearData();
@@ -364,6 +366,28 @@ require(['../require/config'],function(){
 						goodsId:groupBuyer.orderInfo.orderDetailsList[0].goods,
 					}
 			       	OD.apiHandle.detailsUI( btnInfo , activeInfo , goodsInfo , groupBuyer.orderInfo.orderCode , d.data.customShare)
+			       	//团购为当前状态时候显示分享
+			       	if (groupBuyer.groups.groupStatus == 1) {
+			       		
+			       		var linkUrl = d.data.customShare.link
+			       		var sharObj = {
+			       			android_download_uri: linkUrl,
+			       			ios_download_uri: linkUrl,
+			       			share_app_strs: goodsInfo.goodsName+"@"+goodsInfo.goodsDescribe+"\n￥"+goodsInfo.goodsMoney,
+			       		};
+			       		var obj = {
+			       			"statusCode":"100000",
+			       			"statusStr":"请求成功",
+			       			"data":sharObj
+			       		};
+			       		common.jsInteractiveApp({
+							name:'getShare',
+							parameter:{
+								str:JSON.stringify(obj)
+							}
+						})
+			       	}
+			       	
 				}
 			},
 			group_goods_details:{
@@ -402,6 +426,26 @@ require(['../require/config'],function(){
 						goodsId:goodsInfoAll.id,
 					}
 			       	OD.apiHandle.detailsUI( btnInfo , activeInfo , goodsInfo , null , d.data.customShare)
+			       	//团购为当前状态时候显示分享
+			       	if (groupBuyer.groups.groupStatus == 1) {
+			       		var linkUrl = d.data.customShare.link ;
+			       		var sharObj = {
+			       			android_download_uri: linkUrl,
+			       			ios_download_uri: linkUrl,
+			       			share_app_strs: goodsInfo.goodsName+"@"+goodsInfo.goodsDescribe+"\n￥"+goodsInfo.goodsMoney,
+			       		};
+			       		var obj = {
+			       			"statusCode":"100000",
+			       			"statusStr":"请求成功",
+			       			"data":sharObj
+			       		};
+			       		common.jsInteractiveApp({
+							name:'getShare',
+							parameter:{
+								str:JSON.stringify(obj)
+							}
+						})
+			       	}
 				}
 			},
 			detailsUI:function( btnInfo , activeInfo , goodsInfo ,orderCode , shareData){
@@ -579,7 +623,7 @@ require(['../require/config'],function(){
 								'goodsList':pub.goodsList
 							})
 							if(pub.logined){
-								sessionStorage.setItem('groupData',pub.goodsListStr)
+								localStorage.setItem('groupData',pub.goodsListStr)
 								OD.apiHandle.group_goods_sponsor.init();
 							}else{
 								//common.jumpLinkPlain('login.html')
@@ -596,15 +640,20 @@ require(['../require/config'],function(){
 						}
 					}
 					if ( isInvitation ) {
-						if(pub.isWeiXin){
-							common.prompt('点击右上角的按钮即可完成分享哟~')
+						if(pub.isApp){
+							common.jsInteractiveApp({
+								name:'share',
+								parameter:{
+									list:['WeChat','WeChatSpace']
+								}
+							})
 						}else{
-							common.prompt('请在微信环境下分享');
+							common.prompt('不在app环境');
 						}
+						
 					}
 					if ( isSuccess ) {
 						//跳转订单详情
-						console.log($this.attr('orderCode'))
 						common.orderCode.setItem( $this.attr('orderCode') ); //存储订单编号
 						//common.jumpLinkPlain( 'orderDetails.html' );
 						common.jsInteractiveApp({

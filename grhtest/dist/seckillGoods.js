@@ -417,7 +417,7 @@ require(['../require/config'],function () {
 						var obj = $.extend({},pub.detail.seckill.seckillData, {
 							num:num,
 						});
-						sessionStorage.setItem('seckillData',JSON.stringify(obj));
+						localStorage.setItem('seckillData',JSON.stringify(obj));
 						setTimeout(function(){
 							//common.jumpLinkPlain($('.goodsDetails_balance').attr("url-data"));
 							common.jsInteractiveApp({
