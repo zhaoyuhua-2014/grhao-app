@@ -200,10 +200,10 @@ require(['../require/config'],function(){
 		};
 		
 		//微信自动登录成功回调函数
-		pub.login.apiHandle.trueFn = function(d){
-			
-			var d = JSON.parse(d);
-			pub.weixin_login.init(d.openid);
+		pub.login.apiHandle.trueFn = function( str ){
+			var str = '{"unionid":"o4XFHxNtjx3HSiBgFKQCXXXIweqQ","screen_name":"小测","city":"","accessToken":"23_vq3OLynfCu9jArWIAb2Ufw0hhQONtTuhU8l_lXKlMj8AbgwbQgqS7EeZ12CC_6q1m5WM4PZsm5tQm220PK_swUqD3l4rWnDJLXFoKHh3R6o","refreshToken":"23_EUzIxvBKYtaBc0LRXnFhKs8j_0ZxB3J9aacdQjmXhx1TGlj5YM8n8q0zFCjHh7496iw9siO46zTzh_Xyxu1QVCeojQOIUx3VoVyS3Hh4cgs","gender":"女","province":"","openid":"oyBo6wBh863IfMOeoIF0I8jVKPHE","profile_image_url":"","country":"","access_token":"23_vq3OLynfCu9jArWIAb2Ufw0hhQONtTuhU8l_lXKlMj8AbgwbQgqS7EeZ12CC_6q1m5WM4PZsm5tQm220PK_swUqD3l4rWnDJLXFoKHh3R6o","iconurl":"","name":"小测","uid":"o4XFHxNtjx3HSiBgFKQCXXXIweqQ","expiration":"1563507263599","language":"zh_CN","expires_in":"1563507263599"}'
+			var d = JSON.parse( str );
+			pub.scan_qrcode_login.init(d.openid , d.unionid);
 		};
 		//微信自动登录失败回调函数
 		pub.login.apiHandle.cancleFn = function(d){
@@ -313,6 +313,7 @@ require(['../require/config'],function(){
 							name:'wxLoginApp',
 							parameter:{}
 						})
+						pub.login.apiHandle.trueFn();
 					}
 				})
 				
@@ -331,14 +332,17 @@ require(['../require/config'],function(){
 			}
 		};
 		//使用 openId 自动登录
-		pub.weixin_login = {
-			init:function(openId){
+		pub.scan_qrcode_login = {
+			init:function(openId , unionid){
 				common.ajaxPost({
-		            method: 'weixin_login',
+		            method: 'scan_qrcode_login',
 		            openId : openId,
-		            flag:'app',
+		            unionid:unionid,
+		            uniqueId:'app',
 		       },function( d ){
+		       		console.log(d);
 		            if( d.statusCode == '100000'){
+		            	
 						pub.login.apiHandle.apiData(d);		                
 		            }else if(d.statusCode == '100200'){
 		        		common.openId.setItem( openId ); // 存opendId
