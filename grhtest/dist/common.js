@@ -7,7 +7,7 @@ define(['jquery','mdData','shar1'],function($,md){
 	common.encrypt = md;
 	$.extend(common,{
 		//EVE 作为正式环境和测试环境的开关，为true时为正式环境，为false时为测试环境
-		EVE:true,
+		EVE:false,
 		//API : "http://api.grhao.com/server/api.do", // 接口地址
 		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数
@@ -47,8 +47,8 @@ define(['jquery','mdData','shar1'],function($,md){
 			common.API = "http://api.grhao.com/server/api.do";
 			common.APIFARM = "http://api.grhao.com/server/farm.do"; // 正式
 		}else{//http://61.164.118.194:8090/grh_api/server/api.do/192.168.1.3:80/192.168.1.8:8080
-			common.API = "http://61.164.113.168:8090/grh_api/server/api.do";
-			common.APIFARM = "http://61.164.113.168:8090/grh_api/server/farm.do";
+			common.API = "https://testapi.grhao.cn/grh_api/server/api.do";
+			common.APIFARM = "https://testapi.grhao.cn/grh_api/server/farm.do";
 		}
 	})(common)
 
