@@ -36,6 +36,7 @@ require(['../require/config'],function(){
 				// 登录状态 信息处理
 				if( pub.logined ){
 					var phone = common.user_datafn().mobile.replace( /(\d{3})\d{4}(\d{4})/,"$1****$2")
+					console.log(phone)
 					$(".user_image").attr( "src",common.user_datafn().faceImg !="" ? common.user_datafn().faceImg + '?rom='+ Math.floor(Math.random()*1000000 ) : "../img/icon_touxiang.png" );
 	
 					$('.off_line_state').css({'display':'none'});
@@ -46,6 +47,7 @@ require(['../require/config'],function(){
 				}else{
 			        $('.off_line_state').css({'display':'block'});
 			        $('.user_name_phone').hide();
+			        $("#userPhoto").hide();
 				}
 			},
 			// 包月卡余额 + 果币 + 优惠券数量
@@ -419,7 +421,6 @@ require(['../require/config'],function(){
             	console.log(e);
             }, false);
 		};
-		pub
 	
 	/********************* 用户信息修改模块 *****************/
 	
@@ -442,7 +443,14 @@ require(['../require/config'],function(){
 				// 点击修改手机号码
 				var bool = true;
 				$('.message_phoneNumber').click(function(){
+					
+					if(pub.userInfoRepaired.phone){
+						$('.phone_now').show();
+					}else{
+						$('.phone_now').hide();
+					}
 					pub.userInfoRepaired.switchInput('更换手机号码','.zs_address_box','.zs_phone_box');
+					
 					$('#phone_verify_code2').attr('disabled','disabled').val('');
 					$('#phone_phoneNumber').val('');
 					$('#phone_verify_code1').show().text('获取手机验证码')
@@ -459,6 +467,22 @@ require(['../require/config'],function(){
 				});
 				// 点击发送验证码
 				$('#phone_verify_code1').on('click',function(){
+					pub.userInfoRepaired.newPhoneNum = $("#phone_phoneNumber").val();
+					console.log(pub.userInfoRepaired.newPhoneNum)
+					if( pub.userInfoRepaired.newPhoneNum == '' ){
+						common.prompt('请输入手机号'); return;
+					}
+					if( !common.PHONE_NUMBER_REG.test( pub.userInfoRepaired.newPhoneNum ) ){
+						common.prompt('请输入正确的手机号'); return;
+					}
+					var userInfo = common.user_datafn();
+					console.log(userInfo)
+					if(userInfo.mobile){
+						if(userInfo.mobile == pub.userInfoRepaired.newPhoneNum){
+							common.prompt('输入手机号不能当前绑定手机号相同')
+							return;
+						}
+					};
 					pub.userInfoRepaired.time = 59;
 					$("#phone_verify_code2").removeAttr("disabled");
 					$("#phone_verify_code1").css("display",'none');
@@ -476,7 +500,11 @@ require(['../require/config'],function(){
 					if( !common.PHONE_NUMBER_REG.test( pub.userInfoRepaired.newPhoneNum ) ){
 						common.prompt('手机号输入有误'); return;
 					}
-					pub.userInfoRepaired.apiHandle.update_mobile.init(); // 手机号更新
+					if(pub.userInfoRepaired.verify_code == ''){
+						common.prompt("请输入手机验证码!");return;
+					}
+					//pub.userInfoRepaired.apiHandle.update_mobile.init(); // 手机号更新
+					pub.userInfoRepaired.apiHandle.binding_mobile.init();
 				});
 				// 点击保存
 				$('.main_reverse').on('click',function(){
@@ -509,6 +537,74 @@ require(['../require/config'],function(){
 			init : function(){
 				var me = this;
 				me.show.init();
+				var system  = localStorage.getItem('system') ? JSON.parse(localStorage.getItem('system')) : null
+				if(system && system.binding_account_tips){
+					
+				}else{
+					pub.userInfoRepaired.apiHandle.getSystem()
+				}
+			},
+			getSystem:function(){
+				common.ajaxPost({
+	 				method:'system_config_constant'
+	 			},function( d ){
+	 				if(d.statusCode == "100000"){
+	 					localStorage.setItem('system',JSON.stringify(d.data))
+	 				}
+	 			});
+			},
+			binding_mobile:{
+				init:function(){
+					common.ajaxPost($.extend({},pub.userBasicParam,{
+						method : 'binding_new_mobile',
+						mobile : pub.userInfoRepaired.newPhoneNum,
+						smsCode : pub.userInfoRepaired.verify_code
+					}),function( d ){
+						if (d.statusCode == '100000') {
+							pub.userInfoRepaired.apiHandle.binding_mobile.apiData( d );
+						} else if ( d.statusCode == '100521'){
+							
+							common.jsInteractiveApp({
+								name:'alertMask',
+								parameter:{
+									type:1,
+									title:JSON.parse(localStorage.getItem('system')).binding_account_tips,
+									truefn:'pub.userInfoRepaired.apiHandle.bind_update_mobile.init()'
+								}
+							})
+						}else{
+							common.prompt( d.statusStr )
+						}
+					});
+				},
+				apiData:function(){
+					common.user_data.setItem(JSON.stringify($.extend({},common.user_datafn(),{
+						mobile:pub.userInfoRepaired.newPhoneNum
+					})));
+					common.prompt('添加手机号成功',1000);
+					var tid = setTimeout(function(){
+						clearTimeout(tid)
+						common.setMyTimeout(function(){
+							pub.userInfoRepaired.switchInput('修改信息','.zs_phone_box','.zs_address_box');
+						},500);
+						$('#message_phoneNumber').val( pub.userInfoRepaired.newPhoneNum );
+					},500)
+				}
+			},
+			//当前手机号已经注册过账号时候调用改接口确认绑定手机号
+			bind_update_mobile : {
+				init:function(){
+					common.ajaxPost( $.extend({},pub.userBasicParam,{
+						method : 'bind_update_mobile',
+						mobile : pub.userInfoRepaired.newPhoneNum,
+					}),function( d ){
+						if ( d.statusCode == "100000" ) {
+							pub.userInfoRepaired.apiHandle.binding_mobile.apiData( d );
+						}else{
+							common.prompt(d.statusStr);	
+						}
+					});
+				}
 			},
 		};
 		// 用户基本信息展示接口
@@ -530,7 +626,20 @@ require(['../require/config'],function(){
 			   	data.idcard == '' && $('#message_IDcard').removeAttr("disabled");
 			   	$('#message_sex').val(['男','女'][data.sex-1]);
 			   	$('#message_phoneNumber').val(data.mobile);
-			   	$('.phone_now').text('当前手机号：'+ data.mobile);
+			   	$('.phone_now').text('当前手机号：'+ data.mobile).hide();
+			   	
+				var user_data = {
+				    cuserInfoid : data.id,
+				    firmId : data.firmId,
+				    faceImg : data.faceImg,
+				    petName : data.petName,
+				    realName : data.realName,
+				    idCard : data.idCard,
+				    mobile : data.mobile,
+				    sex : data.sex,
+				    isRegOpenfire : data.isRegOpenfire
+				};
+				common.user_data.setItem( common.JSONStr(user_data) );
 			}
 		};
 	
@@ -538,12 +647,15 @@ require(['../require/config'],function(){
 		pub.userInfoRepaired.apiHandle.send_sms = {
 			init : function(){
 				common.ajaxPost($.extend({},pub.userBasicParam,{
-					method : 'send_sms2',
-					mobile : pub.userInfoRepaired.phone,
-					type : '4'
+					method : 'send_new_mobile',
+					mobile : pub.userInfoRepaired.newPhoneNum
 				}),function( d ){
-					d.statusCode == "100000" && common.prompt("验证码已发送，请查收"); 
-					d.statusCode != "100000" && common.prompt( d.statusStr);
+					if( d.statusCode == "100000" ){
+						common.prompt( '验证码已发送，请查收' );
+						$('input[disabled]').removeAttr('disabled');
+					}else{
+						common.prompt( d.statusStr );
+					} 
 				})
 			}
 		};
@@ -618,7 +730,7 @@ require(['../require/config'],function(){
 				if ( pub.userInfoRepaired.time == 0 ) {
 					$("#phone_time").css("display","none");
 					$("#phone_verify_code1").css("display","block").html('重新获取')
-					clearInterval( id );
+					clearInterval( pub.timer_id );
 					pub.userInfoRepaired.time = 59;
 				}else{
 					$("#phone_time").html("( " + pub.userInfoRepaired.time + " s后可重试 )");
@@ -1647,7 +1759,11 @@ require(['../require/config'],function(){
 		
 		
 		pub.apiHandle.refresh = function(){
+			console.log('refresh')
 			if (pub.logined) {
+				var phone = common.user_datafn().mobile.replace( /(\d{3})\d{4}(\d{4})/,"$1****$2")
+				
+				$('.user_phone').html(phone);
 				pub.apiHandle.userScoCouMon.init();
 				pub.pullInstance.pullDownSuccess();
 			}else{
@@ -1717,15 +1833,26 @@ require(['../require/config'],function(){
 				common.preColumn.removeItem();
 			}
 			$("body").fadeIn(300)
+			pub.common = common;
 		};
 		$(document).ready(function(){
 		 	pub.init();
 		 	window.pub = pub;
-		 	setTimeout(function(){
-		 		if( pub.muduleId == "0" ){
-		 			load();
-		 		}
-		 	}, 500);
+		 	if( pub.muduleId == "0" ){
+		 		setTimeout(document.getElementById('wrapper').style.left = '0', 500);
+	 			var $listWrapper = $('.main');
+
+		        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
+		             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
+		            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
+		            onPullDown: function () {
+		            	console.log('onPullDown')
+		            	console.log(pub.pullInstance)
+		            	common.getNetwork(pullDownAction,pub.pullInstance.pullDownFailed.bind(pub.pullInstance))
+		            },
+		        });
+		        
+	 		}
 			pub.info = {
 				"pullDownLable":"下拉刷新...",
 				"pullingDownLable":"松开刷新...",
@@ -1733,22 +1860,14 @@ require(['../require/config'],function(){
 				"pullingUpLable":"松开加载更多...",
 				"loadingLable":"加载中..."
 			}
+			var timerId = null;
 			function pullDownAction () {
-				setTimeout(function () {
+				clearTimeout(timerId)
+				timerId = setTimeout(function () {
+					console.log('pullDownAction')
+					clearTimeout(timerId)
 					pub.apiHandle.refresh();
 				}, 1000);	
-			}
-			function load(){
-				var $listWrapper = $('.main');
-
-		        pub.pullInstance =  pullInstance = new Pull($listWrapper, {
-		             distance: 100, // 下拉多少距离触发onPullDown。默认 50，单位px
-		            // 下拉刷新回调方法，如果不存在该方法，则不加载下拉dom
-		            onPullDown: function () {
-		            	common.getNetwork(pullDownAction,pub.pullInstance.pullDownFailed.bind(pub.pullInstance))
-		            },
-		        });
-		        $("#wrapper").css('left','0')
 			}
 		})
 	});

@@ -47,7 +47,8 @@ define(['jquery','mdData','shar1'],function($,md){
 			common.API = "http://api.grhao.com/server/api.do";
 			common.APIFARM = "http://api.grhao.com/server/farm.do"; // 正式
 		}else{//http://61.164.118.194:8090/grh_api/server/api.do/192.168.1.3:80/192.168.1.8:8080
-			common.API = "https://testapi.grhao.cn/grh_api/server/api.do";
+			//http://122.228.113.80:8090/grh_api/server/api.do  https://testapi.grhao.cn/grh_api/server/api.do
+			common.API = "http://122.228.113.80:8090/grh_api/server/api.do";
 			common.APIFARM = "https://testapi.grhao.cn/grh_api/server/farm.do";
 		}
 	})(common)
@@ -1544,7 +1545,18 @@ define(['jquery','mdData','shar1'],function($,md){
         
         return Y+M+D+h+m+s;
     }
-	
+	//将对象转换为已&符号分割的字符串
+	common.objConversionString = function ( obj , key ){
+		var str = '';
+		var k = key ? key : '&';
+		  for (var i in obj) {
+		    if (str) {
+		      str += k
+		    }
+		    str = str + (i + '=' + obj[i]);
+		  }
+		  return str;
+	}
 	$(document).on('click','#prompt-node',function(){
 		var nodeTemp = $(this).remove();
 		nodeTemp = null;

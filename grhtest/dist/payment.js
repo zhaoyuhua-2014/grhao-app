@@ -731,6 +731,20 @@ require(['../require/config'],function(){
 	            });
 	            
 	            $('#get_verify_code').on('click',function(){ // 获取验证码
+	            	
+	            	var userInfo = common.user_datafn();
+					if(!userInfo.mobile){
+						common.jsInteractiveApp({
+							name:'alertMask',
+							parameter:{
+								type:1,
+								title:'充值涉及账户安全,请先绑定手机号！',
+								truefn:'pub.jumpLinkPlain1()'
+							}
+						})
+						return;
+					};
+					
 	                var 
 	                timeNode = $("#time"),
 	                $this = $(this),
@@ -749,10 +763,21 @@ require(['../require/config'],function(){
 	                    }
 	                },1000);
 	            });
-	            $(".month_pay_deal,.month_record,.pay_style_msg a").on("click",function(){
+	            $(".pay_style_msg a").on("click",function(){
 	            	var url = $(this).attr("data-url"),
 					title = $(this).attr("data-title");
-					//common.jumpLinkPlainApp(title , url);
+					var userInfo = common.user_datafn();
+					if(!userInfo.mobile){
+						common.jsInteractiveApp({
+							name:'alertMask',
+							parameter:{
+								type:1,
+								title:'充值涉及账户安全,请先绑定手机号！',
+								truefn:'pub.jumpLinkPlain1()'
+							}
+						})
+						return;
+					};
 					common.jsInteractiveApp({
 						name:'goToNextLevel',
 						parameter:{
@@ -901,6 +926,20 @@ require(['../require/config'],function(){
 						recharge:function(){
 							if (this.btnIsActive) {
 								//pub.isRecharge
+								
+								
+								var userInfo = common.user_datafn();
+								if(!userInfo.mobile){
+									common.jsInteractiveApp({
+										name:'alertMask',
+										parameter:{
+											type:1,
+											title:'充值涉及账户安全,请先绑定手机号！',
+											truefn:'pub.jumpLinkPlain()'
+										}
+									})
+									return;
+								};
 								//在线充值
 								if (this.rechargeMode.type == 0) {
 									pub.payMoney = this.rechargeList[this.rechargeListIndex].limit;
@@ -1460,9 +1499,31 @@ require(['../require/config'],function(){
 	        pub.isRecharge && pub.rechange.init();
 	        
 	        $("body").fadeIn(300)
+	        //充值
+	        pub.jumpLinkPlain = function (  ) {
+		   		common.jsInteractiveApp({
+					name:'goToNextLevel',
+					parameter:{
+						title:'绑定手机号',
+						url:'html/bindUser.html?url=month_recharge'
+					}
+				})
+		   	}
+	        //支付
+	        pub.jumpLinkPlain1 = function (  ) {
+		   		common.jsInteractiveApp({
+					name:'goToNextLevel',
+					parameter:{
+						title:'绑定手机号',
+						url:'html/bindUser.html?url=order_pay'
+					}
+				})
+		   	}
 	    }
 	   	
 	   	pub.init();
+	   	
+	   	
 	   	window.pub = pub;
 	})
 })

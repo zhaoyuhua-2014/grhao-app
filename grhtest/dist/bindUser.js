@@ -27,37 +27,33 @@ require(['../require/config'],function () {
 		 	}
 			
 		};
-		pub.weixinAppId = common.openId.getItem();
-		if (pub.weixinAppId) {
-			
-		}else{
-			//common.jumpLinkPlainApp("登录","../html/login.html");
-			common.jsInteractiveApp({
-				name:'goToNextLevel',
-				parameter:{
-					title:'登录',
-					url:"html/login.html"
-				}
-			})
-		}
-		pub.key = null;// 图片验证码编号
 		// 倒计时
 		pub.time = 59;
 		/************************绑定手机号***************************/
 		pub.bindUser = {
 			init:function(){
-				pub.send_sms_type = "5";//5表示动态登录
-				pub.bindUser.verification.init();
+				var system  = localStorage.getItem('system') ? JSON.parse(localStorage.getItem('system')) : null
+				if(system && system.binding_account_tips){
+					
+				}else{
+					pub.bindUser.getSystem()
+				}
+			},
+			getSystem:function(){
+				common.ajaxPost({
+	 				method:'system_config_constant'
+	 			},function( d ){
+	 				if(d.statusCode == "100000"){
+	 					localStorage.setItem('system',JSON.stringify(d.data))
+	 				}
+	 			});
 			},
 			send_sms:{
 				init:function(){
-					common.ajaxPost({
-						method : 'send_sms',
-						mobile: pub.phoneNum,
-						type : pub.send_sms_type,
-						key : pub.key,
-						authcode : pub.imgCode
-					},function(d){
+					common.ajaxPost($.extend({},pub.userBasicParam,{
+						method : 'send_new_mobile',
+						mobile : pub.phoneNum
+					}),function(d){
 						if( d.statusCode == "100000" ){
 							common.prompt( '验证码已发送，请查收' );
 							$('input[disabled]').removeAttr('disabled');
@@ -67,26 +63,9 @@ require(['../require/config'],function () {
 					},function(d){
 		
 					});
-				},
-				apiData:function(d){
-					var o = d.data,html='';
-					
 				}
 			},
-			verification : {
-				init:function(){
-					common.ajaxPost({
-						method : 'verification'
-					},function( d ){
-						if( d.statusCode == '100000' ){
-							$('.imgCode_box .img_code').attr( 'src','data:image/jpeg;base64,' + d.data.code );
-							pub.key =  d.data.key;
-						}else{
-							common.prompt( d.statusStr );
-						}
-					});
-				}
-			},
+			
 			countDown : function(){
 				var id = setInterval(function(){
 					if ( pub.time == 0 ) {
@@ -101,82 +80,77 @@ require(['../require/config'],function () {
 					pub.time--;
 				},1000);
 			},
-			weixin_binding_mobile:{
+			binding_mobile:{
 				init:function(){
-					common.ajaxPost({
-						method : 'weixin_binding_mobile',
-						openId : pub.weixinAppId,
+					common.ajaxPost($.extend({},pub.userBasicParam,{
+						method : 'binding_new_mobile',
 						mobile : pub.phoneNum,
 						smsCode : pub.smsCode
-					},function( d ){
-						d.statusCode == "100000" && pub.bindUser.weixin_binding_mobile.apiData( d );
-						d.statusCode != "100000" && common.prompt(d.statusStr)
+					}),function( d ){
+						if (d.statusCode == '100000') {
+							pub.bindUser.binding_mobile.apiData( d );
+						} else if ( d.statusCode == '100521'){
+							
+							common.jsInteractiveApp({
+								name:'alertMask',
+								parameter:{
+									type:1,
+									title:JSON.parse(localStorage.getItem('system')).binding_account_tips,
+									truefn:'pub.bindUser.bind_update_mobile.init()'
+								}
+							})
+						}else{
+							common.prompt( d.statusStr )
+						}
 					});
 				},
 				apiData:function(){
-					pub.bindUser.weixin_login.init();
+					
+					var backUrl = '';
+					if(pub.bindUser.backUrl == 'month_recharge'){
+						backUrl = 'html/month_recharge.html?search=recharge'
+					}
+					if (pub.bindUser.backUrl == 'order_pay') {
+						backUrl = 'html/order_pay.html'
+					}
+					common.user_data.setItem(JSON.stringify($.extend({},common.user_datafn(),{
+						mobile:pub.phoneNum
+					})));
+					common.prompt('添加手机号成功',1000);
+					var tid = setTimeout(function(){
+						clearTimeout(tid)
+						common.jsInteractiveApp({
+							name:'goBack',
+							parameter:{
+								'num':1,
+								'type':1,
+								'url':backUrl
+							}
+						})
+					},800)
 				}
 			},
-			weixin_login:{
+			//当前手机号已经注册过账号时候调用改接口确认绑定手机号
+			bind_update_mobile : {
 				init:function(){
-					common.ajaxPost({
-						method:"weixin_login",
-						openId:pub.weixinAppId,
-						flag:'app',
-					},function(d){
-						d.statusCode == "100000" && pub.bindUser.weixin_login.apiData( d );
-						d.statusCode != "100000" && common.prompt(d.statusStr)
-					})
-				},
-				apiData:function(d){
-					var 
-					infor = d.data.cuserInfo,
-					user_data = {
-					    cuserInfoid : infor.id,
-					    firmId : infor.firmId,
-					    faceImg : infor.faceImg,
-					    petName : infor.petName,
-					    realName : infor.realName,
-					    idCard : infor.idcard,
-					    mobile : infor.mobile,
-					    sex : infor.sex,
-					    isRegOpenfire : infor.isRegOpenfire
-					};
-					common.user_data.setItem( common.JSONStr(user_data) );
-					common.tokenId.setItem( d.data.tokenId );
-					common.secretKey.setItem( d.data.secretKey );
-					// 给app端传用户信息 分享使用
-					if (common.isApp()) {
-						common.jsInteractiveApp({
-							name:'saveLoginInfo',
-							parameter:{
-								str:common.JSONStr( d )
-							}
-						});
-						//pub.sendToApp( common.JSONStr( d ) ); // 传数据给 APP 端
-						common.jsInteractiveApp({
-							name:'tellRefresh'
-						});
-						//common.tellRefreshAPP();
-						common.jsInteractiveApp({
-							name:'goHome'
-						});
-						//common.goHomeApp();
-					}
-					
+					common.ajaxPost( $.extend({},pub.userBasicParam,{
+						method : 'bind_update_mobile',
+						mobile : pub.phoneNum,
+					}),function( d ){
+						if ( d.statusCode == "100000" ) {
+							pub.bindUser.binding_mobile.apiData( d );
+						}else{
+							common.prompt(d.statusStr);	
+						}
+					});
 				}
 			},
 			eventHandle:{
 				init:function(){
-					// 获取图片验证码
-					$('.imgCode_box .img_code').click(function(){
-						pub.bindUser.verification.init();
-					});
 					// 获取验证码
 					$('.zs_get_verify_code').on('click',function(){
 		
 						pub.phoneNum = $(".zs_phoneNumber").val();
-						pub.imgCode = $('#img_code').val();
 						console.log(pub.phoneNum)
 						if( pub.phoneNum == '' ){
 							common.prompt('请输入手机号'); return;
@@ -184,13 +158,20 @@ require(['../require/config'],function () {
 						if( !common.PHONE_NUMBER_REG.test( pub.phoneNum ) ){
 							common.prompt('请输入正确的手机号'); return;
 						}
-						if( pub.imgCode == '' ){
-							common.prompt('请输入图片验证码'); return;
-						}
+						var userInfo = common.user_datafn();
+						if(userInfo.mobile){
+							if(userInfo.mobile == pub.phoneNum){
+								common.prompt('输入手机号不能当前绑定手机号相同')
+								return;
+							}
+						};
 						$(".zs_get_verify_code").hide();
 						$(".zs_time").show().html('( 60s 后重试)');
 						pub.bindUser.countDown();// 倒计时开始
 						pub.bindUser.send_sms.init(); // 请求验证码
+						
+						
+						
 					});
 					//绑定手机号
 					$("#btn_save").on("click",function(){
@@ -206,7 +187,7 @@ require(['../require/config'],function () {
 						if (pub.smsCode == '') {
 							common.prompt("请输入手机验证码");return;
 						}
-						pub.bindUser.weixin_binding_mobile.init();
+						pub.bindUser.binding_mobile.init();
 					})
 				}
 			}
@@ -244,6 +225,7 @@ require(['../require/config'],function () {
 			if (pub.muduleId == "bindUser") {
 				pub.bindUser.init();
 				pub.bindUser.eventHandle.init();
+				pub.bindUser.backUrl = common.getUrlParam("url");
 			}
 			$("body").fadeIn(300)
 		};

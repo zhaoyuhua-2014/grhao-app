@@ -201,8 +201,28 @@ require(['../require/config'],function(){
 		
 		//微信自动登录成功回调函数
 		pub.login.apiHandle.trueFn = function( str ){
-			var str = '{"unionid":"o4XFHxNtjx3HSiBgFKQCXXXIweqQ","screen_name":"小测","city":"","accessToken":"23_vq3OLynfCu9jArWIAb2Ufw0hhQONtTuhU8l_lXKlMj8AbgwbQgqS7EeZ12CC_6q1m5WM4PZsm5tQm220PK_swUqD3l4rWnDJLXFoKHh3R6o","refreshToken":"23_EUzIxvBKYtaBc0LRXnFhKs8j_0ZxB3J9aacdQjmXhx1TGlj5YM8n8q0zFCjHh7496iw9siO46zTzh_Xyxu1QVCeojQOIUx3VoVyS3Hh4cgs","gender":"女","province":"","openid":"oyBo6wBh863IfMOeoIF0I8jVKPHE","profile_image_url":"","country":"","access_token":"23_vq3OLynfCu9jArWIAb2Ufw0hhQONtTuhU8l_lXKlMj8AbgwbQgqS7EeZ12CC_6q1m5WM4PZsm5tQm220PK_swUqD3l4rWnDJLXFoKHh3R6o","iconurl":"","name":"小测","uid":"o4XFHxNtjx3HSiBgFKQCXXXIweqQ","expiration":"1563507263599","language":"zh_CN","expires_in":"1563507263599"}'
+			var genderObj = {
+				'男':1,
+				'女':2,
+			}
+			//var str = '{"unionid":"o4XFHxNtjx3HSiBgFKQCXXXIweqQ","screen_name":"小测","city":"","accessToken":"23_vq3OLynfCu9jArWIAb2Ufw0hhQONtTuhU8l_lXKlMj8AbgwbQgqS7EeZ12CC_6q1m5WM4PZsm5tQm220PK_swUqD3l4rWnDJLXFoKHh3R6o","refreshToken":"23_EUzIxvBKYtaBc0LRXnFhKs8j_0ZxB3J9aacdQjmXhx1TGlj5YM8n8q0zFCjHh7496iw9siO46zTzh_Xyxu1QVCeojQOIUx3VoVyS3Hh4cgs","gender":"男","province":"","openid":"oyBo6wBh863IfMOeoIF0I8jVKPHE","profile_image_url":"","country":"","access_token":"23_vq3OLynfCu9jArWIAb2Ufw0hhQONtTuhU8l_lXKlMj8AbgwbQgqS7EeZ12CC_6q1m5WM4PZsm5tQm220PK_swUqD3l4rWnDJLXFoKHh3R6o","iconurl":"","name":"小测","uid":"o4XFHxNtjx3HSiBgFKQCXXXIweqQ","expiration":"1563507263599","language":"zh_CN","expires_in":"1563507263599"}'
+			//var str = '{"country":"中国","unionid":"o4XFHxP7T_vx2hBg91sr3NSJHivE","gender":"男","city":"三门峡","openid":"oyBo6wJwpZYW5UwY0vQUFL_YkwLc","language":"zh_CN","profile_image_url":"http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTII1GCiaIScuzgBzm4azpGr7qZUhDYzFzDn2EdGrUsM3eRxthmxusR1rOwSLIPdwMj7SRTmicib8OX6w/132","accessToken":"24_Z_VBX3osjNausxyVG7Jmgr7V4kFMWbjvOHHeL9UfBn_W4jRjbqV-D53QmAHrIx2PQuFS9TOZH02X4JFrbarzto2roKe7XbHpFXSp5wOiivc","access_token":"24_Z_VBX3osjNausxyVG7Jmgr7V4kFMWbjvOHHeL9UfBn_W4jRjbqV-D53QmAHrIx2PQuFS9TOZH02X4JFrbarzto2roKe7XbHpFXSp5wOiivc","uid":"o4XFHxP7T_vx2hBg91sr3NSJHivE","province":"河南","screen_name":"赵玉华","name":"赵玉华","iconurl":"http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTII1GCiaIScuzgBzm4azpGr7qZUhDYzFzDn2EdGrUsM3eRxthmxusR1rOwSLIPdwMj7SRTmicib8OX6w/132","expiration":"1565258427684","expires_in":"1565258427684","refreshToken":"24_h02iPLjtjtMpfmbAbFkhrSrXUouubYid8fdlAnqFt99rbDRQqozEe1NTbqwKtYqfaNbtxU3ZBL043MbCU3vcFdeskwBQ_uMV2u0NXjqqmOo"}'
 			var d = JSON.parse( str );
+			var basicInformation = {};
+			if(common.isApp()){
+				if (common.isAndroid()) {
+					basicInformation.nickName = d.name || d.screen_name;
+					basicInformation.avatarUrl = d.profile_image_url || d.iconurl;
+					basicInformation.gender = d.gender == '男' ? 1 : 2;
+				}
+				if(common.isApple()){
+					basicInformation.nickName = d.nickname ;
+					basicInformation.avatarUrl = d.headimgurl ;
+					basicInformation.gender = d.sex ;
+				}
+				pub.basicInformation = common.objConversionString(basicInformation , '@');
+			}
+			console.log(basicInformation);
 			pub.scan_qrcode_login.init(d.openid , d.unionid);
 		};
 		//微信自动登录失败回调函数
@@ -313,7 +333,7 @@ require(['../require/config'],function(){
 							name:'wxLoginApp',
 							parameter:{}
 						})
-						pub.login.apiHandle.trueFn();
+						
 					}
 				})
 				
@@ -338,6 +358,7 @@ require(['../require/config'],function(){
 		            method: 'scan_qrcode_login',
 		            openId : openId,
 		            unionid:unionid,
+		            basicInformation:pub.basicInformation,
 		            uniqueId:'app',
 		       },function( d ){
 		       		console.log(d);
@@ -345,15 +366,15 @@ require(['../require/config'],function(){
 		            	
 						pub.login.apiHandle.apiData(d);		                
 		            }else if(d.statusCode == '100200'){
-		        		common.openId.setItem( openId ); // 存opendId
-		        		common.jsInteractiveApp({
-							name:'goToNextLevel',
-							parameter:{
-								title:'绑定注册',
-								url:'html/bindUser.html'
-							}
-						})
-		        		
+//		        		common.openId.setItem( openId ); // 存opendId
+//		        		common.jsInteractiveApp({
+//							name:'goToNextLevel',
+//							parameter:{
+//								title:'绑定注册',
+//								url:'html/bindUser.html'
+//							}
+//						})
+//		        		
 		            }else{
 		            	common.prompt( d.statusStr );
 		            }
