@@ -48,7 +48,7 @@ define(['jquery','mdData','shar1'],function($,md){
 			common.APIFARM = "http://api.grhao.com/server/farm.do"; // 正式
 		}else{//http://61.164.118.194:8090/grh_api/server/api.do/192.168.1.3:80/192.168.1.8:8080
 			//http://122.228.113.80:8090/grh_api/server/api.do  https://testapi.grhao.cn/grh_api/server/api.do
-			common.API = "http://122.228.113.80:8090/grh_api/server/api.do";
+			common.API = "https://testapi.grhao.cn/grh_api/server/api.do";
 			common.APIFARM = "https://testapi.grhao.cn/grh_api/server/farm.do";
 		}
 	})(common)
@@ -993,6 +993,11 @@ define(['jquery','mdData','shar1'],function($,md){
 						case 'goToNextLevel':
 							var jsonObj = {'title':parameter.title,"url":'/'+parameter.url};
 							common.isApple() ? window.webkit.messageHandlers.goToNextLevel.postMessage(jsonObj) : android.goToNextLevel(JSON.stringify(jsonObj));
+							break;
+						//定义 registerOnshow 方法。
+						case 'registerOnshow':
+							var jsonObj = parameter.fn;
+							common.isApple() ? window.webkit.messageHandlers.registerOnshow.postMessage(jsonObj) : android.registerOnshow(jsonObj);
 							break;
 						//跳转到搜索页面
 						case 'goToSearch':

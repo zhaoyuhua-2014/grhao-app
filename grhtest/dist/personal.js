@@ -33,6 +33,7 @@ require(['../require/config'],function(){
 		pub.apiHandle = {}
 		pub.apiHandle = {
 			init : function(){
+				pub.logined = common.isLogin();
 				// 登录状态 信息处理
 				if( pub.logined ){
 					var phone = common.user_datafn().mobile.replace( /(\d{3})\d{4}(\d{4})/,"$1****$2")
@@ -118,14 +119,6 @@ require(['../require/config'],function(){
 					}
 				});
 			},
-			goRechangeHistroy(){
-				common.jsInteractiveApp({
-					name:'saveLoginInfo',
-					parameter:{
-						str:common.JSONStr( data )
-					}
-				});
-			}
 		};
 		
 		// 父模块事件处理 
@@ -708,7 +701,7 @@ require(['../require/config'],function(){
 								name:'goBack',
 								parameter:{
 									'num':1,
-									'type':1,
+									'type':false,
 									'url':'html/my.html'
 								}
 							})
@@ -1831,6 +1824,12 @@ require(['../require/config'],function(){
 				pub.eventHandle.init(); // 父模块 事件 初始化
 				common.orderColumn.removeItem();
 				common.preColumn.removeItem();
+				common.jsInteractiveApp({
+					name:'registerOnshow',
+					parameter:{
+						fn:'pub.apiHandle.init()'
+					}
+				})
 			}
 			$("body").fadeIn(300)
 			pub.common = common;

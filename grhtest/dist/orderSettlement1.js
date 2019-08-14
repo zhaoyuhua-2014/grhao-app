@@ -255,7 +255,6 @@ require(['../require/config'],function () {
 			*/
 			if (common.goodsType.getItem() == 'ZHENG_JIAN') {
 				cart.init("wholeGood");
-				$('.set_charge_con .set_delivery_box').show();
 			}else{
 				cart.init();
 			}
@@ -305,9 +304,12 @@ require(['../require/config'],function () {
 						if (typeof d.wholecargoTime == 'undefined') {
 							pub.apiHandle.storeInfo.init();
 						}else{
-							$(".set_charge_con .set_delivery_box").find("dd").html(d.wholecargoTime )
+							if (d.wholecargoTime) {
+								$(".set_charge_con .set_delivery_box").show().find("dd").html(d.wholecargoTime )
+							} else{
+								$(".set_charge_con .set_delivery_box").hide();
+							}
 						}
-						
 					}else{
 						$(".set_charge_con .set_delivery_box").find("dd").html(d.cargoTime)
 					}
@@ -737,7 +739,7 @@ require(['../require/config'],function () {
 				
 				if (common.goodsType.getItem() == 'ZHENG_JIAN') {
 					pub.activityType = 7;
-					$(".set_contact_information,.set_charge_con .set_delivery_box").show();
+					$(".set_contact_information").show();
 				}
 						
 				pub.addrDtd.done(function(){
@@ -755,8 +757,9 @@ require(['../require/config'],function () {
 				pub.selectCoupon.init();
 			}
 			
-			
 		};
 		pub.init();
-	})
+		window.pub = pub;
+	});
+	
 });

@@ -1519,8 +1519,8 @@ require(['../require/config'],function(){
 					}
 				})
 		   	}
+	        
 	    }
-	   	
 	   	pub.init();
 	   	
 	   	

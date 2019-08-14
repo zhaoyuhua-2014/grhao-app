@@ -473,9 +473,12 @@ require(['../require/config'],function(){
 					}),function( d ){
 						if ( d.statusCode == "100000" ) {
 							GAME_TIGER.apiHandle.game_activity.apiData(d);
+							$(".gameTiger_box_center").show();
 						}else{
 							common.prompt( d.statusStr );
 							//GAME_TIGER.isGameSuccess = 2;
+							$(".noActive").show().css({"text-align":"center","line-height":"200px","font-size":"64px"})
+							console.log($(".gameTiger_box_center"))
 						}
 					});
 				},
@@ -887,6 +890,10 @@ require(['../require/config'],function(){
 				//抽奖
 				$(".gameTiger_operateArea_start").on("click",function(){
 					var dom = $(this);
+					if(!GAME_TIGER.activityId){
+						common.prompt("暂时没有活动！")
+						return;
+					}
 					dom.addClass("down");
 					setTimeout(function(){
 						dom.removeClass("down")

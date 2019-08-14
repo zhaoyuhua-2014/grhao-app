@@ -50,6 +50,8 @@ require(['../require/config'],function(){
 		pub.goods.TITLE = ['礼盒套餐','钜惠活动','全部商品']; // 标题
 	
 		pub.goods.isEnd = null; // 是否为最后一页
+		
+		pub.goods.list = [];//商品列表
 	
 		pub.goodsList = null;
 	
@@ -179,12 +181,31 @@ require(['../require/config'],function(){
 				apiData : function( d ){
 					d = d.data;
 					pub.goods.isEnd = d.isLast;
+					var list = [];
 					if (pub.PAGE_INDEX == 1) {
 						$(".more_bottom_right").html('');
+						list = d.objects
+					}else{
+						list = pub.goods.list.concat(d.objects)
 					}
+					pub.goods.list = list;
+					pub.goods.apiHandle.goods_list.render();
+					if( pub.goods.isEnd ){
+						pub.loading.show().html("没有更多数据了！");
+					}else{
+						pub.loading.show().html("点击加载更多！");
+					};
+					common.jsInteractiveApp({
+						name:'cancelDialog'
+					});
+					if (pub.isrefresh) {
+						pub.pullInstance1.pullDownSuccess();
+					}
+				},
+				render:function(){
 					var html = '',i;
-					for (var i = 0, l = d.objects.length; i < l; i++) {
-						var obj = d.objects[i]
+					for (var i = 0, l = pub.goods.list.length; i < l; i++) {
+						var obj = pub.goods.list[i]
 						var gdnum = cart.getgoodsNum( obj.id );
 						
 						html += '<dl class="goods_item clearfloat lazyload" data="' + obj.id + '" id="_more_">'
@@ -223,19 +244,7 @@ require(['../require/config'],function(){
 						html += '	</dd>'
 						html += '</dl>'
 					}
-					
-					$(".more_bottom_right").append(html).find('.goods_item:last dd').css("border-bottom","1px solid #FFF");
-					if( pub.goods.isEnd ){
-						pub.loading.show().html("没有更多数据了！");
-					}else{
-						pub.loading.show().html("点击加载更多！");
-					};
-					common.jsInteractiveApp({
-						name:'cancelDialog'
-					});
-					if (pub.isrefresh) {
-						pub.pullInstance1.pullDownSuccess();
-					}
+					$(".more_bottom_right").html(html).find('.goods_item:last dd').css("border-bottom","1px solid #FFF");
 				}
 			}
 		};
@@ -342,6 +351,14 @@ require(['../require/config'],function(){
 	
 			pub.goods.apiHandle.init();
 			pub.goods.eventHandle.init();
+			
+			
+			common.jsInteractiveApp({
+				name:'registerOnshow',
+				parameter:{
+					fn:'pub.goods.apiHandle.goods_list.render()'
+				}
+			})
 		}
 	
 	
@@ -405,6 +422,7 @@ require(['../require/config'],function(){
 							}
 						}
 					} 
+					$(".gd_number").show();
 					//添加存储数据到元素
 					$('.good_box1_box1').attr({
 						'data-id' : d.id,
@@ -446,7 +464,7 @@ require(['../require/config'],function(){
 								pub.goodsDetail.apiHandle.good_comment.apiData( d );
 							} else if(d.data.objects.length == '0' ){
 								if (pub.PAGE_INDEX == 1) {
-									pub.loading.show().html("暂无评论信息！").css("text-align","left");
+									pub.loading.show().html("暂无评论信息！").css("text-align","center");
 								}else{
 									pub.loading.show().html("没有更多数据了！");
 								}
@@ -467,7 +485,7 @@ require(['../require/config'],function(){
 					for ( var i = 0, l = d.objects.length; i < l; i++) {
 						html +='<div class="comment_item">'
 						html +='	<dl class="comment_item_top clearfloat">'
-						html +='		<dt class="float_left"><img src="'+d.objects[i].userFaceImg+'"/></dt>'
+						html +='		<dt class="float_left"><img src="'+ (d.objects[i].userFaceImg ? d.objects[i].userFaceImg : '../img/icon_touxiang.png') +'"/></dt>'
 						html +='		<dd	class="float_left">'
 						html +='			<p class="comment_time">'+d.objects[i].createTime.split(" ")[0]+'</p>'
 						html +='			<p class="comment_name">'+d.objects[i].userName+'</p>'
@@ -485,13 +503,19 @@ require(['../require/config'],function(){
 						html +='	</dl>'
 						html +='	<div class="comment_item_bottom">'
 						html +='		<p class="comment_content">'+d.objects[i].comment+'</p>'
-						html +='		<div class="comment_goods_picter_box clearfloat">'
-						for (var m in d.objects[i].pics.split("@")) {
-							if (d.objects[i].pics.split("@")[m]) {
-								html +='			<div class="comment_goods_picter_item"><img src="'+d.objects[i].pics.split("@")[m]+'"/></div>'
+						if (d.objects[i].pics.split("@").length && d.objects[i].pics.split("@")[0]) {
+							
+							html +='		<div class="comment_goods_picter_box clearfloat">'
+							for (var m in d.objects[i].pics.split("@")) {
+								if (d.objects[i].pics.split("@")[m]) {
+									html +='			<div class="comment_goods_picter_item"><img src="'+d.objects[i].pics.split("@")[m]+'"/></div>'
+								}
 							}
+							html +='		</div>'
+							
+						} else{
+							
 						}
-						html +='		</div>'
 						html +='	</div>'
 						html +='</div>'
 					}
@@ -565,8 +589,8 @@ require(['../require/config'],function(){
 			$('.show_num').attr( 'zs-goodsId',pub.goodsDetail.goodsId );
 			pub.goodsDetail.apiHandle.init();
 			pub.goodsDetail.eventHandle.init();
+			
 		};
-	
 		// console.log(pub,'pub');
 	
 		// 父模块
@@ -669,7 +693,7 @@ require(['../require/config'],function(){
 					var d = $(this).parent().parent();
 					var id=d.attr('data'),packagenum=d.attr('packagenum'),maxCount=d.attr('maxCount');
 					
-					if (parseInt($(this).siblings().eq(1).text()) < parseInt(packagenum)) {	
+					//if (parseInt($(this).siblings().eq(1).text()) < parseInt(packagenum)) {	
 						if(maxCount >0){
 							if(parseInt($(this).siblings().eq(1).text())<maxCount){
 								var num=cart.addCartGood(id)
@@ -683,9 +707,9 @@ require(['../require/config'],function(){
 							$('.show_num[zs-goodsid='+id+']').html(num)
 							cart.style_change();
 						}
-					} else{
-						common.prompt("库存不足")
-					}
+//					} else{
+//						common.prompt("库存不足")
+//					}
 				})
 				//添加减少事件
 				$(".car_main").on('click','.minus_num',function(){

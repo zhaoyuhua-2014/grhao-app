@@ -218,8 +218,8 @@ require(['../require/config'],function () {
 			pub.search.paramListInit(); // 参数初始化
 			pub.search.apiHandle.init();
 			pub.search.eventHandle.init();
+			
 		};
-	
 	/************************************ 门店地址 *************************/
 		
 		// 命名空间

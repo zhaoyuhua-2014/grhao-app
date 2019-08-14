@@ -871,9 +871,11 @@ require(['../require/config'],function () {
 	 		
 	 		pub.eventHandle.init(); // 模块初始化事件处理
 	 		$("body").fadeIn(300)
+	 		
 	 	};
-	 	
+	 	window.pub = pub;
 	 	$(document).ready(function(){
+	 		
 	 		try{
 	 			pub.init();
 	 		}catch(e){

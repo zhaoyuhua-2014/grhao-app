@@ -5,7 +5,7 @@
 		<title>全部商品</title>
 		<meta name="viewport" content="width=720,user-scalable=no" />
 		<meta content="telephone=no, address=no" name="format-detection" />
-		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/base.css?v=190812"/>
 		<script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body module-id="goods" class="animation-fadeIn">
@@ -31,4 +31,10 @@
 		<img id = "netWork" style="display: none;" />
 	</body>
 	<script data-main = "../dist/moregoods.js?v=0.1" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		function onShow(){
+			alert("on show 2");
+			return 1;
+		}
+	</script>
 </html>

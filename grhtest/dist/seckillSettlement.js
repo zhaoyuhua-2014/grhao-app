@@ -84,7 +84,7 @@ require(['../require/config'],function(){
 				
 				if( pub.goods_type == '2' ){
 					pub.activityType = 7;
-					$(".set_delivery_box,.user_phone_number").show();
+					$(".user_phone_number").show();
 				}else{
 					pub.activityType = 1;
 				}
@@ -119,7 +119,13 @@ require(['../require/config'],function(){
 							if ( typeof ORDER_SET.info.wholecargoTime == 'undefined') {
 								ORDER_SET.apiHandle.storeInfo.api();
 							} else{
-								userStoreDom.find(".set_delivery_box dd").html( ORDER_SET.info.wholecargoTime)
+								if(ORDER_SET.info.wholecargoTime){
+									userStoreDom.find(".set_delivery_box").show()
+									userStoreDom.find(".set_delivery_box dd").html( ORDER_SET.info.wholecargoTime)
+								}else{
+									userStoreDom.find(".set_delivery_box").hide()
+								}
+								
 							}
 						}
 					}

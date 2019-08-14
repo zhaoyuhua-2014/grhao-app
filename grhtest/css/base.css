@@ -311,6 +311,7 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .goods_item dd .good_box{width: 340px;position: relative;height: 60px;}
 
 .good_name {height:50px;line-height:50px;font-weight:900;white-space:nowrap;font-size: 28px;overflow: hidden;text-overflow: ellipsis;}
+.goods_item  .good_describe {padding-right: 20px;}
 .good_describe ,.good_describe1{height:45px;line-height:45px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
 .good_describe1{color: #898989;}
 .good_picre {width: 186px;height: 50px; position: absolute;left: 0;bottom: 0;line-height:50px;font-size:30px;color:#fc7732;}
@@ -664,7 +665,7 @@ background-origin: content-box;-webkit-background-clip: content-box;}
 .person_message li{width:100%;height:87px;font-size:28px;line-height:87px;border-bottom:1px solid #b2b2b2;padding:0 20px;}
 .person_name{width:115px;height:87px;}
 .person_address{width:140px;height:87px;}
-#person_name{width:565px;height:85px;}
+#person_name{width:540px;height:85px;}
 #person_phone,#person_area,#person_moreAddress{width:540px;height:85px;}
 .address_reverse{width:550px;height:80px;display:block;margin:250px auto;font-size:30px;color:white;background:#93c01d;text-align:center;line-height:80px;border-radius:10px;}
 
@@ -1134,9 +1135,9 @@ to {
 .goodsDetails_box2_comment .comment_item_top dt img{width:100%;height:100%}
 .goodsDetails_box2_comment .star{display:inline-block;width:32px;height:32px;background-image:url(../img/img_xingxing_b.png);background-size:cover;background-repeat:no-repeat;background-clip:content-box;background-origin:content-box;-webkit-background-origin:content-box;-webkit-background-clip:content-box}
 .goodsDetails_box2_comment .star.active{background-image:url(../img/star1.png)}
-.goodsDetails_box2_comment .comment_item_bottom{padding-bottom:38px;padding-left:80px;width:100%;border-bottom:2px solid #EEE}
+.goodsDetails_box2_comment .comment_item_bottom{padding-left:80px;width:100%;border-bottom:2px solid #EEE}
 .comment_content{color:#444;text-align:left;text-indent:70px;font-size:22px;line-height:36px}
-.comment_goods_picter_box{padding-top:36px}
+.comment_goods_picter_box{padding-top:36px;padding-bottom:38px;}
 .comment_goods_picter_box .comment_goods_picter_item{float:left;margin-left:30px;width:100px;height:100px}
 .comment_goods_picter_item img{width:100%;height:100%}
 .goodsDetails_box2_bottom .comment_time{font-size:24px}
