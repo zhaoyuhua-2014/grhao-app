@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>果然好</title>
+	<meta name="viewport" content="width=720,user-scalable=0"/>
+	<meta content="telephone=no, address=no" name="format-detection" />
+	<link rel="stylesheet" href="../css/base.css" />
+	<script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body style="background: #f5f5f5;" module-id="recharge" class="animation-fadeIn">
+	<div id="vueApp" class="vuePageBox">
+		<div class="mask"></div>
+		<!--<div class="header_wrap">
+			<div class="header_contain">
+				<div class="header_left" @click="goBack">
+					<span class="triangle-btn green"></span>
+				</div>
+				<h1 class="header_title header_title_color">账户充值</h1>
+				<div class="header_right" @click="jumpPage">
+					<span class="text">充值记录</span>
+				</div>
+		    </div>
+		</div>
+		<div class="empty"></div>-->
+		<div class="main_wrap recharge-wrap">
+			<div class="main recharge_main" v-cloak>
+				<div class="recharge_user_money" >
+					<p class="desc">我的余额</p>
+					<div class="money">￥<span class="money_num" v-text="money"></span></div>
+				</div>
+				<div class="recharge_center">
+					<ul class="recharge_nav clearfloat" >
+						<li class="recharge_nav_item float_left" v-for="(item,index) in rechargeMode.list" v-text="item" :class="{'active':getIsRechargeModeType(index)}" @click="rechargeModeClick(index)"></li>
+					</ul>
+					<div class="recharge_box">
+						<div class="recharge_box_item":class="{'active':getIsRechargeModeType(0)}" >
+							<ul class="recharge_money_list clearfloat" v-if="rechargeList.length">
+								<li class="recharge_money_item" v-for="(item,index) in rechargeList" :class="{'active':getRechargeListIndex(index)}" @click="rechargeListClick(index)">
+									<p class="principal" v-text="'充'+item.limit+'元'"></p>
+									<p class="giveMoney" v-text="'送'+(item.sendMoney || 0)+'元'"></p>
+								</li>
+							</ul>
+							<div class="recharge_pay_select" v-if="!isWX">
+								<div class="recharge_pay_title">
+									支付方式
+								</div>
+								<div class="recharge_pay_box">
+									<dl class="pay_item clearfloat" @click="changePayType(0)" :class="{'active':payType==0}" v-if="isApp">
+										<dt class="float_left">
+											<svg class="icon" width="46px" height="46.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path fill="#41b035" d="M390.21952 631.09248c-61.26464 34.01984-70.35136-19.09888-70.35136-19.09888l-76.78208-178.46656c-29.54368-84.80512 25.56928-38.23744 25.56928-38.23744s47.2896 35.63392 83.17952 57.34784c35.87072 21.71392 76.75776 6.3744 76.75776 6.3744l501.9648-230.7776C837.94688 113.4528 684.96256 38.4 511.76576 38.4 229.11104 38.4 0 238.13248 0 484.52864c0 141.72544 75.8656 267.8656 194.0352 349.62176l-21.31072 122.01856c0 0-10.38848 35.6224 25.61536 19.10016 24.53376-11.26528 87.0784-51.63392 124.30976-76.20224 58.53056 20.31616 122.2976 31.5968 189.14432 31.5968 282.63168 0 511.79008-199.73248 511.79008-446.13376 0-71.36896-19.31008-138.76864-53.51552-198.59456C810.14144 381.7792 438.15808 604.51712 390.21952 631.09248L390.21952 631.09248 390.21952 631.09248zM390.21952 631.09248" /></svg>
+										</dt>
+										<dd class="float_left">
+											微信支付
+										</dd>
+										<dd class="float_right">
+											<svg class="icon" width="46px" height="46.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M513.68385 80.202647c-239.632729 0-433.882851 194.406688-433.882851 434.239985 0 239.823064 194.250122 434.252265 433.882851 434.252265 239.631706 0 433.926854-194.429201 433.926854-434.252265C947.610704 274.609335 753.315556 80.202647 513.68385 80.202647zM785.134239 388.580063c-0.044002 0.044002-0.134053 0.090051-0.179079 0.134053l-99.332333 103.685477-19.188015 19.188015-157.302629 157.25658c-0.223081 0.24457-0.268106 0.580215-0.535189 0.803295-8.076956 8.076956-21.196765 8.076956-29.272697 0l-43.464931-43.48642-19.188015-19.189038-87.531566-91.7701-3.346211 3.302209-18.563798 16.867156c-0.044002 0.046049-0.090051 0.135076-0.134053 0.179079-8.121981 8.055466-21.240767 7.988951-29.272697-0.13303-8.032954-8.123005-7.987928-21.24179 0.13303-29.296233l18.71934-17.046235 17.582447-17.425881c0.11154-0.11154 0.156566-0.268106 0.245593-0.379647 0.134053-0.110517 0.289596-0.156566 0.401136-0.267083l1.048889-1.026376 0.200568 0.200568c8.121981-6.670933 20.058848-6.492878 27.668153 1.092891 0.045025 0.066515 0.089028 0.156566 0.13303 0.201591l101.989859 106.228393 19.188015 19.188015 28.693506 28.760021 143.333476-143.332453 19.189038-19.189038 99.513458-103.863533c8.074909-8.055466 21.195741-8.055466 29.271674 0.022513S793.211195 380.503107 785.134239 388.580063z" /></svg>
+										</dd>
+									</dl>
+									<div class="pay_item clearfloat" @click="changePayType(1)" :class="{'active':payType==1}">
+										<dt class="float_left">
+											<svg class="icon" width="46px" height="46.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path fill="#3c9ff3" d="M1023.648242 701.277871 1023.648242 197.496221c0-108.597339-88.13141-196.728749-196.792705-196.728749L197.080507 0.767472C88.483168 0.767472 0.351758 88.898882 0.351758 197.496221l0 629.77503c0 108.597339 88.067454 196.728749 196.728749 196.728749l629.77503 0c96.765474 0 177.286116-69.967897 193.722816-162.000625-52.188121-22.576479-278.336644-120.237337-396.143651-176.454687-89.666354 108.597339-183.553807 173.768534-325.088502 173.768534s-235.997752-87.172069-224.677534-193.850728C82.151521 595.430641 130.1825 480.949347 338.80707 500.583849 448.747486 510.880769 499.080882 531.410655 588.747236 561.022297c23.216039-42.53076 42.466804-89.346574 57.112735-139.168322L248.245331 421.853975 248.245331 382.457061l196.728749 0L444.97408 311.721691 205.011055 311.721691 205.011055 268.359503l239.963025 0L444.97408 166.285679c0 0 2.174505-15.989008 19.826369-15.989008L563.164824 150.296671l0 118.062832 255.824121 0 0 43.362188-255.824121 0L563.164824 382.457061l208.688527 0c-19.186809 78.090313-48.286803 149.848979-84.74174 212.525888C747.741927 616.919868 1023.648242 701.277871 1023.648242 701.277871L1023.648242 701.277871 1023.648242 701.277871zM283.676972 791.775654c-149.529199 0-173.19293-94.399101-165.262382-133.859971 7.866592-39.269003 51.164824-90.497783 134.307663-90.497783 95.550309 0 181.123478 24.431204 283.836862 74.444819C464.416714 735.814128 375.773656 791.775654 283.676972 791.775654L283.676972 791.775654z" /></svg>											
+										</dt>
+										<dd class="float_left">
+											支付宝支付
+										</dd>
+										<dd class="float_right">
+											<svg class="icon" width="46px" height="46.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M513.68385 80.202647c-239.632729 0-433.882851 194.406688-433.882851 434.239985 0 239.823064 194.250122 434.252265 433.882851 434.252265 239.631706 0 433.926854-194.429201 433.926854-434.252265C947.610704 274.609335 753.315556 80.202647 513.68385 80.202647zM785.134239 388.580063c-0.044002 0.044002-0.134053 0.090051-0.179079 0.134053l-99.332333 103.685477-19.188015 19.188015-157.302629 157.25658c-0.223081 0.24457-0.268106 0.580215-0.535189 0.803295-8.076956 8.076956-21.196765 8.076956-29.272697 0l-43.464931-43.48642-19.188015-19.189038-87.531566-91.7701-3.346211 3.302209-18.563798 16.867156c-0.044002 0.046049-0.090051 0.135076-0.134053 0.179079-8.121981 8.055466-21.240767 7.988951-29.272697-0.13303-8.032954-8.123005-7.987928-21.24179 0.13303-29.296233l18.71934-17.046235 17.582447-17.425881c0.11154-0.11154 0.156566-0.268106 0.245593-0.379647 0.134053-0.110517 0.289596-0.156566 0.401136-0.267083l1.048889-1.026376 0.200568 0.200568c8.121981-6.670933 20.058848-6.492878 27.668153 1.092891 0.045025 0.066515 0.089028 0.156566 0.13303 0.201591l101.989859 106.228393 19.188015 19.188015 28.693506 28.760021 143.333476-143.332453 19.189038-19.189038 99.513458-103.863533c8.074909-8.055466 21.195741-8.055466 29.271674 0.022513S793.211195 380.503107 785.134239 388.580063z" /></svg>
+										</dd>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="recharge_box_item" :class="{'active':getIsRechargeModeType(1)}" >
+							<ul class="recharge_card_box">
+								<li class="">
+									<label>充值卡号</label>
+									<input type="text" id="" v-model="rechangeCard" placeholder="请输入充值卡号" @blur="inputBlur" @focus="inputFocus" />
+									<span class="icon_del" v-text="'X'" v-show="rechangeCard" @click="delRechangeCard"></span>
+								</li>
+								<li>
+									<label>兑换码</label>
+									<input type="text" name="" id="" value="" v-model="rechangeExchangeCode" placeholder="请输入兑换码"  @blur="inputBlur" @focus="inputFocus"  />
+									<span class="icon_del" v-text="'X'" v-show="rechangeExchangeCode" @click="delRechangeExchangeCode"></span>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="rechange_btn_wrap">
+					<div class="rechange_btn" v-text="btnText" :class="{'active':btnIsActive,'isShow':btnIsShow}" @click="recharge"></div>
+				</div>
+				<form id="form2" action="http://wappaygw.alipay.com/service/rest.htm?_input_charset=utf-8" method="post" style="display: none;">
+			
+				</form>
+			</div>
+			<div class="order_refund" v-show="isMask">		
+				<div class="refund_bg refund_bg_load"></div>
+				<div class="loading_box">
+					<div id="gavinPlay"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</body>
+
+<script data-main = "../dist/payment.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+<!--<script src="../seajs/2.1.1/sea.js"></script>
+<script src="../seajs-config.js?v=20190319"></script>
+<script>
+	seajs.use(['payment'],function( zs ){
+		zs.init();
+	});
+</script>-->
+<script type="text/javascript">
+	//alipay支付回调
+	function aliPayResult ( d ){
+		pub.rechange.order_topay_alipay.alipay_result(d);
+	}
+	//wxpay支付回调
+	function wxPayResult ( d ){
+		pub.rechange.wx_pay_app.wxpay_result(d);
+	}
+	
+</script>
+</html>

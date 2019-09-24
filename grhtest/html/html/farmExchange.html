@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>兑换</title>
+		<!--<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://api.grhao.com/server/api.do http://61.164.113.168:8090/grh_api/server/api.do http://api.grhao.com/server/farm.do http://61.164.113.168:8090/grh_api/server/farm.do ; style-src 'self' 'unsafe-inline' 'unsafe-eval'  " >--> 
+		
+		<meta name="apple-touch-fullscreen" content="no"/>
+		<meta name="viewport" content="width=720,user-scalable=0"/>
+		<meta content="telephone=no, address=no" name="format-detection" />
+		<link rel="stylesheet" href="../css/rest.css" />
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/farm.css?v=0905"/>
+	</head>
+	<body module-id="2">
+		<div class="mainVue" id="appVue">
+			<!--<div class="header_wrap">
+				<div class="header_contain">
+					<div class="header_left" @click="goBack">
+						<span class="triangle-btn green"></span>
+					</div>
+					<h1 class="header_title header_title_color">兑换</h1>
+			    </div>
+			</div>
+			<div  class="empty"></div>-->
+			<div v-cloak class="main_wrap main_wrap_margin">
+				<ul v-cloak class="exchange_nav" v-show="PageType !=2">
+					<li @click="PageType = 0" :class="{'active':PageType===0}">兑换水果</li>
+					<li @click="PageType = 1" :class="{'active':PageType===1}">兑换果币</li>
+				</ul>
+				<div class="main exchange_main" v-show="PageType ===0">
+					<div v-cloak class="exchange">
+						<div class="goods same">
+							<p>兑换物品(<b v-text="fruit.name +'X'+fruit.num"></b>)</p>
+							<span><img v-bind:src="fruit.logo"/></span>
+						</div>
+						<div class="exchange_box">
+							<div class="exchange_msg exchange_msg_top" v-text="fruit.rate +'个' + fruit.name + '可兑换一份水果，最多可兑换'+parseInt(fruit.num/fruit.rate) + '份'"></div>
+							<div class="number same">
+								<p>兑换数量</p>
+								<input type="tel" class='value' maxlength = "4" placeholder="请输入要兑换的份数" v-model="fruitNum"/>
+							</div>
+							<div class="exchange_msg exchange_msg_bottom error" v-show="exchangeErrorMsg" v-text="exchangeErrorMsg"></div>
+						</div>
+						<div class="address">
+							<div class="top same">
+								<p>我的地址</p>
+								<p class="arrow" @click="goAddressList">请选择</p>
+							</div>
+							<div v-if="addressInfo.id" class="bottom">
+								<p><span v-text="addressInfo.firmName"></span></p>
+								<p v-text="addressInfo.address"></p>
+							</div>
+						</div>
+					</div>
+					<div class='exchange_b' :class="{'active':fruitNum && !exchangeErrorMsg && addressInfo.id}" @click="exchangeFruit">确认兑换</div>
+				</div>
+				<div class="exchange_coin exchange_main" v-show="PageType ===1">
+					<div v-cloak class="exchange">
+						<div class="goods same">
+							<p>兑换物品(<b v-text="fruit.name +'X'+fruit.num"></b>)</p>
+							<span><img v-bind:src="fruit.logo"/></span>
+						</div>
+						<div class="coin_wrap">
+							<div class="exchange_msg exchange_msg_top" v-text="fruit.score +'份' + fruit.name +'可兑换1个果币，最多可兑换'+parseInt(fruit.num/fruit.score)+'个'"></div>
+							<div class="same number">
+								<p>兑换数量</p>
+								<input type="tel" class='value' maxlength = "4" placeholder="请输入要兑换的个数" v-model="coinNum"/>
+							</div>
+							<div class="exchange_msg exchange_msg_bottom error" v-show="exchangeFruitCoinErrorMsg" v-text="exchangeFruitCoinErrorMsg"></div>
+						</div>
+					</div>
+					<div class='exchange_b ' :class="{'active':coinNum && !exchangeFruitCoinErrorMsg }" @click="exchangeCoin">确认兑换</div>
+				</div>
+				<div v-cloak class="main exchange_success" v-show="PageType == 2">
+					<div class="get">
+						<img src="../img/farmImg/success.png"/>
+						<p v-text="successful"></p>
+					</div>
+					<div class='exchange_index' @click="goBack">返回农场</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<!--<script src="../seajs/2.1.1/sea.js"></script>
+	<script src="../seajs-config.js?v=20181023"></script>
+	<script>
+		seajs.use(['framOther'],function( zs ){
+			zs.init();
+		});
+	</script>-->
+	<script data-main = "../dist/framOther.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+
+</html>

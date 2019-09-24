@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>修改信息</title>
+	<meta name="viewport" content="width=720,user-scalable=no"/>
+    <meta content="telephone=no, address=no" name="format-detection" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body module-id="1">
+<div class="zs_address_box">
+	<div class="main_wrap main_wrap_margin">
+		<div class="main">
+			<div class="main_content">
+				<dl class="clearfloat">
+					<dt>昵称</dt>
+					<dd>
+						<input type="text" id="message_nick" value="" autocomplete="off"/>						
+					</dd>
+				</dl>
+				<dl class="clearfloat">
+					<dt>真实姓名</dt>
+					<dd>
+						<input type="text" id="message_name" value=""  autocomplete="off"/>						
+					</dd>
+				</dl>
+				<dl class="clearfloat">
+					<dt>身份证号</dt>
+					<dd>
+						<input type="number" id="message_IDcard" style="color: inherit;" placeholder="第一次填写后不可修改" disabled="disabled" value="" autocomplete="off"/>						
+					</dd>
+				</dl>
+				<dl class="message_sex">
+					<div class="clearfloat" style="border-bottom: 1px solid #b2b2b2">
+						<dt>性别</dt>
+						<dd>
+							<input type="text" id="message_sex" disabled="disabled" value="" autocomplete="off"/>
+						</dd>
+					</div>					
+					<ul class="message_sex_choose">
+					    <li>男</li>
+					    <li>女</li>
+				    </ul>
+				</dl>				
+				<dl class="message_phoneNumber clearfloat">
+					<dt>手机号</dt>
+					<dd>
+						<input type="text" id="message_phoneNumber" value="" disabled="disabled" autocomplete="off"/>						
+					</dd>
+				</dl>
+				
+			</div>
+			<button class="main_reverse">保存</button>
+		</div>
+	</div>
+</div>
+
+<div class="zs_phone_box"  style="display:none;">
+	<div class="main_wrap">
+		<div class="main">
+			<ul class="phone_content">
+				<li class="phone_now"></li>
+				<li class="phone_verify_intro">
+					<input type="number" id="phone_phoneNumber" value="" placeholder="请输入您的手机号码" autocomplete="off" />
+				</li>
+				<li class="phone_new">
+					<input type="number" id="phone_verify_code2" name="" placeholder="请输入手机验证码" disabled="disabled" autocomplete="off" />
+				    <a id="phone_verify_code1">获取手机验证码</a>
+				    <a id="phone_time" style="display:none ;background: none; color: #F76A10;"></a>
+				</li>
+				
+			</ul>
+			<button class="phone_submit">确定</button>
+		</div>
+	</div>
+</div>
+
+</body>
+<script data-main = "../dist/personal.js?v=0905" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+</html>

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>订单结算</title>
+	
+	<meta name="viewport" content="width=720,user-scalable=no"/>
+    <meta content="telephone=no, address=no" name="format-detection" />
+    <link rel="stylesheet" href="../css/base.css?v=1214" />
+    <script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body module-id="orderSettlement" class="animation-fadeIn">
+	<!--<div class="header_wrap">
+		<div class="header_contain">
+			<div class="header_left"><span class="triangle-btn green"></span></div>
+			<h1 class="header_title header_title_color">订单结算</h1>
+	    </div>
+	</div>
+	<div class="empty"></div>-->
+	<div class="orderSettlement">
+		<div class="main_wrap">
+			<div class="main">
+				<div class="set_charge_contact clearfloat">
+					<div class="set_charge_contact_left">取货方式：</div>
+					<div class="set_charge_contact_right">
+						<ul class="clearfloat">
+							<li class="take_others">自提点</li>
+							<li class="take_own">送货上门</li>
+						</ul>
+					</div>
+				</div>
+				<div class="set_charge_con">
+					<div class="set_charge_address set_charge_address2">
+					    <div class="set_address_top clearfloat">
+					    	<div class="take_goods_name"></div>
+						    <div class="take_goods_phone"></div>
+					    </div>
+					    <div class="set_address_bottom"></div>
+					    <div class="set_job_time clearfloat"></div>
+				    </div>
+				    <div class="set_charge_address set_charge_address1" style="display: none;">
+					    
+					    <div class="set_address_top clearfloat group1">
+						    <div class="take_goods_name"></div>
+						    <div class="take_goods_phone"></div>
+					    </div>
+					    <div class="set_address_bottom group1"></div>
+				    </div>
+				    <dl class="set_delivery_box">
+				    	<dt>配送说明</dt>
+				    	<dd>
+				    		
+				    	</dd>
+				    </dl>
+				</div>
+				<div class="set_order_remark">
+					<div class="order_remark">订单备注:</div>
+					<input type="text" name="" id="" placeholder="选填，您想对商家说些什么" />
+				</div>
+				<!--<dl class="set_coupon_box clearfloat">
+					<dt>优惠券:</dt>
+					<dd class="set_coupon_box1">
+						<div class="set_coupon_box1_top" data=''>请选择优惠券</div>
+						<div class="set_coupon_box1_bottom">
+							<div class="set_coupon_box1_bottom-inner"></div>
+						</div>
+					</dd>
+					<span id="coupon_msg" class="monthCard_introduction">?</span>
+				</dl>-->
+				<dl class="set_coupon_box_item clearfloat">
+					<dt class="float_left">优惠券</dt>
+					<dd class="float_right set_coupon_box_item_text color_999">
+						
+					</dd>
+				</dl>
+				<div class="set_contact_information clearfloat">
+					<div class="float_left">联系方式</div>
+					<input type="tel" name="" id="" value="" placeholder="必填" />
+				</div>
+				<dl class="set_delivery_box clearfloat">
+					<dt class="float_left">配送时间:</dt>
+					<dd class="float_right">
+						<input type="text" id="person_area" value="" placeholder="请选择配送时间" readonly="readonly">
+						<input id="value1" type="hidden" value="">
+					</dd>
+				</dl>
+				<div class="order_goods_contain_details">
+				</div>
+				
+				<ul class="order_set_list">
+					<li>
+						<div class="float_left">商品总价：</div>
+						<div class="float_right">￥</div>
+					</li>
+					<li>
+						<div class="float_left">运费：</div>
+						<div class="float_right">￥</div>
+					</li>
+					<div class="order_first_free clearfloat">
+						<div class="float_left">首单立减</div>
+						<div class="float_right"></div>
+					</div>
+					<li class="group">
+						<div class="float_left">优惠券：</div>
+						<div class="float_right">￥0</div>
+					</li>
+					<li class="group">
+						<div class="float_left">立减优惠：</div>
+						<div class="float_right">￥</div>
+					</li>
+					<li style="display:none;">
+						<div class="float_left">充值优惠：</div>
+						<div class="float_right">￥</div>
+					</li>
+					<li>
+						<div class="float_left">合计：</div>
+						<div class="float_right">￥</div>
+					</li>
+					
+				</ul>
+			</div>
+		</div>
+		<div class="empty1"></div>
+	    <div class="order_submit clearfloat">
+	    	<div class="order_submit_left">
+	    		<span class="order_submit_sum">实际支付：</span>
+	    		<span class="order_submit_sign">￥</span>
+	    		<span class="order_submit_money"></span>
+	    	</div>
+	    	<div class="order_submit_right confirm-submit">提交订单</div>
+	    </div>
+	</div>
+	<!--选择优惠卷-->
+	<div class="select_coupon">
+		<div class="main_wrap">
+			<div class="main">
+				<div class="select_coupon_top active">不使用优惠卷</div>
+				<div class="cuopon_management_contain cuopon_management_contain1">
+					
+				</div>
+				<div class="cuopon_management_contain cuopon_management_contain2">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<!--<script src="../seajs/2.1.1/sea.js"></script>
+<script src="../seajs-config.js?v=0606"></script>
+<script>
+	seajs.use(['orderSettlement1'],function( zs ){
+		zs.init();
+	});
+</script>-->
+<script data-main = "../dist/orderSettlement1.js?v=0929" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+
+<html>

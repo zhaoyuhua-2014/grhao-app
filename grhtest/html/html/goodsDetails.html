@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>商品详情</title>	
+		<meta name="viewport" content="width=720,user-scalable=no"/>
+	    <meta content="telephone=no, address=no" name="format-detection" />
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/swiper-3.3.1.min.css"/>
+		<script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body style="background: #FFFFFF;" module-id="goodsDetail" class="animation-fadeIn">
+		<div class="main_wrap" style="background: #FFFFFF;">
+			<div class="main">
+				<div class="goodsDetails_img_box">
+					<div class="swiper-wrapper">
+					</div>
+					<!-- 如果需要分页器 -->
+					<div class="swiper-pagination"></div>
+				</div>
+				<div class="goodsDetails_box1">
+					<div class="gd_goodName">
+						
+					</div>
+					<div class="gd_specification clearfloat">
+						<p class="float_left"></p>
+						<p class="float_right" style="display: none;"></p>
+					</div>
+					<div class="gd_goodsDescribe"></div>
+					<div class="good_box1_box1 clearfloat zs-static-box zs-goods-box">
+						<div class="gd_price">
+							
+						</div>
+						<div class="gd_number clearfloat hidden" style="width:auto;">
+							<div class="minus_num">
+								
+							</div>
+							<div class="show_num" style="width:auto;padding: 0 10px"> 
+								
+							</div>
+							<div class="add_num">
+								
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="goodsDetails_box2">
+					<ul class="goodsDetails_box2_top clearfloat">
+						<li class="active"><h4 class="clearfloat"><span class="float_left"></span><b class="float_left">商品详情</b></h4></li>
+						<li><h4 class="clearfloat"><span class="float_left"></span><b class="float_left">商品评价</b></h4></li>
+					</ul>
+					<div class="goodsDetails_box2_top_empty"></div>
+					<ul class="goodsDetails_box2_bottom lazyload">
+						<li class="goodsDetails_box2_bottom_item goodsDetails_box2_ active">
+							<div class="goodsDetails_box2_details">
+								暂无详情信息
+							</div>
+						</li>
+						<li class="goodsDetails_box2_bottom_item goodsDetails_box2_comment">
+							<div class="goodsDetails_box2_comment_box">
+								
+							</div>
+							<p class="click_load" style="display: none;">正在加载中...</p>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="my_bg"></div>
+		
+		<div class="toTop"></div>
+		<div class="footer_menu_wrap">
+			<div class="footer_menu">
+				<dl class="footer_car footer_car_hide">
+					<dt class="car_top clearfloat">
+						<div class="car_left float_left">
+							已选商品
+						</div>
+						<div class="car_right car_clear float_right">
+							<svg viewBox="0 0 24 32" id="cart-remove" width="24px" height="24px"><path fill="#bbb" fill-rule="evenodd" d="M21.5 10h-19c-1.1 0-1.918.896-1.819 1.992l1.638 18.016C2.419 31.104 3.4 32 4.5 32h15c1.1 0 2.081-.896 2.182-1.992l1.637-18.016A1.798 1.798 0 0 0 21.5 10zM8 28H5L4 14h4v14zm6 0h-4V14h4v14zm5 0h-3V14h4l-1 14zm2-24h-2.941l-.353-2.514C17.592.669 16.823 0 15.998 0H8c-.825 0-1.593.668-1.708 1.486L5.94 4H3a3 3 0 0 0-3 3v1h24V7a3 3 0 0 0-3-3zM8.24 2h7.52l.279 2H7.96l.28-2z"></path></svg>
+							清空
+						</div>
+					</dt>
+					<dd class="car_main">
+						<ul></ul>
+					</dd>
+				</dl>
+				<div class="footer clearfloat">
+					<div class="footer-left float_left">
+						<div class="icon_cart float_left" data-content='99+'></div>
+						<p class="float_left cart_message">购物车是空的</p>
+					</div>
+					<div class="footer-rigth float_right ">
+						去结算
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script data-main = "../dist/moregoods.js?v=123" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+</html>
