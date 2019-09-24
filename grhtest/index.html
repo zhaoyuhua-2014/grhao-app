@@ -5,7 +5,7 @@
 		<title>首页</title>
 		<meta name="viewport" content="width=720,user-scalable=no" />
 		<meta content="telephone=no, address=no" name="format-detection" />
-		<link rel="stylesheet" type="text/css" href="css/base.css?v=1215" />
+		<link rel="stylesheet" type="text/css" href="css/base.css?v=0408" />
 		<link rel="stylesheet" type="text/css" href="css/swiper-3.3.1.min.css"/>
 		<script src="dist/EVE.js" type="text/javascript" charset="utf-8"></script>
 		<style type="text/css">
@@ -17,68 +17,52 @@
 			<div class="index_header">
 				<div class="index_loge"></div>
 				<div class="index_tit">
-					<p><span></span>&nbsp;&nbsp;<span></span>&nbsp;&nbsp;<span class="all_bg1"></span></p>
+					<p class="clearfloat"><span></span><span style="margin: 0 10px;"></span><span class="all_bg1"></span></p>
 					<p></p>
 				</div>
 				<div class="index_rigth"></div>
 			</div>
 		</div>
 		<div class="empty"></div>
-		<div class="main_wrap" id="wrapper">
-			<!-- <div id="iscroll"> -->
-				<!--<div id="pullDown" class="empty">
-					<span class="pullDownIcon"></span><span class="pullDownLabel">Pull down to refresh...</span>
-					<div class="loader">
-						<span></span><span></span><span></span><span></span>
+		<div class="main_wrap" id="wrapper" style="background:#ffffff">
+			<div class="main index">
+				<div class="banner_wrap">
+					<div class="index_banner">
+						<div class="swiper-wrapper"></div>
+						<div class="swiper-pagination"></div>
 					</div>
-					<div class="pullDownLabel">下拉刷新...</div>
+				</div>
+				<!--<div class="index_center_wrap">
+					<div class="index_center_banner">
+						<div class="swiper-wrapper">
+						</div>
+					</div>
+				</div>
+				<div class="index_inner_wrap">
+					<div class="index_inner lazyload"></div>
 				</div>-->
-				<div class="main index">
-					<div class="banner_wrap">
-						<div class="index_banner">
-							<div class="swiper-wrapper"></div>
-							<div class="swiper-pagination"></div>
+				<div class="shop-active-container">
+					<ul class="shop-active-box swiper-wrapper" id="shop-active-data-box"></ul>
+				</div>
+				<div class="index_active_wrap">
+					<div class="index_active clearfloat">
+						<div class="active_left float_left activeJump">
+							<!--<img src="img/index_active01.png" data-url="html/seckill.html"/>-->
 						</div>
-					</div>
-					<div class="index_center_wrap">
-						<!--<dl class="top_left" data="1">
-							<dt class="all_bg2"></dt>
-							<dd>礼盒套餐</dd>
-							<dd>满足味蕾</dd>
-						</dl>
-						<dl class="top_right" data="2">
-							<dt class="all_bg3"></dt>
-							<dd>钜惠活动</dd>
-							<dd>吃点新鲜</dd>
-						</dl>
-					
-						<dl class="bottom_left" data="3">
-							<dt class="all_bg4"></dt>
-							<dd>疯狂秒杀</dd>
-							<dd>整点秒杀</dd>
-						</dl>
-						<dl class="bottom_right" data="4">
-							<dt class="all_bg5"></dt>
-							<dd>一元预购</dd>
-							<dd>意想不到</dd>
-						</dl>
-						<div class="index_center_center">
-						</div>
-						<div class="mask hidden"></div>-->
-						<div class="index_center_banner">
-							<div class="swiper-wrapper">
-								<!--
-								<dl class="swiper-slide">
-									<dt><img src="img/1226-01.png"/></dt>
-									<dd>钜惠活动2</dd>
-								</dl>-->
+						<div class="active_right float_right">
+							<div class="active_top activeJump">
+								<!--<img src="img/index_active02.png" data-url = "html/month_recharge.html?search=recharge"/>-->
+							</div>
+							<div class="active_bottom activeJump">
+								<!--<img src="img/index_active03.png" data-url="html/whole.html"/>-->
 							</div>
 						</div>
 					</div>
-					<div class="index_inner_wrap">
-						<div class="index_inner lazyload"></div>
-					</div>
-				<!-- </div> -->
+				</div>
+				<div class="home_goods_show"></div>
+				<div class="index_bottom_wrap">
+					<div class="index_bottom"></div>
+				</div>
 			</div>
 		</div>
 		<div class="order_refund">		
@@ -95,14 +79,23 @@
 			    </dl>
 			</div>	
 		</div>
+		<img id = "netWork" style="display: none;" />
+		<script type="text/x-jquery-tmpl" id="shop-active-data">
+			<li class="swiper-slide" link="${h5Url}" tit="${name}">
+				<div class="shop-active-content-box" >
+					<p class="pic"><img src="${logo}"></p>
+					<p class="txt">${name}</p>
+				</div>
+			</li>
+		</script>
 	</body>
-	<script data-main = "dist/index.js?v=1215" src="require/require.js" type="text/javascript" charset="utf-8"></script>
+	<script data-main = "dist/index.js?v=1204" src="require/require.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
-		
 		// 定位交互
 		function setLocation(d){
 			if (d) {
 				localStorage.setItem("location",d);
+				//alert(d);
 			};
 		};
 		// 取消交互逻辑
@@ -116,5 +109,19 @@
 		function trueFn1(){
 			pub.apiHandle.trueFn1();
 		}
+		//获取app版本信息
+		function setAppVersion(n){
+			if (typeof n == 'string') {
+				if (!!n) {
+					localStorage.setItem("version",n);
+					console.log(localStorage.getItem('version'));
+				}else{
+					console.log("n is empty string")	
+				}			
+			}else{
+				console.log(n+"not is string")
+			}
+		}
+		
 	</script>
 </html>

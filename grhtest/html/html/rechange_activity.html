@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>果然好</title>
+	<meta name="viewport" content="width=720,user-scalable=no"/>
+    <meta content="telephone=no, address=no" name="format-detection" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
+	<style>
+		.rechange_activity{
+			padding-bottom:24px;
+			background-image: linear-gradient(0deg, 
+			#ffcfa1 0%, 
+			#ffeede 100%);
+		}
+		.activity_top{
+			position: relative;
+			width: 720px;
+			height: 626px;
+			background:url(../img/activity_img/ch_bg2.png) no-repeat center center;
+		}
+		.activity_top .activity_title{
+			padding-top:176px;
+			font-family: FZPSCHJW--GB1-0;
+			font-size: 47px;
+			color: #ff6203;
+			text-align: center;
+		}
+		.rechange_activity .activity_content {
+			margin:10px  auto 0;
+			padding:52px 42px;
+			width: 680px;
+			/*height: 732px;*/
+			background-color: #ff7046;
+			border-radius: 13px;
+		}
+		.rechange_activity  .content_title {
+			width: 377px;
+			margin:0 auto 36px;
+			font-family: MicrosoftYaHei;
+			font-size: 40px;
+			letter-spacing: 1px;
+			color: #ffffff;
+			text-align: center;
+			background:url(../img/activity_img/ch_text.png) no-repeat bottom center;
+		}
+		.rechange_activity .activity_content dl {
+			 display: flex;
+			 height:156px;
+		}
+		.activity_content dl dt{
+			flex-grow: 1;
+		}
+		.activity_content dl + dl{
+			margin-top: 32px;
+		} 
+		.activity_content dl dd{
+			width: 200px;
+		}
+		.coupon_items {
+			background-color: #ffd401;
+		}
+		.coupon_content{
+			position: relative;
+		}
+		.coupon_content:before,
+		.coupon_content:after{
+			content: "";
+			display: block;
+			position: absolute;
+			top:0;
+			height:156px;
+		}
+		.coupon_content:before{
+			left:0;
+			width:23px;
+			background:url(../img/activity_img/quan.png) no-repeat center center;
+		}
+		.coupon_content:after{
+			right:0;
+			width:16px;
+			background:url(../img/activity_img/quan-2.png) no-repeat center center;
+		}
+		.coupon_items p {
+			text-align: center;
+			font-weight: 700;
+		}
+		.coupon_items .coupon_des{
+			font-size: 26px;
+			letter-spacing: 1px;
+			font-weight: 700;
+			color: #e2552a;
+		}
+		.coupon_items p .coupon_money{
+			display: inline-block;	
+			margin-top:28px;
+			font-size: 80px;
+			line-height: 80px;
+			letter-spacing: 2px;
+			color: #e2552a;
+		}
+		.coupon_items p .coupon_word{
+			display: inline-block;
+			font-size: 47px;
+			letter-spacing: 1px;
+			text-indent: 6px;
+			color: #e2552a;
+		}
+		.coupon_items .to_recharge{
+			display: block;
+			margin:46px auto 0;
+			width: 150px;
+			height:64px;
+			font-size: 28px;
+			color:#FFFFFF;
+			background-color: #26b2c1;
+			border-radius: 13px;
+			font-weight: 700;
+		}
+		.rechange_activity .activity_ruler{
+			margin:30px auto 0;
+			padding:50px 60px 40px;
+			width: 680px;
+			background-color: #ff7046;
+			border-radius: 13px;
+		}
+		
+		.rechange_activity .home_button {
+			display: block;
+			margin:30px auto 0;
+			font-family: MicrosoftYaHei;
+			font-size: 28px;     
+			line-height: 37px;
+			letter-spacing: 1px;
+			color: #ff7046;
+		}
+		.ruler_des li {
+			font-size: 23px;
+			line-height: 37px;
+			letter-spacing: 1px;
+			color: #fffffe;
+		}
+		.ruler_des li:last-child{
+			margin-top:50px;
+		}
+		.share_btn{
+			position: absolute;
+			top: 32px;
+			right: 0;
+			width: 100px;
+			height: 50px;
+			
+		}
+	</style>
+</head>
+<body module-id="rechange_activity" class="animation-fadeIn" >
+	<div class="rechange_activity">
+		<div class="activity_top">
+			<!--<button class="share_btn"></button>-->
+			<p class="activity_title">充值最高可赠送 70元</p>
+		</div>
+		<div class="activity_content">
+			<p class="content_title">充值满即送</p>
+			<dl class="coupon_items">
+				<dt class="coupon_content">
+		 			<p><span class="coupon_money">10元</span><span class="coupon_word">红包</span></p>
+					<p class="coupon_des">充值福利：充100元送10元</p>
+				</dt>
+				<dd><button class="to_recharge" url-data="html/month_recharge.html?search=recharge">去充值</button></dd>
+			</dl>
+			<dl class="coupon_items">
+				<dt class="coupon_content">
+		 			<p><span class="coupon_money">40元</span><span class="coupon_word">红包</span></p>
+					<p class="coupon_des">充值福利：充300元送40元</p>
+				</dt>
+				<dd><button class="to_recharge" url-data="html/month_recharge.html?search=recharge">去充值</button></dd>
+			</dl>
+			<dl class="coupon_items">
+				<dt class="coupon_content">
+		 			<p><span class="coupon_money">70元</span><span class="coupon_word">红包</span></p>
+					<p class="coupon_des">充值福利：充500元送70元</p>
+				</dt>
+				<dd><button class="to_recharge" url-data="html/month_recharge.html?search=recharge">去充值</button></dd>
+			</dl>
+		</div>
+		<div class="activity_ruler">
+			<p class="content_title">活动规则</p>
+			<ul class="ruler_des">
+				<li>1.活动期间，如遇到充值故障问题可联系客服处理；</li>
+				<li>2.用户每天参与活动次数不予限制；</li>
+				<li>3.充值所获得的红包金额将直接充值在“余额”中；</li>
+				<li>本活动最终解释权归本平台所有</li>
+			</ul>
+		</div>
+		<button class="home_button" url-data="../index.html">返回首页>></button>
+		
+	</div>
+</body>
+	<script src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		require(['../require/config'],function(){
+			require(['common'],function(common){
+				
+				var isWeixin = common.isWeiXin();
+				var isApp = common.isApp();
+				
+				var pub = {
+					
+				};
+				pub.sharDataDefault = $.Deferred(); //分享数据延时对象。
+				
+				//请求初始化
+			pub.apiInit = {
+				init:function(){
+					pub.apiInit.getShareDate();
+					//微信sdk 及分享数据初始化完成在调用微信分享
+					//$.when(pub.sharDataDefault , common.weixinDefault).done(function(data,type){
+						//alert('weixinSDK初始化'+type);
+						//alert('weixin分享初始化');
+						//common.weixin.share( data );
+					//});
+				},
+				//从服务器获取分享数据
+				getShareDate:function(){
+					common.ajaxPost({
+						method : 'rech_share',
+					},function( d ){
+						if(d.statusCode == "100000"){
+							pub.sharDataDefault.resolve(d.data)
+						}
+					})
+				}
+			}
+			//事件初始化
+			pub.eventHandle = {
+				init:function(){
+					$('.home_button').on('click',function(){
+						var data =  $(this).attr('url-data')
+						//common.jumpLinkPlain(data)
+						common.jsInteractiveApp({
+							name:'goHome'
+						})
+					})
+					$('.to_recharge').on('click',function(){
+						var data =  $(this).attr('url-data'),
+							title = "充值"
+						//common.jumpLinkPlain(data)
+						common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:title,
+								url:data
+							}
+						})
+					})
+					$('.share_btn').on('click',function(){
+						if (isApp) {
+							common.prompt('调用APP分享方法~')
+						}else if(isWeixin){
+							common.prompt('点击右上角的按钮即可完成分享哟~')
+						}else{
+							 common.prompt('请在微信环境下分享')
+						}
+					});
+				}
+			}
+			pub.init = function(){
+				pub.apiInit.init();
+				pub.eventHandle.init();
+			}
+			pub.init();
+				
+				
+			})
+		})
+	</script>
+	<!--<script src="../seajs/2.1.1/sea.js"></script>
+	<script src="../seajs-config.js?v=20190319"></script>
+	<script>
+		seajs.use(['common'], function( zs ){
+			//var common = require('common');
+			var common = zs;
+			var isWeixin = zs.isWeiXin();
+			
+			var pub = {
+				
+			};
+			pub.sharDataDefault = $.Deferred(); //分享数据延时对象。
+			zs.weixin.config(location.href.split('#')[0]);
+			//请求初始化
+			pub.apiInit = {
+				init:function(){
+					pub.apiInit.getShareDate();
+					//微信sdk 及分享数据初始化完成在调用微信分享
+					$.when(pub.sharDataDefault , common.weixinDefault).done(function(data,type){
+						//alert('weixinSDK初始化'+type);
+						//alert('weixin分享初始化');
+						common.weixin.share( data );
+					});
+				},
+				//从服务器获取分享数据
+				getShareDate:function(){
+					zs.ajaxPost({
+						method : 'rech_share',
+					},function( d ){
+						if(d.statusCode == "100000"){
+							pub.sharDataDefault.resolve(d.data)
+						}
+					})
+				}
+			}
+			//事件初始化
+			pub.eventHandle = {
+				init:function(){
+					$('.to_recharge, .home_button').on('click',function(){
+						var data =  $(this).attr('url-data')
+						zs.jumpLinkPlain(data)
+					})
+					
+					$('.share_btn').on('click',function(){
+						if(isWeixin){
+							zs.prompt('点击右上角的按钮即可完成分享哟~')
+						}else{
+							 zs.prompt('请在微信环境下分享')
+						}
+					});
+				}
+			}
+			pub.init = function(){
+				pub.apiInit.init();
+				pub.eventHandle.init();
+			}
+			pub.init();
+		});
+	</script>-->
+</html>

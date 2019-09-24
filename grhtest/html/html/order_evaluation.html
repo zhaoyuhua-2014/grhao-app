@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>订单评价</title>
+	<!--<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://61.164.118.194:8090/grh_api/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'"/>
+	--><meta name="viewport" content="width=720,user-scalable=no"/>
+    <meta content="telephone=no, address=no" name="format-detection" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body style="background: #ffffff;" module-id="evaluate">
+	<!--<div class="header_wrap">
+		<div class="header_contain">
+			<div class="header_left">
+				<span class="triangle-btn green"></span>
+
+			</div>
+			<h1 class="header_title header_title_color">订单评价</h1>
+	    </div>
+	</div>
+	<div class="empty"></div>-->
+	<div class="main_wrap main_wrap_bgColor">
+		<div class="main">
+			<div class="comment_box">
+				<div class="comment_goods">
+					
+				</div>
+				<div class="comment_order">
+					<div class="comment_order_tit">
+						店铺评分
+					</div>
+					<div class="comment_order_star">
+						<dl class="comment_order_star_item clearfloat">
+							<dt>服务态度</dt>
+							<dd class="goods_star">
+								<span class="star active" data='2'></span>
+								<span class="star active" data='4'></span>
+								<span class="star active" data='6'></span>
+								<span class="star active" data='8'></span>
+								<span class="star active" data='10'></span>
+							</dd>
+							<input type="hidden" name="stars" id="stars" value="10" />
+						</dl>
+						<dl class="comment_order_star_item clearfloat">
+							<dt>商品评分</dt>
+							<dd class="goods_star">
+								<span class="star active" data='2'></span>
+								<span class="star active" data='4'></span>
+								<span class="star active" data='6'></span>
+								<span class="star active" data='8'></span>
+								<span class="star active" data='10'></span>
+							</dd>
+							<input type="hidden" name="stars" id="stars" value="10" />
+						</dl>
+						<dl class="comment_order_star_item clearfloat">
+							<dt>送货速度</dt>
+							<dd class="goods_star">
+								<span class="star active" data='2'></span>
+								<span class="star active" data='4'></span>
+								<span class="star active" data='6'></span>
+								<span class="star active" data='8'></span>
+								<span class="star active" data='10'></span>
+							</dd>
+							<input type="hidden" name="stars" id="stars" value="10" />
+						</dl>
+					</div>
+				</div>
+			</div>
+			<!--<div class="eval_comment">评分</div>-->
+			<ul class="eval_level">				
+				<!--<li class="clearfloat">
+					<div class="eval_contain">商品质量：</div>
+					<div class="eval_goods_quality clearfloat zs-eval">
+						<span class="zs-star"></span>
+						<span class="zs-star"></span>
+						<span class="zs-star"></span>
+						<span class="zs-star"></span>
+						<span class="zs-star"></span>
+					</div>
+				</li>
+				<li class="clearfloat">
+					<div class="eval_contain">商家服务：</div>
+					<div class="eval_service clearfloat zs-eval">
+						<span class="zs-star"></span>
+						<span class="zs-star"></span>
+						<span class="zs-star"></span>
+						<span class="zs-star"></span>
+						<span class="zs-star"></span>
+					</div>
+				</li>
+				<li class="clearfloat">
+					<div class="eval_contain">配送服务：</div>
+					<div class="eval_distribution clearfloat zs-eval">
+						<span class="zs-star"></span>
+						<span class="zs-star"></span>
+						<span class="zs-star"></span>
+						<span class="zs-star"></span>
+						<span class="zs-star"></span>
+					</div>
+				</li>
+			</ul>															
+			<div class="eval_intro">
+				<div class="eval_intro_contain">
+					<textarea class="eval_intro_content" placeholder="订单评价包括对商品质量，商品服务，配送服务进行综合评价" value=""></textarea>			
+				<div></div>
+			</div>-->
+			<div class="eval_submit">提交</div>
+		</div>
+	</div>
+</body>
+<!--<script src="../seajs/2.1.1/sea.js"></script>
+<script src="../seajs-config.js"></script>
+<script>
+	seajs.use(['../lib/other'],function( zs ){
+		zs.init();
+	});
+</script>-->
+<script data-main = "../dist/other.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	// 取消交互逻辑
+	function cancleFn(){
+		pub.evaluate.cancleFn();
+	};
+	// 确定交互逻辑
+	function trueFn(){
+		pub.evaluate.trueFn();
+	};
+</script>
+</html>

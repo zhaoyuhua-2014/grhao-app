@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>兑换记录</title>
+		<!--<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://api.grhao.com/server/api.do http://61.164.113.168:8090/grh_api/server/api.do http://api.grhao.com/server/farm.do http://61.164.113.168:8090/grh_api/server/farm.do ; style-src 'self' 'unsafe-inline' 'unsafe-eval'  " >--> 
+		<meta name="apple-touch-fullscreen" content="no"/>
+		<meta name="viewport" content="width=720,user-scalable=0"/>
+		<meta content="telephone=no, address=no" name="format-detection" />
+		<link rel="stylesheet" href="../css/rest.css" />
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/farm.css?v=0905"/>
+	</head>
+	<body module-id="3">
+		<div class="mainVue" id="appVue">
+			<!--<div class="header_wrap">
+				<div class="header_contain">
+					<div class="header_left" @click="goBack">
+						<span class="triangle-btn green"></span>
+					</div>
+					<h1 class="header_title header_title_color">兑换记录</h1>
+			    </div>
+			</div>
+			<div class="empty"></div>-->
+			<div class="main_wrap main_wrap_margin">
+				<div class="main exchangeRecord_main" >
+					<div class="exchangeRecord">
+						<div class="exchangeRecordTitle exchangeRecord_list">
+							<div class="exchangeRecord_item">兑换时间</div>
+							<div class="exchangeRecord_item">兑换物品</div>
+							<div class="exchangeRecord_item">兑换进度</div>
+						</div>
+						<div v-cloak class="exchangeRecordBox">
+							<div class="exchangeRecord_list" v-for="(item,index) in exchangeRecord.list" v-bind:class="'active'+item.status"  @click.prevent>
+								<div class="exchangeRecord_item" v-text="item.createTime.split(' ')[0]"></div>
+								<div class="exchangeRecord_item" v-text="item.fruitName+'x'+item.num"></div>
+								<div class="exchangeRecord_item">
+									<span>
+										<b>申请中</b><br />
+										<b @click="goOrderDetails(index)">去提货</b><br />
+										<b>已完成</b>
+									</span>
+								</div>
+							</div>
+						</div>
+						<p v-cloak v-show="exchangeRecord.list.length != 0" class="load_more" v-text="exchangeRecord.isLast ? '没有更多数据了' : '点击加载更多'" @click="clickGetMoreList"></p>
+						<p v-cloak v-show="exchangeRecord.list.length == 0 && ajaxState == 'success'" class="load_more">暂无兑换记录</p>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</body>
+	<!--<script src="../seajs/2.1.1/sea.js"></script>
+	<script src="../seajs-config.js?v=20181023"></script>
+	<script>
+		seajs.use(['framOther'],function( zs ){
+			zs.init();
+		});
+	</script>-->
+	<script data-main = "../dist/framOther.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+	
+</html>

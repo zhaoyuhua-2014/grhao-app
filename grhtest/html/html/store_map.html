@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>门店位置</title>
+		<style type="text/css">
+			#container{width: 100%;height: 600px;}
+			.amap-marker .amap-marker-label{background: rgba(0,0,0,0.6);border:0;color:#ffffff;padding:8px 12px;border-radius: 8px;font-size: 26px;line-height: 26px;}
+			.amap-marker .amap-marker-content {
+			    background: rgba(0,0,0,.6);
+			    border: 0;
+			    color: #fff;
+			    padding: 5px 8px;
+			    border-radius: 8px;
+			    font-size: 26px;
+			    line-height: 26px
+			}
+		</style>
+	</head>
+	<body>
+		<div class="main">
+			<div id="container"></div>
+		</div>
+	</body>
+	<script data-main = "../dist/map.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		function trueFn(){
+			pub.Map.trueFn();
+		}
+		function cancleFn(){
+			pub.Map.cancleFn();
+		}
+	</script>
+</html>

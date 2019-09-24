@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>我的预购</title>
+	<!--<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://61.164.118.194:8090/grh_api/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'"/>
+	--><meta name="viewport" content="width=720,user-scalable=no"/>
+    <meta content="telephone=no, address=no" name="format-detection" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body module-id="preOrderManagement">
+	<!--<div class="header_wrap">
+		<div class="header_contain">
+			<div class="header_left">
+				<span class="triangle-btn green"></span>
+			</div>
+			<h1 class="header_title header_title_color">我的预购</h1>
+	    </div>
+	</div>
+	<div class="empty"></div>-->
+	<div class="main_wrap" id="wrapper">
+		<!--<div id="iscroll">
+			<div id="pullDown" class="empty">
+				<span class="pullDownIcon "></span><span class="pullDownLabel">Pull down to refresh...</span>
+				<div class="loader">
+					<span></span><span></span><span></span><span></span>
+				</div>
+				<div class="pullDownLabel">下拉刷新...</div>
+			</div>-->
+			<div class="main">
+				<ul class="myOrder_management_top clearfloat">
+				    <li class="myOrder_man_item">待付定金</li>
+				    <li class="myOrder_man_item">待付尾款</li>
+				    <li class="myOrder_man_item">待收货</li>
+				    <li class="myOrder_man_item">全部</li>
+			    </ul>
+			    <div class="management_contain">
+					<div class="order_manage_contain">
+					   
+				    </div>
+				    <p class="lodemore">点击加载更多数据</p>
+				</div>		    
+			</div>
+		<!--</div>-->
+	</div>
+	<div class="order_refund">		
+		<div class="refund_bg"></div>
+		<div class="order_refund_content">
+		    <div class="order_refund_confirm">确定删除订单？</div>
+		    <dl class="order_refund_choose clearfloat">
+		    	<dt class="float_left">		    	    	
+		    	    <button class="refund_cancle" style="background:#f25f4f;">取消</button>
+		    	</dt>
+		    	<dd class="float_right">
+		    		<button class="makeSure" style="background:#93c01d;">确定</button>
+		    	</dd>		    	
+		    </dl>
+		</div>	
+	</div>    
+</body>
+<!--<script src="../seajs/2.1.1/sea.js"></script>
+<script src="../seajs-config.js"></script>
+<script>
+	seajs.use(['../lib/preOrderManagement'],function( zs ){
+		zs.init();
+	});
+</script>-->
+<script data-main = "../dist/preOrderManagement.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	// 取消交互逻辑
+	function cancleFn(){
+	};
+	// 确定交互逻辑
+	function trueFn(){
+		pub.preOrderManagement.apiHandle.trueFn();
+	};
+</script>
+</html>
