@@ -24,6 +24,11 @@ require(['../require/config'],function(){
 	    pub.isGroup = pub.seachParam == 'group'//团购支付
 	    pub.isRecharge = pub.seachParam == 'recharge' ; // 充值
 	    
+	    pub.reg_card = /^[0-9]{14}$/;
+		pub.reg_card_ = /^[0-9]{1,14}$/;
+		pub.reg_exchange = /^[0-9A-Za-z]{16}$/;
+		pub.reg_exchange_ = /^[0-9A-Za-z]{1,16}$/;
+	    
 	    pub.urlParam = {
 	    	'base':1,
 	    	'pre':2,
@@ -687,13 +692,11 @@ require(['../require/config'],function(){
 		pub.payWay.rechangeCardPay = function(){
 			pub.rechargeCard = $("#rechange_card").val();
 			pub.exchargeCode = $("#rechange_exchangeCode").val();
-			var reg_card = /^[0-9]{12}$/;
-			var reg_exchange = /^[0-9A-Za-z]{4}$/;
-			if( !reg_card.test( pub.rechargeCard ) ) {
+			if( !pub.reg_card.test( pub.rechargeCard ) ) {
 	            common.prompt( "请输入正确的充值卡号" ); return;
 	        }
 	        // 充值
-	       	if( !reg_exchange.test( pub.exchargeCode ) ) {
+	       	if( !pub.reg_exchange.test( pub.exchargeCode ) ) {
 	            common.prompt( "请输入正确的兑换码" ); return;
 	        }
 	        pub.apiHandle.ExchangeRechargeableCard.init();
@@ -817,10 +820,12 @@ require(['../require/config'],function(){
 						isWX:pub.isWinXin,
 						inputfocus:false,
 						isMask:false,
-						isApp : pub.isApp
+						isApp : pub.isApp,
+						screenHeight:document.body.clientHeight || document.documentElement.clientHeight ,//页面默认（初始化）高度
 					},
 			        beforeCreate : function(){
 			        	this.isPhone = common.isPhone();
+			        	this.isAndroid = common.isAndroid();
 			        },
 			        created : function(){
 			        	console.log("created			//创建完成");
@@ -829,6 +834,19 @@ require(['../require/config'],function(){
 			        	}else{
 			        		this.payType = 1;
 			        	}
+			        },
+			        mounted : function(){
+			        	var _this = this;
+			            window.onresize = function(){
+			            	var sh = document.body.clientHeight || document.documentElement.clientHeight;
+			            	console.log(sh)
+			            	console.log(_this.screenHeight)
+			            	if( +sh < +_this.screenHeight ){
+			            		_this.inputfocus = true;
+			            	}else{
+			            		_this.inputfocus = false;
+			            	}
+			            }
 			        },
 			        beforeMount : function(){
 			        	console.log("beforeMount		//挂载之前")
@@ -841,9 +859,7 @@ require(['../require/config'],function(){
 					    	if (this.rechargeMode.type == 0) {
 					    		return true;
 					    	}else{
-					    		var reg_card = /^[0-9]{12}$/;
-								var reg_exchange = /^[0-9A-Za-z]{4}$/;
-								if( reg_card.test( this.rechangeCard ) && reg_exchange.test( this.rechangeExchangeCode ) ){
+								if( pub.reg_card.test( this.rechangeCard ) && pub.reg_exchange.test( this.rechangeExchangeCode ) ){
 						            return true;
 						        }else{
 						        	return false;
@@ -851,12 +867,8 @@ require(['../require/config'],function(){
 					    	}
 					    },
 					    btnIsShow:function(){
-					    	if (this.isPhone) {
-					    		if (this.inputfocus) {
-					    			return false;
-					    		}else{
-					    			return true;
-					    		}
+					    	if (this.isPhone && this.isAndroid) {
+								return !this.inputfocus;
 					    	}else{
 					    		return true;
 					    	}
@@ -872,29 +884,31 @@ require(['../require/config'],function(){
 					    	}else{
 					    		return '立即支付';
 					    	}
-					    }
+					    },
+					    getRechangeStyle:function(){
+							var ind = this.rechargeMode.type;
+							var styleArr = ["transform: translateX(104px) translateX(-50%); transition-duration: 0.3s;","transform: translateX(328px) translateX(-50%); transition-duration: 0.3s;"]
+							return styleArr[ind];
+						}
 					},
 					watch:{
 						rechangeExchangeCode:function(newVal,oldVal){
-							var reg_exchange = /^[0-9A-Za-z]{1,4}$/;
 							if(newVal){
-								if (newVal.length > 4) {
+								if (newVal.length > 16) {
 									this.rechangeExchangeCode = oldVal;
 								}else{
-									if(!reg_exchange.test( newVal )){
+									if(!pub.reg_exchange_.test( newVal )){
 										this.rechangeExchangeCode = oldVal;
 									}
 								}
 							}
 						},
 						rechangeCard:function(newVal,oldVal){
-							var reg_card = /^[0-9]{1,12}$/;
-							
 							if(newVal){
-								if (newVal.length > 12) {
+								if (newVal.length > 14) {
 									this.rechangeCard = oldVal;
 								}else{
-									if(!reg_card.test( newVal )){
+									if(!pub.reg_card_.test( newVal )){
 										this.rechangeCard = oldVal;
 									}
 								}
@@ -1128,7 +1142,6 @@ require(['../require/config'],function(){
 	            },
 	            apiData:function( d ){
 	            	 try{
-	                	
 	                    common.isAndroid() ? android.GoAliPay( common.JSONStr( d ), pub.wxAppPayWay ) : window.webkit.messageHandlers.AliPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
 	                    //window.webkit.messageHandlers.AliPay.postMessage([common.JSONStr( d ), pub.wxAppPayWay]);
 	                }catch(e){}

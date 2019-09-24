@@ -2070,3 +2070,13 @@ to {
 .set_contact_information .float_left{position: relative;width: 150px;padding-left: 10px;}
 .set_contact_information .float_left:before{content: "*";position: absolute;top: 4px;left: -10px;color: #F32927;font-size: 32px;font-weight: 800;}
 .set_contact_information input{width: 500px;}
+
+
+/* 2019-9-24  新增果然好充值卡充值入口 */
+.services .rechangeCard dt{background: url(../img/new_img/rechangeCard_icon.png) no-repeat center center;}
+.other_service{padding: 40px 40px 0;}
+.other_service .services dl{height: 133px;}
+.other_service .set,.services .group{margin-top: 0;}
+.recharge_nav{position: relative;padding: 40px 40px 40px 0;}
+.recharge_nav_item{padding: 0 40px;margin-right: 0;}
+.recharge_nav .nav_tabs__line{position: absolute;bottom: 28px;left: 0;z-index: 1;height: 4px;background-color: #93c01d;border-radius: 4px;width: 86px;}

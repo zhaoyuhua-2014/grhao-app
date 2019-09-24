@@ -31,7 +31,11 @@
 				</div>
 				<div class="recharge_center">
 					<ul class="recharge_nav clearfloat" >
-						<li class="recharge_nav_item float_left" v-for="(item,index) in rechargeMode.list" v-text="item" :class="{'active':getIsRechargeModeType(index)}" @click="rechargeModeClick(index)"></li>
+						<li class="recharge_nav_item float_left" 
+							v-for="(item,index) in rechargeMode.list" 
+							v-text="item" :class="{'active':getIsRechargeModeType(index)}" 
+							@click="rechargeModeClick(index)"></li>
+						<span class="nav_tabs__line" :style="getRechangeStyle"></span>
 					</ul>
 					<div class="recharge_box">
 						<div class="recharge_box_item":class="{'active':getIsRechargeModeType(0)}" >
@@ -105,7 +109,7 @@
 	
 </body>
 
-<script data-main = "../dist/payment.js" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
+<script data-main = "../dist/payment.js?v=20190909" src="../require/require.js" type="text/javascript" charset="utf-8"></script>
 <!--<script src="../seajs/2.1.1/sea.js"></script>
 <script src="../seajs-config.js?v=20190319"></script>
 <script>

@@ -7,7 +7,7 @@ define(['jquery','mdData','shar1'],function($,md){
 	common.encrypt = md;
 	$.extend(common,{
 		//EVE 作为正式环境和测试环境的开关，为true时为正式环境，为false时为测试环境
-		EVE:false,
+		EVE:true,
 		//API : "http://api.grhao.com/server/api.do", // 接口地址
 		//API : "http://61.164.118.194:8090/grh_api/server/api.do", // 测试地址
 		// 每页显示的个数
@@ -36,7 +36,7 @@ define(['jquery','mdData','shar1'],function($,md){
 		//全局的延时函数
 		DTD : $.Deferred(),
 		//更新日期
-		DATE:"0907",
+		DATE:"0924",
 	});
 	//换肤延时对象
 	common.defHuanfu = $.Deferred();
@@ -44,8 +44,8 @@ define(['jquery','mdData','shar1'],function($,md){
 	common.defVersion = $.Deferred();
 	(function(){
 		if (common.EVE) {
-			common.API = "http://api.grhao.com/server/api.do";
-			common.APIFARM = "http://api.grhao.com/server/farm.do"; // 正式
+			common.API = "https://api.grhao.com/server/api.do";
+			common.APIFARM = "https://api.grhao.com/server/farm.do"; // 正式
 		}else{//http://61.164.118.194:8090/grh_api/server/api.do/192.168.1.3:80/192.168.1.8:8080
 			//http://122.228.113.80:8090/grh_api/server/api.do  https://testapi.grhao.cn/grh_api/server/api.do
 			common.API = "https://testapi.grhao.cn/grh_api/server/api.do";

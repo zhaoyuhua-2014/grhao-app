@@ -384,26 +384,6 @@ require(['../require/config'],function(){
 				
 			}
 		}
-		//* 微信认证 method : weixin_binding
-		pub.weixin_binding = {
-			init:function(){
-				common.ajaxPost({
-		            method: 'weixin_binding',
-		            openId:openId,
-		            userId:userId,
-		        },function( d ){
-		            if( d.statusCode == '100000' && d.data.fromWX == 1 ){
-		                pub.openId =  d.data.openId;
-		                common.openId.setItem( pub.openId ); // 存opendId
-		            }else{
-		                common.prompt( d.statusStr );
-		            }
-		        });
-			},
-			apiData:function(){
-				
-			}
-		}
 		
 		/**
 			以下注册模块
