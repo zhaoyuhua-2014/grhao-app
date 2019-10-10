@@ -448,19 +448,19 @@ require(['../require/config'],function () {
 	 			me = this,
 				data = d.data;
 	
-	 			if( !common.timestamp.getKey() && data.adInfoList.length != 0 ){
-	 				json.timestamp = Date.now() + 3 * 60 * 1000;
-	 				json.con = d;
-	 				common.timestamp.setItem( common.JSONStr( json ) );
-	 			}
-	
+//	 			if( !common.timestamp.getKey() && data.adInfoList.length != 0 ){
+//	 				json.timestamp = Date.now() + 3 * 60 * 1000;
+//	 				json.con = d;
+//	 				common.timestamp.setItem( common.JSONStr( json ) );
+//	 			}
+//	
 				
 				
 				data.adInfoList.length != 0 && common.bannerShow(data.adInfoList, '.index_banner', function( d ){
 					var html = '', i = 0, link = null;
 					for ( i =0,l=d.length; i< l; i++ ){
 						link = d[i].linkUrl ? pub.apiHandle.getActiveUrl(d[i].linkUrl) : '';
-						html += '<div class="swiper-slide"><a href="javascript:void(0)" data-title="'+d[i].note+'" url="'+link+'"><img src="' + d[i].adLogo + '" /></a></div>'
+						html += '<div class="swiper-slide"><a href="javascript:void(0)" data-title="'+d[i].note+'" url="'+link+'" data-isLink="'+d[i].isLink+'" data-id="'+d[i].linkUrl+'" "><img src="' + d[i].adLogo + '" /></a></div>'
 					}
 					return html;
 				},'.swiper-pagination',pub.isrefresh);
@@ -706,6 +706,18 @@ require(['../require/config'],function () {
 				$(".index_banner .swiper-wrapper").on("click",'a',function(e){
 					var url = $(this).attr("url"),
 						title = $(this).attr("data-title");
+					var isLink = $(this).attr("data-isLink"),
+						id = $(this).attr("data-id");
+					if (isLink == 2) {
+						var firmId = pub.firmId;
+						if (!!id & !!firmId & (id != firmId)) {
+							pub.locationFirmInfo={
+								id : id
+							};
+							pub.apiHandle.trueFn2()
+						}
+						return;
+					}
 					if (url) {
 						common.jsInteractiveApp({
 							name:'goToNextLevel',

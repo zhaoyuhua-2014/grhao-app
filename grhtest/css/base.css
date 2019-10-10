@@ -1738,7 +1738,7 @@ to {
 .index_inner3 dl dd p.goodName{padding-top: 22px; height: 64px; font-size: 28px; color: #333; text-align: center;}
 .index_inner3 dl dd span.index_price{float: left; width: 104px; text-align: left; color: #a8d926;}
 .index_inner3 dl dd span.index_old_price{float: left;width: 104px; text-align: right; color: #888;}
-.index_bottom{width: 100%;height: 246px;background: url(../img/index_bottom_log.png) no-repeat center 34px;padding-bottom: 110px;}
+.index_bottom{width: 100%;background: url(../img/index_bottom_log.png) no-repeat center 34px;padding-bottom: 110px;}
 /*秒杀活动样式*/
 .seckill_style .main_wrap{padding: 14px 24px 0 24px;background-color: #fff;}
 .seckill_whole_banner{position: relative;overflow: hidden;width:672px;height: 336px;}
@@ -2080,3 +2080,6 @@ to {
 .recharge_nav{position: relative;padding: 40px 40px 40px 0;}
 .recharge_nav_item{padding: 0 40px;margin-right: 0;}
 .recharge_nav .nav_tabs__line{position: absolute;bottom: 28px;left: 0;z-index: 1;height: 4px;background-color: #93c01d;border-radius: 4px;width: 86px;}
+
+/* 2019-09-26 新增签到抽奖入口 */
+.services .gameActive dt{background: url(../img/new_img/game_icon.png) no-repeat center center;}
