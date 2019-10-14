@@ -500,6 +500,7 @@ require(['../require/config'],function () {
 			},
 			apiData:function(d){
 				if( d.statusCode == "100000"){
+					console.log(d.data.cas && d.data.cas.length)
  					if (d.data.cas && d.data.cas.length) {
  						var activeOne = d.data.cas,link='',html=''; 
  						for (var i in activeOne ) {
@@ -516,10 +517,10 @@ require(['../require/config'],function () {
 					     	slidesPerView: 4,
 					      	spaceBetween: 30,
 						});
+						$(".shop-active-container").show();
  					}else{
  						$(".shop-active-container").hide();
  					}
-	 				
 					/*
 					 活动2
 					*/

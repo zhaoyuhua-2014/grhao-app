@@ -2083,3 +2083,27 @@ to {
 
 /* 2019-09-26 新增签到抽奖入口 */
 .services .gameActive dt{background: url(../img/new_img/game_icon.png) no-repeat center center;}
+
+
+/* 2019-10-10 修改充值卡页面 和 新增游戏入口页面 */
+.recharge_card_box .rechangeMsg{font-size: 20px;line-height: 60px;color: #f62929;height: auto;}
+.game_main{display: flex;flex-wrap: wrap;}
+.game_item{
+  width: 208px;
+  height: 262px;
+  margin-left: 24px;
+  text-align: center;
+  box-sizing: border-box;
+  padding-top: 58px;
+  background: #FFF;
+  margin-top: 24px;
+}
+.game_item img{
+  width: 88px;
+  height: 88px;
+  margin:  0 auto;
+}
+.game_item p{
+	margin-top: 32px;
+	font-size: 28px;
+}

@@ -1344,6 +1344,51 @@ require(['../require/config'],function(){
 			pub.settings.apiHandle.init();
 		};	
 		
+		//游戏入口模块
+		pub.game = {
+			init:function(){
+				pub.game.apiHandle.init();
+				pub.game.eventHandle.init();
+			},
+			apiHandle:{
+				init:function(){
+					var gameList=[
+				      {
+				        img: '../img/game/farm_icon.png', text: '水果农场', tit:"水果农场", url: 'html/grhFarm.html'
+				      }, {
+				        img: '../img/game/sign_icon.png', text: '签到抽奖', tit:"签到抽奖", url: 'html/gameTiger.html'
+				      }, {
+				        img: '../img/game/red_icon.png', text: '红包雨', tit:"红包雨", url: 'html/red_package_rain.html'
+				      }
+				    ];
+				    var html = '';
+				    for (var i = 0; i < gameList.length; i++) {
+				    	html += '<div class="game_item" data-url="'+gameList[i].url+'" data-tit="'+gameList[i].tit+'">'
+						html += '	<div class="item_box" >'
+						html += '		<img src="'+gameList[i].img+'">'
+						html += '		<p class="txt">'+gameList[i].text+'</p>'
+						html += '	</div>'
+						html += '</div>'
+				    }
+					$('.game_main').html( html );
+				}
+			},
+			eventHandle:{
+				init:function(){
+					$(".game_main").on("click",".game_item",function(){
+						var url = $(this).attr("data-url")
+						var tit = $(this).attr("data-tit")
+						common.jsInteractiveApp({
+							name:'goToNextLevel',
+							parameter:{
+								title:tit,
+								url:url
+							}
+						})
+					})
+				}
+			}
+		}
 		/************************* 新改版优惠券模块2018-06-22 ***************************/
 	
 		// 优惠券 命名空间
@@ -1812,6 +1857,8 @@ require(['../require/config'],function(){
 			pub.muduleId == "5" && pub.help.init(); // 帮助中心
 	
 			pub.muduleId == "6" && pub.settings.init(); // 设置模块
+			
+			pub.muduleId == "8" && pub.game.init(); //游戏入口模块
 	
 			pub.muduleId == "21" && COUPON_LIST.init();//新增优惠劵列表页面
 			pub.muduleId == "22" && COUPON_LIST_INVALID.init();//失效劵列表页面

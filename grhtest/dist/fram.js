@@ -1419,29 +1419,16 @@ require(['../require/config'],function () {
 					
 					pub.Vue.PageType = 1;
 					pub.Vue.isNewFarmer = v.isNewFarmer;
-					common.isWeiXin() && (function(){
-						var Url = (function(){
-							var iswhy = location.href.indexOf("?")
-							if (iswhy > 0) {
-								return location.href.split("?")[0] + "?farmerId="+v.farm.farmerId;
-							}else{
-								return location.href+"?farmerId="+v.farm.farmerId;
-							}
-						})()
-		 				common.weixin.config( location.href.split('#')[0] );
-		 				var shareData = $.extend({},dateModule.sharData,{
-		 					link:Url
-		 				})
-		 				common.weixin.share( shareData );
-		 			}());
+					
+		 			
+					console.log(common.EVE)
+					pub.pathHeader = common.EVE ? 'https://weixin.grhao.com/html' : 'https://wx.grhao.cn/lifei/html';
 		 			common.isApp() && (function(){
 		 				dateModule.sharData = $.extend({},dateModule.sharData,{
-		 					'linkUrl':'http://weixin.grhao.com/html/grhFarm.html?farmerId='+ v.farm.farmerId
+		 					'linkUrl':pub.pathHeader + '/grhFarm.html?farmerId='+ v.farm.farmerId
 		 				});
 		 			})()
 					pub.apiHandle.farm_level.init();
-					
-					
 				}
 			},
 			//等级列表接口

@@ -1662,3 +1662,9 @@ body[name = 'farm'] {
 	color:#333333;
 	text-decoration:none;
 }
+
+
+.land_content {
+	max-height: 862px;
+	overflow-y: auto;
+}

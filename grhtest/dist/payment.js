@@ -14,6 +14,10 @@ require(['../require/config'],function(){
 		pub.appData = JSON.parse(common.appData.getItem());
 	
 	    pub.seachParam = common.getUrlParam('search') ? common.getUrlParam('search') : 'base'; // 获取url参数
+	    
+	    
+		// 判断是点击那个进入的充值页面
+		pub.formType = common.getUrlParam("type") || '0';
 	
 	    pub.openId = common.openId.getItem();
 	    
@@ -834,6 +838,11 @@ require(['../require/config'],function(){
 			        	}else{
 			        		this.payType = 1;
 			        	}
+			        	var md = {
+							type:pub.formType,
+							list:['在线充值','充值卡充值']
+						};
+						this.rechargeMode = md;
 			        },
 			        mounted : function(){
 			        	var _this = this;
@@ -885,6 +894,19 @@ require(['../require/config'],function(){
 					    		return '立即支付';
 					    	}
 					    },
+					    rechagneMeg:function(){
+							if (this.rechargeMode.type == 0) {
+								return ''
+							}else{
+								if( !pub.reg_card.test( this.rechangeCard ) ){
+								    return "*请输入14位充值卡号"
+								}
+								if ( !pub.reg_exchange.test( this.rechangeExchangeCode ) ) {
+									return "*请输入16位兑换码"
+								}
+								return '*输入成功';
+							}
+						},
 					    getRechangeStyle:function(){
 							var ind = this.rechargeMode.type;
 							var styleArr = ["transform: translateX(104px) translateX(-50%); transition-duration: 0.3s;","transform: translateX(328px) translateX(-50%); transition-duration: 0.3s;"]
