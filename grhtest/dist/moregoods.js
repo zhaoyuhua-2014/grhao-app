@@ -245,6 +245,7 @@ require(['../require/config'],function(){
 						html += '</dl>'
 					}
 					$(".more_bottom_right").html(html).find('.goods_item:last dd').css("border-bottom","1px solid #FFF");
+					cart.style_change();
 				}
 			}
 		};
@@ -344,7 +345,7 @@ require(['../require/config'],function(){
 			emptyH = $('.empty').height() + $('.empty1').height();
 	
 			$('.main').height( wh );
-			pub.scrollH = wh -$('.more_top_wrap').height();
+			pub.scrollH = wh -$('.more_top_wrap').height() - $(".footer_menu_wrap").height();
 			$('.more_bottom_left_wrap,.more_bottom_right_wrap').height( pub.scrollH );
 	
 			// common.lazyload();

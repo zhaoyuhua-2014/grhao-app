@@ -217,10 +217,10 @@ require(['../require/config'],function(){
 				/*window.top.postMessage('123456', '*');*/
 				console.log(1)
 			})
-		   	$("#loginPhoto").on("touchstart",function(e){
+		   	$("#userPhoto").on("touchstart",function(e){
 		   		e.stopPropagation()
 		   	})
-			$("#loginPhoto").on('change',function(){
+			$("#userPhoto").on('change',function(){
 				
 				var Orientation = null;
 				
