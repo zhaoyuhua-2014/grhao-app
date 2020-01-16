@@ -15,7 +15,7 @@
 	<body>
 		<!--<div id="version"></div>
 		<div class="UA"></div>
-		<input type="file" name="" id="file" value="选择文件" />
+		<input style="line-height: normal;" type="file" name="" id="file" value="选择文件" />
 		<div>
 			<h2>图片展示</h2>
 			<img class="loginPhoto" src=""/>
@@ -23,7 +23,7 @@
 		<div id="upload-container"></div>-->
 		 <div style="height: 50px; line-height: 50px;text-align: center;border-bottom: 1px solid #171E28;">  
           	  上传图片:  
-            <input type="file" accept="image/*" id="uploadImage" capture="camera" onchange="selectFileImage(this);" />  
+            <input style="line-height: normal;" type="file" accept="image/*" id="uploadImage" capture="camera" onchange="selectFileImage(this);" />  
         </div>  
         <div style="margin-top: 10px;">  
             <img alt="preview" src="" id="myImage"/>  
@@ -33,11 +33,11 @@
         </p>
         <form id="form2" action="http://api.grhao.com/server/api.do?method=face_img_upload" enctype="multipart/form-data" method="post" target="formImg">
 	    	
-	    	<input type="hidden" name="userId" id="cuserId" value="" />
-	    	<input type="hidden" name="tokenId" id="tokenId" value="" />
-	    	<input type="hidden" name="sign" id="sign" value="" />
-	    	<input type="hidden" name="source" id="source" value="" />
-	    	<!--<input type="hidden" name="method" id="" value="face_img_upload" />-->
+	    	<input style="line-height: normal;" type="hidden" name="userId" id="cuserId" value="" />
+	    	<input style="line-height: normal;" type="hidden" name="tokenId" id="tokenId" value="" />
+	    	<input style="line-height: normal;" type="hidden" name="sign" id="sign" value="" />
+	    	<input style="line-height: normal;" type="hidden" name="source" id="source" value="" />
+	    	<!--<input style="line-height: normal;" type="hidden" name="method" id="" value="face_img_upload" />-->
 	    </form>
 	</body>
 	<script src="../js/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>

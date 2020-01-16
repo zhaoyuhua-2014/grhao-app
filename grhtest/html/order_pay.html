@@ -6,7 +6,7 @@
 	<!--<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://61.164.118.194:8090/grh_api/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'"/>
 	--><meta name="viewport" content="width=720,user-scalable=no"/>
     <meta content="telephone=no, address=no" name="format-detection" />
-    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/base.css?v=20200116" />
     <script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body class="animation-fadeIn">
@@ -26,8 +26,8 @@
 				<ul>
 					<li></li>
 					<li></li>
-					<li></li>
-					<li></li>
+					<!-- <li></li>
+					<li></li> -->
 				</ul>
 				<div class="pay_gg">请于2小时内完成支付，超时订单将取消！</div>
 			</div>
@@ -41,7 +41,7 @@
 				    		<div class="pay_style_msg msg1">余额不足，请先<a href="javascript:void(0)" data-title = "账户充值" data-url = "html/month_recharge.html?search=recharge">充值</a></div>
 					    	<div class="pay_style_msg msg2">账户余额不足，请先<a href="javascript:void(0)" data-title = "账户充值" data-url = "html/month_recharge.html?search=recharge">充值</a></div>
 					    	<div class="pay_style_msg1 msg3">
-					    		<input type="number" id="verify_code1" value="" placeholder="请输入验证码" disabled="disabled" />
+					    		<input style="line-height: normal;" type="number" id="verify_code1" value="" placeholder="请输入验证码" disabled="disabled" />
 					    		<a id="get_verify_code">获取验证码</a>
 								<a id="time" style="display:none ;color: #F76A10;"></a>
 					    	</div>
@@ -59,14 +59,14 @@
 			    	<!--<div class="pay_style_item zs-pay-way" pay-way="3">
 			    		<p>银行卡支付</p>
 			    		<div class="pay_style_input content-box">
-				    		<input type="number" id="pay_style_card" value="" placeholder="请输入银行卡号" />
+				    		<input style="line-height: normal;" type="number" id="pay_style_card" value="" placeholder="请输入银行卡号" />
 				    	</div>
 			    	</div> -->              
 			    	
 			    	<form id="form2" action="http://wappaygw.alipay.com/service/rest.htm?_input_charset=utf-8" method="post" style="display: none;"></form>
 			    	<form action="https://wap.lianlianpay.com/payment.htm" method="post" id="form1" style="display: none;">
-						<input type="hidden" name="req_data" id="input1" value='' />
-						<input type="submit" name="" id="" value=""/>
+						<input style="line-height: normal;" type="hidden" name="req_data" id="input1" value='' />
+						<input style="line-height: normal;" type="submit" name="" id="" value=""/>
 					</form>
 			    </div>
 			   

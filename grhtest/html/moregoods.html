@@ -5,8 +5,30 @@
 		<title>全部商品</title>
 		<meta name="viewport" content="width=720,user-scalable=no" />
 		<meta content="telephone=no, address=no" name="format-detection" />
-		<link rel="stylesheet" type="text/css" href="../css/base.css?v=190812"/>
+		<link rel="stylesheet" type="text/css" href="../css/base.css?v=20200116"/>
 		<script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.icon_cart1{
+				position: relative;
+			    width: 106px;
+			    height: 98px;
+			    background: url(../img/cart.png) no-repeat center center;
+			}
+			#goodsNum{
+				position: absolute;
+			    width: 36px;
+			    height: 36px;
+			    border-radius: 50%;
+			    top: 4px;
+			    right: 8px;
+			    background: #f31b44;
+			    font-size: 18px;
+			    line-height: 36px;
+			    text-align: center;
+			    color: #fff;
+			    z-index: 1000;
+			}
+		</style>
 	</head>
 	<body module-id="goods" class="animation-fadeIn">
 		<div class="main_wrap">
@@ -47,7 +69,9 @@
 				</dl>
 				<div class="footer clearfloat">
 					<div class="footer-left float_left">
-						<div class="icon_cart float_left" data-content='99+'></div>
+						<div class="icon_cart1 float_left" data-content='99+'>
+							<span id="goodsNum"></span>
+						</div>
 						<p class="float_left cart_message">购物车是空的</p>
 					</div>
 					<div class="footer-rigth float_right ">

@@ -279,7 +279,7 @@ require(['../require/config'],function () {
 					var html = '', i;
 					for ( i in o) {
 						html += '<div class="store_store_item" data1="' + o[i].id + '">'
-						html += '	<dl class="clearfloat" data="' + o[i].id + '">'
+						html += '	<dl class="clearfloat" data="' + o[i].id + '"  data-firmName = "'+o[i].firmName+'">'
 						html += '		<dt><img src="' + o[i].faceImgUrl + '"/></dt>'
 						html += '		<dd>'
 						html += '			<p class="business_name">' + o[i].firmName + '</p>'
@@ -580,14 +580,15 @@ require(['../require/config'],function () {
 					isCur = $this.parent().is('.active');
 	
 					pub.firmIdTemp = $this.attr("data");
-					
+					var name = $this.attr("data-firmname")
+					console.log(name)
 					if( !isCur ){
 						
 						common.jsInteractiveApp({
 							name:'alertMask',
 							parameter:{
 								type:1,
-								title:'确定选择该门店?',
+								title:'是否切换到' + name,
 								canclefn:'pub.store.apiHandle.cancleFn()',
 								truefn:'pub.store.apiHandle.trueFn()'
 							}

@@ -9,7 +9,7 @@
 		<meta name="viewport" content="width=720,user-scalable=0"/>
 		<meta content="telephone=no, address=no" name="format-detection" />
 		<link rel="stylesheet" href="../css/rest.css" />
-		<link rel="stylesheet" type="text/css" href="../css/base.css?v=20181031"/>
+		<link rel="stylesheet" type="text/css" href="../css/base.css?v=20200116"/>
 		<link rel="stylesheet" type="text/css" href="../css/farm.css?v=20181031"/>
 	</head>
 	<body module-id="4">
@@ -33,7 +33,7 @@
 						<div class="exchange_box">
 							<div class="number same">
 								<p>赠送数量(<b v-text="'拥有'+ giveFriends.num"></b>)</p>
-								<input type="tel" class='value' maxlength = "4" placeholder="请输入整数" v-model="giveNum"/>
+								<input style="line-height: normal;" type="tel" class='value' maxlength = "4" placeholder="请输入整数" v-model="giveNum"/>
 							</div>
 							<div class="exchange_msg exchange_msg_bottom error" v-show="giveErrorMsg" v-text="giveErrorMsg"></div>
 						</div>

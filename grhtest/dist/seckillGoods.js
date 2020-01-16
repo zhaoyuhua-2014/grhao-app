@@ -360,6 +360,8 @@ require(['../require/config'],function () {
 					if( d.packageNum == 0){
 						$('.goodsDetails_balance').html( '<p class="text">您的手速太慢了</p>' ).addClass('active_end')
 					}
+					
+					!d.goodsContext && $('.goodsDetails_box2_').find('li').eq(0).show().html("<div class='empty_desc' style='font-size:28px;'>暂无商品详情</div>");
 					d.goodsContext && $('.goodsDetails_box2_').find('li').eq(0).html( d.goodsContext);
 					
 					if (seckillData.limit == '0'){$('.new_style .add_num').addClass('add_actived')}  
@@ -572,9 +574,9 @@ require(['../require/config'],function () {
 						$.each( goodsData, function( i, v ){
 							html += '<dl data-id="'+v.id+'">'
 							if ( +v.packageNum > 0 ) {
-								html += '	<dt><img src="'+v.goodsLogo+'" alt="" /></dt>'
+								html += '	<dt class="grhao_bg"><img src="'+v.goodsLogo+'" alt="" /></dt>'
 							}else{
-								html += '	<dt class="sold_out"><img src="'+v.goodsLogo+'" alt="" /></dt>'
+								html += '	<dt class="grhao_bg sold_out"><img src="'+v.goodsLogo+'" alt="" /></dt>'
 							}
 							
 							html += '	<dd>'

@@ -6,7 +6,7 @@
 	<!--<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' http://61.164.118.194:8090/grh_api/server/api.do; style-src 'self' 'unsafe-inline' 'unsafe-eval'"/>
 	--><meta name="viewport" content="width=720,user-scalable=no"/>
     <meta content="telephone=no, address=no" name="format-detection" />
-    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/base.css?v=20200116" />
     <script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body module-id="orderSettlement" class="animation-fadeIn">
@@ -52,7 +52,7 @@
 			</div>
 			<div class="set_order_remark">
 				<div class="order_remark">订单备注:</div>
-				<input type="text" name="" id="" placeholder="选填，您想对商家说些什么" />
+				<input style="line-height: normal;" type="text" name="" id="" placeholder="选填，您想对商家说些什么" />
 			</div>
 			<dl class="set_coupon_box clearfloat hidden">
 				<dt>优惠券:</dt>
@@ -67,8 +67,8 @@
 			<dl class="set_delivery_box clearfloat">
 				<dt class="float_left">配送时间:</dt>
 				<dd class="float_right">
-					<input type="text" id="person_area" value="" placeholder="请选择配送时间" readonly="readonly">
-					<input id="value1" type="hidden" value="">
+					<input style="line-height: normal;" type="text" id="person_area" value="" placeholder="请选择配送时间" readonly="readonly">
+					<input style="line-height: normal;" id="value1" type="hidden" value="">
 				</dd>
 			</dl>
 			<div class="order_goods_contain_details">

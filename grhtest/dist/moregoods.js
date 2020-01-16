@@ -224,7 +224,7 @@ require(['../require/config'],function(){
 						html += '		</p>'
 						html += '		<p class="good_describe1" id="_more_">' + obj.goodsDescribe + '</p>'
 						html += '		<div id="_more_" class="good_box" data-id="' + obj.id + '" data-max="' + obj.maxBuyNum + '" data-name="' + obj.goodsName + '" data-logo="' + obj.goodsLogo + '" data-price="' + obj.nowPrice + '" data-packagenum="' + obj.packageNum + '" data-specinfo="' + obj.specInfo + '" data-oldprice ="' + obj.nomalPrice + '"  data-purchaseQuantity = "' + obj.purchaseQuantity + '">'
-						html += '			<span class="good_picre" id="_more_"><span id="_more_">￥' + obj.nowPrice + '</span>&nbsp;<del>￥' + obj.nomalPrice + '</del></span>'
+						html += '			<span class="good_picre" id="_more_"><span class="theme_color_red" id="_more_">￥' + obj.nowPrice + '</span>&nbsp;<del>￥' + obj.nomalPrice + '</del></span>'
 						html += '			<span class="good_number clearfloat" id="_more_">'
 						if ( gdnum ) {
 							html += '					<div class="minus_num" id="_more_"></div>'
@@ -232,7 +232,7 @@ require(['../require/config'],function(){
 							html += '					<div class="add_num" id="_more_"></div>'
 						} else{
 							if ( obj.packageNum <= 0) {
-								html +=  '		<div style="color:#FFFFFF;background:red;text-align:center" id="_more_">已售罄</div>'
+								html +=  '		<div class="goods-sellout" id="_more_">已售罄</div>'
 							}else{
 								html += '					<div class="minus_num" id="_more_" style="display:none"></div>'
 								html += '					<div class="show_num" id="_more_" style="display:none" zs-goodsId="' + obj.id + '">0</div>'
@@ -416,7 +416,7 @@ require(['../require/config'],function(){
 							$('.gd_number .show_num').show().html( goodsNum );
 						}else{
 							if ( d.packageNum <= "0" ) {
-								$(".gd_number").html("已售罄").css({"color":"#FFFFFF",'background':'red','text-align':'center','line-height':$(".gd_number").height()+'px'});
+								$(".gd_number").html("已售罄").addClass('goods-sellout');
 							} else{
 								$(".gd_number .minus_num").hide();
 								$('.gd_number .show_num').hide().html( goodsNum );
@@ -444,9 +444,10 @@ require(['../require/config'],function(){
 					if ( d.purchaseQuantity != 0 ) {
 						$('.gd_specification').find(".float_right").show().html( d.purchaseQuantity + "份起售" );
 					}
-					$('.gd_price').html('<span>￥' + d.nowPrice + '</span>&nbsp;&nbsp;<del>￥' + d.nomalPrice + '</del>');
+					$('.gd_price').html('<span class="theme_color_red">￥' + d.nowPrice + '</span>&nbsp;&nbsp;<del>￥' + d.nomalPrice + '</del>');
 					$(".gd_goodsDescribe").html( d.goodsDescribe );
-	
+					
+					!d.goodsContext && $('.goodsDetails_box2_').show().html("<div class='empty_desc' style='font-size:28px;'>暂无商品详情</div>");
 					d.goodsContext && $('.goodsDetails_box2_').show().html( d.goodsContext);
 					
 				}

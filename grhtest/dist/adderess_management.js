@@ -169,7 +169,7 @@ require(['../require/config'],function () {
 							name:'alertMask',
 							parameter:{
 								type:1,
-								title:'确认删除?',
+								title:'确定删除订单?',
 								canclefn:'cancleFn',
 								truefn:'trueFn'
 							}
@@ -214,18 +214,11 @@ require(['../require/config'],function () {
 	    			index = $(this).parents('.contain_address').index(),
 	    			d = $.data($('body')[0],'addressList')[index];
 	    			if (!d.latitude && !d.longitude) {
-	    				/*common.dialog.init({btns : [
-							{ klass : 'dialog-confirm-btn', txt : '确认'}
-						]});
-		                common.dialog.show('当前地址没有定位信息，请先编辑然后选择地址定位信息？',function(){
-		                	
-		                });
-		                */
 		               	common.jsInteractiveApp({
 							name:'alertMask',
 							parameter:{
 								type:2,
-								title:'地址没有定位信息，请先编辑',
+								title:'当前地址没有定位信息，请先编辑',
 								canclefn:'',
 								truefn:''
 							}

@@ -5,7 +5,7 @@
 	<title>果然好</title>
 	<meta name="viewport" content="width=720,user-scalable=0"/>
 	<meta content="telephone=no, address=no" name="format-detection" />
-	<link rel="stylesheet" href="../css/base.css?v=20191010" />
+	<link rel="stylesheet" href="../css/base.css?v=20200116" />
 	<script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body style="background: #f5f5f5;" module-id="recharge" class="animation-fadeIn">
@@ -79,12 +79,12 @@
 							<ul class="recharge_card_box">
 								<li class="">
 									<label>充值卡号</label>
-									<input type="text" id="" v-model="rechangeCard" placeholder="请输入充值卡号" @blur="inputBlur" @focus="inputFocus" />
+									<input style="line-height: normal;" type="text" id="" v-model="rechangeCard" placeholder="请输入充值卡号" @blur="inputBlur" @focus="inputFocus" />
 									<span class="icon_del" v-text="'X'" v-show="rechangeCard" @click="delRechangeCard"></span>
 								</li>
 								<li>
 									<label>兑换码</label>
-									<input type="text" name="" id="" value="" v-model="rechangeExchangeCode" placeholder="请输入兑换码"  @blur="inputBlur" @focus="inputFocus"  />
+									<input style="line-height: normal;" type="text" name="" id="" value="" v-model="rechangeExchangeCode" placeholder="请输入兑换码"  @blur="inputBlur" @focus="inputFocus"  />
 									<span class="icon_del" v-text="'X'" v-show="rechangeExchangeCode" @click="delRechangeExchangeCode"></span>
 								</li>
 								<li class="rechangeMsg">{{rechagneMeg}}</li>

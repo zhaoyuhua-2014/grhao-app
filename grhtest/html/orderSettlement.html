@@ -6,7 +6,7 @@
 	
 	<meta name="viewport" content="width=720,user-scalable=no"/>
     <meta content="telephone=no, address=no" name="format-detection" />
-    <link rel="stylesheet" href="../css/base.css?v=1214" />
+    <link rel="stylesheet" href="../css/base.css?v=20200116" />
     <script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body module-id="orderSettlement" class="animation-fadeIn">
@@ -24,7 +24,7 @@
 					<div class="set_charge_contact_left">取货方式：</div>
 					<div class="set_charge_contact_right">
 						<ul class="clearfloat">
-							<li class="take_others">自提点</li>
+							<li class="take_others">门店自提</li>
 							<li class="take_own">送货上门</li>
 						</ul>
 					</div>
@@ -36,7 +36,7 @@
 						    <div class="take_goods_phone"></div>
 					    </div>
 					    <div class="set_address_bottom"></div>
-					    <div class="set_job_time clearfloat"></div>
+					    <div class="set_job_time theme_color_orange clearfloat"></div>
 				    </div>
 				    <div class="set_charge_address set_charge_address1" style="display: none;">
 					    
@@ -53,9 +53,13 @@
 				    	</dd>
 				    </dl>
 				</div>
+				<div class="set_contact_information clearfloat">
+					<div class="float_left">联系方式</div>
+					<input style="line-height: normal;" type="tel" name="" id="" value="" placeholder="必填" />
+				</div>
 				<div class="set_order_remark">
 					<div class="order_remark">订单备注:</div>
-					<input type="text" name="" id="" placeholder="选填，您想对商家说些什么" />
+					<input style="line-height: normal;" type="text" name="" id="" placeholder="选填，您想对商家说些什么" />
 				</div>
 				<!--<dl class="set_coupon_box clearfloat">
 					<dt>优惠券:</dt>
@@ -73,15 +77,12 @@
 						
 					</dd>
 				</dl>
-				<div class="set_contact_information clearfloat">
-					<div class="float_left">联系方式</div>
-					<input type="tel" name="" id="" value="" placeholder="必填" />
-				</div>
+				
 				<dl class="set_delivery_box clearfloat">
 					<dt class="float_left">配送时间:</dt>
 					<dd class="float_right">
-						<input type="text" id="person_area" value="" placeholder="请选择配送时间" readonly="readonly">
-						<input id="value1" type="hidden" value="">
+						<input style="line-height: normal;" type="text" id="person_area" value="" placeholder="请选择配送时间" readonly="readonly">
+						<input style="line-height: normal;" id="value1" type="hidden" value="">
 					</dd>
 				</dl>
 				<div class="order_goods_contain_details">
@@ -114,7 +115,7 @@
 					</li>
 					<li>
 						<div class="float_left">合计：</div>
-						<div class="float_right">￥</div>
+						<div class="float_right theme_color_red">￥</div>
 					</li>
 					
 				</ul>
@@ -122,7 +123,7 @@
 		</div>
 		<div class="empty1"></div>
 	    <div class="order_submit clearfloat">
-	    	<div class="order_submit_left">
+	    	<div class="order_submit_left theme_color_orange">
 	    		<span class="order_submit_sum">实际支付：</span>
 	    		<span class="order_submit_sign">￥</span>
 	    		<span class="order_submit_money"></span>

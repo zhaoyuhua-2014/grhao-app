@@ -146,9 +146,10 @@ require(['../require/config'],function(){
                             	2 : ["订单号:<span>" + orderInfo.orderCode + "</span>","订单金额:<span>￥" + orderInfo.realPayMoney + "</span>",pub.allText],
 	                        }[ Number( pub.orderType) ];
 	
-	                        node.eq(0).html( json[0] ).next().html( json[1] ).next().html( json[2] );
+	                        // node.eq(0).html( json[0] ).next().html( json[1] ).next().html( json[2] );
+							node.eq(0).html( json[0] ).next().html( json[1] );
 	
-	                        node.eq(3).html( '22:30前付款，预计明日送达' );
+	                        // node.eq(3).html( '22:30前付款，预计明日送达' );
 	
 	                        var pay_gg = node.parent().next();
 	                        if( pub.isMachineGoods ){
@@ -157,26 +158,26 @@ require(['../require/config'],function(){
 	                            node.eq(1).css("margin-bottom",'10px');
 	                        }else{
 	                            pay_gg.html('请于2小时内完成支付，超时订单将取消！');
-	                            node.eq(3).show().html( '22:30前付款，预计明日送达' );
+	                            // node.eq(3).show().html( '22:30前付款，预计明日送达' );
 	                        } 
-							if (Number(pub.orderType == 1)) {
-								if (pub.allText) {
-									node.eq(2).css({"margin-top":"20px","border-top":"1px solid #b2b2b2","padding-top":"20px"})
-									node.eq(3).css({"padding-bottom":"20px"});
-								}else{
-									if (!pub.isMachineGoods) {
-										node.eq(3).show().html( '22:30前付款，预计明日送达' ).css({"margin-top":"20px","border-top":"1px solid #b2b2b2","padding":"20px 0"});
-									}
-								}
-							}
+							// if (Number(pub.orderType == 1)) {
+							// 	if (pub.allText) {
+							// 		node.eq(2).css({"margin-top":"20px","border-top":"1px solid #b2b2b2","padding-top":"20px"})
+							// 		node.eq(3).css({"padding-bottom":"20px"});
+							// 	}else{
+							// 		if (!pub.isMachineGoods) {
+							// 			node.eq(3).show().html( '22:30前付款，预计明日送达' ).css({"margin-top":"20px","border-top":"1px solid #b2b2b2","padding":"20px 0"});
+							// 		}
+							// 	}
+							// }
 	                    }else{
-	                    	pub.money = orderInfo.frontMoney;
-	                        node.eq(0).html("预购商品:<span>" + orderInfo.goodsInfo.goodsName + "</span>").next().html("订单号:<span>" + orderInfo.orderCode + "</span>").next().html("预购金额:<span class='font_color'>￥" + orderInfo.frontMoney + "</span>");
+	                    	// pub.money = orderInfo.frontMoney;
+	                     //    node.eq(0).html("预购商品:<span>" + orderInfo.goodsInfo.goodsName + "</span>").next().html("订单号:<span>" + orderInfo.orderCode + "</span>").next().html("预购金额:<span class='font_color'>￥" + orderInfo.frontMoney + "</span>");
 	                    }
 	                    $(".orderList_intro").html("订单已提交！");
-	                   	if (pub.isMachineGoods) {
-							node.eq(3).hide();
-						}
+	     //               	if (pub.isMachineGoods) {
+						// 	node.eq(3).hide();
+						// }
 	                }());
 	
 	                // 支付方式
@@ -612,7 +613,7 @@ require(['../require/config'],function(){
 	            common.prompt( "账户余额不足,请先充值" ); return;
 	        }
 	        if( !/^\d{6}$/.test( pub.smsCode ) ){ 
-	            common.prompt( "请输入正确的验证码" ); return; 
+	            common.prompt( "请输入六位验证码" ); return; 
 	        }
 	        pub.loading.show();
 	        pub.timer = setTimeout(function(){

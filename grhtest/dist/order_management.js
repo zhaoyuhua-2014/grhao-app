@@ -111,7 +111,7 @@ require(['../require/config'],function(){
 		       	   	    html += '   <div class="order_manage_num clearfloat">'
 		       	   	    html += '      <div class="order_num_left">订单编号：' + v.orderCode + '</div>'
 	
-		       	   	    html += '      <div class="order_num_right">' + pub.orderManagement.orderStatusLabel[ v.orderStatus + 4 ] + '</div>'
+		       	   	    html += '      <div class="order_num_right theme_color_orange">' + pub.orderManagement.orderStatusLabel[ v.orderStatus + 4 ] + '</div>'
 	
 		       	   	    html += '   </div>'
 		       	   	    html += '   <div class="order_manage_details">'
@@ -124,8 +124,8 @@ require(['../require/config'],function(){
 		       	   	    html += '                <div class="manage_details_bottom clearfloat">'
 		       	   	    html += '                    <div class="manage_bottom_left">'     		   	                       
 		       	   	    html += '                        <div class="order_bottom_money clearfloat">'
-		       	   	    html += '                            <div class="order_bottom_money_left">￥' + pub.toFixed( Number(v.realPayMoney) ) +'</div>'
-		       	   	    html += '                            <div class="order_bottom_money_right">共' + v.allGoodsCount + '件商品</div>'
+		       	   	    html += '                            <div class="order_bottom_money_left theme_color_red">￥' + pub.toFixed( Number(v.realPayMoney) ) +'</div>'
+		       	   	    html += '                            <div class="order_bottom_money_right color_666">共' + v.allGoodsCount + '件商品</div>'
 		       	   	    html += '                        </div>'
 		       	   	    html += '                    </div>'
 		       	   	    html += '                    <div class="manage_bottom_right" dataCode=' + v.orderCode + ' dataOrderMoney=' + v.goodsMoney + ' dataPayMethod=' + v.payMethod + ' dataStatus=' + v.orderStatus + '>'
@@ -279,19 +279,14 @@ require(['../require/config'],function(){
 	
 				    	var data = {
 							type:1,
-							title:'确定删除？',
+							title:'确定删除订单？',
 							canclefn:'cancleFn',
 							truefn:'trueFn'
 						}
 						//common.alertMaskApp(JSON.stringify(data));
 						common.jsInteractiveApp({
 							name:'alertMask',
-							parameter:{
-								type:1,
-								title:'确定删除?',
-								canclefn:'cancleFn',
-								truefn:'trueFn'
-							}
+							parameter:data
 						})
 				    }
 				});
@@ -588,7 +583,7 @@ require(['../require/config'],function(){
 						html += '           </div>'
 						html += '	    </div>'
 			        	html += '         <div class="gds_right_bottom">'
-			        	html += '			<p class="float_left"><span class="font_color">￥' + pub.toFixed( Number(v.nowPrice) ) + '</span></p>'
+			        	html += '			<p class="float_left"><span class="theme_color_red">￥' + pub.toFixed( Number(v.nowPrice) ) + '</span></p>'
 			        	html += '         </div>'            	
 			        	html += '    </dd>'
 			        	html += '</dl>'

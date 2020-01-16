@@ -9,7 +9,7 @@
 		<meta name="viewport" content="width=720,user-scalable=0"/>
 		<meta content="telephone=no, address=no" name="format-detection" />
 		<link rel="stylesheet" href="../css/rest.css" />
-		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/base.css?v=20200116"/>
 		<link rel="stylesheet" type="text/css" href="../css/farm.css?v=0905"/>
 	</head>
 	<body module-id="2">
@@ -38,7 +38,7 @@
 							<div class="exchange_msg exchange_msg_top" v-text="fruit.rate +'个' + fruit.name + '可兑换一份水果，最多可兑换'+parseInt(fruit.num/fruit.rate) + '份'"></div>
 							<div class="number same">
 								<p>兑换数量</p>
-								<input type="tel" class='value' maxlength = "4" placeholder="请输入要兑换的份数" v-model="fruitNum"/>
+								<input style="line-height: normal;" type="tel" class='value' maxlength = "4" placeholder="请输入要兑换的份数" v-model="fruitNum"/>
 							</div>
 							<div class="exchange_msg exchange_msg_bottom error" v-show="exchangeErrorMsg" v-text="exchangeErrorMsg"></div>
 						</div>
@@ -65,7 +65,7 @@
 							<div class="exchange_msg exchange_msg_top" v-text="fruit.score +'份' + fruit.name +'可兑换1个果币，最多可兑换'+parseInt(fruit.num/fruit.score)+'个'"></div>
 							<div class="same number">
 								<p>兑换数量</p>
-								<input type="tel" class='value' maxlength = "4" placeholder="请输入要兑换的个数" v-model="coinNum"/>
+								<input style="line-height: normal;" type="tel" class='value' maxlength = "4" placeholder="请输入要兑换的个数" v-model="coinNum"/>
 							</div>
 							<div class="exchange_msg exchange_msg_bottom error" v-show="exchangeFruitCoinErrorMsg" v-text="exchangeFruitCoinErrorMsg"></div>
 						</div>

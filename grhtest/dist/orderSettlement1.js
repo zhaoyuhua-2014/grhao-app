@@ -288,7 +288,7 @@ require(['../require/config'],function () {
 					pub.firmId = d.id;
 					pub.firmIdType = d.type;
 					$(".set_charge_con").show();
-					node.css("background",'#FFFFFF').find('.take_goods_phone').html( d.firmName )
+					node.css("background",'#FFFFFF').find('.take_goods_name').html( d.firmName )
 						.end().find('.set_address_bottom').html( "地址：" + d.address )
 						.end().find('.set_job_time').html( "营业时间：" + d.pickUpTime );
 					//watm机器处理
@@ -444,6 +444,11 @@ require(['../require/config'],function () {
 					pub.customMobile = $(".set_contact_information input").val();
 					if (common.goodsType.getItem() == 'ZHENG_JIAN') {
 						pub.activityType = 7;
+						if(pub.customMobile === ''){
+							common.prompt('请输入联系方式');
+							// $this.addClass('confirm-submit').html('订单提交');
+							return;
+						}
 						if (!common.PHONE_NUMBER_REG.test( pub.customMobile )) {
 							common.prompt('手机号输入错误');
 							//$('.order_submit_right').addClass('confirm-submit').html('提交订单').css("background-color",'#93c01d');

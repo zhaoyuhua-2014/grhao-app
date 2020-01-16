@@ -39,16 +39,18 @@ define('shopCar',function(require, exports, module){
 		this.style_change = function(){
 			var num = this.getgoodsNum();
 			if ( num == '0' ) {
-				$('.icon_cart[data-content]').attr('data-content',0 ).removeClass("true");
 				$(".cart_message").html("购物车是空的");
 				$(".footer-rigth").removeClass("isClick");
+				$("#goodsNum").hide();
+				$('.icon_cart[data-content]').attr('data-content',0 ).removeClass("true");
 			} else{
 				if (num > 99) {
 					num = '99+'	
 				}
-				$('.icon_cart[data-content]').attr('data-content',num).addClass("true");
 				$(".footer-rigth").addClass("isClick");
 				$(".cart_message").html("￥总计："+this.getgoodsMoney())
+				$("#goodsNum").html(num).show();
+				$('.icon_cart[data-content]').attr('data-content',num).addClass("true");
 			}
 		};
 		this.creat = function( id, name, price, logo, specifications, maxCount, packageNum, oldPrice, type ,purchasequantity ){ // 创建一个单品

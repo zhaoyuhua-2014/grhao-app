@@ -291,8 +291,8 @@ require(['../require/config'],function () {
 							imgHtml += '</li>'
 					}
 					$('.user_img_list').html(imgHtml)
-					
-					groupData.goodsContext && $('.goodsDetails_box2_').find('li').eq(0).html( groupData.goodsContext);
+					!groupData.goodsContext && $('.goodsDetails_box2_').find('li').eq(0).html("<div class='empty_desc' style='font-size:28px;'>暂无商品详情</div>");
+					groupData.goodsContext && $('.goodsDetails_box2_').find('li').eq(0).html(groupData.goodsContext);
 					
 					$('.gd_goodName').html( groupData.goodsName+'<span class="group_number">'+groupData.num+'人拼</span>')
 					$('.gd_specification').text(groupData.goodsDescribe)
