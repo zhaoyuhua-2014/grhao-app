@@ -462,7 +462,7 @@ require(['../require/config'],function () {
 				var arr = [],obj={};
 				for (var i in d) {
 					if (d[i].longitude && d[i].latitude) {
-						obj = {'longitude':d[i].longitude,'latitude':d[i].latitude,'firmName':d[i].firmName,"id":d[i].id};
+						obj = {'longitude':d[i].longitude,'latitude':d[i].latitude,'firmName':d[i].firmName,"id":d[i].id,"type":d[i].type};
 						arr.push(obj);
 						obj = null;
 					}
@@ -508,9 +508,9 @@ require(['../require/config'],function () {
 					contentNodes.addClass('hidden');
 					taskNode.addClass('hidden');
 					$('body').css("overflow-y",'auto');
-					pub.store.pageNo = common.PAGE_INDEX;
-					pub.store.Node.html("");
-					pub.store.apiHandle.firm_list.init();
+					// pub.store.pageNo = common.PAGE_INDEX;
+					// pub.store.Node.html("");
+					// pub.store.apiHandle.firm_list.init();
 				})
 				//点击筛选条件
 				contentNodes.on("click",'span',function(){
@@ -583,7 +583,6 @@ require(['../require/config'],function () {
 					var name = $this.attr("data-firmname")
 					console.log(name)
 					if( !isCur ){
-						
 						common.jsInteractiveApp({
 							name:'alertMask',
 							parameter:{

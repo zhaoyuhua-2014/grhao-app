@@ -424,8 +424,9 @@ define(['jquery','mdData','shar1'],function($,md){
 				common.nodeTemp = null; 
 			},t);
 		},
-		tip : function(str){
+		tip : function(str, n){
 			var $node = $('.prompt');
+			var timeNumber = n || 600;
 			if ($node) {
 				$('.prompt').remove();
 			}
@@ -433,11 +434,16 @@ define(['jquery','mdData','shar1'],function($,md){
 			if($node[0]){
 				return;
 			}
-			$('<div class="prompt" id="prompt-node"></div>').html('<p>' + str + '</p>').appendTo('body').show().css('margin-left',-92);
+			$('<div class="prompt" id="prompt-node"></div>').html('<p>' + str + '</p>').appendTo('body').show().css({
+				'max-width':'500px',
+				"transform":" translate(-50%,-50%)",
+				'position': 'absolute',
+				'top': '30%',
+				'left': '50%'})
 			this.setMyTimeout(function(){
 				common.nodeTemp = $('.prompt').remove();
 				common.nodeTemp = null; 
-			},600);
+			},timeNumber);
 		},
 		getTotal : function(){
 			var total = 0,i;

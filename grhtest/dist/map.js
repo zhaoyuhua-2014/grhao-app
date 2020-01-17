@@ -114,35 +114,40 @@ require(['../require/config'],function () {
 				}
 			},
         	creatMake:function(map,data){
+				console.log(data)
         		new AMap.Marker({
 		        	map:map,
 		            position: [data.longitude, data.latitude],
 		            content : data.firmName,
-		            offset : new AMap.Pixel(-40,-44),
+					offset: new AMap.Pixel(0, -72),
 		            extData : data
 		        }).on("click",function(){
-		        	var data = {
-						type:1,
-						title:'确定选择该门店?',
-						canclefn:'cancleFn',
-						truefn:'trueFn'
-					}
-					//common.alertMaskApp(JSON.stringify(data));
-					common.jsInteractiveApp({
-						name:'alertMask',
-						parameter:{
+					console.log(data)
+					console.log(this.getExtData())
+					pub.firmIdTemp = this.getExtData().id;
+					var storeInfo_storage = JSON.parse(localStorage.getItem('storeInfo'));
+					if (pub.firmIdTemp == storeInfo_storage.id) {
+						common.tip("当前已经在" + data.firmName + "，请选择其他",25000)
+					} else {
+						$(".prompt").remove()
+						var dObj = {
 							type:1,
-							title:'确定选择该门店',
+							title:'是否切换到' + data.firmName,
 							canclefn:'cancleFn',
 							truefn:'trueFn'
 						}
-					})
-					pub.firmIdTemp = this.getExtData().id;
+						//common.alertMaskApp(JSON.stringify(data));
+						common.jsInteractiveApp({
+							name:'alertMask',
+							parameter:dObj
+						})
+					}
 		        })
 		        new AMap.Marker({
 		        	map:map,
-		            icon: "../img/labelmap2.png",
+		            icon: "../img/labelmap"+ (data.type == 5 ? '1' : '2') +".png",
 		            position: [data.longitude, data.latitude],
+					size: new AMap.Size(30, 72)
 		        })
         	},
         	//确定方法
