@@ -377,7 +377,7 @@ html,body{margin: 0;padding: 0;height:100%;width: 100%;background: #f0f0f0;}
 .gd_price span {font-size:36px;}
 .gd_price del {color:rgb(136,136,136);font-size:24px;}
 
-.goodsDetails_box2 {width:100%;height:auto;background:#FFFFFF;margin-bottom: 128px;}
+.goodsDetails_box2 {width:100%;height:auto;background:#FFFFFF;padding-bottom: 128px;}
 /*.goodsDetails_box2 h4 {height:80px;line-height:80px;font-size:30px;color:rgb(147,192,29);text-indent:30px;background: #F0F0F0;border-top: 1px solid #CCCCCC;border-bottom: 1px solid #CCCCCC;}
 */
 .goodsDetails_box2 h4 span{width: 16px;height: 16px;border-radius: 50%;background: rgb(147,192,29);position: relative;top: 32px;left: 25px;}
