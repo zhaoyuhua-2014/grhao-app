@@ -522,7 +522,7 @@ require(['../require/config'],function(){
 			        			
 			        		}
 			        	}
-			        	$('.machine_address').html(firmInfo.address ).data({"latitude":firmInfo.latitude,'longitude':firmInfo.longitude,'firmName':firmInfo.firmName});
+			        	$('.machine_address').html(firmInfo.address ).data({"latitude":firmInfo.latitude,'longitude':firmInfo.longitude,'firmName':firmInfo.firmName,'type': firmInfo.type});
 			        	
 			        }else{
 			        	

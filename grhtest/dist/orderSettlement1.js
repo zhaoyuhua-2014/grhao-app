@@ -239,7 +239,7 @@ require(['../require/config'],function () {
 					html += '           </div>'
 					html += '	    </div>'
 					html += '	    <div class="gds_right_bottom">'
-					html += '			<p class="float_left"><span class="font_color">￥' + v.price + '</span></p>'
+					html += '			<p class="float_left"><span class="theme_color_red">￥' + v.price + '</span></p>'
 					html += '			<p class="float_left"><span class="font_color"></span></p>'
 					html += '</div>'
 					html += '    </dd>'

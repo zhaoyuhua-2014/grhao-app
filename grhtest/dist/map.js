@@ -5,7 +5,6 @@ require(['../require/config'],function () {
 		pub.logined = common.isLogin(); // 已经登录
 		
 	 	if( pub.logined ){
-	 		pub.firmId = common.user_datafn().firmId; // 门店ID
 	 		pub.userId = common.user_datafn().cuserInfoid;
 			pub.source = "userId" + pub.userId;
 			pub.sign = md5( pub.source + "key" + common.secretKeyfn() ).toUpperCase();
@@ -47,7 +46,7 @@ require(['../require/config'],function () {
 					    });
 			        	var marker = new AMap.Marker({
 			        		map:map,
-				            icon: "../img/labelmap2.png",
+				            icon: "../img/labelmap"+ (pub.mapData.type == 5 ? '1' : '2') +".png",
 				            position: [pub.mapData.longitude, pub.mapData.latitude],
 				            label : { content : pub.mapData.firmName, offset : new AMap.Pixel(-40,-44) },
 				        });
@@ -114,7 +113,6 @@ require(['../require/config'],function () {
 				}
 			},
         	creatMake:function(map,data){
-				console.log(data)
         		new AMap.Marker({
 		        	map:map,
 		            position: [data.longitude, data.latitude],
@@ -122,24 +120,20 @@ require(['../require/config'],function () {
 					offset: new AMap.Pixel(0, -72),
 		            extData : data
 		        }).on("click",function(){
-					console.log(data)
-					console.log(this.getExtData())
 					pub.firmIdTemp = this.getExtData().id;
-					var storeInfo_storage = JSON.parse(localStorage.getItem('storeInfo'));
-					if (pub.firmIdTemp == storeInfo_storage.id) {
+					if (pub.firmIdTemp == pub.firmId) {
 						common.tip("当前已经在" + data.firmName + "，请选择其他",25000)
 					} else {
 						$(".prompt").remove()
-						var dObj = {
-							type:1,
-							title:'是否切换到' + data.firmName,
-							canclefn:'cancleFn',
-							truefn:'trueFn'
-						}
 						//common.alertMaskApp(JSON.stringify(data));
 						common.jsInteractiveApp({
 							name:'alertMask',
-							parameter:dObj
+							parameter:{
+								type:1,
+								title:'是否切换到' + data.firmName,
+								canclefn:'cancleFn',
+								truefn:'trueFn'
+							}
 						})
 					}
 		        })
@@ -178,10 +172,11 @@ require(['../require/config'],function () {
 			},
         }
 		pub.init = function(){
+			pub.firmId = common.firmId.getItem();
 			pub.Map.init();
 			$("body").fadeIn(300)
 		};
-	 	pub.init();
+		pub.init();
 	 	window.pub = pub;
 	})
 });
