@@ -229,7 +229,7 @@ require(['../require/config'],function () {
 		pub.store.firmType = null;
 		pub.store.county = null;
 		pub.store.street = null;
-		pub.store.sortType = null;
+		pub.store.sortType = 1;
 		pub.store.longitude = null;
 		pub.store.latitude = null;
 		pub.store.pageNo = common.PAGE_INDEX;
@@ -279,8 +279,8 @@ require(['../require/config'],function () {
 					var html = '', i;
 					for ( i in o) {
 						html += '<div class="store_store_item" data1="' + o[i].id + '">'
-						html += '	<dl class="clearfloat" data="' + o[i].id + '"  data-firmName = "'+o[i].firmName+'">'
-						html += '		<dt><img src="' + o[i].faceImgUrl + '"/></dt>'
+						html += "	<dl class='clearfloat' data='" + o[i].id + "'  data-firmName = '"+o[i].firmName+"' data-item='"+ JSON.stringify(o[i])+"'>"
+						html += '		<dt><img src="' + o[i].faceImgMinUrl + '"/></dt>'
 						html += '		<dd>'
 						html += '			<p class="business_name">' + o[i].firmName + '</p>'
 						html += '			<p class="business_address">' + o[i].address + '</p>'
@@ -462,7 +462,8 @@ require(['../require/config'],function () {
 				var arr = [],obj={};
 				for (var i in d) {
 					if (d[i].longitude && d[i].latitude) {
-						obj = {'longitude':d[i].longitude,'latitude':d[i].latitude,'firmName':d[i].firmName,"id":d[i].id,"type":d[i].type};
+						obj = d[i]
+						// obj = {'longitude':d[i].longitude,'latitude':d[i].latitude,'firmName':d[i].firmName,"id":d[i].id,"type":d[i].type};
 						arr.push(obj);
 						obj = null;
 					}
@@ -576,24 +577,65 @@ require(['../require/config'],function () {
 	
 					var 
 					$this = $(this),
-					i = $this.index(),
 					isCur = $this.parent().is('.active');
-	
-					pub.firmIdTemp = $this.attr("data");
-					var name = $this.attr("data-firmname")
-					console.log(name)
-					if( !isCur ){
-						common.jsInteractiveApp({
-							name:'alertMask',
-							parameter:{
-								type:1,
-								title:'是否切换到' + name,
-								canclefn:'pub.store.apiHandle.cancleFn()',
-								truefn:'pub.store.apiHandle.trueFn()'
-							}
-						})
+					var itemData = JSON.parse($this.attr("data-item"));
+					console.log(itemData)
+					var bodyContent = $(".page-body-content")
+					bodyContent.scrollTop('0px');
+					bodyContent.find(".top-img").attr("src",itemData.faceImgUrl)
+					bodyContent.find(".pd-content-list .firmName").html(itemData.firmName)
+					bodyContent.find(".pd-content-list .address").html(itemData.address)
+					bodyContent.find(".pd-content-list .phoneHref").attr("href","tel:"+itemData.linkTel)
+					bodyContent.find(".pd-content-list .pickUpTime").html(itemData.pickUpTime)
+					if(isCur){
+						$('.page-body-bottom .button').addClass('disable').html('已选择当前门店').attr("data-id",itemData.id)
+					} else {
+						$('.page-body-bottom .button').removeClass('disable').html('切换为当前门店').attr("data-id",itemData.id)
 					}
+					// if( !isCur ){
+					// 	common.jsInteractiveApp({
+					// 		name:'alertMask',
+					// 		parameter:{
+					// 			type:1,
+					// 			title:'是否切换到' + name,
+					// 			canclefn:'pub.store.apiHandle.cancleFn()',
+					// 			truefn:'pub.store.apiHandle.trueFn()'
+					// 		}
+					// 	})
+					// }
+					$(".item-page").removeClass("hidden")
+					$(".page-body").removeClass("page-body-hide").addClass("page-body-show")
+					$("body").css("overflow-y","hidden")
+					var  map = new AMap.Map("store-map", {
+					    resizeEnable: true,
+					    center: [itemData.longitude, itemData.latitude],
+					    zoom: 15
+					});
+					var marker = new AMap.Marker({
+						map:map,
+					    icon: "../img/labelmap"+ (itemData.type == 5 ? '1' : '2') +".png",
+					    position: [itemData.longitude, itemData.latitude],
+					    label : { content : itemData.firmName, offset : new AMap.Pixel(-40,-44) },
+					});
 				});
+				// 点击取消或者遮罩背景
+				$(".cancel_page").on("click",function(){
+					$(".item-page").addClass("hidden")
+					$(".page-body").addClass("page-body-hide").removeClass("page-body-show")
+					$("body").css("overflow-y","auto")
+				})
+				// 点击切换门店
+				$(".page-body-bottom").on("click",".button",function(){
+					var
+					$this = $(this),
+					isDisable = $this.is('.disable');
+					var storeId = $this.attr("data-id");
+					if(!isDisable){
+						console.log('disable');
+						pub.firmIdTemp = storeId
+						pub.store.apiHandle.trueFn()
+					}
+				})
 				//点击进入地图页面
 				$(".store_list").on('click','.business_timer',function(){
 					var longitude = $(this).attr("data-longitude"),
@@ -644,6 +686,9 @@ require(['../require/config'],function () {
 	
 		// 门店模块初始化
 		pub.store.init = function(){
+			require(['map1'])
+			var wh = document.documentElement.clientHeight * 0.8 - 226;
+			$(".page-body-content").css("height",wh + "px")
 			common.replaceLocationApp();
 			pub.store.bodyNode = $('body');
 			
