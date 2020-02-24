@@ -698,6 +698,8 @@ require(['../require/config'],function(){
 			    		$('.order_status').html( text );
 			    		$('.order_situation').addClass( className ).find( '.oprate-btn' ).text( pub.orderDetail.OPERATE[ +orderInfo.orderStatus + 4 ].btnText);
 			    		switch( +orderInfo.orderStatus + 3 ){
+							case 0 : 
+								$(".watm_info_wrap").hide()
 			    			case 6 : 
 				    			(orderInfo.realPayMoney == 0 || orderInfo.realPayMoney == '') ?  $(".order_situation").css("display","none") : ''; break;
 			    			case 7 : 
