@@ -282,7 +282,7 @@ require(['../require/config'],function(){
 	                    }
 	                }[ pub.seachParam ];
 					
-					// app 传参
+                  // app 传参
 	                pub.wxAppPayWay = pub.isRecharge ? '3' : pub.isBase ? '1' : pub.isPre ? '2' : undefined; // 3充值，1普通商品支付，2预购商品
 	                pub.isApp && ( pub.aliPayApi.isApp = '1' );
 	                common.ajaxPost($.extend( {},pub.userBasicParam, pub.aliPayApi ),function( d ){

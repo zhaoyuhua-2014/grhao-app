@@ -560,7 +560,10 @@ require(['../require/config'],function(){
 			        	$('.goods_person_phone').html( orderInfo.customMobile );
 			        	$('.goods_person_address').html( orderInfo.receiveAddress );
 			        };
-	
+					
+					if(orderInfo.pickUpMethod == '1' && !pub.isMachineGoods && orderInfo.orderStatus == '3'){
+						$("#delivery1").removeClass('hidden').find(".deli_style").html('自提码：'+orderInfo.pickUpCode)
+					}
 			        //商品展示
 			        var html = '';
 			        $.each(orderInfo.orderDetailsList,function( i, v){

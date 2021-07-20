@@ -61,12 +61,16 @@ require(['../require/config'],function(){
 					});
 				},
 				apiData : function( d ){
-					var nodeCard = $("#user_money"),nodeFruit=$("#user_fruit_money"),nodeCoupon=$('#user_coupon');
+					var nodeCard = $("#user_money"),nodeFruit=$("#user_fruit_money"),nodeCoupon=$('#user_coupon'),orderDom = $(".my_orders .orders_option");
 					if ( d.statusCode == "100000" ) {
 						var data = d.data;
 						nodeCard.html("￥"+data.userMonthCard.systemMoney);
 						nodeFruit.html(data.userAccountInfo.score+"枚");
 						nodeCoupon.html(data.couponCount);
+						data.waitPayCount ? orderDom.find('.no_paid').attr('data-num', data.waitPayCount).addClass('active') : orderDom.find('.no_paid').removeClass('active')
+						data.payCount ? orderDom.find('.paid').attr('data-num', data.payCount).addClass('active') : orderDom.find('.paid').removeClass('active')
+						data.deliveredCount ? orderDom.find('.no_receive').attr('data-num', data.deliveredCount).addClass('active') : orderDom.find('.no_receive').removeClass('active')
+						
 						common.cancelDialogApp();
 					}else if(  d.statusCode == "100400" ){
 	                        common.prompt( '登录已失效，请重新登陆' );
@@ -126,11 +130,12 @@ require(['../require/config'],function(){
 		pub.eventHandle.init = function(){
 	
 			//common.jumpLinkSpecialApp('.main_top_right','个人信息修改','html/message_change.html'); // 进入个人信息修改
-	
+			common.orderColumn.removeItem()
 			// 订单管理 + 我的预购 + 优惠券 + 收货地址 + 果币商城 + 在线充值 + 修改密码 + 帮助中心 + 设置
 			$('.zs_personal,.main_top_right').click(function(){
 				var url = $(this).attr('data-url'),
 					tit = $(this).attr("tit"),
+					index = $(this).attr("url-index"),
 					right = $(this).attr("data-right");
 					isOnlineServer = $(this)[0].className.indexOf('online_service');
 				if( pub.logined ){
@@ -162,6 +167,9 @@ require(['../require/config'],function(){
 								pub.iminfo_regist();
 							}
 						}else{
+							if (index != undefined) {
+								common.orderColumn.setItem(index)
+							}
 							common.jsInteractiveApp({
 								name:'goToNextLevel',
 								parameter:{

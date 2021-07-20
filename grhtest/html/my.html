@@ -7,6 +7,29 @@
     	<meta content="telephone=no, address=no" name="format-detection" />    	
     	<link rel="stylesheet" href="../css/base.css?v=20200120" />
     	<script src="../dist/EVE.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.my_orders .orders_option dl{
+				position: relative;
+			}
+			dl.zs_personal.active::after{
+				content: attr(data-num);
+				width: 30px;
+				height: 30px;
+				position: absolute;
+				top: -15px;
+				right: 34px;
+				border: 2px solid #f61e1e;
+				border-radius: 50%;
+				background: #fff;
+				font-size: 24px;
+				color: #f61e1e;
+				text-align: center;
+				line-height: 26px;
+				z-index: 10;
+				box-sizing: border-box;
+				letter-spacing: -2px;
+			}
+		</style>
 	</head>
 	<body module-id="0" class="animation-fadeIn">
 		<div class="main_wrap main_wo_wrap" id="wrapper">
@@ -49,19 +72,19 @@
 						<span class="all_orders fr zs_personal"  data-url="/html/order_management.html" tit='订单管理' url-index="0">全部订单</span>
 					</div>
 					<div class="orders_option">
-						<dl class="zs_personal no_paid" data-url="/html/order_management.html" tit='订单管理' url-index="1">
+						<dl class="zs_personal no_paid" data-url="/html/order_management.html" tit='订单管理' url-index="1" data-num=0>
 							<dt></dt>
 							<dd>待支付</dd>
 						</dl>
-						<dl class="zs_personal paid" data-url="/html/order_management.html" tit='订单管理' url-index="2">
+						<dl class="zs_personal paid" data-url="/html/order_management.html" tit='订单管理' url-index="2" data-num=0>
 							<dt></dt>
 							<dd>已付款</dd>
 						</dl>
-						<dl class="zs_personal no_receive" data-url="/html/order_management.html" tit='订单管理' url-index="3">
+						<dl class="zs_personal no_receive" data-url="/html/order_management.html" tit='订单管理' url-index="3" data-num=0>
 							<dt></dt>
 							<dd>待收货</dd>
 						</dl>
-						<dl class="zs_personal goods_done" data-url="/html/order_management.html" tit='订单管理' url-index="4">
+						<dl class="zs_personal goods_done" data-url="/html/order_management.html" tit='订单管理' url-index="4" data-num=0>
 							<dt></dt>
 							<dd>已完成</dd>
 						</dl>
