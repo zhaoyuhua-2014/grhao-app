@@ -770,6 +770,7 @@ require(['../require/config'],function(){
 			init : function(){
 				common.ajaxPost($.extend({}, pub.userBasicParam, {
 					method : 'shop_cart_submit_two',
+          
 					goodsList : pub.goodsListStr
 				}),function( d ){
 					if ( d.statusCode == "100000" ) {
